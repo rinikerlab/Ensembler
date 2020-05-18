@@ -1,4 +1,4 @@
-# Ensembler - v0.2
+# Ensembler
 
 
 __CURRENTLY UNDER CONSTRUCTION __
@@ -33,15 +33,8 @@ This project tries to give users very easy to use and simple functionality to de
 
    This module contains predefined visualization a and animation functions.
 
-### Ensembles
-
-   This module contains the replica exchange and conveyorbelt approaches.
 
 
-
-## Current development
-* rebuild Potentials more performant
-* write test for all potentials
 
 
 ### Authors
