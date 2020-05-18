@@ -103,14 +103,14 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
 
     return ani, out_path
 
-def animation_EDS_trajectory(sys: system, x_range=None, title:str=None, out_path:str=None, hide_legend:bool=True,
+def animation_EDS_trajectory(system: system, x_range=None, title:str=None, out_path:str=None, hide_legend:bool=True,
                              s_values:list=[1.0], step_size:float=1, out_writer:str="pillow", dpi:int=100, tot_pot_resolution:int=100)-> (animation.Animation, (str or None)):
     # plotting
-    x1data = sys.trajectory.position
-    y1data = sys.trajectory.totPotEnergy
-
-    x_max = max(x1data[0])
-    x_min = min(x1data[0])
+    x1data = np.array(system.trajectory.position)
+    y1data = system.trajectory.totPotEnergy
+ 
+    x_max = max(x1data)
+    x_min = min(x1data)
     active_dots = 20
 
     if (x_range == None):
@@ -127,9 +127,9 @@ def animation_EDS_trajectory(sys: system, x_range=None, title:str=None, out_path
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    from ensembler.visualisation import envPot_differentS_overlay_plot
+    from ensembler.visualisation.plotPotentials import envPot_differentS_overlay_plot
 
-    _, ax = envPot_differentS_overlay_plot(eds_potential=sys.potential, s_values=s_values, title=title,
+    _, ax = envPot_differentS_overlay_plot(eds_potential=system.potential, s_values=s_values, title=title,
                                            positions=xtot_space, axes=ax, hide_legend=hide_legend)
 
     scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap='inferno')  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
@@ -140,7 +140,7 @@ def animation_EDS_trajectory(sys: system, x_range=None, title:str=None, out_path
     # Params
     ax.set_xlabel("$r$")
     ax.set_ylabel("$V$")
-    if (title != None):
+    if (isinstance(title, type(None))):
         fig.suptitle(title)
 
     def init():
@@ -161,7 +161,6 @@ def animation_EDS_trajectory(sys: system, x_range=None, title:str=None, out_path
     def run(data):
         # update the data
         x, V = data
-
         if (type(x) == type(x1data[-1])==list and all([xi == x1i for xi, x1i in zip(x, x1data[-1])]) ):  # last step of traj
             curr_p.set_data([], [])
             end_p.set_data(x1data[-1], y1data[-1])

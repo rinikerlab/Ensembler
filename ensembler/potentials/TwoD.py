@@ -11,6 +11,7 @@ from numbers import Number
 from typing import Iterable, List, Sized, Union
 
 from ensembler.potentials._baseclasses import _potential2DCls, _potential2DClsSymPY
+from ensembler.potentials.ND import envelopedPotential
 
 
 class harmonicOscillator(_potential2DClsSymPY):
@@ -59,7 +60,7 @@ class harmonicOscillator(_potential2DClsSymPY):
 
 class wavePotential(_potential2DClsSymPY):
     name:str = "Wave Potential"
-    nDim:int = sp.symbols("nDim")
+    nDim:sp.Symbol = sp.symbols("nDim")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
     multiplicity: sp.Matrix = sp.Matrix([sp.symbols("m")])
     phase_shift: sp.Matrix = sp.Matrix([sp.symbols("omega")])
@@ -70,14 +71,23 @@ class wavePotential(_potential2DClsSymPY):
     i = sp.Symbol("i")
     V_orig = sp.Sum(V_dim[i, 0], (i, 0, nDim))
 
-    def __init__(self, amplitude=(1,1), multiplicity=(1,1), phase_shift=(0,0), y_offset=(0, 0)):
+    def __init__(self, amplitude=(1,1), multiplicity=(1,1), phase_shift=(0,0), y_offset=(0, 0), degree:bool=True):
         nDim=2
         self.constants.update({"amp_"+str(j): amplitude[j] for j in range(nDim)})
         self.constants.update({"mult_"+str(j): multiplicity[j] for j in range(nDim)})
-        self.constants.update({"phase_"+str(j): phase_shift[j] for j in range(nDim)})
         self.constants.update({"yOff_"+str(j): y_offset[j] for j in range(nDim)})
+        self.constants.update({"nDim": nDim})
+
+        if(degree):
+            self.constants.update({"phase_"+str(j): np.deg2rad(phase_shift[j]) for j in range(nDim)})
+        else:
+            self.constants.update({"phase_"+str(j): phase_shift[j] for j in range(nDim)})
+
         
         super().__init__()
+
+        if(degree):
+            self.set_degree_mode()
 
     def _initialize_functions(self):
         # Parameters
@@ -92,6 +102,15 @@ class wavePotential(_potential2DClsSymPY):
         self.V_dim = sp.matrix_multiply_elementwise(self.amplitude,
                                         (sp.matrix_multiply_elementwise((self.position +self.phase_shift), self.multiplicity)).applyfunc(sp.cos)) + self.yOffset
         self.V_orig = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
+
+    def set_degree_mode(self):
+        self.ene = lambda positions: np.squeeze(self._calculate_energies(*np.hsplit(np.deg2rad(positions), self.constants[self.nDim])))
+        self.dvdpos = lambda positions: np.squeeze(self._calculate_dVdpos(*np.hsplit(np.deg2rad(positions), self.constants[self.nDim])))
+
+    def set_radian_mode(self):
+        self.ene = lambda positions: np.squeeze(self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])))
+        self.dvdpos = lambda positions: np.squeeze(self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])))
+
 
 
 class torsionPotential(_potential2DCls):

@@ -10,7 +10,8 @@ from ensembler.system.basic_system import system
 from ensembler.util import dataStructure as data
 
 from ensembler import potentials
-from ensembler.integrator import _integratorCls, metropolisMonteCarloIntegrator
+from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.integrator.stochastic import metropolisMonteCarloIntegrator
 from ensembler.conditions._conditions import Condition
 
 class edsSystem(system):

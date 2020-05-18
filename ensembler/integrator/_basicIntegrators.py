@@ -9,7 +9,7 @@ import numpy as np
 from typing import Tuple
 import scipy.constants as const
 
-from ensembler import system
+#from ensembler import system
 
 class _integratorCls:
     """
@@ -34,7 +34,7 @@ class _integratorCls:
     def __init__(self):
         raise NotImplementedError("This "+str(__class__)+" class is not implemented")
     
-    def step(self, system:system):
+    def step(self, system):
         """
         ..autofunction: step
             This is the parent function that is the interface for all integrator step functions.
@@ -46,7 +46,7 @@ class _integratorCls:
         """
         raise NotImplementedError("The function step in "+__class__+" class is not implemented")
 
-    def integrate(self, system:system, steps:int):
+    def integrate(self, system, steps:int):
         for step in range(steps):
             (newPosition, newVelocity, newForces) = self.step(system=system)
             system.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)

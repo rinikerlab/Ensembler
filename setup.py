@@ -13,5 +13,7 @@ setup(
                      'numpy',
                      'sympy',
                      'scipy',
+                     'tqdm',
+                     'ipywidgets',
                      'matplotlib'], #external packages as dependencies
 )

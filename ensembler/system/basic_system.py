@@ -18,7 +18,7 @@ from ensembler.potentials.ND import envelopedPotential
 from ensembler.potentials._baseclasses import _potentialNDCls as _potentialCls
 from ensembler.potentials._baseclasses import _perturbedPotentialNDCls as _perturbedPotentialCls
 
-from ensembler.integrator import _integratorCls,newtonianIntegrator
+from ensembler.integrator import _basicIntegrators, newtonian
 from ensembler.conditions._conditions import Condition
 
 class system:
@@ -33,7 +33,7 @@ class system:
     #static attributes
     state = data.basicState
 
-    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[Condition]=[],
+    def __init__(self, potential:_potentialCls, integrator:_basicIntegrators._integratorCls, conditions:Iterable[Condition]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
         ################################
         # Declare Attributes
@@ -99,7 +99,7 @@ class system:
         ##Make System Potential and initial State
         self.init_position(initial_position=position)
         ##do we need velocities?
-        if(issubclass(integrator.__class__, newtonianIntegrator)):
+        if(issubclass(integrator.__class__, newtonian.newtonianIntegrator)):
             self.init_velocities()
 
         ##check if system should be coupled to conditions:
@@ -113,6 +113,9 @@ class system:
                 condition.dt = self.integrator.dt
             else:
                 condition.dt=1
+
+        #init Trajectory
+        self.trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
 
         self.verbose = verbose
 
@@ -172,7 +175,7 @@ class system:
         self.veltemp = self.mass / const.gas_constant / 1000.0 * np.linalg.norm(self._currentVelocities) ** 2  # t
 
         self.updateEne()
-        self.set_current_state(currentPosition=self._currentPosition, currentVelocities=self._currentVelocities, currentForce=self._currentForce, currentTemperature=self.temperature)
+        self.updateCurrentState()
         return self._currentVelocities
 
     def _gen_rand_vel(self)->float:
@@ -239,7 +242,7 @@ class system:
         else:
             show_progress = False
 
-        if(withdrawTraj):
+        if(withdrawTraj or not isinstance(self.trajectory, pd.DataFrame)):
             self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
             self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
@@ -254,7 +257,7 @@ class system:
         
         #self.potential.set_simulation_mode() #TODO FIX
         step = 0
-        for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, disable=show_progress):
+        for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, disable=show_progress, leave=False):
             #if(show_progress and step%block_length==0):
                 #print(str(100*step//steps)+"%", end="\t")
 
@@ -315,12 +318,9 @@ class system:
 
     def getCurrentState(self)->state:
         return self.currentState
-    
-    def getTrajectoryObjects(self)->Iterable[state]:
-        return self.trajectory
 
     def getTrajectory(self)->pd.DataFrame:
-        return pd.DataFrame.from_dict([frame._asdict() for frame  in self.trajectory])
+        return self.trajectory #pd.DataFrame.from_dict([frame._asdict() for frame  in self.trajectory])
 
     def writeTrajectory(self, out_path:str)->str:
         if(not os.path.exists(os.path.dirname(out_path))):

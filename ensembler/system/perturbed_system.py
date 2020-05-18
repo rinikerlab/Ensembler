@@ -13,7 +13,7 @@ from ensembler.potentials._baseclasses import _potentialNDCls as _potentialCls
 from ensembler.potentials._baseclasses import _potential1DClsSymPYPerturbed as _perturbedPotentialCls
 
 from ensembler.system.basic_system import system
-from ensembler.integrator import _integratorCls
+from ensembler.integrator._basicIntegrators import _integratorCls
 from ensembler.conditions._conditions import Condition
 
 class perturbedSystem(system):
@@ -73,6 +73,6 @@ class perturbedSystem(system):
         self.updateEne()
 
     def _update_dHdlambda(self):
-        self._currentdHdLam = self.potential.dhdlam(self._currentPosition)
+        self._currentdHdLam = self.potential.dvdlam(self._currentPosition)
         self.updateCurrentState()
         return self._currentdHdLam

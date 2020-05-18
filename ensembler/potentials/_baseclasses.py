@@ -456,7 +456,6 @@ def notImplementedERR():
 """
 SYMPY POTENTIALS
 """
-
 class _potentialNDClsSymPY:
     '''
     potential base class
@@ -559,7 +558,6 @@ class _potential1DClsSymPY(_potentialNDClsSymPY):
     def dvdpos(self, positions:(Iterable[Number] or Number)) -> (Iterable[Number] or Number):
         '''
         calculates derivative with respect to position
-        :param lam: alchemical parameter lambda
         :param pos: position on 1D potential energy surface
         :return: derivative dh/dpos
         '''
@@ -572,7 +570,7 @@ class _potential2DClsSymPY(_potentialNDClsSymPY):
 
 
 class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
-    nStates:int = 2
+    nStates:int = 1
 
     lam = sp.symbols(u"λ")
 
@@ -584,10 +582,10 @@ class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
     dVdlam = notImplementedERR
 
     def __init__(self):
-        self.nStates = 2
+        self.nStates = 1
         self.nDim = 1
         super().__init__()
-        self.nStates = 2
+        self.nStates = 1
         self.nDim = 1 #check this
 
     def __str__(self)->str:
@@ -629,3 +627,13 @@ class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
     def set_lam(self, lam:float):
         self.constants.update({self.lam: lam})
         self._update_functions()
+
+    def dvdlam(self, positions:(Iterable[Number] or Number)) -> (Iterable[Number] or Number):
+        '''
+        calculates derivative with respect to lambda
+        :param lam: alchemical parameter lambda
+        :param pos: position on 1D potential energy surface
+        :return: derivative dh/dpos
+        '''
+        return np.squeeze(self._calculate_dVdpos(np.squeeze(positions)))
+

@@ -137,7 +137,10 @@ class envelopedPotential(_potentialNDCls):
 
         # Todo: think about n states with each m dims.
         if(self.nDim == -1):
-            self.nDim = V_is[0].nDim
+            if(issubclass(V_is[0].__class__, _potentialNDClsSymPY) and V_is[0].nDim in V_is[0].constants ): #nixe to be fixed
+                self.nDim = V_is[0].constants[V_is[0].nDim]
+            else:
+                self.nDim = V_is[0].nDim
 
         super().__init__(nDim=self.nDim)
 
@@ -223,9 +226,9 @@ class envelopedPotential(_potentialNDCls):
         #print("position", position)
         #print(self.Eoff_i, self.s, self.V_is)
 
-        partA = np.multiply(-self.sign*self.s, np.subtract(self.V_is[0].ene(position[0]), self.Eoff_i[0]))
+        partA = np.multiply(-self.s, np.subtract(self.V_is[0].ene(position[0]), self.Eoff_i[0]))
         if(len(self.Eoff_i) >1):
-            partB = np.multiply(-self.sign*self.s, np.subtract(self.V_is[1].ene(position[1]), self.Eoff_i[1]))
+            partB = np.multiply(-self.s, np.subtract(self.V_is[1].ene(position[1]), self.Eoff_i[1]))
             sum_prefactors = max(partA, partB) + np.log(1 + np.exp(min(partA, partB) - max(partA, partB)))
         else:
             sum_prefactors = partA + np.log(1 + np.exp(partA - partA))
@@ -235,7 +238,7 @@ class envelopedPotential(_potentialNDCls):
 
         # more than two states!
         for state in range(2, self.nStates):
-            partN = np.multiply(-self.sign*self.s, np.subtract(self.V_is[state].ene(position[state]), self.Eoff_i[state]))
+            partN = np.multiply(-self.s, np.subtract(self.V_is[state].ene(position[state]), self.Eoff_i[state]))
             sum_prefactors = max(sum_prefactors, partN) + np.log(1 + np.exp(min(sum_prefactors, partN) - max(sum_prefactors, partN)))
 
         #print(sum_prefactors)

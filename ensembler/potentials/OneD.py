@@ -274,7 +274,10 @@ class torsionPotential(_potential1DClsSymPY):
         super().__init__()
 
 class forceField:
-    pass
+
+    def __init__(self):
+        raise NotImplementedError("Not implemented yet, but this calss shall be used to link potential terms! ") 
+
 
 """
     PERTURBED POTENTIALS
@@ -302,6 +305,7 @@ class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
         self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.lam: lam}
         self.V_orig = self.Coupling
         super().__init__()
+
 
 
 class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):

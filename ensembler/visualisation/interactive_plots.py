@@ -1,32 +1,26 @@
 import matplotlib
 import ipywidgets
 
+import numpy as np
+from matplotlib import pyplot as plt
+
+from ensembler.potentials import OneD as pot
 from ensembler.potentials import ND as potN
 from ensembler.visualisation import plotPotentials as exPlot
 from ensembler.visualisation.plotConveyorBelt import plotEnsembler
-import numpy as np
-from matplotlib import pyplot as plt
-from ensembler.potentials import OneD as pot
 
-
-import ensembler.visualisation.plotConveyorBelt as plotEnsembler
-
-
-def interactive_conveyor_belt(conveyorBelt=None, nbins=100):
+def interactive_conveyor_belt(conveyorBelt=None, numsys:int=8, nbins:int=100, steps:int=100):
     
     #if none given build cvb
     if(isinstance(conveyorBelt, type(None))):
         import ensembler.potentials.OneD as pot
-        import ensembler.system as system
+        import ensembler.system.perturbed_system as system
         import ensembler.ensemble.replicas_dynamic_parameters as cvb
         import ensembler.integrator as integ
 
-        numsys = 8
-        steps = 1000
-
-        integrat = integ.metropolisMonteCarloIntegrator()
-        potial = pot.harmonicOscillator(fc=1.0, alpha=10.0, gamma=0.0)
-        syst = system.perturbedSystem(potential=potial , integrator=integrat)
+        integrat = integ.stochastic.metropolisMonteCarloIntegrator()
+        potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillator(k=1.0), Vb=pot.harmonicOscillator(k=2.0))
+        syst = system.perturbedSystem(potential=potential , integrator=integrat)
         conveyorBelt=cvb.ConveyorBelt(0.0, 8, system=syst, build=False)
         conveyorBelt.simulate(steps)
 
@@ -51,7 +45,8 @@ def interactive_conveyor_belt(conveyorBelt=None, nbins=100):
     nReps=conveyorBelt.nReplicas
     
     def redraw(CapLam, M):
-        drawEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)
+        plotEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)
+        
 
     #build layout and components
  
@@ -80,6 +75,7 @@ def interactive_conveyor_belt(conveyorBelt=None, nbins=100):
           right_sidebar=None,
           footer=None,
           align_items="center")
+          
     
     display(app)
     return app
@@ -177,7 +173,7 @@ class interactive_eds():
         for state_e in [V.ene(self.positions_state) for V in V_is]:
             self.ax.plot(self.positions_state, state_e, alpha=0.8, lw=5)
         self.ax.set_xlim([-4,(4*self.nstates)])
-        print(len(V_is))
+
         
         #pot
         self.Eoffs = self.eds_pot.Eoff_i

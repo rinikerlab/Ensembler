@@ -313,6 +313,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
 class dfEDS(threeStateZwanzigReweighting):
     pass
 
+"""
 class bennetAcceptanceRatio(zwanzigEquation):
     k, T, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T C  Vi_i Vj_i Vi_j Vj_j")
     equation:sp.function = (1/(k*T)) * (sp.log(sp.exp((1/(k*T)) * (Vi_j-Vj_j+C))) - sp.log(sp.exp((1/(k*T)) * (Vj_i-Vi_i+C))))
@@ -416,7 +417,7 @@ class bennetAcceptanceRatio(zwanzigEquation):
             mean_edV_i = np.mean(edV_i)
             mean_edV_j = np.mean(edV_j)
 
-\            # Return free energy difference
+           # Return free energy difference
             try:
                 dF = (1/beta) * (mean_edV_j / mean_edV_i).ln()
             except ValueError:
@@ -461,9 +462,6 @@ class bar(bennetAcceptanceRatio):
     pass
 
 
-
-"""
- 
 #Suff
 from itertools import combinations
 
