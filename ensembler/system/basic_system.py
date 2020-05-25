@@ -18,7 +18,8 @@ from ensembler.potentials.ND import envelopedPotential
 from ensembler.potentials._baseclasses import _potentialNDCls as _potentialCls
 from ensembler.potentials._baseclasses import _perturbedPotentialNDCls as _perturbedPotentialCls
 
-from ensembler.integrator import _basicIntegrators, newtonian
+from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.integrator import newtonian
 from ensembler.conditions._conditions import Condition
 
 class system:
@@ -33,7 +34,7 @@ class system:
     #static attributes
     state = data.basicState
 
-    def __init__(self, potential:_potentialCls, integrator:_basicIntegrators._integratorCls, conditions:Iterable[Condition]=[],
+    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[Condition]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
         ################################
         # Declare Attributes

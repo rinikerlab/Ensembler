@@ -9,7 +9,6 @@ import numpy as np
 from typing import Tuple
 import scipy.constants as const
 
-#from ensembler import system
 
 class _integratorCls:
     """

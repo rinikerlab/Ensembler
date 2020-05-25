@@ -12,8 +12,26 @@ except Exception as err:
     print()
     traceback.print_exc()
     #exit(1)
+
+matplotlib_missing=False
+ipywidgets_missing=False
 try:
-    from ensembler import visualisation
-except Exception as err:
+    import matplotlib
+    matplotlib_missing=True
+except ImportError as err:
     warnings.warn("Could not find matplotlib or ipywidgets therefore no Visualisation.")
+
+try:
+    import ipywidgets
+    ipywidgets_missing=True
+except ImportError as err:
+    warnings.warn("Could not find matplotlib or ipywidgets therefore no Visualisation.")
+
+if(matplotlib_missing or ipywidgets_missing):
+    warnings.warn("Could not import Visualisation-Module.")
+else:
+    try:
+        from ensembler import visualisation
+    except Exception as err:
+        warnings.warn("Could not import Visualisation-Module.")
 

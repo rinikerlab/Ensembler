@@ -33,12 +33,12 @@ This project tries to give users very easy to use and simple functionality to de
 
    This module contains predefined visualization a and animation functions.
 
+## How To Install
 
 
 
 
 ### Authors
 
-Benjamin Schroeder
-
+Benjamin Schroeder;
 David Hahn
