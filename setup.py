@@ -10,7 +10,7 @@ import sys
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'Ensembler'
+NAME = 'ensembler'
 DESCRIPTION = 'This Package shall be a tool for fast and efficient development of theoretic thermodynamic simulation tools or teaching.'
 URL = 'https://github.com/rinikerlab/Ensembler'
 EMAIL = 'bschroed@ethz.ch'
