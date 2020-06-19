@@ -4,8 +4,8 @@ Module: System
 """
 
 import os, numpy as np
-from tqdm import tqdm
-from typing import Iterable, NoReturn
+from tqdm import tqdm_notebook as tqdm
+from typing import Iterable, NoReturn, List, Sized
 from numbers import Number
 import pandas as pd
 import scipy.constants as const
@@ -14,12 +14,11 @@ pd.options.mode.use_inf_as_na = True
 
 
 from ensembler.util import dataStructure as data
-from ensembler.potentials.ND import envelopedPotential
-from ensembler.potentials._baseclasses import _potentialNDCls as _potentialCls
-from ensembler.potentials._baseclasses import _perturbedPotentialNDCls as _perturbedPotentialCls
+from ensembler.potentials._baseclasses import _potentialCls
 
 from ensembler.integrator._basicIntegrators import _integratorCls
-from ensembler.integrator import newtonian
+from ensembler.integrator.newtonian import newtonianIntegrator
+
 from ensembler.conditions._conditions import Condition
 
 class system:
@@ -34,17 +33,50 @@ class system:
     #static attributes
     state = data.basicState
 
+
+    """
+    Attributes:
+    """
+    ##POTENTIAL CLASS
+    @property
+    def potential(self)-> _potentialCls:
+        return self.m_potential
+    
+    @potential.setter
+    def potential(self, potential:_potentialCls):
+        if(issubclass(potential.__class__, _potentialCls)):
+            self.m_potential = potential
+        else:
+            raise ValueError("Potential needs to be a subclass of potential")
+
+    @property
+    def integrator(self)->_integratorCls:
+        return self.m_integrator
+    
+    @integrator.setter
+    def integrator(self, integrator:_integratorCls):
+        if(issubclass(integrator.__class__, _integratorCls)):
+            self.m_integrator = integrator
+        else:
+            raise ValueError("Integrator needs to be a subclass of integrator")
+   
+    @property
+    def conditions(self)->List[Condition]:
+        return self.m_conditions
+    
+    @conditions.setter
+    def conditions(self, conditions:List[Condition]):
+        if(isinstance(conditions, List) and all([issubclass(condition.__class__, Condition) for condition in conditions])):
+            self.m_conditions = conditions
+        else:
+            raise ValueError("Conditions needs to be a List of objs, that are a subclass of Condition")
+    
     def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[Condition]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
         ################################
         # Declare Attributes
         #################################
-        
-        ##essential parts
-        self.potential: _potentialCls = None
-        self.integrator: _integratorCls = None
-        self.conditions: Iterable[Condition] = []
-
+    
         ##Physical parameters
         self.temperature: float = 298.0
         self.mass: float = 1  # for one particle systems!!!!
@@ -97,11 +129,12 @@ class system:
             self.nstates = 1
 
         #PREPARE THE SYSTEM
-        ##Make System Potential and initial State
-        self.init_position(initial_position=position)
-        ##do we need velocities?
-        if(issubclass(integrator.__class__, newtonian.newtonianIntegrator)):
-            self.init_velocities()
+        #Only init velocities, if the integrator uses them
+        if(issubclass(integrator.__class__, newtonianIntegrator)):
+            init_velocity=True
+        else:
+            init_velocity=False
+        self.initialise(withdraw_Traj=True, init_position=True, init_velocity=init_velocity, set_initial_position=position)
 
         ##check if system should be coupled to conditions:
         for condition in self.conditions:
@@ -115,59 +148,49 @@ class system:
             else:
                 condition.dt=1
 
-        #init Trajectory
-        self.trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-
         self.verbose = verbose
 
     """
         Initialisation
     """
-    def initialise(self, withdraw_Traj:bool=False, init_position:bool=True, init_velocity:bool=True):
+    def initialise(self, withdraw_Traj:bool=True, init_position:bool=True, init_velocity:bool=True, set_initial_position=None):
         if(withdraw_Traj):
             self.trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
 
         if(init_position):
-            self.init_position()
+            self._init_position(initial_position=set_initial_position)
 
         #Try to init the force
         try:
-            self._currentForce = self.potential.dhdpos(self.initial_position)  #initialise forces!    #todo!
+            self._currentForce = self.potential.dvdpos(self.initial_position)  #initialise forces!    #todo!
         except:
             warnings.warn("Could not initialize the force of the potential? Check if you need it!")
 
         if(init_velocity):
-            self.init_velocities()
+            self._init_velocities()
 
         # set initial Temperature
         self._currentTemperature = self.temperature
 
         #update current state
-        self.updateEne()
+        self.updateSystemProperties()
         self.updateCurrentState()
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
-    def init_position(self, initial_position=None):
-
-        #Set initial position
-        if (type(initial_position) == type(None)):
+    def _init_position(self, initial_position=None):
+        if (isinstance(initial_position, type(None))):
             self.initial_position = self.randomPos()
-        elif(isinstance(initial_position, Iterable)):
-            if(len(initial_position) == 1 and  len(np.array(initial_position.shape))==1):
-                self.initial_position=np.array(self.initial_position).item()
-            else:
-                self.initial_position = initial_position
-        elif(isinstance(initial_position, Number)):
+        elif(isinstance(initial_position, (Number,Iterable))):
             self.initial_position = initial_position
         else:
             raise Exception("did not understand the initial position!")
 
         self._currentPosition = self.initial_position
-
+        self.updateCurrentState()
         return self.initial_position
 
-    def init_velocities(self)-> NoReturn:
+    def _init_velocities(self)-> NoReturn:
         if(self.nStates>1):
             self._currentVelocities = [[self._gen_rand_vel() for dim in range(self.nDim)] for s in range(self.nStates)] if(self.nDim>1) else [self._gen_rand_vel() for state in range(self.nStates)]
         else:
@@ -175,23 +198,24 @@ class system:
 
         self.veltemp = self.mass / const.gas_constant / 1000.0 * np.linalg.norm(self._currentVelocities) ** 2  # t
 
-        self.updateEne()
         self.updateCurrentState()
         return self._currentVelocities
 
     def _gen_rand_vel(self)->float:
         return np.sqrt(const.gas_constant / 1000.0 * self.temperature / self.mass) * np.random.normal()
 
-    def randomPos(self)-> Iterable:
-        print("SYSTEM ASSIGNS random POSITION FOR: states: "+str(self.nStates)+"\tnDim: "+str(self.nDim))
-        if(self.nStates > 1):    #TODO: remains to be tested!
+    def randomPos(self)-> (np.array or np.float):
+        """uncoupled states
+        if(self.nStates > 1):
             return [np.subtract(np.multiply(np.random.rand(self.nDim),20),10) for state in range(self.nStates)]
         else:
-            random_pos = np.squeeze(np.array([np.subtract(np.multiply(np.random.rand(self.nDim), 20), 10) for state in range(self.nStates)]))
-            if(len(random_pos.shape) == 1 and random_pos.shape[0] == 1):
-                random_pos = random_pos.item()
-
+        """
+        random_pos = np.squeeze(np.array(np.subtract(np.multiply(np.random.rand(self.nDim), 20), 10)))
+        if(len(random_pos.shape) == 0):
+            return np.float(random_pos)
+        else:
             return random_pos
+
 
     """
         Update
@@ -208,21 +232,25 @@ class system:
     def totPot(self)-> (Iterable[Number] or Number or None):
         return self.potential.ene(self._currentPosition)
 
-    def updateTemp(self)-> NoReturn:
-        """ this looks like a thermostat like thing! not implemented!@ TODO calc velocity from speed"""
-        self._currentTemperature = self._currentTemperature
-
-    def updateEne(self)-> NoReturn:
-        self._currentTotPot = self.totPot()
-        self._currentTotKin = self.totKin()
-        self._currentTotE = self._currentTotPot if(np.isnan(self._currentTotKin))else np.add(self._currentTotKin, self._currentTotPot)
+    def updateSystemProperties(self)-> NoReturn:
+        self._updateEne()
+        self._updateTemp()
 
     def updateCurrentState(self)-> NoReturn:
         self.currentState = self.state(self._currentPosition, self._currentTemperature,
                                         self._currentTotE, self._currentTotPot, self._currentTotKin,
                                         self._currentForce, self._currentVelocities)
 
-    def _update_current_vars(self):
+    def _updateTemp(self)-> NoReturn:
+        """ this looks like a thermostat like thing! not implemented!@ TODO calc velocity from speed"""
+        self._currentTemperature = self._currentTemperature
+
+    def _updateEne(self)-> NoReturn:
+        self._currentTotPot = self.totPot()
+        self._currentTotKin = self.totKin()
+        self._currentTotE = self._currentTotPot if(np.isnan(self._currentTotKin))else np.add(self._currentTotKin, self._currentTotPot)
+
+    def _update_current_vars_from_current_state(self):
         self._currentPosition = self.currentState.position
         self._currentTemperature = self.currentState.temperature
         self._currentTotE = self.currentState.totEnergy
@@ -234,39 +262,27 @@ class system:
     """
         Functionality
     """
+    def simulate(self, steps:int,  withdrawTraj:bool=False, save_every_state:int=1, initSystem:bool=False, verbosity:bool=True)-> state:
 
-    def simulate(self, steps:int,  withdrawTraj:bool=False, save_every_state:int=1, initSystem:bool=False,)-> state:
-        
-        if(steps > 1000 and self.verbose):
-            show_progress =True
-            block_length = steps*0.1
-        else:
-            show_progress = False
-
-        if(withdrawTraj or not isinstance(self.trajectory, pd.DataFrame)):
+        if(withdrawTraj):
             self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
             self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
-        if(initSystem): #type(self._currentVelocities) == type(None) or type(self._currentPosition) == type(None)
-            self.init_velocities()
-            self.init_position(initial_position=self.initial_position)
+        if(initSystem):
+            self._init_position()
+            self._init_velocities()
 
         self.updateCurrentState()
-        self.updateEne()
-        
-        #if(show_progress): print("Progress: ", end="\t")
-        
-        #self.potential.set_simulation_mode() #TODO FIX
-        step = 0
-        for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, disable=show_progress, leave=False):
-            #if(show_progress and step%block_length==0):
-                #print(str(100*step//steps)+"%", end="\t")
+        self.updateSystemProperties()
+
+        #Simulation loop
+        for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, leave=verbosity):
 
             #Do one simulation Step. Todo: change to do multi steps
             self.propergate()
 
-            #Calc new Energy
-            self.updateEne()
+            #Calc new Energy&and other system properties
+            self.updateSystemProperties()
 
             #Apply Restraints, Constraints ...
             self.applyConditions()
@@ -274,14 +290,12 @@ class system:
             #Set new State
             self.updateCurrentState()
 
-            if(step%save_every_state == 0 ):
+            if(step%save_every_state == 0 and step != steps-1):
                 self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
-        if(step%save_every_state != 0 ):
-            self.trajectory.append(self.currentState)
+        self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
         self.potential.set_simulation_mode(False)
 
-        #if(show_progress): print("100%")
         return self.currentState
 
     def propergate(self)->NoReturn:
@@ -297,20 +311,26 @@ class system:
         self._currentVelocities = newVelocity
         self._currentForce = newForces
 
-        self.updateTemp()
-        self.updateEne()
+        self._updateTemp()
+        self._updateEne()
         self.updateCurrentState()
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
     def revertStep(self)-> NoReturn:
         self.currentState = self.trajectory[-2]
-        self._update_current_vars()
+        self._update_current_vars_from_current_state()
         return
 
+    def _update_state_from_traj(self)-> NoReturn:
+        print(self.trajectory.iloc[-1].to_dict())
+        self.currentState = self.state(**self.trajectory.iloc[-1].to_dict())
+        self._update_current_vars_from_current_state()
+        return
     """
         Getter
     """
+    #Getters
     def getTotPot(self)-> (Iterable[Number] or Number or None):
         return self._currentTotPot
 
@@ -321,27 +341,26 @@ class system:
         return self.currentState
 
     def getTrajectory(self)->pd.DataFrame:
-        return self.trajectory #pd.DataFrame.from_dict([frame._asdict() for frame  in self.trajectory])
+        return self.trajectory
 
+    #writing out
     def writeTrajectory(self, out_path:str)->str:
         if(not os.path.exists(os.path.dirname(out_path))):
             raise Exception("Could not find output folder: "+os.path.dirname(out_path))
-        df = pd.DataFrame.from_dict([frame._asdict() for frame  in self.trajectory])
-        df.to_csv(out_path, header=True)
-        del df
+        self.trajectory.to_csv(out_path, header=True)
         return out_path
 
-
+    #Setters
     def set_position(self, position):
         self._currentPosition = position
         if(len(self.trajectory) == 0):
             self.initial_position = self._currentPosition
-        self.updateEne()
+        self._updateEne()
         self.updateCurrentState()
 
     def set_velocities(self, velocities):
-        self._currentVelocities = position
-        self.updateEne()
+        self._currentVelocities = velocities
+        self._updateEne()
         self.updateCurrentState()
 
     def set_current_state(self, currentPosition:(Number or Iterable), currentVelocities:(Number or Iterable)=0, currentForce:(Number or Iterable)=0, currentTemperature:Number=298):
@@ -351,11 +370,11 @@ class system:
         self._currentTemperature = currentTemperature
         self.currentState = self.state(self._currentPosition, self._currentTemperature, np.nan, np.nan, np.nan, np.nan, np.nan)
 
-        self.updateEne()
+        self._updateEne()
         self.updateCurrentState()
 
     def set_Temperature(self, temperature):
         """ this looks like a thermostat like thing! not implemented!@"""
         self.temperature = temperature
         self._currentTemperature = temperature
-        self.updateEne()
+        self._updateEne()
