@@ -105,7 +105,7 @@ class MultiReplicaApproach():
 
 class ReplicaExchange(MultiReplicaApproach):
     ##Parameters
-    verbose:bool=True
+    verbose:bool=False
     ##Exchange Variables
     _currentTrial:int
     nSteps_between_trials:int
