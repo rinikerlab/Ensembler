@@ -7,8 +7,9 @@ import os, sys
 sys.path.append(os.path.dirname(__file__)+"/..")
 
 from ensembler.system import system
+from ensembler.visualisation import style
 
-def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None, out_path:str=None, out_writer:str="pillow", dpi:int=100)-> (animation.Animation, (str or None)):
+def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None, out_path:str=None, out_writer:str="pillow", dpi:int=style.dpi_animation)-> (animation.Animation, (str or None)):
     # plotting
     x1data = sys.trajectory.position
     y1data = sys.trajectory.totPotEnergy
@@ -34,15 +35,15 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
     # figures
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.plot(xtot_space, ytot_space, label="wholePot")
+    ax.plot(xtot_space, ytot_space, label="Potential", c=style.potential_light)
     # data structures in ani
-    line, = ax.plot([], [], c="blue", alpha=0.3, lw=2)
+    line, = ax.plot([], [], c=style.potential_light, alpha=0.3, lw=2)
     line.set_data(xtot_space, ytot_space)
 
-    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap='inferno')  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
-    start_p, = ax.plot([], [], "bo", c="g", ms=10)
-    end_p, = ax.plot([], [], "bo", c="r", ms=10)
-    curr_p, = ax.plot([], [], "bo", c="k", ms=10)
+    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap=style.animation_traj)  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
+    start_p, = ax.plot([], [], "bo", c=style.traj_start, ms=10)
+    end_p, = ax.plot([], [], "bo", c=style.traj_end, ms=10)
+    curr_p, = ax.plot([], [], "bo", c=style.traj_current, ms=10)
 
     # Params
     ax.set_xlabel("$r$")
