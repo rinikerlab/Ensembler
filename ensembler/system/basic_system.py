@@ -16,7 +16,9 @@ pd.options.mode.use_inf_as_na = True
 from ensembler.util import dataStructure as data
 from ensembler.potentials._baseclasses import _potentialCls
 
-from ensembler.integrator._basicIntegrators import _integratorCls
+import ensembler.util.ensemblerTypes as ensemblerTypes
+_integratorCls = ensemblerTypes.integrator
+
 from ensembler.integrator.newtonian import newtonianIntegrator
 
 from ensembler.conditions._conditions import Condition
@@ -55,10 +57,7 @@ class system:
     
     @integrator.setter
     def integrator(self, integrator:_integratorCls):
-        if(issubclass(integrator.__class__, _integratorCls)):
-            self.m_integrator = integrator
-        else:
-            raise ValueError("Integrator needs to be a subclass of integrator")
+        self.m_integrator = integrator
    
     @property
     def conditions(self)->List[Condition]:
