@@ -1,5 +1,6 @@
 import os, sys
 import numpy as np
+import matplotlib
 from matplotlib import pyplot as plt, colorbar
 from typing import Tuple, List
 from numbers import Number
@@ -757,7 +758,7 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
                 ax.set_xticks([])
 
     # colorbar
-    cmap = matplotlib.cm.get_cmap(style.qualitative_map)
+    cmap = style.qualitative_map
     norm = matplotlib.colors.Normalize(vmin=minV, vmax=maxV)
     cbaxes = fig.add_axes([1.0, 0.1, 0.03, 0.8])
     cb = matplotlib.colorbar.ColorbarBase(cbaxes, cmap=style.qualitative_map,
