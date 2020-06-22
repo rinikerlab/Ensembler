@@ -378,10 +378,12 @@ class envelopedPotential(ND.envelopedPotential):
         :param s:
         :param Eoff_i:
         """
-
         super().__init__(V_is=V_is, s=s, Eoff_i=Eoff_i)
 
         #Sympy Implementation
+        self.nStates = len(V_is)
+        if(isinstance(Eoff_i, type(None))):
+            Eoff_i = [0 for i in range(self.nStates)]
         Eoffis = {"Eoff_"+str(i): Eoff_i[i] for i in range(self.nStates)}
         self.statePotentials =  {"state_"+str(j): V_is[j] for j in range(self.nStates)}
         self.states =  sp.Matrix([sp.symbols(j)-sp.symbols(k) for j,k in zip(self.statePotentials, Eoffis)])
@@ -455,8 +457,4 @@ class envelopedPotential(ND.envelopedPotential):
         #print(sum_prefactors)
         Vr = np.multiply(np.divide(-1, float(self.s)), sum_prefactors)
         return Vr.item() if(len(Vr.shape) == 1 and Vr.shape[0] == 1) else Vr 
-
-
-if __name__ == "__main__":
-    pass
 
