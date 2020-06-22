@@ -4,92 +4,142 @@
 """
 
 import numpy as np
-from typing import Tuple
 import scipy.constants as const
 
-from ensembler import system
+from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import Union, List, Tuple, Number, Callable
 from ensembler.integrator._basicIntegrators import _integratorCls
 
+class stochasticIntegrator(_integratorCls):
+    #Params
+    minStepSize:Number=None
+    maxStepSize:Number=None
+    spaceRange:Tuple[Number, Number] = None
+    resolution:float = 0.01   #increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions.
+    fixedStepSize: (Number or List[Number])
 
-class monteCarloIntegrator(_integratorCls):
+    #calculation
+    posShift:float = 0  
+    
+    #Limits:
+    _critInSpaceRange = lambda self,pos: self.spaceRange == None or (self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange))
+
+    def randomShift(self, nDim:int)->Union[float, np.array]:
+        """
+        randomShift 
+            This function calculates the shift for the current position.
+
+        Parameters
+        ----------
+        nDim : int
+            gives the dimensionality of the position, defining the ammount of shifts.
+
+        Returns
+        -------
+        Union[float, List[float]]
+            returns the Shifts
+        """
+
+        #which sign will the shift have?
+        sign = np.array([-1 if(x <50) else 1 for x in np.random.randint(low=0, high=100, size=nDim)])
+
+        #Check if there is a space restriction? - converges faster
+        if(not isinstance(self.fixedStepSize, type(None))):
+            shift = np.array(np.full(shape=nDim, fill_value=self.fixedStepSize), ndmin=1)
+        elif(not isinstance(self.spaceRange, type(None))):
+            shift = np.array(np.multiply(np.abs(np.random.randint(low=self.spaceRange[0]/self.resolution, high=self.spaceRange[1]/self.resolution, size=nDim)), self.resolution), ndmin=1)
+        else:
+            shift = np.array(np.abs(np.random.rand(nDim)), ndmin=1)
+
+        self.posShift = np.multiply(sign, shift)
+
+        
+        #Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
+        if(self.maxStepSize != None and any([s > self.maxStepSize for s in shift])):#is there a maximal step size?
+            self.posShift = np.multiply(sign, self.maxStepSize)
+        elif(self.minStepSize != None and any([s < self.minStepSize for s in shift])):
+            self.posShift = np.multiply(sign, self.minStepSize)
+        else:
+            self.posShift = np.multiply(sign, shift)
+        
+
+        return np.squeeze(self.posShift)
+
+    
+
+class monteCarloIntegrator(stochasticIntegrator):
     """
-    ..autoclass: monteCarloIntegrator
+    monteCarloIntegrator 
         This class implements the classic monte carlo integrator.
         It choses its moves purely randomly.
     """
-    resolution:float = 0.01   #increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions.
-    fixedStepSize: (float or list)
 
-    def __init__(self, maxStepSize:float=None, minStepSize:float=None, spaceRange:tuple=None, fixedStepSize=None):
+    def __init__(self, maxStepSize:Number=None, minStepSize:Number=None, spaceRange:Tuple[Number,Number]=None, fixedStepSize:Number=None):
+        """
+        __init__ 
+            This is the Constructor of the MonteCarlo integrator.
+
+        Parameters
+        ----------
+        maxStepSize : Number, optional
+            maximal size of an integrationstep in any direction, by default None
+        minStepSize : Number, optional
+            minimal size of an integration step in any direction, by default None
+        spaceRange : Tuple[Number, Number], optional
+            maximal and minimal allowed position for after an integration step. 
+            If not fullfilled, step is rejected. By default None
+        fixedStepSize : Number, optional
+            this option restrains each integration step to a certain size in each dimension, by default None
+        """
         self.fixedStepSize =  None if(isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
         self.maxStepSize = maxStepSize
         self.minStepSize = minStepSize
         self.spaceRange = spaceRange
         pass
     
-    def step(self, system)-> Tuple[float, None, float]:
+    def step(self, system:systemType)-> Tuple[float, None, float]:
         """
-        ..autofunction: step
+        step 
             This function is performing an integration step in MonteCarlo fashion.
-        :param system: This is a system, that should be integrated.
-        :type system: ensembler.system.system
-        :return: (new Position, None, position Shift)
-        :rtype: (float, None, float)
+
+        Parameters
+        ----------
+        system : systemType
+           A system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, None, float]
+            This Tuple contains the new: (new Position, None, position Shift/ force)
+
         """
+
         # integrate
         # while no value in spaceRange was found, terminates in first run if no spaceRange
+        current_state = system.currentState
+        self.oldpos = current_state.position
+        
         while(True):
-            current_state = system.currentState
-
-            self.oldpos = current_state.position
             self.randomShift(system.nDim)
             self.newPos = np.add(self.oldpos,self.posShift)
 
             #only get positions in certain range or accept if no range
             if(self._critInSpaceRange(self.newPos)):
                 break
-            else:
-                self.newPos = self.oldpos           #reject step outside of range
 
-        return self.newPos, np.nan, self.posShift
+        if(self.verbose):
+            print(str(self.__name__)+": current position\t ", self.oldpos)
+            print(str(self.__name__)+": shift\t ", self.posShift)
+            print(str(self.__name__)+": newPosition\t ", self.newPos)
+            print("\n")
+
+        return np.squeeze(self.newPos), np.nan, np.squeeze(self.posShift)
     
-    def randomShift(self, nDim:int)->float:
-        """
-        ..autofunction: randomShift
-            This function calculates the shift for the current position.
-
-        :return: position shift
-        :rtype: float
-        """
-        #which sign will the shift have?
-        sign = np.array([-1 if(x <50) else 1 for x in np.random.randint(low=0, high=100, size=nDim)])
-
-        #Check if there is a space restriction? - converges faster
-        ##TODO: Implement functional
-        if(not isinstance(self.fixedStepSize, type(None))):
-            shift = self.fixedStepSize
-        elif(self.spaceRange!=None):
-            shift = np.multiply(np.abs(np.random.randint(low=self.spaceRange[0]/self.resolution, high=self.spaceRange[1]/self.resolution, size=nDim)), self.resolution)
-        else:
-            shift = np.abs(np.random.rand(nDim))
-        #print(sign, shift)
-        #Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
-        if(self.maxStepSize != None and shift > self.maxStepSize):#is there a maximal step size?
-            self.posShift = np.multiply(sign, self.maxStepSize)
-        elif(self.minStepSize != None and shift < self.minStepSize):
-            self.posShift = np.multiply(sign, self.minStepSize)
-        else:
-            self.posShift = np.multiply(sign, shift)
-
-        if(nDim == 1):  #TODO Make Effiecient?
-            self.posShift = self.posShift[0]
-
-        return self.posShift
 
 
-class metropolisMonteCarloIntegrator(monteCarloIntegrator):
+class metropolisMonteCarloIntegrator(stochasticIntegrator):
     """
-    ..autoclass: metropolisMonteCarloInegrator
+    metropolisMonteCarloIntegrator 
         This class is implementing a metropolis monte carlo Integrator.
         In opposite to the Monte Carlo Integrator, that is completley random, this integrator has limitations to the randomness.
         Theis limitation is expressed in the Metropolis Criterion.
@@ -107,58 +157,112 @@ class metropolisMonteCarloIntegrator(monteCarloIntegrator):
             $ decision:  True if( 0.5 < p_A(E_{t}, E_{t-1}, T)) else False
             with:
                 - $k_b$ as Boltzmann Constant
+
     """
-    #
+    
     #Parameters:
     metropolisCriterion=None    #use a different Criterion
     randomnessIncreaseFactor:float = 1  #tune randomness of your results
-    maxIterationTillAccept:float = 100  #how often shall the integrator iterate till it accepts a step forcefully
+    maxIterationTillAccept:float = np.inf  #how often shall the integrator iterate till it accepts a step forcefully
+    convergence_limit:int=1000  # after reaching a certain limit abort iteration
 
     #METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
-    _defaultRandomness = lambda self, ene_new, currentState: ((1/self.randomnessIncreaseFactor)*np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy))) #pseudocount  for equal energies
+    _defaultRandomness = lambda self, ene_new, currentState: ((1/self.randomnessIncreaseFactor)*np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
     ##default Metropolis Criterion
     _defaultMetropolisCriterion = lambda self, ene_new, currentState: (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
-    ## original criterion not useful causes overflows:
-    #_defaultMetropolisCriterion = lambda self, ene_new, currentState: True if(0.5 > min(1, np.e**(-1/(const.k * currentState.temperature)*(ene_new-currentState.totPotEnergy)))) else False
 
-    def __init__(self, minStepSize:float=None, maxStepSize:float=None, spaceRange:tuple=None, metropolisCriterion=None, randomnessIncreaseFactor=1, maxIterationTillAccept:int=100, fixedStepSize=None):
+    def __init__(self, minStepSize:float=None, maxStepSize:float=None, spaceRange:tuple=None, fixedStepSize=None, 
+                metropolisCriterion=None, randomnessIncreaseFactor=1, maxIterationTillAccept:int=np.inf):
+        """
+        __init__ 
+            This is the Constructor of the Metropolis-MonteCarlo integrator.
+
+
+        Parameters
+        ----------
+        maxStepSize : Number, optional
+            maximal size of an integrationstep in any direction, by default None
+        minStepSize : Number, optional
+            minimal size of an integration step in any direction, by default None
+        spaceRange : Tuple[Number, Number], optional
+            maximal and minimal allowed position for after an integration step. 
+            If not fullfilled, step is rejected. By default None
+        fixedStepSize : Number, optional
+            this option restrains each integration step to a certain size in each dimension, by default None
+
+        metropolisCriterion : Callable, optional
+            The metropolis criterion deciding if a step is accepted if None.
+            But can be adapted by user providing a function as argument. By default None
+        randomnessIncreaseFactor : int, optional
+            arbitrary factor, controlling the ammount of randomness(the bigger the more random steps), by default 1
+        maxIterationTillAccept : int, optional
+            number, after which a step is accepted, regardless its likelihood (turned off if np.inf). By default None
+        """
+
+        #Integration Step Constrains
         self.fixedStepSize = None if(isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
         self.maxStepSize = maxStepSize
         self.minStepSize = minStepSize
         self.spaceRange = spaceRange
+
+
+        #Metropolis Criterions
         self.randomnessIncreaseFactor = randomnessIncreaseFactor
         self.maxIterationTillAccept = maxIterationTillAccept
+        self.convergence_limit = self.convergence_limit if(isinstance(maxIterationTillAccept, type(None))) else maxIterationTillAccept+1
+        
         if(metropolisCriterion == None):
             self.metropolisCriterion = self._defaultMetropolisCriterion
         else:
             self.metropolisCriterion = metropolisCriterion
 
-    def step(self, system):
+
+    def step(self, system:systemType)-> Tuple[float, None, float]:
         """
-        ..autofunction: step
-            This function is performing an integration step in MetropolisMonteCarlo fashion.
-        :param system: This is a system, that should be integrated.
-        :type system: ensembler.system.system
-        :return: (new Position, None, position Shift)
-        :rtype: (float, None, float)
+        step 
+            This function is performing an Metropolis Monte Carlo integration step.
+
+        Parameters
+        ----------
+        system : systemType
+            A system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, None, float]
+            This Tuple contains the new: (new Position, None, position Shift/ force)
+
         """
 
-        iterstep = 0
+        current_iteration = 0
         current_state = system.currentState
         self.oldpos = current_state.position
         nDim = system.nDim
+        
         # integrate position
-        while(True):    #while no value in spaceRange was found, terminates in first run if no spaceRange
+        while(current_iteration <= self.convergence_limit and current_iteration<=self.maxIterationTillAccept):    #while no value in spaceRange was found, terminates in first run if no spaceRange
             self.randomShift(nDim)
             #eval new Energy
             system._currentPosition = np.add(self.oldpos, self.posShift)
+            system._currentForce = self.posShift
             ene = system.totPot()
 
             #MetropolisCriterion
-            if ((self._critInSpaceRange(system._currentPosition) and self.metropolisCriterion(ene, current_state)) or iterstep==self.maxIterationTillAccept):
+            if ((self._critInSpaceRange(system._currentPosition) and self.metropolisCriterion(ene, current_state))):
                 break
             else:   #not accepted
-                iterstep += 1
+                current_iteration += 1
                 continue
-        return system._currentPosition , None, self.posShift
+        if(current_iteration >= self.convergence_limit):
+            raise ValueError("Metropolis-MonteCarlo integrator did not converge! Think about the maxIterationTillAccept")
+
+        self.newPos=self.oldpos
+        if(self.verbose):
+            print(str(self.__name__)+": current position\t ", self.oldpos)
+            print(str(self.__name__)+": shift\t ", self.posShift)
+            print(str(self.__name__)+": newPosition\t ", self.newPos)
+            print(str(self.__name__)+": iteration "+str(current_iteration)+"/"+str(self.convergence_limit))
+            print("\n")
+
+        return np.squeeze(system._currentPosition), np.nan, np.squeeze(self.posShift)
