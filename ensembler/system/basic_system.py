@@ -21,6 +21,7 @@ _integratorCls = ensemblerTypes.integrator
 
 from ensembler.integrator.newtonian import newtonianIntegrator
 
+from ensembler.integrator import stochastic
 from ensembler.conditions._conditions import Condition
 
 class system:
@@ -128,7 +129,7 @@ class system:
 
         #PREPARE THE SYSTEM
         #Only init velocities, if the integrator uses them
-        if(issubclass(integrator.__class__, newtonianIntegrator)):
+        if(issubclass(integrator.__class__, (newtonian.newtonianIntegrator, stochastic.langevinIntegrator))) :
             init_velocity=True
         else:
             init_velocity=False

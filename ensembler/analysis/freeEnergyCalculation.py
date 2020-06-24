@@ -462,7 +462,6 @@ class bar(bennetAcceptanceRatio):
     pass
 
 
-#Suff
 from itertools import combinations
 
 # eds_zwanzig
