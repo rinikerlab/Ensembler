@@ -1,4 +1,4 @@
-import numpy as np
+import numpy as np, sympy as sp
 from numbers import Number
 from typing import Iterable, Sized, Union, Dict
 from concurrent.futures.thread import ThreadPoolExecutor

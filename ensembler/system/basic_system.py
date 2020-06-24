@@ -129,7 +129,7 @@ class system:
 
         #PREPARE THE SYSTEM
         #Only init velocities, if the integrator uses them
-        if(issubclass(integrator.__class__, (newtonian.newtonianIntegrator, stochastic.langevinIntegrator))) :
+        if(issubclass(integrator.__class__, (newtonianIntegrator, stochastic.langevinIntegrator))) :
             init_velocity=True
         else:
             init_velocity=False

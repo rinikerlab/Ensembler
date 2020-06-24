@@ -370,12 +370,12 @@ class langevinIntegrator(_integratorCls):
 
 
         if(self.verbose):
-            print("INTEGRATOR: current forces\t ", self.newForces)
-            print("INTEGRATOR: old Position\t ", sef._oldPosition)
-            print("INTEGRATOR: current_position\t ", currentPosition)
-            print("INTEGRATOR: current_velocity\t ", currentVelocity)
-            print("INTEGRATOR: newPosition\t ", new_position)
-            print("INTEGRATOR: newVelocity\t ", new_velocity)
+            print(str(self.__name__)+": current forces\t ", self.newForces)
+            print(str(self.__name__)+": old Position\t ", sef._oldPosition)
+            print(str(self.__name__)+": current_position\t ", currentPosition)
+            print(str(self.__name__)+": current_velocity\t ", currentVelocity)
+            print(str(self.__name__)+": newPosition\t ", new_position)
+            print(str(self.__name__)+": newVelocity\t ", new_velocity)
             print("\n")
         return new_position, new_velocity, self.newForces  # add random number
 
