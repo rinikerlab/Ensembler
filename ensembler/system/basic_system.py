@@ -20,6 +20,7 @@ from ensembler.potentials._baseclasses import _perturbedPotentialNDCls as _pertu
 
 from ensembler.integrator._basicIntegrators import _integratorCls
 from ensembler.integrator import newtonian
+from ensembler.integrator import stochastic
 from ensembler.conditions._conditions import Condition
 
 class system:
@@ -100,7 +101,7 @@ class system:
         ##Make System Potential and initial State
         self.init_position(initial_position=position)
         ##do we need velocities?
-        if(issubclass(integrator.__class__, newtonian.newtonianIntegrator)):
+        if(issubclass(integrator.__class__, (newtonian.newtonianIntegrator, stochastic.langevinIntegrator))) :
             self.init_velocities()
 
         ##check if system should be coupled to conditions:

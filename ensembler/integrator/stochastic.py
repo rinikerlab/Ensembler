@@ -162,3 +162,187 @@ class metropolisMonteCarloIntegrator(monteCarloIntegrator):
                 iterstep += 1
                 continue
         return system._currentPosition , None, self.posShift
+
+'''
+Langevin stochastic integration
+'''
+
+class langevinIntegrator(_integratorCls):
+
+
+    def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
+        self.dt = dt
+        self.gamma = gamma
+        self._oldPosition = oldPosition
+        self._first_step = True # only neede for velocity Langevin
+        self.R_x = None
+        self.newForces = None
+        self.currentPosition = None
+        self.currentVelocity = None
+
+
+    def update_positon(self, system):
+        """
+        Integrate step according to Position Langevin BBK integrator
+        Designed after:
+        Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html
+
+        update position
+            This interface function needs to be implemented for a subclass.
+            The purpose of this function is to perform one integration step.
+
+        Parameters
+        ----------
+        system : systemType
+           A system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, None]
+            This Tuple contains the new: (new Position, new velocity=None)
+            for velocity return use langevinVelocityIntegrator
+
+        Raises
+        ------
+        NotImplementedError
+            You need to implement this function in the subclass (i.e. in your integrator)
+
+        """
+
+        nDim = system.nDim
+        #get random number, normal distributed for nDim dimentions
+        curr_random = np.squeeze(np.random.normal(0,1,nDim))
+        #scale random number according to fluctuation-dissipation theorem
+        # energy is expected to be in units of k_B
+        self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
+        #calculation of forces:
+        self.newForces = -system.potential.dvdpos(self.currentPosition)
+
+        #Brünger-Brooks-Karplus integrator for positions
+        new_position = (1 / (1 + self.gamma * self.dt/2)) * (2 * self.currentPosition - self._oldPosition
+            + self.gamma * (self.dt / 2) * (self._oldPosition) + (self.dt**2 / system.mass) * (self.R_x + self.newForces))
+
+        return new_position, None
+
+    def step(self, system):
+        """
+        step
+            This interface function needs to be implemented for a subclass.
+            The purpose of this function is to perform one integration step.
+
+        Parameters
+        ----------
+        system : systemType
+           A system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, float, float]
+            This Tuple contains the new: (new Position, new velocity, position Shift/ force)
+
+        Raises
+        ------
+        NotImplementedError
+            You need to implement this function in the subclass (i.e. in your integrator)
+
+        """
+        # get current positiona and velocity form system class
+        self.currentPosition = system._currentPosition
+        self.currentVelocity = system._currentVelocities
+
+        # hirachy: first check if old postition is given, if not it takes the velocity from the system class
+        # is there no initial velocity a Maxwell-Boltzmann distributied velocity is generated
+        if self._oldPosition is None:
+            # get old position from velocity, only during initialization
+            print("initializing Langevin old Positions\t ")
+            print("\n")
+            self._oldPosition = self.currentPosition - self.currentVelocity * self.dt
+
+        # integration step
+        new_position, new_velocity = self.update_positon(system)
+        # update position
+        self._oldPosition = self.currentPosition
+
+
+
+        if(self.verbose):
+            print("INTEGRATOR: current forces\t ", self.newForces)
+            print("INTEGRATOR: old Position\t ", sef._oldPosition)
+            print("INTEGRATOR: current_position\t ", currentPosition)
+            print("INTEGRATOR: current_velocity\t ", currentVelocity)
+            print("INTEGRATOR: newPosition\t ", new_position)
+            print("INTEGRATOR: newVelocity\t ", new_velocity)
+            print("\n")
+        return new_position, new_velocity, self.newForces  # add random number
+
+
+class langevinVelocityIntegrator(langevinIntegrator):
+
+    """
+    Integrate step according to Velocity Langevin BKK integrator
+    Designed after:
+    Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html
+
+    update position
+        This interface function needs to be implemented for a subclass.
+        The purpose of this function is to perform one integration step.
+
+    Parameters
+    ----------
+    system : systemType
+       A system, that should be integrated.
+
+    Returns
+    -------
+    Tuple[float, None]
+        This Tuple contains the new: (new Position, new velocity)
+
+        returns both velocities and positions at full steps
+
+    Raises
+    ------
+    NotImplementedError
+        You need to implement this function in the subclass (i.e. in your integrator)
+
+    """
+
+    def update_positon(self, system):
+        """
+        update for position Lanvevin
+        :return:
+        """
+
+        # for the first step we have to calculate new random numbers and forces
+        # then we can take the one from  the previous  step
+        nDim = system.nDim
+        if self._first_step:
+            # get random number, normal distributed for nDim dimentions
+            curr_random = np.squeeze(np.random.normal(0, 1, nDim))
+            # scale random number according to fluctuation-dissipation theorem
+            # energy is expected to be in units of k_B
+            self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
+            #calculate of forces:
+            self.newForces = -system.potential.dvdpos(self.currentPosition)
+
+            self._first_step = False
+
+        #Brünger-Brooks-Karplus integrator for velocities
+
+        half_step_velocity = (1-self.gamma*self.dt/2)*self.currentVelocity + self.dt/(2*system.mass) * (self.newForces + self.R_x)
+
+        full_step_position = self.currentPosition + half_step_velocity*self.dt
+
+        # calculate forces and random number for new position
+        # get random number, normal distributed for nDim dimentions
+        curr_random = np.squeeze(np.random.normal(0,1,nDim)) # for n dimentions
+        # scale random number according to fluctuation-dissipation theorem
+        # energy is expected to be in units of k_B
+        self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
+
+        #calculate of forces:
+        self.newForces = -system.potential.dvdpos(full_step_position)
+
+        # last half step
+        full_step_velocity = (1 / (1 + self.gamma * self.dt/2)) * (half_step_velocity +self.dt/(1*system.mass)*(self.newForces + self.R_x))
+
+        return full_step_position, full_step_velocity
