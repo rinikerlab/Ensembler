@@ -72,4 +72,5 @@ Free Energy Calculations: __Under Construction__
 ### Authors
 
 Benjamin Schroeder;
-David Hahn
+David Hahn;
+Stephanie Linker

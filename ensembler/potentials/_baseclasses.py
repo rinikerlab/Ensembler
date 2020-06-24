@@ -5,6 +5,11 @@ from concurrent.futures.thread import ThreadPoolExecutor
 
 
 class _potentialCls:
+    nDim: sp.Symbol = sp.symbols("N")
+    nStates: int = 1
+
+    constants:dict = {}
+
     pass
 
 
@@ -18,15 +23,12 @@ class _potentialNDCls(_potentialCls):
     @nullState
     @Strategy Pattern
     '''
-    name: str = "Unknown"
-    nDim: int = -1
-    nStates: int = 1
     threads: int = 1
     _no_Type_check: bool = False
     _singlePos_mode: bool = False
 
     def __init__(self, nDim: int = -1, n_threads: int = 1):
-        self.nDim = nDim
+        nDim = nDim
         self._calculate_energies = self._calculate_energies_multiPos
         self._calculate_dvdpos = self._calculate_dvdpos_multiPos
         self._check_positions_type = self._check_positions_type_multiPos
@@ -35,13 +37,16 @@ class _potentialNDCls(_potentialCls):
             self.thread_pool = ThreadPoolExecutor(max_workers=self.threads)
         self.threads = n_threads
 
+        self.constants.update({self.nDim: nDim})
+
+
     def __name__(self) -> str:
         return str(self.name)
 
     def __str__(self):
         msg = self.__name__() + "\n"
         msg += "\tStates: " + str(self.nStates) + "\n"
-        msg += "\tDimensions: " + str(self.nDim) + "\n"
+        msg += "\tDimensions: " + str(self.constants[self.nDim]) + "\n"
         msg += "\n"
         return msg
 
@@ -267,8 +272,6 @@ class _potential1DCls(_potentialNDCls):
         .. autoclass:: _potentialCls
         This class is the
     '''
-
-    nDim: int = 1
 
     def __init__(self):
         super().__init__(nDim=self.nDim)

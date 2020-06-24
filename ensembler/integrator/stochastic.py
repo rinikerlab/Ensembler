@@ -13,9 +13,11 @@ from ensembler.integrator._basicIntegrators import _integratorCls
 class stochasticIntegrator(_integratorCls):
     #Params
     minStepSize:Number=None
-    maxStepSize:Number=None
+    maxStepSize:Number=1
+
     spaceRange:Tuple[Number, Number] = None
-    resolution:float = 0.01   #increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions.
+    resolution:float = 0.01   #increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions. only used with space_range
+
     fixedStepSize: (Number or List[Number])
 
     #calculation
@@ -47,18 +49,16 @@ class stochasticIntegrator(_integratorCls):
         if(not isinstance(self.fixedStepSize, type(None))):
             shift = np.array(np.full(shape=nDim, fill_value=self.fixedStepSize), ndmin=1)
         elif(not isinstance(self.spaceRange, type(None))):
-            shift = np.array(np.multiply(np.abs(np.random.randint(low=self.spaceRange[0]/self.resolution, high=self.spaceRange[1]/self.resolution, size=nDim)), self.resolution), ndmin=1)
+            shift = np.array(np.multiply(np.abs(np.random.randint(low=np.min(self.spaceRange)/self.resolution, high=np.max(self.spaceRange)/self.resolution, size=nDim)), self.resolution), ndmin=1)
         else:
-            shift = np.array(np.abs(np.random.rand(nDim)), ndmin=1)
+            shift = np.array(np.abs(np.random.rand(nDim)), ndmin=1)*self.maxStepSize
 
         self.posShift = np.multiply(sign, shift)
 
         
         #Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
-        if(self.maxStepSize != None and any([s > self.maxStepSize for s in shift])):#is there a maximal step size?
-            self.posShift = np.multiply(sign, self.maxStepSize)
-        elif(self.minStepSize != None and any([s < self.minStepSize for s in shift])):
-            self.posShift = np.multiply(sign, self.minStepSize)
+        if(self.minStepSize != None and any([s < self.minStepSize for s in shift])):
+            self.posShift = np.multiply(sign, np.array([s if(s>self.minStepSize) else self.minStepSize for s in shift]) )
         else:
             self.posShift = np.multiply(sign, shift)
         
@@ -74,7 +74,7 @@ class monteCarloIntegrator(stochasticIntegrator):
         It choses its moves purely randomly.
     """
 
-    def __init__(self, maxStepSize:Number=None, minStepSize:Number=None, spaceRange:Tuple[Number,Number]=None, fixedStepSize:Number=None):
+    def __init__(self, maxStepSize:Number=1, minStepSize:Number=None, spaceRange:Tuple[Number,Number]=None, fixedStepSize:Number=None):
         """
         __init__ 
             This is the Constructor of the MonteCarlo integrator.
@@ -82,7 +82,7 @@ class monteCarloIntegrator(stochasticIntegrator):
         Parameters
         ----------
         maxStepSize : Number, optional
-            maximal size of an integrationstep in any direction, by default None
+            maximal size of an integrationstep in any direction, by default 1
         minStepSize : Number, optional
             minimal size of an integration step in any direction, by default None
         spaceRange : Tuple[Number, Number], optional
@@ -172,7 +172,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
     ##default Metropolis Criterion
     _defaultMetropolisCriterion = lambda self, ene_new, currentState: (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
 
-    def __init__(self, minStepSize:float=None, maxStepSize:float=None, spaceRange:tuple=None, fixedStepSize=None, 
+    def __init__(self, minStepSize:float=None, maxStepSize:float=1, spaceRange:tuple=None, fixedStepSize=None, 
                 metropolisCriterion=None, randomnessIncreaseFactor=1, maxIterationTillAccept:int=np.inf):
         """
         __init__ 
@@ -182,7 +182,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
         Parameters
         ----------
         maxStepSize : Number, optional
-            maximal size of an integrationstep in any direction, by default None
+            maximal size of an integrationstep in any direction, by default 1
         minStepSize : Number, optional
             minimal size of an integration step in any direction, by default None
         spaceRange : Tuple[Number, Number], optional

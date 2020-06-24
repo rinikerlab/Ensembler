@@ -77,7 +77,7 @@ class system:
         #################################
     
         ##Physical parameters
-        self.temperature: float = 298.0
+        self.temperature: float = temperature
         self.mass: float = 1  # for one particle systems!!!!
         self.nparticles: int = 1  # Todo: adapt it to be multiple particles
 
@@ -114,7 +114,6 @@ class system:
             self.nDim = potential.nDim
         else:
             raise IOError("Could not estimate the disered Dimensionality as potential dim was <1 and no initial position was given.")
-        self.temperature = temperature
         self.mass = mass
 
         ###is the potential a state dependent one? - needed for initial pos.

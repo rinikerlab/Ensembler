@@ -4,35 +4,62 @@
 """
 
 import numpy as np
-from typing import Tuple
 import scipy.constants as const
 from scipy.optimize import fmin_cg
+
+from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import Tuple
 from ensembler.integrator._basicIntegrators import _integratorCls
 
-
 class optimizer(_integratorCls):
+    """
+    optimizer [summary]
+
+
+    """
+    maxStepSize:float
+
     pass
 
 class conjugate_gradient(optimizer):
+    """
+    conjugate_gradient 
+
+    """
     epsilon:float
-    maxStepSize:float
 
     def __init__(self, max_step_size:float=1, epsilon:float=10 ** -20):
+        """
+        __init__ [summary]
+
+        Parameters
+        ----------
+        max_step_size : float, optional
+            [description], by default 1
+        epsilon : float, optional
+            [description], by default 10**-20
+        """
         self.epsilon = epsilon
         self.maxStepSize = max_step_size
 
-    def step(self, system)-> Tuple[float, None, float]:
+
+    def step(self, system:systemType)-> Tuple[float, None, float]:
         """
-        ..autofunction: step
+        step 
             This function is performing an integration step for optimizing a potential.
             NOTE: This is not the optimal way to call scipy optimization, but it works with the interfaces and is useful for theoretical thinking about it. 
             It is not optimal or even efficient here! -> it simulates the optimization process as a stepwise process
-        :param system: This is a system, that should be integrated.
-        :type system: ensembler.system.system
-        :return: (new Position, None, position Shift)
-        :rtype: (float, None, float)
-        """
 
+        Parameters
+        ----------
+        system : [type]
+            This is a system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, None, float]
+            (new Position, None, position Shift)
+        """
         f = system.potential.ene
         f_prime = system.potential.dvdpos
 
@@ -54,15 +81,25 @@ class conjugate_gradient(optimizer):
         """
         optimize [summary]
 
-        :param potential: [description]
-        :type potential: [type]
-        :param x0: [description]
-        :type x0: [type]
-        :param maxiter: [description], defaults to 100
-        :type maxiter: int, optional
-        :raises ValueError: [description]
-        :return: [description]
-        :rtype: dict
+        Parameters
+        ----------
+        potential : [type]
+            [description]
+        x0 : [type]
+            [description]
+        maxiter : int, optional
+            [description], by default 100
+
+        Returns
+        -------
+        dict
+            [description]
+
+        Raises
+        ------
+        ValueError
+            [description]
+
         """
 
         cg_out = fmin_cg(f=potential.ene, fprime=potential.dvdpos, x0=x0, epsilon=self.epsilon, maxiter=maxiter,
@@ -78,5 +115,6 @@ class conjugate_gradient(optimizer):
 
         return {"optimal_position":opt_position, "minimal_potential_energy":Vmin, "used_iterations":function_iterations, "position_trajectory":traj_positions}
 
+#alternative class names
 class cg(conjugate_gradient):
     pass
