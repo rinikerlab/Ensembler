@@ -275,6 +275,21 @@ class langevinIntegrator(_integratorCls):
 
 
     def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
+        """
+          __init__
+              This is the Constructor of the Langevin integrator.
+
+
+          Parameters
+          ----------
+          dt : Number, optional
+              time step of an integration, by default 0.005
+          gamma : Number, optional
+              Friktion constant of the system
+          oldPosition : Iterable[Number, Number] of size nDim, optional
+              determins position at step -1, if not set the system will use the velocity to determine tis position
+          """
+
         self.dt = dt
         self.gamma = gamma
         self._oldPosition = oldPosition
