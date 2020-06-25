@@ -43,8 +43,9 @@ class _potentialNDCls(_potentialCls):
     _no_Type_check: bool = False
     _singlePos_mode: bool = False
 
-    def __init__(self, nDim: int = -1, n_threads: int = 1):
+    def __init__(self, nDim: int = -1, nStates:int=1, n_threads: int = 1):
         self.constants.update({self.nDim:nDim})
+        self.constants.update({self.nStates:nStates})
         self._calculate_energies = self._calculate_energies_multiPos
         self._calculate_dvdpos = self._calculate_dvdpos_multiPos
         self._check_positions_type = self._check_positions_type_multiPos
@@ -382,8 +383,7 @@ class _potentialNDMultiState(_potentialNDCls):
     states: _potentialNDCls
 
     def __init__(self, nDim: int, nStates: int):
-        super().__init__(nDim=nDim)
-        self.nStates = nStates
+        super().__init__(nDim=nDim, nStates=nStates)
 
     def _check_positions_type_singlePos(self, position: Union[Iterable[Number], Number]) -> np.array:
         """
@@ -404,7 +404,7 @@ class _potentialNDMultiState(_potentialNDCls):
         elif (isinstance(position, Iterable) and isinstance(position, Sized)):
             if ((len(position) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) and all([isinstance(dim, Number) for dim in position])):
                 return np.array([position for state in range(self.nStates)])
-            elif (len(position) == self.nStates):
+            elif (len(position) == self.constants[self.nStates]):
                 if (all([isinstance(state, Iterable) and (len(state) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) for state in
                          position]) and
                         all([[isinstance(dim, Number) for dim in state] for state in position])):
@@ -439,7 +439,7 @@ class _potentialNDMultiState(_potentialNDCls):
                 return np.array([positions for state in range(self.nStates)])
             elif ((1 == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) and all([isinstance(dim, Number) for dim in positions])):
                 return np.array([[p for state in range(self.nStates)] for p in positions])
-            elif (len(positions) == self.nStates and all(
+            elif (len(positions) == self.constants[self.nStates] and all(
                     [(len(state) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) for state in positions]) and
                   all([[isinstance(dim, Number) for dim in state] for state in positions])):
                 return np.array(positions)
@@ -467,11 +467,11 @@ class _perturbedPotentialNDCls(_potentialNDMultiState):
         :param gamma: perturbation parameter for position of harmonic oscillator
         '''
         self.states = state_potentials
-        self.nStates = len(state_potentials)
+
         if (all([V.nDim == state_potentials[0].nDim for V in state_potentials])):
            self.constants.update({self.nDim : state_potentials[0].nDim})
 
-        super().__init__(nDim=self.constants[self.nDim], nStates=self.nStates)
+        super().__init__(nDim=self.constants[self.nDim], nStates=len(state_potentials))
         self.lam = lam
         self._calculate_dhdlam = self._calculate_dhdlam_multiPos
 
@@ -522,8 +522,8 @@ class _potentialNDClsSymPY(_potentialCls):
     V_orig: sp.Function
     dVdpos_orig: sp.Function
 
-    def __init__(self, nDim: int = -1):
-        self.constants.update({self.nDim: nDim})
+    def __init__(self, nDim: int = -1, nStates:int =1):
+        self.constants.update({self.nDim: nDim, self.nStates:nStates})
         # needed for multi dim functions to be generated dynamically
         self._initialize_functions()
         # apply potential simplification and update calc functions
@@ -533,7 +533,7 @@ class _potentialNDClsSymPY(_potentialCls):
 
     def __str__(self) -> str:
         msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.nStates) + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
         msg += "\tDimensions: " + str(self.nDim) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tV:\t" + str(self.V_orig) + "\n"
@@ -619,7 +619,6 @@ class _potential2DClsSymPY(_potentialNDClsSymPY):
 
 
 class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
-    nStates: int = 1
 
     lam = sp.symbols(u"λ")
 
@@ -636,7 +635,7 @@ class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
 
     def __str__(self) -> str:
         msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.nStates) + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
         msg += "\tDimensions: " + str(self.nDim) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tCoupling:\t" + str(self.Coupling) + "\n"

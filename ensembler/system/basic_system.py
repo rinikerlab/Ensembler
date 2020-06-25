@@ -119,7 +119,7 @@ class system:
 
         ###is the potential a state dependent one? - needed for initial pos.
         if(hasattr(potential, "nStates")):
-            self.nStates = potential.nStates
+            self.nStates = potential.constants[potential.nStates]
             if(hasattr(potential, "states_coupled")):   #does each state get the same position?
                 self.states_coupled = potential.states_coupled
             else:
