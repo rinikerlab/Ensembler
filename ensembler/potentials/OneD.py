@@ -23,7 +23,6 @@ from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotenti
 class dummyPotential(_potential1DClsSymPY):
 
     name:str = "dummyPotential"
-    nDim=1
     position, y_shift = sp.symbols("r Voffset")
 
     def __init__(self, y_shift: float = 0):
@@ -100,11 +99,9 @@ class harmonicOscillator(_potential1DClsSymPY):
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
-        self.nDim = 1
 
 class wavePotential(_potential1DClsSymPY):
     name:str = "Wave Potential"
-    nDim=1
     amplitude, phase_shift, position, y_shift, multiplicity = sp.symbols("A w r Voff m")
     V_orig = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
 
@@ -357,8 +354,6 @@ class envelopedPotential(ND.envelopedPotential):
     V_is:t.List[_potential1DCls] = None
     E_is:t.List[float] = None
     s:float = None
-
-    nDim:int = 1
     nStates:int = None
 
     kb=const.gas_constant 
@@ -378,16 +373,9 @@ class envelopedPotential(ND.envelopedPotential):
         :param s:
         :param Eoff_i:
         """
+        self.constants.update({self.nDim: 1})
         super().__init__(V_is=V_is, s=s, Eoff_i=Eoff_i)
 
-        #Sympy Implementation
-        self.nStates = len(V_is)
-        if(isinstance(Eoff_i, type(None))):
-            Eoff_i = [0 for i in range(self.nStates)]
-        Eoffis = {"Eoff_"+str(i): Eoff_i[i] for i in range(self.nStates)}
-        self.statePotentials =  {"state_"+str(j): V_is[j] for j in range(self.nStates)}
-        self.states =  sp.Matrix([sp.symbols(j)-sp.symbols(k) for j,k in zip(self.statePotentials, Eoffis)])
-        self.constants = {**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **{"s":s, self.T:T, self.N:self.nStates}}
 
         self.V_orig = -1/(self.beta*self.s_s) * sp.log(sp.Sum(sp.exp(-self.beta * self.s_s * (self.states[self.i,0])),(self.i, 0, self.N-1)))
         self.V = self.V_orig.subs(self.constants)
@@ -438,23 +426,3 @@ class envelopedPotential(ND.envelopedPotential):
             dhdpos_R.append(dhdposR_position)
 
         return  dhdpos_R.item() if(len(dhdpos_R.shape) == 1 and dhdpos_R.shape[0] == 1) else np.array(dhdpos_R) 
-
-    def _calculate_energies_singlePos(self, position:(t.Iterable[float]))  -> np.array:
-        #print(position)
-        partA = np.multiply(-self.s, np.subtract(self.V_is[0].ene(position[0]), self.Eoff_i[0]))
-        partB = np.multiply(-self.s, np.subtract(self.V_is[1].ene(position[1]), self.Eoff_i[1]))
-        #print("OH", self.V_is[1].ene(position))
-
-        #print("partA", partA)
-        #print("partB", partB)
-        sum_prefactors = np.add(max(partA, partB), np.log(np.add(1, np.exp(np.subtract(min(partA, partB), max(partA, partB))))))
-
-        # more than two states!
-        for state in range(2, self.nStates):
-            partN = np.multiply(-self.s, np.subtract(self.V_is[state].ene(position[state]), self.Eoff_i[state]))
-            sum_prefactors = np.add(np.max([sum_prefactors, partN]), np.log(np.add(1, np.exp(np.subtract(np.min([sum_prefactors, partN]), np.max([sum_prefactors, partN]))))))
-
-        #print(sum_prefactors)
-        Vr = np.multiply(np.divide(-1, float(self.s)), sum_prefactors)
-        return Vr.item() if(len(Vr.shape) == 1 and Vr.shape[0] == 1) else Vr 
-

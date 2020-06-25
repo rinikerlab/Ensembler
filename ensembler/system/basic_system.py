@@ -108,11 +108,11 @@ class system:
         self.conditions = conditions
 
         ## set dim
-        if(potential.nDim < 1 and isinstance(position, Iterable) and all([isinstance(pos, Number) for pos in position])):  #one  state system.
+        if(potential.constants[potential.nDim] < 1 and isinstance(position, Iterable) and all([isinstance(pos, Number) for pos in position])):  #one  state system.
             self.nDim = len(position)
             self.potential.nDim = self.nDim
-        elif(potential.nDim > 0):
-            self.nDim = potential.nDim
+        elif(potential.constants[potential.nDim] > 0):
+            self.nDim = potential.constants[potential.nDim]
         else:
             raise IOError("Could not estimate the disered Dimensionality as potential dim was <1 and no initial position was given.")
         self.mass = mass

@@ -40,20 +40,20 @@ class harmonicOscillator(_potential2DClsSymPY):
         #if(any(self.nDim != len(x) for x in [k, r_shift, Voff])):
         #    raise ValueError("All parameters need to be iterable and have len(x) == 2!")
 
-        nDim=2
-        self.constants.update({"k_"+str(j): k[j] for j in range(nDim)})
-        self.constants.update({"r_shift"+str(j): r_shift[j] for j in range(nDim)})
-        self.constants.update({"V_off_"+str(j): Voff[j] for j in range(nDim)})
+        self.constants.update({self.nDim:2})
+        self.constants.update({"k_"+str(j): k[j] for j in range(self.constants[self.nDim])})
+        self.constants.update({"r_shift"+str(j): r_shift[j] for j in range(self.constants[self.nDim])})
+        self.constants.update({"V_off_"+str(j): Voff[j] for j in range(self.constants[self.nDim])})
         super().__init__()
 
 
     def _initialize_functions(self):
         # Parameters
         nDim = self.constants[self.nDim]
-        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
-        self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(nDim)])
-        self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(nDim)])
-        self.k = sp.Matrix([sp.symbols("k_" + str(i)) for i in range(nDim)])
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDim])])
+        self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(self.constants[self.nDim])])
+        self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(self.constants[self.nDim])])
+        self.k = sp.Matrix([sp.symbols("k_" + str(i)) for i in range(self.constants[self.nDim])])
         #Function
         self.V_dim =   0.5*sp.matrix_multiply_elementwise(self.k, ((self.position-self.r_shift).applyfunc(lambda x: x**2)))#+self.Voff
         self.V_orig = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDim-1))
@@ -72,7 +72,7 @@ class wavePotential(_potential2DClsSymPY):
     V_orig = sp.Sum(V_dim[i, 0], (i, 0, nDim))
 
     def __init__(self, amplitude=(1,1), multiplicity=(1,1), phase_shift=(0,0), y_offset=(0, 0), degree:bool=True):
-        nDim=2
+        nDim = 2 
         self.constants.update({"amp_"+str(j): amplitude[j] for j in range(nDim)})
         self.constants.update({"mult_"+str(j): multiplicity[j] for j in range(nDim)})
         self.constants.update({"yOff_"+str(j): y_offset[j] for j in range(nDim)})
