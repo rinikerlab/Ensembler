@@ -38,7 +38,9 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys:int=8, nbins:int=100, st
                 index=nbins-1
             bins[index]+=1
             dhdlbins[index]+=systrajs[i].dhdlam[j]
-    dhdlbins/=bins
+    for i, b in enumerate(bins):
+        if b > 0:
+            dhdlbins[i]/=b
     ene = np.cumsum(dhdlbins)/nbins
 
     lam = np.linspace(0, 1, nbins)

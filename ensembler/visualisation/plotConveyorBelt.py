@@ -71,7 +71,10 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     lamVals=x-x.min()
     lamVals/=lamVals.max()
     gVals=y-y.min()
-    gVals/=(2.0*gVals.max()*goldRat)
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     l=CapLam
@@ -157,7 +160,6 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     ax.yaxis.set_ticks_position('left')
     ax.set_yticks([])
     ax.spines['left'].set_color('None')
-    ax.spines['bottom'].set_smart_bounds(True)
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
 
@@ -189,7 +191,10 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     lamVals=x-x.min()
     lamVals/=lamVals.max()
     gVals=y-y.min()
-    gVals/=(2.0*gVals.max()*goldRat)
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     l=CapLam
@@ -289,7 +294,6 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     ax.yaxis.set_ticks_position('left')
     ax.set_yticks([])
     ax.spines['left'].set_color('None')
-    ax.spines['bottom'].set_smart_bounds(True)
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
     ax.set_title("Conveyor Belt over simulated Free Energy Landscape")
@@ -318,7 +322,10 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
     lamVals=x-x.min()
     lamVals/=lamVals.max()
     gVals=y-y.min()
-    gVals/=(2.0*gVals.max()*goldRat)
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     l=CapLam

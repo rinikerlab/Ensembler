@@ -119,7 +119,7 @@ class ReplicaExchange(MultiReplicaApproach):
     _defaultRandomness = lambda self, originalParams, swappedParams: ((1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (originalParams - swappedParams+0.0000001))) #pseudo count, if params are equal
 
 
-    def __init__(self, system:system.system, exchange_dimensions:Dict[str, Iterable], exchange_criterium=None, steps_between_trials:int=10):
+    def __init__(self, system:system.basic_system.system, exchange_dimensions:Dict[str, Iterable], exchange_criterium=None, steps_between_trials:int=10):
 
         #TODO do some fancy parsing
         #SET PARAMETER FIELDS
