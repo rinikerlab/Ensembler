@@ -1,12 +1,15 @@
-# Ensembler
+Ensembler
+==============================
+[//]: # (Badges)
+[![GitHub Actions Build Status](https://github.com/REPLACE_WITH_OWNER_ACCOUNT/ensembler/workflows/CI/badge.svg)](https://github.com/REPLACE_WITH_OWNER_ACCOUNT/ensembler/actions?query=branch%3Amaster+workflow%3ACI)
+[![codecov](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/Ensembler/branch/master/graph/badge.svg)](https://codecov.io/gh/REPLACE_WITH_OWNER_ACCOUNT/Ensembler/branch/master)
 
 
-__CURRENTLY UNDER CONSTRUCTION __
-
+Code to sample ensembles of simple (toy) models with various algorithms. 
 
 ## Description
 This project tries to give users very easy to use and simple functionality to develop code for physical ensembles.
-
+ 
 ## Contents
 ### Potential functions
 
@@ -38,7 +41,18 @@ This project tries to give users very easy to use and simple functionality to de
 
 
 
-### Authors
+## Authors
 
 Benjamin Schroeder;
+Stephanie Linker;
 David Hahn
+
+## Copyright
+
+Copyright (c) 2020, Benjamin Schröder, Stephanie Linker, David Hahn
+
+
+### Acknowledgements
+ 
+Project based on the 
+[Computational Molecular Science Python Cookiecutter](https://github.com/molssi/cookiecutter-cms) version 1.3.
