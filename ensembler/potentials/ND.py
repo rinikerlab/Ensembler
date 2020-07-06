@@ -93,7 +93,7 @@ class wavePotential(_potentialNDClsSymPY):
         self.constants.update({"yOff_"+str(j): y_offset[j] for j in range(nDim)})
         
          
-        super().__init__(self.nDim)
+        super().__init__(self.constants[self.nDim])
     
     def _initialize_functions(self):
         # Parameters
@@ -121,7 +121,7 @@ class envelopedPotential(_potentialNDCls):
     name = "Enveloping potential"
 
 
-    def __init__(self, V_is: Iterable[_potentialNDCls], s: float = 1.0, Eoff_i: Iterable[float] = None):
+    def __init__(self, V_is: Iterable[_potentialNDCls], s: float = 1.0, Eoff_i: Iterable[float] = None, T:float=298):
         """
 
         :param V_is:
@@ -136,13 +136,10 @@ class envelopedPotential(_potentialNDCls):
         self.nStates:int = 0
 
         # Todo: think about n states with each m dims.
-        if(self.nDim == -1):
-            if(issubclass(V_is[0].__class__, _potentialNDClsSymPY) and V_is[0].nDim in V_is[0].constants ): #nixe to be fixed
-                self.nDim = V_is[0].constants[V_is[0].nDim]
-            else:
-                self.nDim = V_is[0].nDim
+        if(not self.nDim in self.constants or self.constants[self.nDim] == -1):
+            self.constants[self.nDim] = V_is[0].constants[V_is[0].nDim]
 
-        super().__init__(nDim=self.nDim)
+        super().__init__(nDim=self.constants[self.nDim])
 
         #check State number
         self.nStates = len(V_is)
@@ -150,14 +147,18 @@ class envelopedPotential(_potentialNDCls):
         #    raise IOError("It does not make sense enveloping less than two potentials!")
         if (isinstance(Eoff_i, type(None))):
             Eoff_i = [0.0 for state in range(len(V_is))]
+
         elif (len(Eoff_i) != self.nStates):
             raise IOError(
                 "Energy offset Vector and state potentials don't have the same length!\n states in Eoff " + str(
                     len(Eoff_i)) + "\t states in Vi" + str(len(V_is)))
 
-        #if (any([V.nDim != self.nDim for V in V_is]) and not self.nDim == -1):
-        #    raise Exception("Not all endstates have the same dimensionality! This is not imnplemented.\n Dims:\n\t envelopedPot: "+str(self.nDim)+"\n\t Potentials: " + str(
-        #        [V.nDim != self.nDim for V in V_is]))
+
+        Eoffis = {"Eoff_"+str(i): Eoff_i[i] for i in range(self.nStates)}
+        
+        self.statePotentials =  {"state_"+str(j): V_is[j] for j in range(self.nStates)}
+        self.states =  sp.Matrix([sp.symbols(j)-sp.symbols(k) for j,k in zip(self.statePotentials, Eoffis)])
+        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **{"s":s, self.T:T, self.nDim:1 , self.N:self.nStates}})
 
         self.V_is = V_is
         self.s = s
@@ -180,9 +181,9 @@ class envelopedPotential(_potentialNDCls):
         if (isinstance(position, numbers.Number)):
                 return np.array([[position] for state in range(self.nStates)], ndmin=1)
         elif (isinstance(position, Iterable)):
-            if(len(position) == self.nDim and all([isinstance(x, numbers.Number) for x in position])):    #ndim pot list
+            if(len(position) == self.constants[self.nDim] and all([isinstance(x, numbers.Number) for x in position])):    #ndim pot list
                 return np.array([position for state in range(self.nStates)], ndmin=2)
-            elif(len(position) == self.nDim and all([isinstance(x, Iterable) for x in position]) and all([isinstance(x, numbers.Number) for x in position for y in x ])):    #nDim pos lis
+            elif(len(position) == self.constants[self.nDim] and all([isinstance(x, Iterable) for x in position]) and all([isinstance(x, numbers.Number) for x in position for y in x ])):    #nDim pos lis
                 return np.array([position for position in range(self.nStates)], ndmin=2)
             elif(len(position) == self.nStates):    #nDim pos lis\
                 if(all([isinstance(y, numbers.Number) for y in position])):
@@ -195,7 +196,7 @@ class envelopedPotential(_potentialNDCls):
             elif (len(position) == self.nStates and all([isinstance(x, Iterable) for x in position]) and len(position[0]) == self.nStates):
                 return np.array([[x] for x in position[0]])
 
-            elif(not len(position) == self.nStates and not len(position) == self.nDim and all([isinstance(x, numbers.Number) for x in position]) ):
+            elif(not len(position) == self.nStates and not len(position) == self.constants[self.nDim] and all([isinstance(x, numbers.Number) for x in position]) ):
                 return np.array([[position for state in range(self.nStates)] for position in position], ndmin=2)
             else:
                 raise Exception("This is an unknown type of Data structure: " + str(type(position)) + "\n" + str(position))
@@ -206,16 +207,16 @@ class envelopedPotential(_potentialNDCls):
         if (isinstance(positions, numbers.Number)):
                 return np.array([[positions] for state in range(self.nStates)], ndmin=3)
         elif (isinstance(positions, Iterable)):
-            if(all([isinstance(x, numbers.Number) for x in positions]) and self.nDim ==1 ):    #ndim pot list
+            if(all([isinstance(x, numbers.Number) for x in positions]) and self.constants[self.nDim] ==1 ):    #ndim pot list
                 return np.array([[[p] for state in range(self.nStates)] for p in positions], ndmin=3)
             elif(all([isinstance(x, numbers.Number) for x in positions])):  # ndim pot list
                 return np.array([positions for state in range(self.nStates)], ndmin=3)
-            elif(all([isinstance(x, Iterable) and (len(x) == self.nDim or self.nDim == -1) and all([isinstance(y, numbers.Number) for y in x]) for x in positions])):    #nDim pos lis
+            elif(all([isinstance(x, Iterable) and (len(x) == self.constants[self.nDim] or self.constants[self.nDim] == -1) and all([isinstance(y, numbers.Number) for y in x]) for x in positions])):    #nDim pos lis
                 return np.array([[pos for position in range(self.nStates)] for pos in positions])
-            elif(all([isinstance(x, Iterable) and (len(x) == self.nStates or self.nDim == -1) and all([isinstance(y, numbers.Number) for y in x]) for x in positions])):    #nDim pos lis
+            elif(all([isinstance(x, Iterable) and (len(x) == self.nStates or self.constants[self.nDim] == -1) and all([isinstance(y, numbers.Number) for y in x]) for x in positions])):    #nDim pos lis
                 print("Don't be a maybe")
                 return np.array([[pos] for pos in positions])
-            elif(all([(isinstance(x, Iterable) and len(x) == self.nStates) and all([isinstance(y, Iterable) and (len(y) == self.nDim or self.nDim==-1) and all([isinstance(z, numbers.Number)  for z in y] ) for y in x]) for x in positions])):
+            elif(all([(isinstance(x, Iterable) and len(x) == self.nStates) and all([isinstance(y, Iterable) and (len(y) == self.constants[self.nDim] or self.constants[self.nDim] ==-1) and all([isinstance(z, numbers.Number)  for z in y] ) for y in x]) for x in positions])):
                 return np.array(positions, ndmin=3)
             else:
                 raise Exception("This is an unknown type of Data structure, wrapped by a Iterable: " + str(type(positions)) + "\n" + str(positions))
@@ -223,27 +224,27 @@ class envelopedPotential(_potentialNDCls):
             raise Exception("This is an unknown type of Data structure: " + str(type(positions)) + "\n" + str(positions))
 
     def _calculate_energies_singlePos(self, position:(Iterable[float])) -> np.array:
-        #print("position", position)
-        #print(self.Eoff_i, self.s, self.V_is)
-
+        #print(position)
         partA = np.multiply(-self.s, np.subtract(self.V_is[0].ene(position[0]), self.Eoff_i[0]))
-        if(len(self.Eoff_i) >1):
-            partB = np.multiply(-self.s, np.subtract(self.V_is[1].ene(position[1]), self.Eoff_i[1]))
-            sum_prefactors = max(partA, partB) + np.log(1 + np.exp(min(partA, partB) - max(partA, partB)))
-        else:
-            sum_prefactors = partA + np.log(1 + np.exp(partA - partA))
+        partB = np.multiply(-self.s, np.subtract(self.V_is[1].ene(position[1]), self.Eoff_i[1]))
+        #print("OH", self.V_is[1].ene(position))
+
         #print("partA", partA)
         #print("partB", partB)
+        log_prefac = 1 + np.exp(np.min(np.array([partA, partB]).T, axis=1) - np.max(np.array([partA, partB]).T, axis=1))
 
-
+        sum_prefactors = np.max(np.array([partA, partB]).T, axis=1) + np.log(log_prefac)
+        #print(sum_prefactors)
+        
         # more than two states!
         for state in range(2, self.nStates):
             partN = np.multiply(-self.s, np.subtract(self.V_is[state].ene(position[state]), self.Eoff_i[state]))
-            sum_prefactors = max(sum_prefactors, partN) + np.log(1 + np.exp(min(sum_prefactors, partN) - max(sum_prefactors, partN)))
+            sum_prefactors = np.add(np.max([sum_prefactors, partN]), np.log(np.add(1, np.exp(np.subtract(np.min([sum_prefactors, partN], axis=1), np.max([sum_prefactors, partN], axis=1))))))
 
         #print(sum_prefactors)
-        Vr = float(np.sum(np.multiply(np.divide(-1, float(self.s)), sum_prefactors)))
-        return Vr
+        Vr = (-1/float(self.s))*sum_prefactors
+        #print(Vr)
+        return np.squeeze(Vr)
 
     def _calculate_dvdpos_singlePos(self, position:(Iterable[float])) -> np.array:
         """
@@ -278,7 +279,7 @@ class envelopedPotential(_potentialNDCls):
 
         dvdpos_R = []
         #print("Ndim: ", self.nDim)
-        for dimPos in range(self.nDim):
+        for dimPos in range(self.constants[self.nDim]):
             dvdposR_positionDim = 0
             for state in range(len(V_Is_ene)):
                 dvdposR_positionDim = np.add(dvdposR_positionDim, dvdpos_state_scaled[state, dimPos])
