@@ -4,11 +4,28 @@ from typing import Iterable, Sized, Union, Dict
 from concurrent.futures.thread import ThreadPoolExecutor
 
 
+def notImplementedERR():
+    raise NotImplementedError("This function needs to be implemented in sympy")
+
+
 class _potentialCls:
+    """
+    potential base class
+    @nullState
+    @Strategy Pattern
+    """
+    name:str = "Unknown"
     nDim: sp.Symbol = sp.symbols("N")
-    nStates: int = 1
+    nStates: sp.Symbol = sp.symbols("state")
+    #threads: int = 1
 
     constants:dict = {}
+
+    def __init__(self):
+        self.name = self.__class__.__name__
+
+    def __name__(self) -> str:
+        return str(self.name)
 
     pass
 
@@ -19,16 +36,16 @@ class _potentialCls:
 """
 class _potentialNDCls(_potentialCls):
     '''
-    potential base class
-    @nullState
-    @Strategy Pattern
+    _potentialNDCls 
+    DEAPPRICEATED
+
     '''
-    threads: int = 1
     _no_Type_check: bool = False
     _singlePos_mode: bool = False
 
-    def __init__(self, nDim: int = -1, n_threads: int = 1):
-        nDim = nDim
+    def __init__(self, nDim: int = -1, nStates:int=1, n_threads: int = 1):
+        self.constants.update({self.nDim:nDim})
+        self.constants.update({self.nStates:nStates})
         self._calculate_energies = self._calculate_energies_multiPos
         self._calculate_dvdpos = self._calculate_dvdpos_multiPos
         self._check_positions_type = self._check_positions_type_multiPos
@@ -37,11 +54,9 @@ class _potentialNDCls(_potentialCls):
             self.thread_pool = ThreadPoolExecutor(max_workers=self.threads)
         self.threads = n_threads
 
-        self.constants.update({self.nDim: nDim})
 
 
-    def __name__(self) -> str:
-        return str(self.name)
+
 
     def __str__(self):
         msg = self.__name__() + "\n"
@@ -139,9 +154,9 @@ class _potentialNDCls(_potentialCls):
         if (isinstance(position, Number)):
             return position
         elif (isinstance(position, Iterable)):
-            if (cls.nDim == 1 and isinstance(position, Number)):
+            if (cls.constants[cls.nDim] == 1 and isinstance(position, Number)):
                 return position[0]
-            elif ((len(position) == cls.nDim or cls.nDim == -1) and all(
+            elif ((len(position) == cls.constants[cls.nDim] or cls.constants[cls.nDim] == -1) and all(
                     [isinstance(position, Number) for position in position])):  # position[dimPos]
                 return np.array(position, ndmin=1)
             else:
@@ -164,7 +179,7 @@ class _potentialNDCls(_potentialCls):
         """
         # array
         if (isinstance(positions, Iterable)):
-            if (all([isinstance(position, Iterable) and (len(position) == cls.nDim or cls.nDim == 0) for position in
+            if (all([isinstance(position, Iterable) and (len(position) == cls.constants[cls.nDim] or cls.constants[cls.nDim] == 0) for position in
                      positions])):  # positions[[position[dimPos]]
                 if (all([all([isinstance(dimPos, Number) for dimPos in position]) for position in positions])):
                     return np.array(positions, ndmin=2)
@@ -175,13 +190,13 @@ class _potentialNDCls(_potentialCls):
             elif (all([isinstance(position, Iterable) and all([isinstance(x, Number) for x in position]) for position in
                        positions])):  # positions[[position[dimPos]]
                 return np.array(positions, ndmin=2)
-            elif ((cls.nDim == 1 or cls.nDim == 0) and all(
+            elif ((cls.constants[cls.nDim] == 1 or cls.constants[cls.nDim] == 0) and all(
                     [isinstance(position, Number) for position in positions])):  # positions[[position[dimPos]]
                 return np.array(positions, ndmin=2)
             else:
                 raise Exception(
                     "Input Type dimensionality does not fit to potential dimensionality! Input: " + str(positions))
-        elif ((cls.nDim == 1 or cls.nDim == -1) and isinstance(positions, Number)):
+        elif ((cls.constants[cls.nDim] == 1 or cls.constants[cls.nDim] == -1) and isinstance(positions, Number)):
             return np.array(positions, ndmin=2)
         else:
             raise Exception(
@@ -200,8 +215,8 @@ class _potentialNDCls(_potentialCls):
 
         :return:  -
         """
-        ene = np.array(list(map(self._calculate_energies_singlePos, positions)))
-        return ene.item() if (len(ene.shape) == 1 and ene.shape[0] == 1) else ene
+        ene = np.squeeze(np.array(list(map(self._calculate_energies_singlePos, positions))))
+        return ene
 
     def _calculate_dvdpos_multiPos(self,
                                    positions: Union[Iterable[Iterable[Number]], Iterable[Number], Number]) -> np.array:
@@ -274,7 +289,7 @@ class _potential1DCls(_potentialNDCls):
     '''
 
     def __init__(self):
-        super().__init__(nDim=self.nDim)
+        super().__init__(nDim=1)
 
     @classmethod
     def _check_positions_type_singlePos(cls, position: Union[Iterable[Number], Number]) -> Union[np.array, Number]:
@@ -288,7 +303,7 @@ class _potential1DCls(_potentialNDCls):
         """
         if (isinstance(position, Number)):
             return position
-        elif (isinstance(position, Sized) and len(position) == cls.nDim and isinstance(position[0], Number)):
+        elif (isinstance(position, Sized) and len(position) == cls.constants[cls.nDim] and isinstance(position[0], Number)):
             return position[0]
         else:
             raise Exception(
@@ -322,7 +337,7 @@ class _potential1DCls(_potentialNDCls):
                 raise Exception("potential got None as position")
             else:
                 raise Exception("list dimensionality does not fit to potential dimensionality! len(list)=" + str(
-                    len(positions)) + " potential Dimensions " + str(cls.nDim))
+                    len(positions)) + " potential Dimensions " + str(cls.constants[cls.nDim]))
 
     def _calculate_energies_singlePos(self, position: Union[Iterable[Number], Number]) -> Union[np.array, Number]:
         raise NotImplementedError("Function " + __name__ + " was not implemented for class " + str(__class__) + "")
@@ -335,7 +350,6 @@ class _potential2DCls(_potentialNDCls):
     '''
     potential base class
     '''
-    nDim: int = 2
 
     def __init__(self):
         super().__init__(nDim=2)
@@ -343,7 +357,7 @@ class _potential2DCls(_potentialNDCls):
     @classmethod
     def _check_positions_type_singlePos(cls, position: Union[Iterable[Number], Number]) -> np.array:
         positions = super()._check_positions_type_singlePos(position=position)
-        if (len(positions) == cls.nDim):
+        if (len(positions) == cls.constants[cls.nDim]):
             return position
         else:
             raise Exception("Dimensionality is not correct for positions! " + str(positions))
@@ -353,14 +367,14 @@ class _potential2DCls(_potentialNDCls):
         Iterable[Iterable[Number]], Iterable[Number], Number]) -> np.array:
         positions = super()._check_positions_type_multiPos(positions=positions)
         # dim check
-        if (all([len(pos) == cls.nDim for pos in positions])):
+        if (all([len(pos) == cls.constants[cls.nDim] for pos in positions])):
             return positions
         else:
             raise Exception("Dimensionality is not correct for positions! " + str(positions))
 
 
 """
-MultiState Potentials
+    MultiState Potentials
 """
 
 
@@ -369,8 +383,7 @@ class _potentialNDMultiState(_potentialNDCls):
     states: _potentialNDCls
 
     def __init__(self, nDim: int, nStates: int):
-        super().__init__(nDim=nDim)
-        self.nStates = nStates
+        super().__init__(nDim=nDim, nStates=nStates)
 
     def _check_positions_type_singlePos(self, position: Union[Iterable[Number], Number]) -> np.array:
         """
@@ -384,19 +397,19 @@ class _potentialNDMultiState(_potentialNDCls):
         # array
         # print(position)
         if (isinstance(position, Number)):
-            if (self.nDim == 1):
+            if (cls.constants[self.nDim] == 1):
                 return np.array([position for state in range(self.nStates)])
-            elif (self.nDim == -1):
+            elif (cls.constants[self.nDim] == -1):
                 return np.array([[position, ] for state in range(self.nStates)])
         elif (isinstance(position, Iterable) and isinstance(position, Sized)):
-            if ((len(position) == self.nDim or self.nDim == -1) and all([isinstance(dim, Number) for dim in position])):
+            if ((len(position) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) and all([isinstance(dim, Number) for dim in position])):
                 return np.array([position for state in range(self.nStates)])
-            elif (len(position) == self.nStates):
-                if (all([isinstance(state, Iterable) and (len(state) == self.nDim or self.nDim == -1) for state in
+            elif (len(position) == self.constants[self.nStates]):
+                if (all([isinstance(state, Iterable) and (len(state) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) for state in
                          position]) and
                         all([[isinstance(dim, Number) for dim in state] for state in position])):
                     return np.array(position)
-                if (self.nDim == 1 and all([isinstance(dim, Number) for dim in position])):
+                if (cls.constants[self.nDim] == 1 and all([isinstance(dim, Number) for dim in position])):
                     return np.array([[p] for p in position])
             elif (len(position) == 1 and isinstance(position[0], Number)):
                 return np.array([position[0] for state in range(self.nStates)])
@@ -418,16 +431,16 @@ class _potentialNDMultiState(_potentialNDCls):
         :return type: Iterable[Number]
         """
         # array
-        if (isinstance(positions, Number) and (self.nDim == 1 or self.nDim == -1)):
+        if (isinstance(positions, Number) and (cls.constants[self.nDim] == 1 or cls.constants[self.nDim] == -1)):
             return np.array([[positions, ] for state in range(self.nStates)])
         elif (isinstance(positions, Iterable) and isinstance(positions, Sized)):
-            if ((len(positions) == self.nDim or self.nDim == -1) and all(
+            if ((len(positions) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) and all(
                     [isinstance(dim, Number) for dim in positions])):
                 return np.array([positions for state in range(self.nStates)])
-            elif ((1 == self.nDim or self.nDim == -1) and all([isinstance(dim, Number) for dim in positions])):
+            elif ((1 == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) and all([isinstance(dim, Number) for dim in positions])):
                 return np.array([[p for state in range(self.nStates)] for p in positions])
-            elif (len(positions) == self.nStates and all(
-                    [(len(state) == self.nDim or self.nDim == -1) for state in positions]) and
+            elif (len(positions) == self.constants[self.nStates] and all(
+                    [(len(state) == cls.constants[self.nDim] or cls.constants[self.nDim] == -1) for state in positions]) and
                   all([[isinstance(dim, Number) for dim in state] for state in positions])):
                 return np.array(positions)
             else:
@@ -454,11 +467,11 @@ class _perturbedPotentialNDCls(_potentialNDMultiState):
         :param gamma: perturbation parameter for position of harmonic oscillator
         '''
         self.states = state_potentials
-        self.nStates = len(state_potentials)
-        if (all([V.nDim == state_potentials[0].nDim for V in state_potentials])):
-            self.nDim = state_potentials[0].nDim
 
-        super().__init__(nDim=self.nDim, nStates=self.nStates)
+        if (all([V.nDim == state_potentials[0].nDim for V in state_potentials])):
+           self.constants.update({self.nDim : state_potentials[0].nDim})
+
+        super().__init__(nDim=self.constants[self.nDim], nStates=len(state_potentials))
         self.lam = lam
         self._calculate_dhdlam = self._calculate_dhdlam_multiPos
 
@@ -486,19 +499,13 @@ class _perturbedPotentialNDCls(_potentialNDMultiState):
 
 
 """
-NEW SYMPY IMPLEMENT
+    NEW SYMPY IMPLEMENT
 """
-import sympy as sp
-
-
-def notImplementedERR():
-    raise NotImplementedError("This function needs to be implemented in sympy")
 
 
 """
 SYMPY POTENTIALS
 """
-
 
 class _potentialNDClsSymPY(_potentialCls):
     '''
@@ -506,33 +513,27 @@ class _potentialNDClsSymPY(_potentialCls):
     @nullState
     @Strategy Pattern
     '''
-    name: str = "Unknown"
-    nDim: sp.symbol = sp.symbols("nDim")
-    nStates: int = 1
-    _no_Type_check: bool = False
-    _singlePos_mode: bool = False
-
-    position: sp.Symbol = None
-    V_orig: sp.Function
-    dVdpos_orig: sp.Function
 
     V: sp.Function = notImplementedERR
     dVdpos = notImplementedERR
-    constants: dict = {}
 
-    def __init__(self, nDim: int = -1):
-        self.constants.update({self.nDim: nDim})
+    #generated during construction:
+    position: sp.Symbol
+    V_orig: sp.Function
+    dVdpos_orig: sp.Function
+
+    def __init__(self, nDim: int = -1, nStates:int =1):
+        self.constants.update({self.nDim: nDim, self.nStates:nStates})
         # needed for multi dim functions to be generated dynamically
         self._initialize_functions()
         # apply potential simplification and update calc functions
         self._update_functions()
 
-    def __name__(self) -> str:
-        return str(self.name)
+
 
     def __str__(self) -> str:
         msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.nStates) + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
         msg += "\tDimensions: " + str(self.nDim) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tV:\t" + str(self.V_orig) + "\n"
@@ -618,7 +619,6 @@ class _potential2DClsSymPY(_potentialNDClsSymPY):
 
 
 class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
-    nStates: int = 1
 
     lam = sp.symbols(u"λ")
 
@@ -630,15 +630,12 @@ class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
     dVdlam = notImplementedERR
 
     def __init__(self):
-        self.nStates = 1
-        self.nDim = 1
+        self.constants.update({self.nDim:1, self.nStates:1})
         super().__init__()
-        self.nStates = 1
-        self.nDim = 1  # check this
 
     def __str__(self) -> str:
         msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.nStates) + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
         msg += "\tDimensions: " + str(self.nDim) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tCoupling:\t" + str(self.Coupling) + "\n"
