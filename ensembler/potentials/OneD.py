@@ -245,6 +245,39 @@ class doubleWellPot(_potential1DClsSymPY):
         super().__init__()
 
 
+class fourWellPot(_potential1DClsSymPY):
+    '''
+        .. autoclass:: unperturbed four well potential
+    '''
+    name:str = "Four Well Potential"
+
+    a, ah, b, bh, c, ch, d, dh, Vmax, position = sp.symbols("a ah b bh c ch d dh V_max r")
+
+
+    V_orig = -Vmax * sp.log(sp.exp(-(position - a)**2 - ah)+ sp.exp(-(position - b)**2 - bh)+ sp.exp(-(position - c)**2 - ch)+ sp.exp(-(position - d)**2 - dh))
+
+    def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1. ):
+        '''
+
+        :param Vmax: scaling of the whole potential
+        :param a: minimum of the first well
+        :param b: minimum of the second well
+        :param c: minimum of the third well
+        :param d: minimum of the fourth well
+        :param ah: y position of the first well
+        :param bh: y position of the second well
+        :param ch: y position of the third well
+        :param dh: y position of the fourth well
+        '''
+
+
+        self.constants = {self.Vmax:Vmax, self.a:a, self.b:b, self.c:c, self.d:d, self.ah:ah, self.bh:bh, self.ch:ch, self.dh:dh}
+        self.V = self.V_orig.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+
+        super().__init__()
+
+
 """
     COMBINED POTENTIALS
 """
