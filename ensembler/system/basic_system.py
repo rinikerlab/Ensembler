@@ -16,7 +16,7 @@ pd.options.mode.use_inf_as_na = True
 from ensembler.util import dataStructure as data
 from ensembler.potentials._baseclasses import _potentialCls
 
-import ensembler.util.ensemblerTypes as ensemblerTypes
+from ensembler.util import  ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
 
 from ensembler.integrator.newtonian import newtonianIntegrator
