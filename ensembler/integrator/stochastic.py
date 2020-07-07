@@ -275,6 +275,21 @@ class langevinIntegrator(_integratorCls):
 
 
     def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
+        """
+          __init__
+              This is the Constructor of the Langevin integrator.
+
+
+          Parameters
+          ----------
+          dt : Number, optional
+              time step of an integration, by default 0.005
+          gamma : Number, optional
+              Friktion constant of the system
+          oldPosition : Iterable[Number, Number] of size nDim, optional
+              determins position at step -1, if not set the system will use the velocity to determine tis position
+          """
+
         self.dt = dt
         self.gamma = gamma
         self._oldPosition = oldPosition
@@ -351,8 +366,8 @@ class langevinIntegrator(_integratorCls):
 
         """
         # get current positiona and velocity form system class
-        self.currentPosition = system._currentPosition
-        self.currentVelocity = system._currentVelocities
+        self.currentPosition = np.array(system._currentPosition)
+        self.currentVelocity = np.array(system._currentVelocities)
 
         # hirachy: first check if old postition is given, if not it takes the velocity from the system class
         # is there no initial velocity a Maxwell-Boltzmann distributied velocity is generated
@@ -361,6 +376,8 @@ class langevinIntegrator(_integratorCls):
             print("initializing Langevin old Positions\t ")
             print("\n")
             self._oldPosition = self.currentPosition - self.currentVelocity * self.dt
+        else:
+            self._oldPosition = np.array(self._oldPosition)
 
         # integration step
         new_position, new_velocity = self.update_positon(system)
