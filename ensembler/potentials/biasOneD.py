@@ -62,7 +62,7 @@ class _bias_baseclass(_potential1DClsSymPY):
             # --> simulation potential has to be
             P_x = (1 / (np.sqrt(2 * np.pi) * np.sqrt(2 * self.system.temperature * self.integrator.gamma * self.system.mass))) * np.exp(
                 -(self.integrator.R_x ** 2) / (2 * (2 * self.system.temperature * self.integrator.gamma * self.system.mass)))
-            return = -np.log(P_x)
+            return -np.log(P_x)
         # if not raise error
         else:
             raise TypeError("Integrator has to be of type langevinIntegrator to calculate the actions")
@@ -84,14 +84,11 @@ class _bias_baseclass(_potential1DClsSymPY):
 
         #works with newtonion or langevin Integrator
 
-        Pass
+        #pass
 
 
-        get reweighting parameter necessary for Weber reweighting
-        :return: bias structure
-        '''
-
-
+        #get reweighting parameter necessary for Weber reweighting
+        #:return: bias structure
 
         # calculate new force and corresponding random number
         F_rw = -system.potential.unbiased_system_dhdpos(currentPosition)  # has to be defined
@@ -112,12 +109,33 @@ class _bias_baseclass(_potential1DClsSymPY):
 """
     TIME INDEPENDENT BIASES 
 """
-# inlcude umbrella sampling, scaled potential
 
-class
+class addedPotentials(_potential1DClsSymPY):
+
+    name:str = "Added Potential Enhanced Sampling System"
+    position = sp.symbols("r")
+
+    def __init__(self, origPotential, addPotential):
+
+        '''
+        initializes torsions Potential
+        '''
+        self.origPotential  = origPotential
+        self.addPotential = addPotential
+
+        self.constants = {**origPotential.constants, **addPotential.constants}
+
+        self.V_orig =  origPotential.V + addPotential.V 
+
+        self.V = self.V_orig.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+
+        super().__init__()
+
 
 
 """
     TIME DEPENDENT BIASES 
 """
 # include metadynamics
+
