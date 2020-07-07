@@ -104,6 +104,8 @@ class wavePotential(_potential2DClsSymPY):
         self.V_orig = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
 
     def set_degree_mode(self):
+        #self.dvdpos = lambda positions: np.squeeze(self._calculate_dVdpos(*np.deg2rad(positions)))
+        #self.ene = lambda positions: np.squeeze(self._calculate_energies(*np.deg2rad(positions)))
         self.ene = lambda positions: np.squeeze(self._calculate_energies(*np.hsplit(np.deg2rad(positions), self.constants[self.nDim])))
         self.dvdpos = lambda positions: np.squeeze(self._calculate_dVdpos(*np.hsplit(np.deg2rad(positions), self.constants[self.nDim])))
 

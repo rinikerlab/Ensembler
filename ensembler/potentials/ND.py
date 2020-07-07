@@ -131,9 +131,7 @@ class envelopedPotential(_potentialNDCls):
         #ATTRIBUTES
         self.V_is:Iterable[_potentialNDCls] = None
         self.E_is:Iterable[float] = None
-        self.nStates:int = None
         self.s:float = None
-        self.nStates:int = 0
 
         # Todo: think about n states with each m dims.
         if(not self.nDim in self.constants or self.constants[self.nDim] == -1):
@@ -142,23 +140,23 @@ class envelopedPotential(_potentialNDCls):
         super().__init__(nDim=self.constants[self.nDim])
 
         #check State number
-        self.nStates = len(V_is)
+        self.constants[self.nStates] = len(V_is)
         #if (self.nStates < 2):
         #    raise IOError("It does not make sense enveloping less than two potentials!")
         if (isinstance(Eoff_i, type(None))):
             Eoff_i = [0.0 for state in range(len(V_is))]
 
-        elif (len(Eoff_i) != self.nStates):
+        elif (len(Eoff_i) != self.constants[self.nStates]):
             raise IOError(
                 "Energy offset Vector and state potentials don't have the same length!\n states in Eoff " + str(
                     len(Eoff_i)) + "\t states in Vi" + str(len(V_is)))
 
 
-        Eoffis = {"Eoff_"+str(i): Eoff_i[i] for i in range(self.nStates)}
+        Eoffis = {"Eoff_"+str(i): Eoff_i[i] for i in range(self.constants[self.nStates])}
         
-        self.statePotentials =  {"state_"+str(j): V_is[j] for j in range(self.nStates)}
+        self.statePotentials =  {"state_"+str(j): V_is[j] for j in range(self.constants[self.nStates])}
         self.states =  sp.Matrix([sp.symbols(j)-sp.symbols(k) for j,k in zip(self.statePotentials, Eoffis)])
-        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **{"s":s, self.T:T, self.nDim:1 , self.N:self.nStates}})
+        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **{"s":s, self.T:T, self.nDim:1 , self.N:self.constants[self.nStates]}})
 
         self.V_is = V_is
         self.s = s

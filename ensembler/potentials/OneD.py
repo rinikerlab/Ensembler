@@ -76,7 +76,7 @@ class flatwell(_potential1DCls):
         return self.y_min if (position >= self.x_min and position <= self.x_max) else self.y_max
 
     def _calculate_dvdpos_singlePos(self, positions: float) -> float:
-        return 0
+        return np.inf
 
 class harmonicOscillator(_potential1DClsSymPY):
     name:str = "harmonicOscilator"
