@@ -3,18 +3,12 @@ Module: Potential
 This module shall be used to implement biases on top of Potentials. This module contains all available biases.
 """
 
-import math
+
 import numpy as np
 import sympy as sp
-from numbers import Number
-from typing import Iterable, Sized, Union
-import typing as t
-from numbers import Number
-import scipy.constants as const
-from collections.abc import Iterable, Sized
 
-from ensembler.potentials import ND
-from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotentialNDCls, _potential1DClsSymPY, _potential1DClsSymPYPerturbed
+
+from ensembler.potentials._baseclasses import _potential1DClsSymPY
 
 """
     BIAS BASECLASS
@@ -118,8 +112,17 @@ class addedPotentials(_potential1DClsSymPY):
     def __init__(self, origPotential, addPotential):
 
         '''
-        initializes torsions Potential
+        __init__
+              This is the Constructor of the addedPotential class.
+        Parameters
+        ----------
+        origPotential: potential type
+            The unbiased potential
+        addPotential: potential type
+            The potential added on top of the unbiased potential to
+            bias the system
         '''
+
         self.origPotential  = origPotential
         self.addPotential = addPotential
 

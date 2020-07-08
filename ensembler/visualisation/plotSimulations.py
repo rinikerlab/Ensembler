@@ -80,15 +80,33 @@ def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_pa
 
     return out_path, fig
 
-def static_sim_plots_bias(sys: system, x_range: tuple = None,  y_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
-    """
+def static_sim_plots_bias(sys: system, x_range: tuple = None,  y_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space: int = style.potential_resolution) -> str:
+    '''
     Plot giving the sampled space, position distribution and forces
-    :param sys:
-    :param x_range:
-    :param title:
-    :param out_path:
-    :return:
-    """
+
+    Parameters
+    ----------
+    sys: system Type
+        The simulated system
+    x_range: tuple
+        Defines the range of the x axis of the first plot
+    y_range: tuple
+        Defines the range of the y axis of the first plot
+    title: String
+        Title for the plot
+    out_path: str
+        If specified, figure will be saved to this location
+    resolution_full_space: int
+        Number of points used for visualizing the potential space
+
+
+    Returns
+    -------
+    out_path: str
+        Location the figure is saved to
+    fig: Figure object
+    '''
+
     # gather data
     traj = sys.trajectory
     last_frame = traj.shape[0]-1

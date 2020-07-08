@@ -247,7 +247,7 @@ class doubleWellPot(_potential1DClsSymPY):
 
 class fourWellPot(_potential1DClsSymPY):
     '''
-        .. autoclass:: unperturbed four well potential
+        Unperturbed four well potential
     '''
     name:str = "Four Well Potential"
 
@@ -259,15 +259,26 @@ class fourWellPot(_potential1DClsSymPY):
     def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1. ):
         '''
 
-        :param Vmax: scaling of the whole potential
-        :param a: minimum of the first well
-        :param b: minimum of the second well
-        :param c: minimum of the third well
-        :param d: minimum of the fourth well
-        :param ah: y position of the first well
-        :param bh: y position of the second well
-        :param ch: y position of the third well
-        :param dh: y position of the fourth well
+        Parameters
+        ----------
+        Vmax: int
+            scaling of the whole potential
+        a: int
+            x position of the minimum of the first well
+        b: int
+            x position of the minimum of the second well
+        c: int
+            x position of the minimum of the third well
+        d: int
+            x position of the minimum of the fourth well
+        ah: str
+            ah*Vmax = y position of the first well
+        bh: str
+            bh*Vmax = y position of the second well
+        ch: str
+            ch*Vmax = y position of the third well
+        dh: str
+            dh*Vmax = y position of the fourth well
         '''
 
 
