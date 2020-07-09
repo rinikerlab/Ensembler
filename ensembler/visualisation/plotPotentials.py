@@ -11,6 +11,10 @@ from ensembler.visualisation import style
 from ensembler.potentials import OneD as pot, ND as nDPot
 from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotentialNDCls
 
+from ensembler.visualisation import plot_layout_settings
+for key, value in plot_layout_settings.items():
+    matplotlib.rcParams[key] = value
+
 #UTIL FUNCTIONS
 def significant_decimals(s:float)->float:
     significant_decimal=2

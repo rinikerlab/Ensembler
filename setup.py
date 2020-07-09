@@ -14,7 +14,7 @@ NAME = 'ensembler'
 DESCRIPTION = 'This Package shall be a tool for fast and efficient development of theoretic thermodynamic simulation tools or teaching.'
 URL = 'https://github.com/rinikerlab/Ensembler'
 EMAIL = 'bschroed@ethz.ch'
-AUTHOR = 'Benjamin Schroeder; David Hahn'
+AUTHOR = 'Benjamin Schroeder; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 

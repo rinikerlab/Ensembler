@@ -22,7 +22,7 @@ from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotenti
 
 class dummyPotential(_potential1DClsSymPY):
 
-    name:str = "dummyPotential"
+    name:str = "dummy"
     position, y_shift = sp.symbols("r Voffset")
 
     def __init__(self, y_shift: float = 0):
@@ -76,7 +76,8 @@ class flatwell(_potential1DCls):
         return self.y_min if (position >= self.x_min and position <= self.x_max) else self.y_max
 
     def _calculate_dvdpos_singlePos(self, positions: float) -> float:
-        return np.inf
+        x = np.inf if(positions == self.x_min or positions == self.x_max) else 1
+        return x
 
 class harmonicOscillator(_potential1DClsSymPY):
     name:str = "harmonicOscilator"
@@ -277,7 +278,7 @@ class forceField:
 
 
 """
-    PERTURBED POTENTIALS
+    Multi State Potentials - PERTURBED POTENTIALS
 """
 class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
     name:str = "linear Coupled System"
@@ -304,18 +305,16 @@ class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
         super().__init__()
 
 
-
 class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
-    name:str = "linear Coupled System"
-    lam, position, s, temp = sp.symbols(u'λ r s T')
+    name:str = "exponential Coupled System"
+    position, s, temp, eoffA, eoffB = sp.symbols(u'r s T eoffI eoffJ')
     Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
-    Coupling = (1-lam) * Va(position) + lam * Vb(position)
     beta = const.gas_constant / 1000.0 * temp
-    Coupling = -1/(beta*s) * sp.log(lam * sp.exp(-beta*s*Vb(position)) + (1-lam) * sp.exp(-beta*s*Va(position)))
+    Coupling = -1/(beta*s) * sp.log(sp.exp(-beta*s*Vb(position)-eoffA) + sp.exp(-beta*s*Va(position)-eoffB))
 
     def __init__(self, Va: _potential1DClsSymPY = harmonicOscillator(k=1.0, x_shift=0.0),
                        Vb: _potential1DClsSymPY = harmonicOscillator(k=11.0, x_shift=0.0), 
-                       lam:float = 0.5, s:float = 1.0, temp:float = 298):
+                       eoffA:float=0, eoffB:float=0, s:float = 1.0, temp:float = 298):
         """
         exponential Coupled Potentials, this is a mixture of EDS and TI
     
@@ -332,7 +331,7 @@ class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
         """
 
         self.statePotentials =  {self.Va:Va, self.Vb:Vb}
-        self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.lam:lam, self.s:s, self.temp:temp}
+        self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.eoffA:eoffA, self.eoffB:eoffB, self.s:s, self.temp:temp}
         
         super().__init__()
 
@@ -340,14 +339,11 @@ class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
         self.constants.update({self.s:s})
         self._update_functions()
 
-    def set_Eoff(self, Eoff:float):
-        self.constants.update({self.Eoff:Eoff})
+    def set_Eoff(self, eoffA:float, eoffB:float):
+        self.constants.update({self.eoffA:eoffA, self.eoffB: eoffB})
         self._update_functions()
 
-"""
-    ENVELOPED POTENTIALS
-    Here old implementations are way more reasonable, otherwise overkill in exponent!
-"""
+
 class envelopedPotential(ND.envelopedPotential):
     name = "Enveloping Potential"
 
@@ -426,3 +422,43 @@ class envelopedPotential(ND.envelopedPotential):
             dhdpos_R.append(dhdposR_position)
 
         return  dhdpos_R.item() if(len(dhdpos_R.shape) == 1 and dhdpos_R.shape[0] == 1) else np.array(dhdpos_R) 
+
+
+class hybridCoupledPotentials(_potential1DClsSymPYPerturbed):
+    name:str = "hybrid Coupled System"
+    lam, position, s, temp = sp.symbols(u'λ r s T')
+    Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
+    beta = const.gas_constant / 1000.0 * temp
+    Coupling = -1/(beta*s) * sp.log(lam * sp.exp(-beta*s*Vb(position)) + (1-lam) * sp.exp(-beta*s*Va(position)))
+
+    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillator(k=1.0, x_shift=0.0),
+                       Vb: _potential1DClsSymPY = harmonicOscillator(k=11.0, x_shift=0.0), 
+                       lam:float = 0.5, s:float = 1.0, temp:float = 298):
+        """
+        exponential Coupled Potentials, this is a mixture of EDS and TI
+    
+        :param Va: Potential A, defaults to harmonicOsc(k=1.0, x_shift=0.0)
+        :type Va: _potential1DClsSymPY, optional
+        :param Vb: Potential B, defaults to harmonicOsc(k=11.0, x_shift=0.0)
+        :type Vb: _potential1DClsSymPY, optional
+        :param lam: Coupling factor, defaults to 0.5
+        :type lam: float, optional
+        :param s: smoothing factor, defaults to 1.0
+        :type s: float, optional
+        :param temp: Temperature, defaults to 298
+        :type temp: float, optional
+        """
+
+        self.statePotentials =  {self.Va:Va, self.Vb:Vb}
+        self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.lam:lam, self.s:s, self.temp:temp}
+        
+        super().__init__()
+
+    def set_s(self, s:float):
+        self.constants.update({self.s:s})
+        self._update_functions()
+
+    def set_Eoff(self, Eoff:float):
+        self.constants.update({self.Eoff:Eoff})
+        self._update_functions()
+
