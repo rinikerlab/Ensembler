@@ -6,9 +6,10 @@ import os, sys
 sys.path.append(os.path.dirname(__file__)+"/..")
 
 from ensembler.system import system
+from ensembler.visualisation import style
 
 
-def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=1000) -> str:
+def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
     """
     Plot giving the sampled space, position distribution and forces
     :param sys:
@@ -39,17 +40,21 @@ def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_pa
     w, h = figaspect(0.25)
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[w, h])
 
-    ax1.scatter(x, y, c="orange", alpha=0.8)        #traj
-    ax1.scatter(x[0], y[0], c="green", alpha=0.8)   #start_point
-    ax1.scatter(x[last_frame], y[last_frame], c="red", alpha=0.8)   #end_point
-    ax1.plot(x_pot, ytot_space)
+    ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)        #traj
+    ax1.plot(x_pot, ytot_space, c=style.potential_light)
+    ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)   #start_point
+    ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)   #end_point
 
-    ax2.violinplot(x, showmeans=False, showextrema=False)
+    color = style.potential_color(2)
+    viol = ax2.violinplot(x, showmeans=False, showextrema=False)
     ax2.boxplot(x)
-    ax2.scatter([1], [x[0]], c="green", alpha=0.8)   #start_point
-    ax2.scatter([1], [x[last_frame]], c="red", alpha=0.8)   #end_point
+    ax2.scatter([1], [x[0]], c=style.traj_start, alpha=style.alpha_val)   #start_point
+    ax2.scatter([1], [x[last_frame]], c=style.traj_end, alpha=style.alpha_val)   #end_point
+    print(viol)
+    viol["bodies"][0].set_facecolor(color)
 
-    ax3.plot(range(len(x)), shift)
+    color = style.potential_color(3)
+    ax3.plot(range(len(x)), shift, color=color)
 
     #Labels
     ax1.set_ylabel("$V_pot$")

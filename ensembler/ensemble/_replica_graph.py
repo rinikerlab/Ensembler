@@ -2,16 +2,20 @@
 .. automodule: _replica graph
 
 """
+from typing import List, Dict, Tuple, Iterable
+from collections import namedtuple
+import copy, itertools as it
+from tqdm import tqdm_notebook as tqdm
 
-import numpy as np
-import pandas as pd
-from collections import Iterable, namedtuple
+import numpy as np, pandas as pd
 import scipy.constants as const
-from typing import List, Dict, Tuple
-import copy
-import itertools as it
 
-from ensembler import system, potentials as pot
+from ensembler.system import basic_system as system
+from ensembler.ensemble import exchange_pattern
+
+
+import multiprocessing as mult
+
 
 class MultiReplicaApproach():
     ##Parameters - to build replica graphs
@@ -41,7 +45,7 @@ class MultiReplicaApproach():
         self.build_nodes(coordinates=coordinates)
 
         if(verbose):
-            print("Replicas:\n\tuniqID\tcoordinates\n\t"+"\n\t".join([str(self.replicas[x].uniqueID)+"\t"+str(self.replicas[x].Nodecoordinates) for x in self.replicas]))
+            print("Replicas:\n\treplicaID\tcoordinates\n\t"+"\n\t".join([str(self.replicas[x].uniqueID)+"\t"+str(self.replicas[x].Nodecoordinates) for x in self.replicas]))
 
     ### * Node Functions
     #### Generate coordinates
@@ -69,18 +73,19 @@ class MultiReplicaApproach():
         replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]#generate deepcopies
 
         # build up graph - set parameters
-        uid = 0
+        replicaID = 0
         for coords, replica in zip(coordinates, replicas):
 
             ## finalize deepcopy:
-            replica.trajectory = [] #fields are not deepcopied!!!
+            #replica.trajectory = [] #fields are not deepcopied!!!
             replica.nsteps = self.nSteps_between_trials     # set steps between trials #todo: ? Really here?
             
             ## Node properties
-            setattr(replica, "uniqueID", uid)
+            setattr(replica, "replicaID", replicaID)
             setattr(replica, "Nodecoordinates", coords)
 
             ##set parameters
+            parameter_set = {}
             for ind, parameter_Name in enumerate(self.coord_dims):
                 if (hasattr(replica, parameter_Name) or True):
                     if (isinstance(coords, Iterable)):
@@ -89,29 +94,32 @@ class MultiReplicaApproach():
                         setattr(replica, parameter_Name, coords)
                 else:
                     raise Exception("REPLICA INIT FAILED: Replica does not have a field: "+parameter_Name+"\n")
-            replica.init_velocities() # e.g. if temperature changes
+                parameter_set.update({parameter_Name:coords[ind]})
 
-            self.replicas.update({uid: replica})
-            uid+=1
+            setattr(replica, "exchange_parameters", parameter_set)
+            replica._init_velocities() # e.g. if temperature changes
+
+            self.replicas.update({replicaID: replica})
+            replicaID+=1
 
 
 class ReplicaExchange(MultiReplicaApproach):
     ##Parameters
-
+    verbose:bool=False
     ##Exchange Variables
     _currentTrial:int
     nSteps_between_trials:int
+    _exchange_pattern: exchange_pattern.Exchange_pattern = None
 
 
     ###Exchange params/io
-    exchange_information: pd.DataFrame = pd.DataFrame(columns=["nExchange", "uniqueReplicaID","replicaI", "exchangeCoordinateI", "TotEI",
-                                                          "replicaJ","exchangeCoordinateJ", "TotEJ", "doExchange"])
+    exchange_information: pd.DataFrame = pd.DataFrame(columns=["nExchange", "replicaID","replicaPositionI", "exchangeCoordinateI", "TotEI",
+                                                          "replicaPositionJ","exchangeCoordinateJ", "TotEJ", "doExchange"])
     
     ###METROPOLIS CRITERION
     ###default Metropolis Criterion
     _defaultMetropolisCriterion = lambda self, originalParams, swappedParams: (np.greater_equal(originalParams, swappedParams) or self._defaultRandomness(originalParams, swappedParams))
     exchange_criterium = _defaultMetropolisCriterion
-    exchange_offset=0
 
     ###random part of Metropolis Criterion:
     randomnessIncreaseFactor = 0.1
@@ -146,45 +154,65 @@ class ReplicaExchange(MultiReplicaApproach):
         if(exchange_criterium != None):
             self.exchange_criterium = exchange_criterium
 
+        if(isinstance(self._exchange_pattern, type(None))):
+            self._exchange_pattern = exchange_pattern.localExchangeScheme(replica_graph=self)
 
     #public functions
     def initialise(self):
         self._currentTrial = 0
         # BUILD replicas
         self._initialise_replica_graph()
-
+        self._init_exchanges()
 
     def simulate(self, ntrials:int, steps_between_trials:int=None, reset_ensemble:bool=False):
         if(reset_ensemble):
             self._currentTrial=0
             [replica.initialise(withdraw_Traj=True) for repName,replica in self.replicas.items()]
-            self.exchange_information = pd.DataFrame(columns=["nExchange", "uniqueReplicaID","replicaI", "exchangeCoordinateI", "TotEI",
-                                                          "replicaJ","exchangeCoordinateJ", "TotEJ", "doExchange"])
+            self.exchange_information = pd.DataFrame(columns=["nExchange", "replicaID","replicaPositionI", "exchangeCoordinateI", "TotEI",
+                                                          "replicaPositionJ","exchangeCoordinateJ", "TotEJ", "doExchange"])
+            self._init_exchanges()
 
         if(isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
 
-        for trial in range(ntrials):
+        for trial in tqdm(range(ntrials), desc="Running trials", leave=True):
             self.run()
             self.exchange()
-        self.exchange_information = self.exchange_information
 
 
     def exchange(self):
-        raise NotImplementedError("This method was not implemented for "+str(__name__)+" do so!")
-        pass
+        self._exchange_pattern.exchange(verbose=self.verbose)
 
 
-    def run(self):
+    def run(self, verbosity:bool=False):
         for replica_coords, replica in self.replicas.items():
-            replica.simulate(steps=self.nSteps_between_trials)
+            replica.simulate(steps=self.nSteps_between_trials, withdrawTraj=False, initSystem=False, verbosity=verbosity)
         pass
 
+    def run_parallel(self, verbosity:bool=False, nProcesses:int=4):
+        pool = mult.Pool(processes=nProcesses)
+        sim_params = [self.nSteps_between_trials, False, False, verbosity]
+
+
+
+        result_replica = {}
+        for replica_coords, replica in self.replicas.items():
+           #replica_result = pool.apply_async(sim, [replica, sim_params])
+           replica_result = pool.apply_async(replica.simulate, sim_params)
+           result_replica.update({replica_coords:replica_result})
+        pool.close()
+        pool.join()
+
+        print(replica_result)
+        print(vars(replica_result))
+        print(dir(replica_result)) 
+        #[self.replicas.update({replica_coords:result_replica[replica_coords].get()}) for replica_coords in self.replicas]
+        print("Done")
+        pass
 
     #getter/setters
     def get_trajectories(self)->Dict[Tuple, List]:
-        return {coord:replica.trajectory for coord, replica in self.replicas.items()}
-
+        return {coord:replica.getTrajectory() for coord, replica in self.replicas.items()}
 
     def get_replicas_positions(self)->Dict:
         """
@@ -229,7 +257,7 @@ class ReplicaExchange(MultiReplicaApproach):
 
 
     def get_total_energy(self)->Dict[Tuple, float]:
-        [replica.updateEne() for coord, replica in self.replicas.items()]
+        [replica._updateEne() for coord, replica in self.replicas.items()]
         return {coord:replica.getTotEnergy() for coord, replica in self.replicas.items()}
 
 
@@ -296,21 +324,21 @@ class ReplicaExchange(MultiReplicaApproach):
             self.replicas = {}
             for coords, replica in zip(coordinates, replicas):
                 for ind, parameter_Name in enumerate(self.exchange_dimensions):
+                    parameters = list(self.exchange_dimensions[self.parameter_Name])
+
                     #set parameter set
                     if (hasattr(replica, parameter_Name)):
-                        setattr(replica, parameter_Name, coords[ind])
+                        setattr(replica, parameter_Name, parameters[coords[ind]])
                     else:
                         raise Exception("REPLICA INIT FAILDE: Replica does not have a field: "+parameter_Name+"\n")
                 self.replicas.update({coords: replica})
         else:
             self.replicas = {}
+            parameters = list(self.exchange_dimensions[self.parameter_names[0]])
             for coords, replica in zip(coordinates, replicas):
                 #set parameter set
                 if (hasattr(replica, self.parameter_names[0])):
-                    if (isinstance(coords, Iterable)):
-                        setattr(replica, self.parameter_names[0], coords[0])
-                    else:
-                        setattr(replica, self.parameter_names[0], coords)
+                    setattr(replica, self.parameter_names[0], parameters[coords])
 
                 else:
                     raise Exception("REPLICA INIT FAILDE: Replica does not have a field: " + self.exchange_dimensions[0] + "\n")
@@ -318,90 +346,16 @@ class ReplicaExchange(MultiReplicaApproach):
 
 
     #private
-    ##Exchange functions
-    def _collect_replica_energies(self, verbose):
-        original_totPots = self.get_total_energy()
-        original_exCoord = list(sorted(original_totPots.keys()))
-
-        replica_values = list([self.replicas[key] for key in original_exCoord])
-
-        # SWAP exchange_coordinates params pairwise
-        swapped_exCoord = self._swap_coordinates(original_exCoord)
-
-        if (verbose):
-            print("original Coords ", original_exCoord)
-            print("swapped Coords ", swapped_exCoord)
-
-        # SWAP Params to calculate energies in swapped case
-        self.set_parameter_set(coordinates=swapped_exCoord, replicas=replica_values)  # swap parameters
-
-        # Exchange coordinate paramters:
-        ##scaleVel
-        self._adapt_system_to_exchange_coordinate(swapped_exCoord, original_exCoord)
-
-        ##get_swapped energies
-        swapped_totPots = self.get_total_energy()  # calc swapped parameter Energies
-
-        ##scale Vel back
-        self._adapt_system_to_exchange_coordinate(swapped_exCoord, original_exCoord)
-        self.set_parameter_set(coordinates=original_exCoord, replicas=replica_values)  # swap back parameters
-
-        return original_exCoord, original_totPots, swapped_exCoord, swapped_totPots
-
-
-    def _do_exchange(self, exchanges_to_make, original_exCoord, original_totPots, swapped_totPots, verbose):
-
-        if (self.exchange_offset == 1):
+    def _init_exchanges(self):
+        for replicaID in self.replicas:
             exchange = False
-            partner1ID = partner2ID = original_exCoord[0]
             self.exchange_information = self.exchange_information.append(
-                {"nExchange": self._currentTrial, "uniqueReplicaID": self.replicas[partner2ID].uniqueID,
-                 "replicaI": partner1ID, "exchangeCoordinateI": partner2ID, "TotEI": swapped_totPots[partner2ID],
-                 "replicaJ": partner2ID, "exchangeCoordinateJ": partner1ID, "TotEJ": swapped_totPots[partner1ID],
+                {"nExchange": self._currentTrial, "replicaID": self.replicas[replicaID].replicaID,
+                 "replicaPositionI": replicaID, "exchangeCoordinateI": self.replicas[replicaID].exchange_parameters,
+                 "TotEI": self.replicas[replicaID].totPot(),
+                 "replicaPositionJ": replicaID, "exchangeCoordinateJ": self.replicas[replicaID].exchange_parameters,
+                 "TotEJ": self.replicas[replicaID].totPot(),
                  "doExchange": exchange}, ignore_index=True)
-
-        for (partner1ID, partner2ID), exchange in exchanges_to_make.items():
-            if (exchange):
-                if (verbose): print(
-                    "Exchanging: " + str(partner1ID) + "\t" + str(partner2ID) + "\t" + str(exchange) + "\n")
-                partner1 = self.replicas[partner1ID]
-                partner2 = self.replicas[partner2ID]
-
-                # T=self.parameter_names[0]
-                exchange_param = "trajectory"
-                param = getattr(partner1, self.exchange_param)
-                setattr(partner1, self.exchange_param, getattr(partner2, self.exchange_param))
-                setattr(partner2, self.exchange_param, param)
-                tmp_id = getattr(partner1, "uniqueID")
-                setattr(partner1, "uniqueID", getattr(partner2, "uniqueID"))
-                setattr(partner2, "uniqueID", tmp_id)
-            else:
-                if (verbose): print("not Exchanging: " + str(partner1ID) + " / " + str(partner2ID) + " \n")
-            # add exchange info line here!
-
-            self.exchange_information = self.exchange_information.append(
-                {"nExchange": self._currentTrial, "uniqueReplicaID": self.replicas[partner1ID].uniqueID,
-                 "replicaI": partner1ID, "exchangeCoordinateI": partner1ID, "TotEI": original_totPots[partner1ID],
-                 "replicaJ": partner2ID, "exchangeCoordinateJ": partner2ID, "TotEJ": original_totPots[partner2ID],
-                 "doExchange": exchange}, ignore_index=True)
-            self.exchange_information = self.exchange_information.append(
-                {"nExchange": self._currentTrial, "uniqueReplicaID": self.replicas[partner2ID].uniqueID,
-                 "replicaI": partner2ID, "exchangeCoordinateI": partner2ID, "TotEI": swapped_totPots[partner1ID],
-                 "replicaJ": partner1ID, "exchangeCoordinateJ": partner1ID, "TotEJ": swapped_totPots[partner2ID],
-                 "doExchange": exchange}, ignore_index=True)
-
-        if (self.exchange_offset == 0):
-            exchange = False
-            partner1ID = partner2ID = original_exCoord[-1]
-            self.exchange_information = self.exchange_information.append(
-                {"nExchange": self._currentTrial, "uniqueReplicaID": self.replicas[partner2ID].uniqueID,
-                 "replicaI": partner1ID, "exchangeCoordinateI": partner2ID, "TotEI": swapped_totPots[partner2ID],
-                 "replicaJ": partner2ID, "exchangeCoordinateJ": partner1ID, "TotEJ": swapped_totPots[partner1ID],
-                 "doExchange": exchange}, ignore_index=True)
-
-
-    def _swap_coordinates(self):
-        raise NotImplementedError("UPS this func is not implemented please override.")
 
 
     def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
