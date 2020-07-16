@@ -261,15 +261,15 @@ class fourWellPot(_potential1DClsSymPY):
 
         Parameters
         ----------
-        Vmax: int
+        Vmax: float
             scaling of the whole potential
-        a: int
+        a: float
             x position of the minimum of the first well
-        b: int
+        b: float
             x position of the minimum of the second well
-        c: int
+        c: float
             x position of the minimum of the third well
-        d: int
+        d: float
             x position of the minimum of the fourth well
         ah: str
             ah*Vmax = y position of the first well
@@ -288,6 +288,35 @@ class fourWellPot(_potential1DClsSymPY):
 
         super().__init__()
 
+class gaussPot(_potential1DClsSymPY):
+    '''
+        Gaussian like potential, usually used for metadynamics
+    '''
+    name:str = "Gaussian Potential"
+
+    mu, sigma, A, position = sp.symbols("mu sigma A r")
+
+
+    V_orig = A * sp.exp(-(position-mu)**2/(2*sigma**2))
+
+    def __init__(self, A=1., mu=0., sigma=1. ):
+        '''
+
+        Parameters
+        ----------
+        A: float
+            scaling of the gauss function
+        mu: float
+            mean of the gauss function
+        sigma: float
+            standard deviation of the gauss function
+        '''
+
+        self.constants = {self.A:A, self.mu:mu, self.sigma:sigma}
+        self.V = self.V_orig.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+
+        super().__init__()
 
 """
     COMBINED POTENTIALS

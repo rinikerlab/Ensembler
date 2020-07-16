@@ -92,7 +92,7 @@ class wavePotential(_potential2DClsSymPY):
     def _initialize_functions(self):
         # Parameters
         nDim = self.constants[self.nDim]
-        self.position = sp.Matrix([sp.symbols("pos_" + str(i)) for i in range(nDim)])
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
         self.multiplicity = sp.Matrix([sp.symbols("mult_" + str(i)) for i in range(nDim)])
         self.phase_shift = sp.Matrix([sp.symbols("phase_" + str(i)) for i in range(nDim)])
         self.amplitude = sp.Matrix([sp.symbols("amp_" + str(i)) for i in range(nDim)])
@@ -144,4 +144,61 @@ class torsionPotential(_potential2DCls):
 
     def _calculate_dhdpos_singlePos(self, position:Iterable[float]) -> np.array:
         return  np.add(*map(lambda x: np.array(x.dhdpos(position)), self.wave_potentials))
+
+
+class gaussPot2D(_potential2DClsSymPY):
+    '''
+        Gaussian like potential, usually used for metadynamics
+    '''
+    name:str = "Gaussian Potential 2D"
+    nDim: sp.Symbol = sp.symbols("nDim")
+    position: sp.Matrix = sp.Matrix([sp.symbols("r")])
+    mean: sp.Matrix = sp.Matrix([sp.symbols("mu")])
+    sigma: sp.Matrix = sp.Matrix([sp.symbols("sigma")])
+    amplitude = sp.symbols("A_gauss")
+
+    # we assume that the two dimentions are uncorrelated
+    V_dim = amplitude*(sp.matrix_multiply_elementwise((position - mean)**2,(2*sigma**2)**(-1)).applyfunc(sp.exp))
+    V_dim =amplitude * (sp.matrix_multiply_elementwise(-(position - mean).applyfunc(lambda x: x ** 2),
+                                       0.5 * (sigma).applyfunc(lambda x: x ** (-2))).applyfunc(sp.exp))
+
+    i = sp.Symbol("i")
+    V_orig = sp.product(V_dim[i, 0], (i, 0, nDim))
+    #V_orig = V_dim[0, 0] * V_dim[1, 0]
+
+    def __init__(self, amplitude=1., mu=(0.,0.), sigma=(1.,1.)):
+        '''
+        Parameters
+        ----------
+        A: float
+            scaling of the gauss function
+        mu: tupel
+            mean of the gauss function
+        sigma: tupel
+            standard deviation of the gauss function
+        '''
+        nDim = 2
+        self.constants.update({"A_gauss": amplitude})
+        self.constants.update({"mu_" + str(j): mu[j] for j in range(nDim)})
+        self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDim)})
+        self.constants.update({"nDim": nDim})
+
+        super().__init__()
+
+
+    def _initialize_functions(self):
+        # Parameters
+        nDim = self.constants[self.nDim]
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
+        self.mean = sp.Matrix([sp.symbols("mu_" + str(i)) for i in range(nDim)])
+        self.sigma = sp.Matrix([sp.symbols("sigma_" + str(i)) for i in range(nDim)])
+        self.amplitude = sp.symbols("A_gauss")
+
+        # Function
+        self.V_dim =self.amplitude*(sp.matrix_multiply_elementwise(-(self.position - self.mean).applyfunc(lambda x: x ** 2),0.5*(self.sigma).applyfunc(lambda x: x **(-2) )).applyfunc(sp.exp))
+
+
+        #self.V_orig = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
+        # Not too beautiful, but sp.Product raises errors
+        self.V_orig = self.V_dim[0, 0] * self.V_dim[1, 0]
 

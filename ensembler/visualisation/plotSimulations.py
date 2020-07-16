@@ -7,6 +7,7 @@ sys.path.append(os.path.dirname(__file__)+"/..")
 
 from ensembler.system import system
 from ensembler.visualisation import style
+from ensembler.potentials.biasOneD import metadynamicsPotential
 
 
 def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
@@ -129,19 +130,34 @@ def static_sim_plots_bias(sys: system, x_range: tuple = None,  y_range: tuple = 
     w, h = figaspect(0.25)
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[w, h])
 
-    ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)        #traj
+      #traj
 
     #plot energy landscape of original and bias potential
-    ytot_orig_space = sys.potential.origPotential.ene(x_pot)
-    ytot_bias_space = sys.potential.addPotential.ene(x_pot)
-    ax1.plot(x_pot, ytot_orig_space, c='red')
-    ax1.plot(x_pot, ytot_bias_space, c=style.potential_light)
+    if isinstance(sys.potential , metadynamicsPotential):
+        # special figure for metadynamics simulations
+        # plot energy landscape of original potential
+        ytot_orig_space = sys.potential.origPotential.ene(x_pot)
+        ax1.plot(x_pot, ytot_orig_space, c='red')
+        # plot energy landscape of total potential
+        #ytot_bias_space = sys.potential.origPotential.ene(x_pot) + sys.potential.finished_steps* sys.potential.addPotential.ene(x_pot)
+        #ax1.plot(x_pot, ytot_bias_space, c='blue')
 
-    #plot energy landscape of total potential
-    ax1.plot(x_pot, ytot_space, c='blue')
+        ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)
+        ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)   #start_point
+        ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)   #end_point
+    else:
+        ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)
 
-    ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)   #start_point
-    ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)   #end_point
+        ytot_orig_space = sys.potential.origPotential.ene(x_pot)
+        ytot_bias_space = sys.potential.addPotential.ene(x_pot)
+        ax1.plot(x_pot, ytot_orig_space, c='red')
+        ax1.plot(x_pot, ytot_bias_space, c=style.potential_light)
+
+        #plot energy landscape of total potential
+        ax1.plot(x_pot, ytot_space, c='blue')
+
+        ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)   #start_point
+        ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)   #end_point
 
     color = style.potential_color(2)
     viol = ax2.violinplot(x, showmeans=False, showextrema=False)
