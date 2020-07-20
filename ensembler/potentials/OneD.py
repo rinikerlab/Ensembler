@@ -245,6 +245,79 @@ class doubleWellPot(_potential1DClsSymPY):
         super().__init__()
 
 
+class fourWellPot(_potential1DClsSymPY):
+    '''
+        Unperturbed four well potential
+    '''
+    name:str = "Four Well Potential"
+
+    a, ah, b, bh, c, ch, d, dh, Vmax, position = sp.symbols("a ah b bh c ch d dh V_max r")
+
+
+    V_orig = -Vmax * sp.log(sp.exp(-(position - a)**2 - ah)+ sp.exp(-(position - b)**2 - bh)+ sp.exp(-(position - c)**2 - ch)+ sp.exp(-(position - d)**2 - dh))
+
+    def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1. ):
+        '''
+
+        Parameters
+        ----------
+        Vmax: float
+            scaling of the whole potential
+        a: float
+            x position of the minimum of the first well
+        b: float
+            x position of the minimum of the second well
+        c: float
+            x position of the minimum of the third well
+        d: float
+            x position of the minimum of the fourth well
+        ah: str
+            ah*Vmax = y position of the first well
+        bh: str
+            bh*Vmax = y position of the second well
+        ch: str
+            ch*Vmax = y position of the third well
+        dh: str
+            dh*Vmax = y position of the fourth well
+        '''
+
+
+        self.constants = {self.Vmax:Vmax, self.a:a, self.b:b, self.c:c, self.d:d, self.ah:ah, self.bh:bh, self.ch:ch, self.dh:dh}
+        self.V = self.V_orig.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+
+        super().__init__()
+
+class gaussPot(_potential1DClsSymPY):
+    '''
+        Gaussian like potential, usually used for metadynamics
+    '''
+    name:str = "Gaussian Potential"
+
+    mu, sigma, A, position = sp.symbols("mu sigma A r")
+
+
+    V_orig = A * sp.exp(-(position-mu)**2/(2*sigma**2))
+
+    def __init__(self, A=1., mu=0., sigma=1. ):
+        '''
+
+        Parameters
+        ----------
+        A: float
+            scaling of the gauss function
+        mu: float
+            mean of the gauss function
+        sigma: float
+            standard deviation of the gauss function
+        '''
+
+        self.constants = {self.A:A, self.mu:mu, self.sigma:sigma}
+        self.V = self.V_orig.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+
+        super().__init__()
+
 """
     COMBINED POTENTIALS
 """

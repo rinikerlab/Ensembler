@@ -23,6 +23,8 @@ from ensembler.integrator.newtonian import newtonianIntegrator
 
 from ensembler.integrator import stochastic
 from ensembler.conditions._conditions import Condition
+from ensembler.potentials.biasOneD import metadynamicsPotential
+from ensembler.potentials.biasTwoD import metadynamicsPotential2D
 
 class system:
     """
@@ -291,6 +293,9 @@ class system:
 
             if(step%save_every_state == 0 and step != steps-1):
                 self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
+            # update for metadynamics simulation
+            if isinstance(self.potential , metadynamicsPotential) or isinstance(self.potential , metadynamicsPotential2D):
+                self.potential.check_for_metastep(self._currentPosition)
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
         self.potential.set_simulation_mode(False)
