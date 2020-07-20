@@ -33,7 +33,7 @@ class edsSystem(system):
     _currentEdsEoffs:float = np.nan
 
 
-    def __init__(self, potential:pot.envelopedPotential=pot.envelopedPotential(V_is=[pot.harmonicOscillator(x_shift=2), pot.harmonicOscillator(x_shift=-2)], Eoff_i=[0,0]),
+    def __init__(self, potential:pot.envelopedPotential=pot.envelopedPotential(V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], Eoff_i=[0, 0]),
                  integrator: _integratorCls=metropolisMonteCarloIntegrator(), conditions: Iterable[_conditionCls]=[],
                  temperature: float = 298.0, position:(Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
 

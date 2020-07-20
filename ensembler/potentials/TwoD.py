@@ -14,7 +14,7 @@ from ensembler.potentials._baseclasses import _potential2DCls, _potential2DClsSy
 from ensembler.potentials.ND import envelopedPotential
 
 
-class harmonicOscillator(_potential2DClsSymPY):
+class harmonicOscillatorPotential(_potential2DClsSymPY):
     '''
         .. autoclass:: harmonic oscillator potential
     '''
@@ -148,7 +148,7 @@ class torsionPotential(_potential2DCls):
         return  np.add(*map(lambda x: np.array(x.dhdpos(position)), self.wave_potentials))
 
 
-class gaussPot2D(_potential2DClsSymPY):
+class gaussPotential(_potential2DClsSymPY):
     '''
         Gaussian like potential, usually used for metadynamics
     '''

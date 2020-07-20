@@ -22,7 +22,7 @@ _conditionCls = ensemblerTypes.condition
 from ensembler.integrator.newtonian import newtonianIntegrator
 from ensembler.integrator import stochastic
 
-from ensembler.potentials.biasOneD import metadynamicsPotential
+from ensembler.potentials.biasOneD import metadynamicsPotential     #generate biased system at timepoint X 
 from ensembler.potentials.biasTwoD import metadynamicsPotential2D
 
 
@@ -105,9 +105,9 @@ class system:
 
         #BUILD System
         ## Fundamental Parts:
-        self.potential = potential
-        self.integrator = integrator
-        self.conditions = conditions
+        self.m_potential = potential
+        self.m_integrator = integrator
+        self.m_conditions = conditions
 
         ## set dim
         if(potential.constants[potential.nDim] < 1 and isinstance(position, Iterable) and all([isinstance(pos, Number) for pos in position])):  #one  state system.

@@ -296,7 +296,7 @@ class potentialCls_lennardJonesPotential(unittest.TestCase):
 
 class potentialCls_doubleWellPot1D(unittest.TestCase):
     def test_constructor(self):
-        potential = pot.doubleWellPot()
+        potential = pot.doubleWellPotential()
 
     def test_energies(self):
         Vmax=100
@@ -306,7 +306,7 @@ class potentialCls_doubleWellPot1D(unittest.TestCase):
         positions = np.linspace(-10, 10, num=5)
         expected_result = np.array([31.640625, 37.13378906, 100, 37.13378906, 31.640625])
 
-        potential = pot.doubleWellPot(Vmax=Vmax, a=a, b=b)
+        potential = pot.doubleWellPotential(Vmax=Vmax, a=a, b=b)
         energies = potential.ene(positions)
 
         #print(energies)
@@ -321,7 +321,7 @@ class potentialCls_doubleWellPot1D(unittest.TestCase):
         positions = [0, 0.1, 0.2, 0.5, 1, 2, 3, 6]
         expected_result = np.array([0, -0.62490234,  -1.24921875,  -3.11279297,  -6.15234375, -11.71875, -16.11328125, -16.40625])
 
-        potential = pot.doubleWellPot(Vmax=Vmax, a=a, b=b)
+        potential = pot.doubleWellPotential(Vmax=Vmax, a=a, b=b)
         energies = potential.dhdpos(positions)
 
         #print(energies)

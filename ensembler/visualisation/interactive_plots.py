@@ -19,7 +19,7 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys:int=8, nbins:int=100, st
         import ensembler.integrator as integ
 
         integrat = integ.stochastic.metropolisMonteCarloIntegrator()
-        potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillator(k=1.0), Vb=pot.harmonicOscillator(k=2.0))
+        potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillatorPotential(k=1.0), Vb=pot.harmonicOscillatorPotential(k=2.0))
         syst = system.perturbedSystem(potential=potential , integrator=integrat)
         conveyorBelt=cvb.ConveyorBelt(0.0, 8, system=syst, build=False)
         conveyorBelt.simulate(steps)
@@ -96,7 +96,7 @@ class interactive_eds():
         else:
             self.Eoffs=Eoff
             
-        self.V_is=[pot.harmonicOscillator(x_shift=state*4, k=10) for state in range(self.nstates)]
+        self.V_is=[pot.harmonicOscillatorPotential(x_shift=state * 4, k=10) for state in range(self.nstates)]
         self.eds_pot = potN.envelopedPotential(V_is=self.V_is, s=self.s, Eoff_i=self.Eoffs)
 
         ##Parameters

@@ -5,6 +5,8 @@ from matplotlib.figure import figaspect
 import os, sys
 sys.path.append(os.path.dirname(__file__)+"/..")
 
+from ensembler.integrator import stochastic, newtonian, optimizers
+
 from ensembler.system import system
 from ensembler.visualisation import style
 from ensembler.potentials.biasOneD import metadynamicsPotential
@@ -58,28 +60,37 @@ def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_pa
     ax3.plot(range(len(x)), shift, color=color)
 
     #Labels
-    ax1.set_ylabel("$V_pot$")
-    ax1.set_xlabel("$x$")
+    ax1.set_ylabel("$V[kT]$")
+    ax1.set_xlabel("$r$")
     ax1.set_title("Potential Sampling")
 
-    ax2.set_ylabel("$x$")
+    ax2.set_ylabel("$r$")
     ax2.set_xlabel("$simulation$")
-    ax2.set_title("x-Distribution")
+    ax2.set_title("r-Distribution")
 
-    ax3.set_ylabel("$dhdpos$")
+    ax3.set_ylabel("$dVdr$")
     ax3.set_xlabel("$t$")
-    ax3.set_title("Forces/shifts")
+    
+    if(issubclass(system.integrator.__class__, (stochastic.stochasticIntegrator, optimizers.optimizer))):
+        ax3.set_title("Shifts")
+    elif(issubclass(system.integrator.__class__, (newtonian.newtonianIntegrator))):
+        ax3.set_title("Forces")
+    else:
+        ax3.set_title("Shifts") #FIX this part!
+        #raise Exception("Did not find integrator type  >"+str(system.integrator.__class__)+"< ")
 
     ax2.set_xticks([])
 
-    fig.suptitle(title, y=1.08)
     fig.tight_layout()
+
+    fig.suptitle(title, y=1.08)
+    fig.subplots_adjust(top=0.85)
 
     if(out_path):
         fig.savefig(out_path)
         plt.close(fig)
 
-    return out_path, fig
+    return fig, out_path
 
 def static_sim_plots_bias(sys: system, x_range: tuple = None,  y_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space: int = style.potential_resolution) -> str:
     '''

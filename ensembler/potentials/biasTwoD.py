@@ -9,7 +9,7 @@ import sympy as sp
 
 
 from ensembler.potentials._baseclasses import _potential2DClsSymPY
-from ensembler.potentials.TwoD import gaussPot2D
+from ensembler.potentials.TwoD import gaussPotential
 
 """
     TIME INDEPENDENT BIASES 
@@ -161,7 +161,7 @@ class metadynamicsPotential2D(_potential2DClsSymPY):
         -------
         '''
         # do gaussian metadynamics
-        new_bias = gaussPot2D(amplitude=self.amplitude, mu=curr_position, sigma=self.sigma)
+        new_bias = gaussPotential(amplitude=self.amplitude, mu=curr_position, sigma=self.sigma)
 
         # size energy and force of the new bias in bin structure
         new_bias_lambda_energy = sp.lambdify(self.position, new_bias.V)

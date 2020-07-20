@@ -9,7 +9,7 @@ import sympy as sp
 
 
 from ensembler.potentials._baseclasses import _potential1DClsSymPY
-from ensembler.potentials.OneD import gaussPot
+from ensembler.potentials.OneD import gaussPotential
 
 """
     BIAS BASECLASS
@@ -196,7 +196,7 @@ class metadynamicsPotential(_potential1DClsSymPY):
         # count how often the potential was updated
         self.finished_steps = 0
 
-        self.constants = {**origPotential.constants, **gaussPot.constants}
+        self.constants = {**origPotential.constants, **gaussPotential.constants}
 
         self.V_orig = origPotential.V
         self.V_orig_part = self.V_orig.subs(self.constants)
@@ -238,7 +238,7 @@ class metadynamicsPotential(_potential1DClsSymPY):
         -------
         '''
         # do gaussian metadynamics
-        new_bias = gaussPot(A=self.amplitude, mu=curr_position, sigma=self.sigma)
+        new_bias = gaussPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma)
         # size energy and force of the new bias in bin structure
         new_bias_lambda_energy = sp.lambdify('r', new_bias.V)
         new_bias_lambda_force = sp.lambdify('r', new_bias.dVdpos)
@@ -423,7 +423,7 @@ class metadynamicsPotentialSympy(_potential1DClsSymPY):
         # count how often the potential was updated
         self.finished_steps = 0
 
-        self.constants = {**origPotential.constants, **gaussPot.constants}
+        self.constants = {**origPotential.constants, **gaussPotential.constants}
 
         self.V_orig = origPotential.V
         self.V = self.V_orig.subs(self.constants)
@@ -463,6 +463,6 @@ class metadynamicsPotentialSympy(_potential1DClsSymPY):
         '''
         # add potential to the system
         # do gaussian metadynamics
-        self.V_orig = self.V + gaussPot(A=self.amplitude, mu=curr_position, sigma=self.sigma).V
+        self.V_orig = self.V + gaussPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma).V
         self.V = self.V_orig.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)

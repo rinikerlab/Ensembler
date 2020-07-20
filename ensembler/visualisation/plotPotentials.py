@@ -45,8 +45,8 @@ def plot_1DPotential(potential: _potential1DCls, positions:list, color =style.po
     ax.set_xlim(min(x_range), max(x_range)) if (x_range!=None) else ax.set_xlim(min(positions), max(positions))
     ax.set_ylim(min(y_range), max(y_range)) if (y_range!=None) else ax.set_ylim(min(energies), max(energies))
 
-    ax.set_xlabel('$x$')
-    ax.set_ylabel('$Potential [kj]$')
+    ax.set_xlabel('$r$')
+    ax.set_ylabel('$V\\ [kj]$')
     ax.set_title(title) if (title != None) else ax.set_title("Potential "+str(potential.name))
 
     if(ax != None):
@@ -72,8 +72,8 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =s
     ax.set_xlim(min(x_range), max(x_range)) if (x_range!=None) else ax.set_xlim(min(positions), max(positions))
     ax.set_ylim(min(y_range), max(y_range)) if (y_range!=None) else ax.set_ylim(min(energies), max(energies))
 
-    ax.set_xlabel('$x$')
-    ax.set_ylabel('$Potential [kj]$')
+    ax.set_xlabel('$r$')
+    ax.set_ylabel('$V\\ [kj]$')
     ax.set_title(title) if (title != None) else ax.set_title("Potential "+str(potential.name))
 
     if(ax != None):
@@ -83,15 +83,21 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =s
     pass
 
 
-def plot_1DPotential_Term(potential:_potential1DCls, positions: list, 
+def plot_1DPotential_Term(potential:_potential1DCls, positions: list, out_path:str=None,
                           x_range=None, y_range=None, title: str = None, ax=None):
     fig, axes = plt.subplots(nrows=1, ncols=2)
-    plot_1DPotential(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range, title="Pot")
-    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range, title="dhdpos")
-    fig.suptitle(title) if(title!=None) else fig.suptitle("Potential "+str(potential.name), y=1.05)
+    plot_1DPotential(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range, title="Potential function V")
+    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range, title="first derivative dV/dr")
+    
     fig.tight_layout()
+    fig.subplots_adjust(top=0.85)
+    fig.suptitle(title, y=0.96) if(title!=None) else fig.suptitle(""+str(potential.name), y=0.96)
 
-    return fig, axes
+    if(out_path):
+        fig.savefig(out_path)
+        plt.close(fig)
+
+    return fig, out_path
 
 def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions:list,
                                  x_range=None, y_range=None, title: str = None, ax=None):
@@ -116,7 +122,7 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions:list,
     ax.set_xlim(min(x_range), max(x_range)) if (x_range!=None) else ax.set_xlim(min(positions), max(positions))
     ax.set_ylim(min(y_range), max(y_range)) if (y_range!=None) else ax.set_ylim(min([min(energies), min(dVdpos)]), max([max(energies), max(dVdpos)]))
 
-    ax.ylabel("$Potential/kJ$")
+    ax.ylabel("$V/kJ$")
     ax.xlabel("$x$")
     ax.legend()
     ax.set_title(title) if (title != None) else ax.set_title("Potential "+str(potential.__name__))
