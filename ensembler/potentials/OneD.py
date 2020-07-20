@@ -44,7 +44,7 @@ class dummyPotential(_potential1DClsSymPY):
         self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
         self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
 
-class flatwell(_potential1DCls):
+class flatwellPotential(_potential1DCls):
     name:str = "Flat Well"
 
     x_min: float = None
@@ -79,8 +79,8 @@ class flatwell(_potential1DCls):
         x = np.inf if(positions == self.x_min or positions == self.x_max) else 1
         return x
 
-class harmonicOscillator(_potential1DClsSymPY):
-    name:str = "harmonicOscilator"
+class harmonicOscillatorPotential(_potential1DClsSymPY):
+    name:str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
     V_orig = 0.5*k*(position-x_shift)**2+y_shift
 
@@ -222,8 +222,8 @@ class lennardJonesForceFieldPotential(_potential1DClsSymPY):
 
         super().__init__()
 
-class doubleWellPot(_potential1DClsSymPY):
-    name:str = "Double Well Potential"
+class doubleWellPotential(_potential1DClsSymPY):
+    name:str = "Double Well"
     a, b, Vmax, position = sp.symbols("a b V_max r")
     V_orig = (Vmax/(b**4)) * ((position - a/2)**2 - b**2) **2
 
@@ -246,7 +246,7 @@ class doubleWellPot(_potential1DClsSymPY):
         super().__init__()
 
 
-class fourWellPot(_potential1DClsSymPY):
+class fourWellPotential(_potential1DClsSymPY):
     '''
         Unperturbed four well potential
     '''
@@ -289,7 +289,7 @@ class fourWellPot(_potential1DClsSymPY):
 
         super().__init__()
 
-class gaussPot(_potential1DClsSymPY):
+class gaussPotential(_potential1DClsSymPY):
     '''
         Gaussian like potential, usually used for metadynamics
     '''
@@ -359,9 +359,9 @@ class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
     Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
     Coupling = (1-lam) * Va(position) + lam * Vb(position)
     
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillator(k=1.0, x_shift=0.0),
-                       Vb: _potential1DClsSymPY = harmonicOscillator(k=11.0, x_shift=0.0), 
-                       lam:float = 0.5):
+    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+                 lam:float = 0.5):
         """
         Linear Coupled Potentials, like in FEP or TI simulations.
         
@@ -385,9 +385,9 @@ class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
     beta = const.gas_constant / 1000.0 * temp
     Coupling = -1/(beta*s) * sp.log(sp.exp(-beta*s*Vb(position)-eoffA) + sp.exp(-beta*s*Va(position)-eoffB))
 
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillator(k=1.0, x_shift=0.0),
-                       Vb: _potential1DClsSymPY = harmonicOscillator(k=11.0, x_shift=0.0), 
-                       eoffA:float=0, eoffB:float=0, s:float = 1.0, temp:float = 298):
+    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+                 eoffA:float=0, eoffB:float=0, s:float = 1.0, temp:float = 298):
         """
         exponential Coupled Potentials, this is a mixture of EDS and TI
     
@@ -504,9 +504,9 @@ class hybridCoupledPotentials(_potential1DClsSymPYPerturbed):
     beta = const.gas_constant / 1000.0 * temp
     Coupling = -1/(beta*s) * sp.log(lam * sp.exp(-beta*s*Vb(position)) + (1-lam) * sp.exp(-beta*s*Va(position)))
 
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillator(k=1.0, x_shift=0.0),
-                       Vb: _potential1DClsSymPY = harmonicOscillator(k=11.0, x_shift=0.0), 
-                       lam:float = 0.5, s:float = 1.0, temp:float = 298):
+    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+                 lam:float = 0.5, s:float = 1.0, temp:float = 298):
         """
         exponential Coupled Potentials, this is a mixture of EDS and TI
     
