@@ -271,7 +271,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
 Langevin stochastic integration
 '''
 
-class langevinIntegrator(_integratorCls):
+class langevinIntegrator(stochasticIntegrator):
 
 
     def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
