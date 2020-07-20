@@ -1,12 +1,12 @@
-from ensembler.system.basic_system import system as sys
-from ensembler.conditions._conditions import Condition
+from ensembler.conditions._conditions import _conditionCls
+from ensembler.util.ensemblerTypes import system as systemType
 
 import warnings
 import numpy as np
 from scipy import constants as const
 from scipy.stats import boltzmann, maxwell
 
-class thermostat(Condition):
+class thermostat(_conditionCls):
     """
     ..autoclass: Thermostat
         This is the parent class of Thermostats.
@@ -14,10 +14,10 @@ class thermostat(Condition):
     """
 
     _currentTemperature:float
-    system:sys #system
+    system:systemType #system
     verbose:bool = False
 
-    def __init__(self, system:sys, tau:float, ):
+    def __init__(self, system:systemType, tau:float, ):
         self.system = system
         self.tau = tau
 
@@ -47,8 +47,8 @@ class andersonThermostat(thermostat):
     _lambda:float =1  #scaling factor for velocities
 
     """Under COnstructurion"""
-    def __init__(self, temperature:float=298, temperature_noise_range:float=25, MConstraintsDims:int=1, system:sys=None,
-                    kb=const.k*const.Avogadro, a:float = 1, k:float=1, N_dens:float=0.005, N:float=1, verbose:bool=False ):
+    def __init__(self, temperature:float=298, temperature_noise_range:float=25, MConstraintsDims:int=1, system:systemType=None,
+                 kb=const.k*const.Avogadro, a:float = 1, k:float=1, N_dens:float=0.005, N:float=1, verbose:bool=False):
         warnings.warn("__Under construction___!")
         #Collision parameters
         self.kb = kb
@@ -112,7 +112,7 @@ class berendsenThermostate(thermostat):
         reference: Molecular dynamics with coupling to an external bath; H.J.C. Berendsen
     """
 
-    def __init__(self, tau:float, dt:float, MConstraintsDims:int=1, system:sys=None ):
+    def __init__(self, tau:float, dt:float, MConstraintsDims:int=1, system:systemType=None):
         self._lambda:float=1   #scaling factor of velocities
         self._current_temperatur = 1
         self.tau = tau

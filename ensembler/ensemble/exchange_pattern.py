@@ -152,7 +152,7 @@ class localExchangeScheme(Exchange_pattern):
         swapped_totPots = self.replica_graph.get_total_energy()  # calc swapped parameter Energies
 
         ##scale Vel back
-        self.replica_graph._adapt_system_to_exchange_coordinate(swapped_exCoord, original_exCoord)
+        self.replica_graph._adapt_system_to_exchange_coordinate(original_exCoord,swapped_exCoord)
         self.replica_graph.set_parameter_set(coordinates=original_exCoord, replicas=replica_values)  # swap back parameters
 
         return original_exCoord, original_totPots, swapped_exCoord, swapped_totPots

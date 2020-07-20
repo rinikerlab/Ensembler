@@ -1,11 +1,9 @@
 import numpy as np
-import typing as t
-from collections import Iterable
 
-from ensembler.conditions._conditions import Condition
-from ensembler.system.basic_system import system as sys
+from ensembler.conditions._conditions import _conditionCls
+from ensembler.util.ensemblerTypes import system as systemType, Iterable
 
-class periodicBoundaryCondition(Condition):
+class periodicBoundaryCondition(_conditionCls):
     """
         ..autoclass:: periodicBoundaryCondition
             This class allows to enable sampling in mirror images and projects the coordinates to the restricted space.
@@ -14,7 +12,7 @@ class periodicBoundaryCondition(Condition):
     lowerbounds:Iterable
     higherbounds:Iterable
 
-    def __init__(self, boundary:Iterable, system:sys=None):
+    def __init__(self, boundary:Iterable, system:systemType=None):
         self._parse_boundary(boundary)
         if(system != None):
             self.system = system

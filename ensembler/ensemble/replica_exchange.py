@@ -24,22 +24,22 @@ class TemperatureReplicaExchange(ReplicaExchange):
         if(exchange_trajs):
             self.exchange_param = "trajectory"
         else:
-            self.exchange_param = "_currentPosition"
+            self.exchange_param = "currentState"
 
         self._exchange_pattern = exchange_pattern.localExchangeScheme(self)
 
 
     def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
         pass
+        [self.replicas[replica]._update_CurrVars() for replica in self.replicas]
         #self._scale_velocities_fitting_to_temperature(swapped_exCoord, original_exCoord)
 
     def _scale_velocities_fitting_to_temperature(self, original_T, swapped_T):
         if (not any([getattr(self.replicas[replica], "_currentVelocities") == None for replica in self.replicas])): # are there velocities?
             [setattr(self.replicas[replica], "_currentVelocities",
-                     np.multiply(self.replicas[replica]._currentVelocities, np.divide(swapped_T[i], original_T[i]))) for
+                     np.multiply(self.replicas[replica]._currentVelocities, np.divide(original_T[i],swapped_T[i]))) for
              i, replica in enumerate(self.replicas)]
-
-
+        
 
 class HamiltonianReplicaExchange(ReplicaExchange):
     pass

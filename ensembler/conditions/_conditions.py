@@ -3,12 +3,12 @@ Module: Conditions
     This module shall be used to implement subclasses of conditions like, thermostat or distance restraints
 """
 
-#ensembler.system import system as sys
+from ensembler.util.ensemblerTypes import system as systemType
 
-class Condition:
+class _conditionCls:
     _tau:float  #tau = apply every tau steps
     nDim:int=0
-    def __init__(self , sys):   #system):
+    def __init__(self , sys:systemType):   #system):
         raise NotImplementedError("This " + __class__ + " class is not implemented")
 
     def apply(self):#, system:system):
@@ -19,8 +19,8 @@ class Condition:
         self.nDim = system.nDim
         self.nStates = system.nStates
 
-class Constraint(Condition):
+class Constraint(_conditionCls):
     pass
 
-class Restraint(Condition):
+class Restraint(_conditionCls):
     pass

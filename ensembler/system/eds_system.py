@@ -9,12 +9,13 @@ pd.options.mode.use_inf_as_na = True
 from ensembler.util import dataStructure as data
 
 from ensembler.potentials import OneD as pot
-from ensembler.integrator._basicIntegrators import _integratorCls
-from ensembler.integrator.stochastic import metropolisMonteCarloIntegrator
 
-from ensembler.conditions._conditions import Condition
+from ensembler.util import  ensemblerTypes as ensemblerTypes
+_integratorCls = ensemblerTypes.integrator
+_conditionCls = ensemblerTypes.condition
 
 from ensembler.system.basic_system import system
+from ensembler.integrator.stochastic import metropolisMonteCarloIntegrator
 
 
 class edsSystem(system):
@@ -33,7 +34,7 @@ class edsSystem(system):
 
 
     def __init__(self, potential:pot.envelopedPotential=pot.envelopedPotential(V_is=[pot.harmonicOscillator(x_shift=2), pot.harmonicOscillator(x_shift=-2)], Eoff_i=[0,0]),
-                 integrator: _integratorCls=metropolisMonteCarloIntegrator(), conditions: Iterable[Condition]=[],
+                 integrator: _integratorCls=metropolisMonteCarloIntegrator(), conditions: Iterable[_conditionCls]=[],
                  temperature: float = 298.0, position:(Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
 
         ################################

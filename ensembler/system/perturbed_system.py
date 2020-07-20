@@ -8,13 +8,13 @@ pd.options.mode.use_inf_as_na = True
 
 
 from ensembler.util import dataStructure as data
-from ensembler.potentials.ND import envelopedPotential
-from ensembler.potentials._baseclasses import _potentialNDCls as _potentialCls
-from ensembler.potentials._baseclasses import _potential1DClsSymPYPerturbed as _perturbedPotentialCls
 
+from ensembler.util import  ensemblerTypes as ensemblerTypes
+_integratorCls = ensemblerTypes.integrator
+_conditionCls = ensemblerTypes.condition
+
+from ensembler.potentials._baseclasses import _potential1DClsSymPYPerturbed as _perturbedPotentialCls
 from ensembler.system.basic_system import system
-from ensembler.integrator._basicIntegrators import _integratorCls
-from ensembler.conditions._conditions import Condition
 
 class perturbedSystem(system):
     """
@@ -31,7 +31,7 @@ class perturbedSystem(system):
     _currentdHdLam:float = np.nan
 
 
-    def __init__(self, potential:_perturbedPotentialCls, integrator: _integratorCls, conditions: Iterable[Condition]=[],
+    def __init__(self, potential:_perturbedPotentialCls, integrator: _integratorCls, conditions: Iterable[_conditionCls]=[],
                  temperature: float = 298.0, position:(Iterable[Number] or float) = None, lam:float=0.0):
         self._currentLam = lam
         super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature, position=position)

@@ -2,24 +2,24 @@
 """
     This file provides ensembler types, that are used to annotate and enforce certain types throughout the ensembler package.
 """
-from typing import TypeVar
 
 #Generic Types
-from typing import Tuple, List, Callable, Union
+from typing import TypeVar
+from typing import Tuple, List, Callable, Union, Iterable
 from numbers import Number
 
 #Ensembpler specific Types:
 from ensembler.potentials._baseclasses import _potentialCls 
 potential = TypeVar("potential", bound=_potentialCls)
 
-
-from ensembler.conditions._conditions import Condition
-condition = TypeVar("condition", bound=Condition)
-
-
+#define here dummy type, so it is useable in sub classes
 system = TypeVar("system")  #dummyDef for integrator
+
+from ensembler.conditions._conditions import _conditionCls
+condition = TypeVar("condition", bound=_conditionCls)
+
 from ensembler.integrator._basicIntegrators import _integratorCls
 integrator = TypeVar("integrator", bound=_integratorCls)
 
-from ensembler.system.basic_system import system as systemb
-system = TypeVar("system", bound=systemb)
+from ensembler.system.basic_system import system as _systemCls
+system = TypeVar("system", bound=_systemCls)

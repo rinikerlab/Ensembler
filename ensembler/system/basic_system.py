@@ -12,17 +12,15 @@ import scipy.constants as const
 import warnings
 pd.options.mode.use_inf_as_na = True
 
-
 from ensembler.util import dataStructure as data
 from ensembler.potentials._baseclasses import _potentialCls
 
 from ensembler.util import  ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
+_conditionCls = ensemblerTypes.condition
 
 from ensembler.integrator.newtonian import newtonianIntegrator
-
 from ensembler.integrator import stochastic
-from ensembler.conditions._conditions import Condition
 
 class system:
     """
@@ -61,17 +59,17 @@ class system:
         self.m_integrator = integrator
    
     @property
-    def conditions(self)->List[Condition]:
+    def conditions(self)->List[_conditionCls]:
         return self.m_conditions
     
     @conditions.setter
-    def conditions(self, conditions:List[Condition]):
-        if(isinstance(conditions, List) and all([issubclass(condition.__class__, Condition) for condition in conditions])):
+    def conditions(self, conditions:List[_conditionCls]):
+        if(isinstance(conditions, List) and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
             self.m_conditions = conditions
         else:
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of Condition")
     
-    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[Condition]=[],
+    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[_conditionCls]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
         ################################
         # Declare Attributes
@@ -239,6 +237,16 @@ class system:
         self.currentState = self.state(self._currentPosition, self._currentTemperature,
                                         self._currentTotE, self._currentTotPot, self._currentTotKin,
                                         self._currentForce, self._currentVelocities)
+
+    def _update_CurrVars(self)->NoReturn:
+        self._currentPosition = self.currentState.position
+        self._currentTemperature = self.currentState.temperature
+        self._currentTotE = self.currentState.totEnergy
+        self._currentTotPot = self.currentState.totPotEnergy
+        self._currentTotKin = self.currentState.totKinEnergy
+        self._currentForce = self.currentState.dhdpos
+        self._currentVelocities = self.currentState.velocity
+
 
     def _updateTemp(self)-> NoReturn:
         """ this looks like a thermostat like thing! not implemented!@ TODO calc velocity from speed"""
