@@ -49,6 +49,11 @@ class perturbedSystem(system):
         self._update_dHdlambda()
         self.updateCurrentState()
 
+    def updateSystemProperties(self)-> NoReturn:
+        self._updateEne()
+        self._updateTemp()
+        self._update_dHdlambda()
+
     def updateCurrentState(self):
         self.currentState = self.state(position=self._currentPosition, temperature=self._currentTemperature,
                                        totEnergy=self._currentTotE,
