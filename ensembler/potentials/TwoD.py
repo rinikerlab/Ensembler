@@ -58,6 +58,7 @@ class harmonicOscillator(_potential2DClsSymPY):
         self.V_dim =   0.5*sp.matrix_multiply_elementwise(self.k, ((self.position-self.r_shift).applyfunc(lambda x: x**2)))#+self.Voff
         self.V_orig = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDim-1))
 
+
 class wavePotential(_potential2DClsSymPY):
     name:str = "Wave Potential"
     nDim:sp.Symbol = sp.symbols("nDim")
@@ -112,7 +113,6 @@ class wavePotential(_potential2DClsSymPY):
     def set_radian_mode(self):
         self.ene = lambda positions: np.squeeze(self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])))
         self.dvdpos = lambda positions: np.squeeze(self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])))
-
 
 
 class torsionPotential(_potential2DCls):
