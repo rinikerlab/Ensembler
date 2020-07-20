@@ -24,10 +24,12 @@ REQUIRED = [  'typing',
             'numpy',
             'sympy',
             'scipy',
-            'tqdm',
+            'matplotlib',
+            'jupyter',
             'ipywidgets',
-            'matplotlib'
-            ]
+            'tqdm',
+
+              ]
 
 # What packages are optional?
 EXTRAS = {
