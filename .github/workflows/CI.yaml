@@ -23,7 +23,7 @@ jobs:
         python-version: [3.6, 3.7]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Additional info about the build
       shell: bash
@@ -34,10 +34,11 @@ jobs:
 
     - name: Configure conda
       run: |
+        conda init bash
         conda activate
         conda config --add channels conda-forge
         conda config --set always_yes True
-        conda install conda conda-build
+        conda install conda conda-build jinja2 anaconda-client
         conda update --quiet --all
       env:
         OPERATING_SYSTEM: ${{ matrix.os }}
