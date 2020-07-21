@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macOS-latest, ubuntu-latest, windows-latest]
+        os: [macOS-latest, ubuntu-latest]
         python-version: [3.6, 3.7]
 
     steps:
@@ -34,7 +34,6 @@ jobs:
 
     - name: Configure conda
       run: |
-        . devtools/scripts/initialize_conda.sh
         conda activate
         conda config --add channels conda-forge
         conda config --set always_yes True
@@ -46,7 +45,6 @@ jobs:
     - name: Create test environment
       shell: bash
       run: |
-        . devtools/scripts/initialize_conda.sh
         conda activate
         python devtools/scripts/create_conda_env.py -n=test -p=${{ matrix.python-version }} devtools/conda-envs/test_env.yaml
 
