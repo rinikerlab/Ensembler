@@ -45,34 +45,14 @@ jobs:
         auto-activate-base: false
         show-channel-urls: true
                 
-    - name: Set MacOS permissions
-      if: startsWith(matrix.os, 'macOS')
-      run: |
-        sudo chown -R $USER:staff $HOME/.conda
-        sudo chown -R $USER:staff $CONDA
-          
-    - name: Configure conda
-      run: |
-        conda activate
-        conda config --add channels conda-forge
-        conda config --set always_yes True
-        conda install conda conda-build jinja2 anaconda-client
-        conda update --quiet --all
-      env:
-        OPERATING_SYSTEM: ${{ matrix.os }}
-
-    - name: Create test environment
-      shell: bash
-      run: |
-        conda activate
-        python devtools/scripts/create_conda_env.py -n=test -p=${{ matrix.python-version }} devtools/conda-envs/test_env.yaml
-
     - name: Install package
+
+      # conda setup requires this special shell
       shell: bash -l {0}
       run: |
-        conda activate test
-        python setup.py develop --no-deps
-
+        python -m pip install . --no-deps
+        conda list
+        
     - name: Run tests
 
       # conda setup requires this special shell
