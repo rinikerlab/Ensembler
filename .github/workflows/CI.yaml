@@ -26,11 +26,25 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Additional info about the build
+      shell: bash
       run: |
         uname -a
         df -h
         ulimit -a
-        
+            
+    # More info on options: https://github.com/goanpeca/setup-miniconda
+    - uses: goanpeca/setup-miniconda@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+        environment-file: devtools/conda-envs/test_env.yaml
+
+        channels: conda-forge,defaults
+
+        activate-environment: test
+        auto-update-conda: true
+        auto-activate-base: false
+        show-channel-urls: true
+                
     - name: Set MacOS permissions
       if: startsWith(matrix.os, 'macOS')
       run: |
