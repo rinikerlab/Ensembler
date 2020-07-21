@@ -15,8 +15,8 @@ class _potentialCls:
     @Strategy Pattern
     """
     name:str = "Unknown"
-    nDim: sp.Symbol = sp.symbols("N")
-    nStates: sp.Symbol = sp.symbols("state")
+    nDim: sp.Symbol = sp.symbols("nDims")
+    nStates: sp.Symbol = sp.symbols("nStates")
     #threads: int = 1
 
     constants:dict = {}
@@ -28,6 +28,175 @@ class _potentialCls:
         return str(self.name)
 
     pass
+
+
+class _potentialNDClsSymPY(_potentialCls):
+    '''
+    potential base class
+    @nullState
+    @Strategy Pattern
+    '''
+
+    V: sp.Function = notImplementedERR
+    dVdpos = notImplementedERR
+
+    #generated during construction:
+    position: sp.Symbol
+    V_orig: sp.Function
+    dVdpos_orig: sp.Function
+
+    def __init__(self, nDim: int = -1, nStates:int =1):
+        self.constants.update({self.nDim: nDim, self.nStates:nStates})
+        # needed for multi dim functions to be generated dynamically
+        self._initialize_functions()
+        # apply potential simplification and update calc functions
+        self._update_functions()
+
+
+
+    def __str__(self) -> str:
+        msg = self.__name__() + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
+        msg += "\tDimensions: " + str(self.nDim) + "\n"
+        msg += "\n\tFunctional:\n "
+        msg += "\t\tV:\t" + str(self.V_orig) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos_orig) + "\n"
+        msg += "\n\tSimplified Function\n"
+        msg += "\t\tV:\t" + str(self.V) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos) + "\n"
+        msg += "\n\tConstants: \n\t\t" + "\n\t\t".join(
+            [str(keys) + ": " + "\n".join(["\t\t\t" + v for v in str(values).split("\n")]) for keys, values in
+             self.constants.items()]) + "\n"
+        msg += "\n"
+        return msg
+
+    """
+        private
+    """
+
+    def _initialize_functions(self):
+        notImplementedERR()
+
+
+    def _update_functions(self):
+        self.V = self.V_orig.subs(self.constants)
+
+        self.dVdpos_orig = sp.diff(self.V_orig, self.position)  # not always working!
+        self.dVdpos = sp.diff(self.V, self.position)
+        self.dVdpos = self.dVdpos.subs(self.constants)
+
+        self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
+        self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
+
+
+    """
+        public
+    """
+    def ene(self, positions):
+        return np.squeeze(self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])))
+
+
+    def dvdpos(self, positions):
+        return np.squeeze(self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])))
+
+
+class _potential1DClsSymPY(_potentialNDClsSymPY):
+    def __init__(self, nStates:int=1):
+        super().__init__(nDim=1, nStates=nStates)
+
+    def _initialize_functions(self):
+        pass
+
+    def ene(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
+        '''
+        calculates energy of particle
+        :param pos: position on 1D potential energy surface
+        :return: energy
+        '''
+        return np.squeeze(self._calculate_energies(np.squeeze(positions)))
+
+
+    def dvdpos(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
+        '''
+        calculates derivative with respect to position
+        :param pos: position on 1D potential energy surface
+        :return: derivative dh/dpos
+        '''
+        return np.squeeze(self._calculate_dVdpos(np.squeeze(positions)))
+
+
+class _potential2DClsSymPY(_potentialNDClsSymPY):
+    def __init__(self, nStates:int=1):
+        super().__init__(nDim=2, nStates=nStates)
+
+
+class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
+
+    lam = sp.symbols(u"λ")
+
+    V_orig = sp.Function
+    dVdlam_orig: sp.Function
+
+    statePotentials: Dict[sp.Function, sp.Function]
+
+    dVdlam = notImplementedERR
+
+    def __init__(self, nStates:int=1):
+        self.constants.update({self.nDim:1, self.nStates:nStates})
+        super().__init__(nDim=1, nStates=nStates)
+
+    def __str__(self) -> str:
+        msg = self.__name__() + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
+        msg += "\tDimensions: " + str(self.nDim) + "\n"
+        msg += "\n\tFunctional:\n "
+        msg += "\t\tCoupling:\t" + str(self.Coupling) + "\n"
+        msg += "\t\tV:\t" + str(self.V_orig) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos_orig) + "\n"
+        msg += "\t\tdVdlam:\t" + str(self.dVdlam_orig) + "\n"
+        msg += "\n\tSimplified Function\n"
+        msg += "\t\tV:\t" + str(self.V) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos) + "\n"
+        msg += "\t\tdVdlam:\t" + str(self.dVdlam) + "\n"
+        msg += "\n\tConstants: \n\t\t" + "\n\t\t".join(
+            [str(keys) + ": " + "\n".join(["\t\t\t" + v for v in str(values).split("\n")]) for keys, values in
+             self.constants.items()]) + "\n"
+        msg += "\n"
+        return msg
+
+    """
+        private
+    """
+
+    def _update_functions(self):
+        # workaround for state definition.
+        self.V_orig = self.Coupling
+        for key, f in self.statePotentials.items():
+            self.V_orig = self.V_orig.replace(key, f._calculate_energies)
+
+        super()._update_functions()
+
+        self.dVdlam_orig = sp.diff(self.V_orig, self.lam)
+        self.dVdlam = self.dVdlam_orig.subs(self.constants)
+        self._calculate_dVdlam = sp.lambdify(self.position, self.dVdlam, "numpy")
+
+    """
+        public
+    """
+
+    def set_lam(self, lam: float):
+        self.constants.update({self.lam: lam})
+        self._update_functions()
+
+    def dvdlam(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
+        '''
+        calculates derivative with respect to lambda
+        :param lam: alchemical parameter lambda
+        :param pos: position on 1D potential energy surface
+        :return: derivative dh/dpos
+        '''
+        return np.squeeze(self._calculate_dVdlam(np.squeeze(positions)))
+
 
 
 
@@ -496,192 +665,4 @@ class _perturbedPotentialNDCls(_potentialNDMultiState):
 
     def _calculate_dhdlam_multiPos(self, positions: (Iterable[Number] or Number)) -> (np.array or Number):
         return np.array(list(map(self._calculate_dhdlam_singlePos, positions)))
-
-
-"""
-    NEW SYMPY IMPLEMENT
-"""
-
-
-"""
-SYMPY POTENTIALS
-"""
-
-class _potentialNDClsSymPY(_potentialCls):
-    '''
-    potential base class
-    @nullState
-    @Strategy Pattern
-    '''
-
-    V: sp.Function = notImplementedERR
-    dVdpos = notImplementedERR
-
-    #generated during construction:
-    position: sp.Symbol
-    V_orig: sp.Function
-    dVdpos_orig: sp.Function
-
-    def __init__(self, nDim: int = -1, nStates:int =1):
-        self.constants.update({self.nDim: nDim, self.nStates:nStates})
-        # needed for multi dim functions to be generated dynamically
-        self._initialize_functions()
-        # apply potential simplification and update calc functions
-        self._update_functions()
-
-
-
-    def __str__(self) -> str:
-        msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
-        msg += "\tDimensions: " + str(self.nDim) + "\n"
-        msg += "\n\tFunctional:\n "
-        msg += "\t\tV:\t" + str(self.V_orig) + "\n"
-        msg += "\t\tdVdpos:\t" + str(self.dVdpos_orig) + "\n"
-        msg += "\n\tSimplified Function\n"
-        msg += "\t\tV:\t" + str(self.V) + "\n"
-        msg += "\t\tdVdpos:\t" + str(self.dVdpos) + "\n"
-        msg += "\n\tConstants: \n\t\t" + "\n\t\t".join(
-            [str(keys) + ": " + "\n".join(["\t\t\t" + v for v in str(values).split("\n")]) for keys, values in
-             self.constants.items()]) + "\n"
-        msg += "\n"
-        return msg
-
-    """
-        private
-    """
-
-    def _initialize_functions(self):
-        notImplementedERR()
-
-    def _update_functions(self):
-        self.V = self.V_orig.subs(self.constants)
-
-        self.dVdpos_orig = sp.diff(self.V_orig, self.position)  # not always working!
-        self.dVdpos = sp.diff(self.V, self.position)
-        self.dVdpos = self.dVdpos.subs(self.constants)
-
-        self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
-        self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
-
-    def _set_type_check(self):
-        """
-        ..autofunction :: _set_type_check
-            This function is setting the default potential Value, to allow secure execution in small code snippets
-        :return:  -
-        """
-        pass
-
-    def _check_positions_type(self):
-        pass
-
-    def set_simulation_mode(self, simulation: bool = True):
-        pass
-
-    """
-        public
-    """
-
-    def ene(self, positions):
-        return np.squeeze(self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])))
-
-    def dvdpos(self, positions):
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])))
-
-
-class _potential1DClsSymPY(_potentialNDClsSymPY):
-    def __init__(self):
-        super().__init__(nDim=1)
-
-    def _initialize_functions(self):
-        pass
-
-    def ene(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
-        '''
-        calculates energy of particle
-        :param pos: position on 1D potential energy surface
-        :return: energy
-        '''
-        return np.squeeze(self._calculate_energies(np.squeeze(positions)))
-
-    def dvdpos(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
-        '''
-        calculates derivative with respect to position
-        :param pos: position on 1D potential energy surface
-        :return: derivative dh/dpos
-        '''
-        return np.squeeze(self._calculate_dVdpos(np.squeeze(positions)))
-
-
-class _potential2DClsSymPY(_potentialNDClsSymPY):
-    def __init__(self):
-        super().__init__(nDim=2)
-
-
-class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
-
-    lam = sp.symbols(u"λ")
-
-    V_orig = sp.Function
-    dVdlam_orig: sp.Function
-
-    statePotentials: Dict[sp.Function, sp.Function]
-
-    dVdlam = notImplementedERR
-
-    def __init__(self):
-        self.constants.update({self.nDim:1, self.nStates:1})
-        super().__init__()
-
-    def __str__(self) -> str:
-        msg = self.__name__() + "\n"
-        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
-        msg += "\tDimensions: " + str(self.nDim) + "\n"
-        msg += "\n\tFunctional:\n "
-        msg += "\t\tCoupling:\t" + str(self.Coupling) + "\n"
-        msg += "\t\tV:\t" + str(self.V_orig) + "\n"
-        msg += "\t\tdVdpos:\t" + str(self.dVdpos_orig) + "\n"
-        msg += "\t\tdVdlam:\t" + str(self.dVdlam_orig) + "\n"
-        msg += "\n\tSimplified Function\n"
-        msg += "\t\tV:\t" + str(self.V) + "\n"
-        msg += "\t\tdVdpos:\t" + str(self.dVdpos) + "\n"
-        msg += "\t\tdVdlam:\t" + str(self.dVdlam) + "\n"
-        msg += "\n\tConstants: \n\t\t" + "\n\t\t".join(
-            [str(keys) + ": " + "\n".join(["\t\t\t" + v for v in str(values).split("\n")]) for keys, values in
-             self.constants.items()]) + "\n"
-        msg += "\n"
-        return msg
-
-    """
-        private
-    """
-
-    def _update_functions(self):
-        # workaround for state definition.
-        self.V_orig = self.Coupling
-        for key, f in self.statePotentials.items():
-            self.V_orig = self.V_orig.replace(key, f._calculate_energies)
-
-        super()._update_functions()
-
-        self.dVdlam_orig = sp.diff(self.V_orig, self.lam)
-        self.dVdlam = self.dVdlam_orig.subs(self.constants)
-        self._calculate_dVdlam = sp.lambdify(self.position, self.dVdlam, "numpy")
-
-    """
-        public
-    """
-
-    def set_lam(self, lam: float):
-        self.constants.update({self.lam: lam})
-        self._update_functions()
-
-    def dvdlam(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
-        '''
-        calculates derivative with respect to lambda
-        :param lam: alchemical parameter lambda
-        :param pos: position on 1D potential energy surface
-        :return: derivative dh/dpos
-        '''
-        return np.squeeze(self._calculate_dVdlam(np.squeeze(positions)))
 

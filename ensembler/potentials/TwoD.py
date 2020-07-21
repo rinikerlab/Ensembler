@@ -11,7 +11,6 @@ from numbers import Number
 from typing import Iterable, List, Sized, Union
 
 from ensembler.potentials._baseclasses import _potential2DCls, _potential2DClsSymPY
-from ensembler.potentials.ND import envelopedPotential
 
 
 class harmonicOscillatorPotential(_potential2DClsSymPY):
@@ -204,3 +203,6 @@ class gaussPotential(_potential2DClsSymPY):
         # Not too beautiful, but sp.Product raises errors
         self.V_orig = self.V_dim[0, 0] * self.V_dim[1, 0]
 
+
+#Biased potentials
+from ensembler.potentials.biased_potentials.biasTwoD import addedPotentials, metadynamicsPotential

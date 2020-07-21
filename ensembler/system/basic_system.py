@@ -5,7 +5,7 @@ Module: System
 
 import os, numpy as np
 from tqdm import tqdm_notebook as tqdm
-from typing import Iterable, NoReturn, List, Sized
+from typing import Iterable, NoReturn, List
 from numbers import Number
 import pandas as pd
 import scipy.constants as const
@@ -22,8 +22,8 @@ _conditionCls = ensemblerTypes.condition
 from ensembler.integrator.newtonian import newtonianIntegrator
 from ensembler.integrator import stochastic
 
-from ensembler.potentials.biasOneD import metadynamicsPotential     #generate biased system at timepoint X 
-from ensembler.potentials.biasTwoD import metadynamicsPotential2D
+from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential     #generate biased system at timepoint X
+from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential
 
 
 class system:
@@ -304,7 +304,7 @@ class system:
             if(step%save_every_state == 0 and step != steps-1):
                 self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
             # update for metadynamics simulation
-            if isinstance(self.potential , metadynamicsPotential) or isinstance(self.potential , metadynamicsPotential2D):
+            if isinstance(self.potential , metadynamicsPotential) or isinstance(self.potential , metadynamicsPotential):
                 self.potential.check_for_metastep(self._currentPosition)
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)

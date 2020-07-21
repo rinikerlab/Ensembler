@@ -17,7 +17,7 @@ plot_layout_settings = {'font.family': 'sans-serif',
                         'ytick.labelsize': 7,
                         'axes.labelsize': 9,
                         'axes.titlesize': 11,
-                        'legend.fontsize': 3,
+                        'legend.fontsize': 10,
                         'savefig.dpi': 900,
                     }
 

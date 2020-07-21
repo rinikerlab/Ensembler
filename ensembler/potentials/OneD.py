@@ -3,18 +3,14 @@ Module: Potential
 This module shall be used to implement subclasses of Potential. This module contains all available potentials.
 """
 
-import math
 import numpy as np
 import sympy as sp
-from numbers import Number
-from typing import Iterable, Sized, Union
 import typing as t
-from numbers import Number
 import scipy.constants as const
-from collections.abc import Iterable, Sized
 
 from ensembler.potentials import ND
-from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotentialNDCls, _potential1DClsSymPY, _potential1DClsSymPYPerturbed
+from ensembler.potentials._baseclasses import _potential1DCls, _potential1DClsSymPY, _potential1DClsSymPYPerturbed
+
 
 """
     SIMPLE POTENTIALS
@@ -22,7 +18,7 @@ from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotenti
 
 class dummyPotential(_potential1DClsSymPY):
 
-    name:str = "dummy"
+    name:str = "Dummy Potential"
     position, y_shift = sp.symbols("r Voffset")
 
     def __init__(self, y_shift: float = 0):
@@ -43,6 +39,7 @@ class dummyPotential(_potential1DClsSymPY):
         
         self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
         self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
+
 
 class flatwellPotential(_potential1DCls):
     name:str = "Flat Well"
@@ -79,6 +76,7 @@ class flatwellPotential(_potential1DCls):
         x = np.inf if(positions == self.x_min or positions == self.x_max) else 1
         return x
 
+
 class harmonicOscillatorPotential(_potential1DClsSymPY):
     name:str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
@@ -100,6 +98,7 @@ class harmonicOscillatorPotential(_potential1DClsSymPY):
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
+
 
 class wavePotential(_potential1DClsSymPY):
     name:str = "Wave Potential"
@@ -149,7 +148,8 @@ class wavePotential(_potential1DClsSymPY):
         else:
             self.set_degrees(degrees=not radians)
     """
-     
+
+
 class coulombPotential(_potential1DClsSymPY):
     name = "Coulomb Potential"
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
@@ -171,6 +171,7 @@ class coulombPotential(_potential1DClsSymPY):
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
+
 
 class LennardJonesPotential(_potential1DClsSymPY):
     name:str = "Lennard Jones Potential"
@@ -197,6 +198,7 @@ class LennardJonesPotential(_potential1DClsSymPY):
 
         super().__init__()
 
+
 class lennardJonesForceFieldPotential(_potential1DClsSymPY):
 
     name:str = "Lennard Jones Potential"
@@ -221,6 +223,7 @@ class lennardJonesForceFieldPotential(_potential1DClsSymPY):
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
+
 
 class doubleWellPotential(_potential1DClsSymPY):
     name:str = "Double Well"
@@ -289,6 +292,7 @@ class fourWellPotential(_potential1DClsSymPY):
 
         super().__init__()
 
+
 class gaussPotential(_potential1DClsSymPY):
     '''
         Gaussian like potential, usually used for metadynamics
@@ -319,6 +323,7 @@ class gaussPotential(_potential1DClsSymPY):
 
         super().__init__()
 
+
 """
     COMBINED POTENTIALS
 """
@@ -344,6 +349,7 @@ class torsionPotential(_potential1DClsSymPY):
 
         super().__init__()
 
+
 class forceField:
 
     def __init__(self):
@@ -354,7 +360,7 @@ class forceField:
     Multi State Potentials - PERTURBED POTENTIALS
 """
 class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
-    name:str = "linear Coupled System"
+    name:str = "Linear Coupled System"
     lam, position = sp.symbols(u'λ r')
     Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
     Coupling = (1-lam) * Va(position) + lam * Vb(position)
@@ -535,3 +541,8 @@ class hybridCoupledPotentials(_potential1DClsSymPYPerturbed):
         self.constants.update({self.Eoff:Eoff})
         self._update_functions()
 
+
+"""
+Biased potentials
+"""
+from ensembler.potentials.biased_potentials.biasOneD import addedPotentials, metadynamicsPotential

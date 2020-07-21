@@ -9,7 +9,7 @@ from ensembler.integrator import stochastic, newtonian, optimizers
 
 from ensembler.system import system
 from ensembler.visualisation import style
-from ensembler.potentials.biasOneD import metadynamicsPotential
+from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential
 
 
 def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
@@ -68,22 +68,27 @@ def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_pa
     ax2.set_xlabel("$simulation$")
     ax2.set_title("r-Distribution")
 
-    ax3.set_ylabel("$dVdr$")
+
     ax3.set_xlabel("$t$")
-    
+   
     if(issubclass(system.integrator.__class__, (stochastic.stochasticIntegrator, optimizers.optimizer))):
         ax3.set_title("Shifts")
+        ax3.set_ylabel("$dr$")
+
     elif(issubclass(system.integrator.__class__, (newtonian.newtonianIntegrator))):
         ax3.set_title("Forces")
+        ax3.set_ylabel("$\partial V/ \partial r$")
+
     else:
         ax3.set_title("Shifts") #FIX this part!
+        ax3.set_ylabel("$dr$")
         #raise Exception("Did not find integrator type  >"+str(system.integrator.__class__)+"< ")
 
     ax2.set_xticks([])
 
     fig.tight_layout()
 
-    fig.suptitle(title, y=1.08)
+    fig.suptitle(title, y=0.97)
     fig.subplots_adjust(top=0.85)
 
     if(out_path):

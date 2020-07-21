@@ -28,8 +28,11 @@ def significant_decimals(s:float)->float:
     else:
         return s
 
-def plot_1DPotential(potential: _potential1DCls, positions:list, color =style.potential_color(0),
-                     x_range=None, y_range=None, title:str=None, ax=None):
+"""
+ 1D Plotting Functions
+"""
+def plot_1DPotential(potential: _potential1DCls, positions:list, color =None,
+                     x_range=None, y_range=None, title:str=None, ax=None, yUnit:str="kT"):
     # generat Data
     energies = potential.ene(positions=positions)
 
@@ -41,12 +44,16 @@ def plot_1DPotential(potential: _potential1DCls, positions:list, color =style.po
         fig = None
 
     # plot
-    ax.plot(positions, energies, c=color)
+    if(color):
+        ax.plot(positions, energies, c=color)
+    else:
+        ax.plot(positions, energies)
+
     ax.set_xlim(min(x_range), max(x_range)) if (x_range!=None) else ax.set_xlim(min(positions), max(positions))
     ax.set_ylim(min(y_range), max(y_range)) if (y_range!=None) else ax.set_ylim(min(energies), max(energies))
 
     ax.set_xlabel('$r$')
-    ax.set_ylabel('$V\\ [kj]$')
+    ax.set_ylabel('$V\\ ['+yUnit+']$')
     ax.set_title(title) if (title != None) else ax.set_title("Potential "+str(potential.name))
 
     if(ax != None):
@@ -55,8 +62,9 @@ def plot_1DPotential(potential: _potential1DCls, positions:list, color =style.po
         return ax
     pass
 
+
 def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =style.potential_color(1),
-                            x_range=None, y_range=None, title:str=None, ax=None):
+                            x_range=None, y_range=None, title:str=None, ax=None, yUnit:str="kT"):
     # generat Data
     energies = potential.dvdpos(positions=positions)
 
@@ -73,7 +81,7 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =s
     ax.set_ylim(min(y_range), max(y_range)) if (y_range!=None) else ax.set_ylim(min(energies), max(energies))
 
     ax.set_xlabel('$r$')
-    ax.set_ylabel('$V\\ [kj]$')
+    ax.set_ylabel('$\partial V / \partial r\\ ['+yUnit+']$')
     ax.set_title(title) if (title != None) else ax.set_title("Potential "+str(potential.name))
 
     if(ax != None):
@@ -86,8 +94,8 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =s
 def plot_1DPotential_Term(potential:_potential1DCls, positions: list, out_path:str=None,
                           x_range=None, y_range=None, title: str = None, ax=None):
     fig, axes = plt.subplots(nrows=1, ncols=2)
-    plot_1DPotential(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range, title="Potential function V")
-    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range, title="first derivative dV/dr")
+    plot_1DPotential(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range, title="Potential function V", color=style.potential_color(0))
+    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range, title="First derivative $\partial V / \partial r$")
     
     fig.tight_layout()
     fig.subplots_adjust(top=0.85)
@@ -98,6 +106,7 @@ def plot_1DPotential_Term(potential:_potential1DCls, positions: list, out_path:s
         plt.close(fig)
 
     return fig, out_path
+
 
 def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions:list,
                                  x_range=None, y_range=None, title: str = None, ax=None):
@@ -256,6 +265,25 @@ def plot_2DEnergy_landscape(potential1: _potential1DCls, potential2: _potential1
  MultiState Plotting Functions
 """
 #1D
+
+def multiState_overlays(states:list, positions:list=np.linspace(-8,8,500), y_range:tuple=(0,10), 
+title:str = "Multiple state overlay", label_prefix:str="State", out_path:str=None):
+
+    fig, ax = plot_1DPotential(potential=states[0], positions=positions)
+    for state in states[1:-1]:
+        plot_1DPotential(potential=state, positions=positions, ax=ax)
+    plot_1DPotential(potential=states[-1], positions=positions, ax=ax, y_range=[0,10], title=title)
+
+    for num, line in enumerate(ax.lines):
+        line._label = label_prefix+" "+str(num+1)
+
+    ax.legend()
+
+    if(out_path):
+        fig.savefig(out_path)
+        plt.close()
+        
+    return fig, out_path
 
 def plot_2perturbedEnergy_landscape(potential:_perturbedPotentialNDCls, positions:list, lambdas:list, cmap=style.qualitative_map,
                                     x_range=None, lam_range=None, title:str=None, colbar:bool=False, ax=None):
