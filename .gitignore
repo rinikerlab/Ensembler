@@ -111,3 +111,4 @@ venv.bak/
 #large files:
 ensembler/potentials/look_up_tables
 examples/dev/img
+examples/dev/ttt.ipynb
