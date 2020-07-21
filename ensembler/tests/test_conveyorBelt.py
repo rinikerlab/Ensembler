@@ -1,56 +1,58 @@
 import unittest
-from ensembler import system, conveyorBelt as ensemble, integrator as integ
-from ensembler import potentials as potent
+from ensembler.system.basic_system import system
+from ensembler.ensemble.replicas_dynamic_parameters import ConveyorBelt
+from ensembler.integrator.stochastic import stochasticIntegrator
+from ensembler.potentials import OneD
 
 class testEnsemble(unittest.TestCase):
     def testEnsemble(self):
-        ens = ensemble.ConveyorBelt(0.0, 1)
-        ens.calc_ene()
-        ens.propagate()
-        ens.calc_ene()
-        ens.print_systems()
+        ens = ConveyorBelt(0.0, 1)
+        ens.calculate_conveyorBelt_totEne()
+        ens.run()
+        ens.calculate_conveyorBelt_totEne()
+        ens.get_replicas_positions()
 
     def testEnsembleSystem(self):
-        integrator = integ.metropolisMonteCarloIntegrator()
-        ha = potent.OneD.harmonicOsc(x_shift=-5)
-        hb = potent.OneD.harmonicOsc(x_shift=5)
-        pot = potent.OneD.linCoupledHosc(ha=ha, hb=hb)
+        integrator = stochasticIntegrator()
+        ha = OneD.harmonicOscillator(x_shift=-5)
+        hb = OneD.harmonicOscillator(x_shift=5)
+        pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
 
         sys = system.perturbedSystem(temperature=300.0, potential=pot, integrator=integrator)
-        ens = ensemble.ConveyorBelt(0.0, 1, system=sys)
+        ens = ConveyorBelt(0.0, 1, system=sys)
 
-        ens.calc_ene()
-        ens.propagate()
-        ens.calc_ene()
-        ens.print_systems()
+        ens.calculate_conveyorBelt_totEne()
+        ens.run()
+        ens.calculate_conveyorBelt_totEne()
+        ens.get_replicas_positions()
 
     def testEnsembleSystemShift(self):
         integrator = integ.metropolisMonteCarloIntegrator()
-        ha = potent.OneD.harmonicOsc(x_shift=-5)
-        hb = potent.OneD.harmonicOsc(x_shift=5)
+        ha = potent.OneD.harmonicOscillator(x_shift=-5)
+        hb = potent.OneD.harmonicOscillator(x_shift=5)
         lam = 0.5
-        pot = potent.OneD.linCoupledHosc(ha=ha, hb=hb, lam=lam)
+        pot = potent.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
 
         sys = system.perturbedSystem(temperature=300.0, potential=pot, integrator=integrator)
         ens = ensemble.ConveyorBelt(0.0, 1, system=sys)
-        ens.calc_ene()
-        ens.propagate()
-        ens.calc_ene()
-        ens.print_systems()
+        ens.calculate_conveyorBelt_totEne()
+        ens.run()
+        ens.calculate_conveyorBelt_totEne()
+        ens.get_replicas_positions()
 
     def testTraj(self):
         integrator = integ.metropolisMonteCarloIntegrator()
-        ha = potent.OneD.harmonicOsc(x_shift=-5)
-        hb = potent.OneD.harmonicOsc(x_shift=5)
+        ha = potent.OneD.harmonicOscillator(x_shift=-5)
+        hb = potent.OneD.harmonicOscillator(x_shift=5)
         lam = 0.5
-        pot = potent.OneD.linCoupledHosc(ha=ha, hb=hb, lam=lam)
+        pot = potent.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
 
         sys = system.perturbedSystem(temperature=300.0, potential=pot, integrator=integrator)
         ens = ensemble.ConveyorBelt(0.0, 1, system=sys)
 
-        print(ensemble.calc_traj(steps=10, ens=ens))
-        ens = ensemble.ConveyorBeltEnsemble(0.0, 8, system=sys)
-
+        # print(ens.run(())
+        # ens = ensemble.ConveyorBelt(0.0, 8, system=sys)
+        #
         #ensemble.calc_traj_file(steps=100, ens=ens)
         #import os
         #os.remove(os.getcwd()+"/traj_*.dat")
