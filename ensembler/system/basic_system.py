@@ -4,7 +4,7 @@ Module: System
 """
 
 import os, numpy as np
-from tqdm import tqdm_notebook as tqdm
+from tqdm.notebook import tqdm
 from typing import Iterable, NoReturn, List, Sized
 from numbers import Number
 import pandas as pd

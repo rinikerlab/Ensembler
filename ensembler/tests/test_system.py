@@ -517,7 +517,7 @@ class test_SystemND(unittest.TestCase):
         #self.assertEqual(np.isnan(init_state.dhdpos), np.isnan(old_frame.dhdpos), msg="The initial state does not equal the frame 0 after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(init_state.velocity), np.isnan(old_frame.velocity),
                             msg="The initial state does not equal the frame 0 after propergating in attribute: velocity!")
-        old_frame.dhdpos = [old_frame.dhdpos for i in range(3)]
+
         #check that the frames are all different from each other.
         for ind, frame in list(trajectory.iterrows())[1:]:
             #print(ind, frame)
@@ -879,10 +879,9 @@ class test_perturbedSystem1D(unittest.TestCase):
         self.assertEqual(np.isnan(init_state.dhdlam), np.isnan(old_frame.dhdlam),
                             msg="The initial state does not equal the frame 0 after propergating in attribute: dhdLam!")
 
-        #check that the frames are all different from each other.
+        # check that the frames are all different from each other.
         for ind, frame in list(trajectory.iterrows())[1:]:
             #check that middle step is not sames
-
             self.assertNotEqual(old_frame.position, frame.position, msg="The frame "+str(ind)+" equals the frame  "+str(ind+1)+" after propergating in attribute: Position!")
             self.assertEqual(old_frame.temperature, frame.temperature, msg="The frame "+str(ind)+" equals the frame  "+str(ind+1)+" after propergating in attribute: temperature!")    #due to integrator
             self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy, msg="The frame "+str(ind)+" equals the frame  "+str(ind+1)+" after propergating in attribute: totPotEnergy!")
