@@ -4,27 +4,23 @@ Module: System
 """
 
 import os, numpy as np
-from tqdm import tqdm_notebook as tqdm
-from typing import Iterable, NoReturn, List
+from tqdm.notebook import tqdm
+from typing import Iterable, NoReturn, List, Sized
 from numbers import Number
 import pandas as pd
 import scipy.constants as const
 import warnings
 pd.options.mode.use_inf_as_na = True
-
-from ensembler.util import dataStructure as data
-from ensembler.potentials._baseclasses import _potentialCls
-
-from ensembler.util import  ensemblerTypes as ensemblerTypes
+#Typing
+import ensembler.util.ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
 _conditionCls = ensemblerTypes.condition
+_potentialCls = ensemblerTypes.potential
+
+from ensembler.util import dataStructure as data
 
 from ensembler.integrator.newtonian import newtonianIntegrator
 from ensembler.integrator import stochastic
-
-from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential     #generate biased system at timepoint X
-from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential
-
 
 class system:
     """
@@ -49,10 +45,10 @@ class system:
     
     @potential.setter
     def potential(self, potential:_potentialCls):
-        if(issubclass(potential.__class__, _potentialCls)):
-            self.m_potential = potential
-        else:
-            raise ValueError("Potential needs to be a subclass of potential")
+        # if(issubclass(potential.__class__, _potentialCls)):
+        self.m_potential = potential
+        # else:
+        #     raise ValueError("Potential needs to be a subclass of potential")
 
     @property
     def integrator(self)->_integratorCls:
@@ -71,7 +67,7 @@ class system:
         if(isinstance(conditions, List) and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
             self.m_conditions = conditions
         else:
-            raise ValueError("Conditions needs to be a List of objs, that are a subclass of Condition")
+            raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
     
     def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[_conditionCls]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
@@ -112,7 +108,7 @@ class system:
         ## set dim
         if(potential.constants[potential.nDim] < 1 and isinstance(position, Iterable) and all([isinstance(pos, Number) for pos in position])):  #one  state system.
             self.nDim = len(position)
-            self.potential.nDim = self.nDim
+            self.potential.constants.update({potential.nDim: self.nDim})
         elif(potential.constants[potential.nDim] > 0):
             self.nDim = potential.constants[potential.nDim]
         else:
@@ -290,7 +286,7 @@ class system:
         for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, leave=verbosity):
 
             #Do one simulation Step. Todo: change to do multi steps
-            self.propergate()
+            self.propagate()
 
             #Calc new Energy&and other system properties
             self.updateSystemProperties()
@@ -312,7 +308,7 @@ class system:
 
         return self.currentState
 
-    def propergate(self)->NoReturn:
+    def propagate(self)->NoReturn:
         self._currentPosition, self._currentVelocities, self._currentForce = self.integrator.step(self)
 
     def applyConditions(self)-> NoReturn:
@@ -332,7 +328,7 @@ class system:
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
     def revertStep(self)-> NoReturn:
-        self.currentState = self.trajectory[-2]
+        self.currentState = self.trajectory.iloc[-2]
         self._update_current_vars_from_current_state()
         return
 

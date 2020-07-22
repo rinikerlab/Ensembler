@@ -10,11 +10,11 @@ from ensembler import ensemble
 
 
 class test_ReplicaExchangeCls(unittest.TestCase):
-    RE = ensemble.replica_exchange.ReplicaExchange
+    RE = ensemble.ReplicaExchange
     integrator = integrators.monteCarloIntegrator()
-    potential = pot.OneD.harmonicOsc()
+    potential = pot.OneD.harmonicOscillator()
     sys = system.system(potential=potential, integrator=integrator)
-    group:ensemble.replica_exchange.ReplicaExchange = None
+    group:ensemble.ReplicaExchange = None
 
     def test_setUp(self) -> None:
         self.group = None
@@ -91,8 +91,8 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         self.assertEqual(setted_pos, list(expected_pos), msg="The positions were not set correctly!")
 
 class test_TemperatureReplicaExchangeCls(unittest.TestCase):
-    TRE = ensemble.replica_exchange.TemperatureReplicaExchange
-    group:ensemble.replica_exchange.TemperatureReplicaExchange
+    TRE = ensemble.ReplicaExchange
+    group:ensemble.ReplicaExchange
 
     def test_tearDown(self) -> None:
         setattr(self, "group", None)

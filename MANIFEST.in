@@ -1,1 +1,6 @@
-include README.md LICENSE
+include LICENSE
+include MANIFEST.in
+include versioneer.py
+
+graft ensembler
+global-exclude *.py[cod] __pycache__ *.so

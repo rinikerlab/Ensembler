@@ -8,7 +8,17 @@ from typing import TypeVar
 from typing import Tuple, List, Callable, Union, Iterable
 from numbers import Number
 
-#Ensembpler specific Types:
+#Dummy defs:
+potential = TypeVar("potential")
+condition = TypeVar("condition")
+integrator = TypeVar("integrator")
+
+system = TypeVar("system")
+
+ensemble = TypeVar("ensemble")
+
+#Ensembler specific Types:
+"""
 from ensembler.potentials._baseclasses import _potentialCls 
 potential = TypeVar("potential", bound=_potentialCls)
 
@@ -21,5 +31,6 @@ condition = TypeVar("condition", bound=_conditionCls)
 from ensembler.integrator._basicIntegrators import _integratorCls
 integrator = TypeVar("integrator", bound=_integratorCls)
 
-from ensembler.system.basic_system import system as _systemCls
-system = TypeVar("system", bound=_systemCls)
+from ensembler.system.basic_system import system
+system = TypeVar("system", bound=system)
+"""
