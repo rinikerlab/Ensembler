@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - "cookiecutter"
+      - "build_release_1"
   pull_request:
     branches:
       - "master"
