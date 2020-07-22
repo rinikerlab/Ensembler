@@ -22,4 +22,7 @@ from ensembler.integrator._basicIntegrators import _integratorCls
 integrator = TypeVar("integrator", bound=_integratorCls)
 
 from ensembler.system import basic_system
-system = TypeVar("system", bound=basic_system.system)
+print(vars(basic_system))
+
+from ensembler.system.basic_system import system
+system = TypeVar("system", bound=system)
