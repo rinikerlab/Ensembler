@@ -60,17 +60,17 @@ class system:
         self.m_integrator = integrator
    
     @property
-    def conditions(self)->List[Condition]:
+    def conditions(self)->List[_conditionCls]:
         return self.m_conditions
     
     @conditions.setter
-    def conditions(self, conditions:List[Condition]):
-        if(isinstance(conditions, List) and all([issubclass(condition.__class__, Condition) for condition in conditions])):
+    def conditions(self, conditions:List[_conditionCls]):
+        if(isinstance(conditions, List) and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
             self.m_conditions = conditions
         else:
-            raise ValueError("Conditions needs to be a List of objs, that are a subclass of Condition")
+            raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
     
-    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[Condition]=[],
+    def __init__(self, potential:_potentialCls, integrator:_integratorCls, conditions:Iterable[_conditionCls]=[],
                  temperature:Number=298.0, position:(Iterable[Number] or Number)=None, mass:Number=1, verbose:bool=True)->NoReturn:
         ################################
         # Declare Attributes
