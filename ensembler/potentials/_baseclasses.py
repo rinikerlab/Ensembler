@@ -143,7 +143,7 @@ class _potential1DClsSymPYPerturbed(_potential1DClsSymPY):
 
     def __init__(self, nStates:int=1):
         self.constants.update({self.nDim:1, self.nStates:nStates})
-        super().__init__(nDim=1, nStates=nStates)
+        super().__init__(nStates=nStates)
 
     def __str__(self) -> str:
         msg = self.__name__() + "\n"

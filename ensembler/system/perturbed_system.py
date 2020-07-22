@@ -67,7 +67,7 @@ class perturbedSystem(system):
         self._currentForce = newForces
         self._currentLam = newLam
 
-        self.updateTemp()
+        self._updateTemp()
         self._updateEne()
         self._update_dHdlambda()
         self.updateCurrentState()

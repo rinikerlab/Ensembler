@@ -45,7 +45,7 @@ class flat_well(_potentialNDCls):
     def _calculate_dvdpos_singlePos(self, position:(Iterable[float])) -> np.array:
         return np.zeros(shape=len(position))
 
-class harmonicOscillator(_potentialNDCls):
+class harmonicOscillatorPotential(_potentialNDCls):
     '''
         .. autoclass:: harmonic oscillator potential
     '''
