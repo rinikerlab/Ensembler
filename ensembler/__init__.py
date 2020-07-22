@@ -5,6 +5,7 @@ Code to sample ensembles of simple (toy) models with various algorithms.
 
 # Add imports here
 from .ensembler import *
+from ensembler.util import ensemblerTypes
 
 # Handle versioneer
 from ._version import get_versions

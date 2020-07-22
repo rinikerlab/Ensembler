@@ -12,17 +12,16 @@ import scipy.constants as const
 import warnings
 pd.options.mode.use_inf_as_na = True
 
-
-from ensembler.util import dataStructure as data
-from ensembler.potentials._baseclasses import _potentialCls
-
+#Typing
 import ensembler.util.ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
+_conditionCls = ensemblerTypes.condition
+_potentialCls = ensemblerTypes.potential
+
+from ensembler.util import dataStructure as data
 
 from ensembler.integrator.newtonian import newtonianIntegrator
-
 from ensembler.integrator import stochastic
-from ensembler.conditions._conditions import Condition
 
 class system:
     """
