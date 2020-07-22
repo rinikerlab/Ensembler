@@ -21,5 +21,5 @@ system = TypeVar("system")  #dummyDef for integrator
 from ensembler.integrator._basicIntegrators import _integratorCls
 integrator = TypeVar("integrator", bound=_integratorCls)
 
-from ensembler.system import basic_system
-system = TypeVar("system", bound=basic_system.system)
+from ensembler.system.basic_system import system
+system = TypeVar("system", bound=system)
