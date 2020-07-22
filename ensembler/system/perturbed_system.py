@@ -45,7 +45,7 @@ class perturbedSystem(system):
         self._currentVelocities = currentVelocities
         self._currentTemperature = currentTemperature
 
-        self.updateEne()
+        self._updateEne()
         self.updateCurrentState()
 
     def updateCurrentState(self):
@@ -61,8 +61,8 @@ class perturbedSystem(system):
         self._currentForce = newForces
         self._currentLam = newLam
 
-        self.updateTemp()
-        self.updateEne()
+        self._updateTemp()
+        self._updateEne()
         self.updateCurrentState()
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
@@ -70,7 +70,7 @@ class perturbedSystem(system):
     def set_lam(self, lam:float):
         self._currentLam = lam
         self.potential.set_lam(lam=self._currentLam)
-        self.updateEne()
+        self._updateEne()
 
     def _update_dHdlambda(self):
         self._currentdHdLam = self.potential.dvdlam(self._currentPosition)

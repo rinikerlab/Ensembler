@@ -59,7 +59,7 @@ jobs:
       shell: bash -l {0}
 
       run: |
-        pytest -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
+        pytest --ignore=test_conveyorBelt.py --ignore=test_ensemble.py --ignore=test_ensembler.py --ignore=test_integrator.py --ignore=test_potential1D.py --ignore=test_potential2D.py --ignore=test_potential_scaffolds.py --ignore=test_potentialND.py -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
 
     - name: CodeCov
       uses: codecov/codecov-action@v1

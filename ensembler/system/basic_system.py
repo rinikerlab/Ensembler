@@ -46,10 +46,10 @@ class system:
     
     @potential.setter
     def potential(self, potential:_potentialCls):
-        if(issubclass(potential.__class__, _potentialCls)):
-            self.m_potential = potential
-        else:
-            raise ValueError("Potential needs to be a subclass of potential")
+        # if(issubclass(potential.__class__, _potentialCls)):
+        self.m_potential = potential
+        # else:
+        #     raise ValueError("Potential needs to be a subclass of potential")
 
     @property
     def integrator(self)->_integratorCls:
@@ -109,7 +109,7 @@ class system:
         ## set dim
         if(potential.constants[potential.nDim] < 1 and isinstance(position, Iterable) and all([isinstance(pos, Number) for pos in position])):  #one  state system.
             self.nDim = len(position)
-            self.potential.nDim = self.nDim
+            self.potential.constants.update({potential.nDim: self.nDim})
         elif(potential.constants[potential.nDim] > 0):
             self.nDim = potential.constants[potential.nDim]
         else:
@@ -277,7 +277,7 @@ class system:
         for step in tqdm(range(steps), desc="Simulation: ", mininterval=1.0, leave=verbosity):
 
             #Do one simulation Step. Todo: change to do multi steps
-            self.propergate()
+            self.propagate()
 
             #Calc new Energy&and other system properties
             self.updateSystemProperties()
@@ -296,7 +296,7 @@ class system:
 
         return self.currentState
 
-    def propergate(self)->NoReturn:
+    def propagate(self)->NoReturn:
         self._currentPosition, self._currentVelocities, self._currentForce = self.integrator.step(self)
 
     def applyConditions(self)-> NoReturn:
@@ -316,7 +316,7 @@ class system:
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
     def revertStep(self)-> NoReturn:
-        self.currentState = self.trajectory[-2]
+        self.currentState = self.trajectory.iloc[-2]
         self._update_current_vars_from_current_state()
         return
 
