@@ -7,6 +7,9 @@ coverage:
         - build_release_1
       default:
         threshold: 50%
+      ignore:
+        - "ensembler/visualisation"  # ignore folders and all its contents
+
 comment:
   layout: "header"
   require_changes: false
@@ -15,5 +18,3 @@ comment:
   flags: null
   paths: null
 
-  ignore:
-    - "ensembler/visualisation"  # ignore folders and all its contents
