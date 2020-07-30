@@ -171,7 +171,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
     _defaultRandomness = lambda self, ene_new, currentState: ((1/self.randomnessIncreaseFactor)*np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
     ##default Metropolis Criterion
     def metropolisCriterion(self, ene_new, currentState):
-        (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
+        return (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
 
 
     def __init__(self, minStepSize:float=None, maxStepSize:float=1, spaceRange:tuple=None, fixedStepSize=None,
@@ -246,7 +246,6 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
             ene = system.totPot()
 
             #MetropolisCriterion
-            print(self._critInSpaceRange,  self.metropolisCriterion, ene, current_state)
             if ((self._critInSpaceRange(system._currentPosition) and self.metropolisCriterion(ene, current_state))):
                 break
             else:   #not accepted

@@ -337,7 +337,6 @@ class system(super_baseClass):
         return
 
     def _update_state_from_traj(self)-> NoReturn:
-        print(self.trajectory.iloc[-1].to_dict())
         self.currentState = self.state(**self.trajectory.iloc[-1].to_dict())
         self._update_current_vars_from_current_state()
         return

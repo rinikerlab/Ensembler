@@ -47,7 +47,7 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, integrator=integrator)
 
         lam = 1.0
-        self.sys.set_lam(lam)
+        sys.set_lam(lam)
         ens = self.convBelt(0.0, 1, system=sys)
 
         ens.calculate_conveyorBelt_totEne()

@@ -73,8 +73,6 @@ class MultiReplicaApproach(super_baseClass):
         ## deepcopy all
         self.nReplicas = len(list(coordinates))
         replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]#generate deepcopies
-        print(replicas[0].potential)
-        print(replicas[0].integrator)
 
         # build up graph - set parameters
         replicaID = 0
@@ -339,8 +337,11 @@ class ReplicaExchange(MultiReplicaApproach):
         else:
             self.replicas = {}
             parameters = list(self.exchange_dimensions[self.parameter_names[0]])
+            print(self.parameter_names)
+            print(parameters)
             for coords, replica in zip(coordinates, replicas):
                 #set parameter set
+                print(coords, replica)
                 if (hasattr(replica, self.parameter_names[0])):
                     setattr(replica, self.parameter_names[0], parameters[coords])
 

@@ -6,9 +6,8 @@ This module shall be used to implement subclasses of Potential. This module cont
 import numpy as np
 import sympy as sp
 import typing as t
-import io
 import scipy.constants as const
-from ensembler.util.ensemblerTypes import Union, Number, Sized
+from ensembler.util.ensemblerTypes import Union, Number, Sized, List
 
 from ensembler.potentials import ND
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
@@ -380,8 +379,8 @@ class exponentialCoupledPotentials(_potential1DCls):
         self.constants.update({self.s:s})
         self._update_functions()
 
-    def set_Eoff(self, eoffA:float, eoffB:float):
-        self.constants.update({self.eoffA:eoffA, self.eoffB: eoffB})
+    def set_Eoff(self, eoffs:List[float]):
+        self.constants.update({self.eoffA:eoffs[0], self.eoffB: eoffs[1]})
         self._update_functions()
 
 
