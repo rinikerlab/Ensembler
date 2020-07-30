@@ -24,7 +24,7 @@ This project tries to give users very easy to use and simple functionality to de
 
    * ND
 
-   You can try the code in your Browser here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/improving_import_structure?filepath=examples%2FBasicPotentials.ipynb)
+   You can try the code in your Browser here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb)
 
 ### Systems
 
@@ -61,13 +61,13 @@ Or you can also add the path to the Ensembler repository, if you want to use the
 
 ### Tutorials
 
-Potentials: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/improving_import_structure?filepath=examples%2FBasicPotentials.ipynb)
+Potentials: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb)
 
-Simulations: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/improving_import_structure?filepath=examples%2FBasicSimulations.ipynb)
+Simulations: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicSimulations.ipynb)
 
-Interactive ConveyorBelt: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/improving_import_structure?filepath=examples%2FConveyorBelt.ipynb)
+Interactive ConveyorBelt: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FConveyorBelt.ipynb)
 
-EDS-Potentials: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/improving_import_structure?filepath=examples%2FEDS.ipynb)
+EDS-Potentials: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FEDS.ipynb)
 
 Free Energy Calculations: __Under Construction__
 
