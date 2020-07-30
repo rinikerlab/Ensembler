@@ -1,9 +1,7 @@
-import numpy as np
-import scipy.constants as const
-#
 from ensembler.util.ensemblerTypes import system as systemType, Tuple
+from ensembler.util.basic_class import super_baseClass, notImplementedERR
 
-class _integratorCls:
+class _integratorCls(super_baseClass):
     """
             This class is the parent class for all integrator classes. 
             The constructor is a interface method. 
@@ -29,8 +27,8 @@ class _integratorCls:
         NotImplementedError
             You need to implement this function in the subclass (i.e. in your integrator)
         """
-        raise NotImplementedError("This "+str(__class__)+" class is not implemented")
-    
+        pass
+
     def step(self, system:systemType)->Tuple[float, float, float]:
         """
         step  
@@ -52,7 +50,7 @@ class _integratorCls:
         NotImplementedError
             You need to implement this function in the subclass (i.e. in your integrator)
         """
-        raise NotImplementedError("The function step in "+str(__class__)+" class is not implemented")
+        notImplementedERR()
 
     def integrate(self, system:systemType, steps:int)->None:
         """

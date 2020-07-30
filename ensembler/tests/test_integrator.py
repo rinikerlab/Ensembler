@@ -1,17 +1,40 @@
-import unittest
-import numpy as np
+import os, unittest, tempfile
 from ensembler import integrator as integ, potentials as pot, system
+from ensembler.integrator import _basicIntegrators
+from ensembler.integrator import stochastic, newtonian, optimizers
 
-class test_Integrators(unittest.TestCase):
-    pass
+"""
+STOCHASTIC INTEGRATORS
+"""
+tmp_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_integrators")
 
-class test_MonteCarlo_Integrator(unittest.TestCase):
+class standard_IntegratorTests(unittest.TestCase):
+    integrator_class = _basicIntegrators._integratorCls
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
+
     def test_constructor(self):
-        integrator = integ.monteCarloIntegrator()
+        integrator = self.integrator_class()
+
+    def test_save_integrator(self):
+
+        integrator = self.integrator_class()
+        integrator.save(self.tmp_out_path)
+
+    def test_load_integrator(self):
+        integrator = self.integrator_class()
+        integrator.save(self.tmp_out_path)
+        del integrator
+
+        integrator = self.integrator_class.load(self.tmp_out_path)
+        print(integrator)
+
+class test_MonteCarlo_Integrator(standard_IntegratorTests):
+    integrator_class = stochastic.monteCarloIntegrator
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
-        potent = pot.OneD.harmonicOsc()
-        integrator = integ.monteCarloIntegrator()
+        potent = pot.OneD.harmonicOscillatorPotential()
+        integrator = stochastic.monteCarloIntegrator()
         sys = system.system(potential=potent, integrator=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
@@ -22,34 +45,24 @@ class test_MonteCarlo_Integrator(unittest.TestCase):
         pass
 
     def test_integrate(self):
-        potent = pot.OneD.harmonicOsc()
-        integrator = integ.monteCarloIntegrator()
+        potent = pot.OneD.harmonicOscillatorPotential()
+        integrator = stochastic.monteCarloIntegrator()
+
         steps=42
         sys = system.system(potential=potent, integrator=integrator)
-        sys.trajectory = []
+
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
         new_pos, new_Force = sys._currentPosition, sys._currentForce
-        self.assertEqual(steps, len(sys.trajectory), msg="The simulation did not run or was too short!")
+
+        self.assertEqual(steps+1, len(sys.trajectory), msg="The simulation did not run or was too short!")
         self.assertNotEqual(old_pos, new_pos, msg="Nothing happened here!")
         self.assertNotEqual(oldForce, new_Force, msg="Nothing happened here!")
         pass
 
-class test_MetropolisMonteCarlo_Integrator(unittest.TestCase):
-
-    def test_constructor(self):
-        integrator = integ.metropolisMonteCarloIntegrator()
-
-    def test_step(self):
-        pass
-
-    def test_integrate(self):
-        pass
-
-class test_verlocityVerletIntegrator_Integrator(unittest.TestCase):
-
-    def test_constructor(self):
-        integrator = integ.velocityVerletIntegrator()
+class test_MetropolisMonteCarlo_Integrator(standard_IntegratorTests):
+    integrator_class = stochastic.metropolisMonteCarloIntegrator
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         pass
@@ -57,10 +70,12 @@ class test_verlocityVerletIntegrator_Integrator(unittest.TestCase):
     def test_integrate(self):
         pass
 
-class test_positionVerletIntegrator_Integrator(unittest.TestCase):
-
-    def test_constructor(self):
-        integrator = integ.positionVerletIntegrator()
+"""
+NETOWNIAN
+"""
+class test_verlocityVerletIntegrator_Integrator(standard_IntegratorTests):
+    integrator_class = newtonian.velocityVerletIntegrator
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         pass
@@ -68,10 +83,19 @@ class test_positionVerletIntegrator_Integrator(unittest.TestCase):
     def test_integrate(self):
         pass
 
-class test_leapFrogIntegrator_Integrator(unittest.TestCase):
+class test_positionVerletIntegrator_Integrator(standard_IntegratorTests):
+    integrator_class = newtonian.positionVerletIntegrator
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
 
-    def test_constructor(self):
-        integrator = integ.leapFrogIntegrator()
+    def test_step(self):
+        pass
+
+    def test_integrate(self):
+        pass
+
+class test_leapFrogIntegrator_Integrator(standard_IntegratorTests):
+    integrator_class = newtonian.leapFrogIntegrator
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_"+integrator_class.name+"_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         pass

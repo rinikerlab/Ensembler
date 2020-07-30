@@ -12,7 +12,7 @@ import numbers
 from typing import Iterable, Union
 
 #Base Classes
-from ensembler.potentials._baseclasses import _potentialNDCls, _potentialNDClsSymPY
+from ensembler.potentials._basicPotentials import _potentialNDCls, _potentialNDCls
 
 """
 standard potentials
@@ -73,7 +73,7 @@ class harmonicOscillatorPotential(_potentialNDCls):
 """
 Waves
 """
-class wavePotential(_potentialNDClsSymPY):
+class wavePotential(_potentialNDCls):
     name:str = "Wave Potential"
     nDim = sp.symbols("nDim")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
@@ -84,7 +84,7 @@ class wavePotential(_potentialNDClsSymPY):
     V_dim = sp.matrix_multiply_elementwise(amplitude,
                                         (sp.matrix_multiply_elementwise((position + phase_shift), multiplicity)).applyfunc(sp.cos)) + yOffset
     i = sp.Symbol("i")
-    V_orig = sp.Sum(V_dim[i, 0], (i, 0, nDim))
+    V_functional = sp.Sum(V_dim[i, 0], (i, 0, nDim))
 
     def __init__(self, amplitude, multiplicity, phase_shift, y_offset, nDim:int):
         self.constants.update({"amp_"+str(j): amplitude[j] for j in range(nDim)})
@@ -253,7 +253,7 @@ class envelopedPotential(_potentialNDCls):
         ###CHECK!THIS FUNC!!! not correct
         V_R_ene = self.ene(position)
         V_Is_ene = np.array([statePot.ene(state_pos) for statePot, state_pos in zip(self.V_is, position)])
-        V_Is_dvdpos = np.array([statePot.dvdpos(state_pos) for statePot, state_pos in zip(self.V_is, position)])
+        V_Is_dvdpos = np.array([statePot.force(state_pos) for statePot, state_pos in zip(self.V_is, position)])
         dvdpos = []
 
 

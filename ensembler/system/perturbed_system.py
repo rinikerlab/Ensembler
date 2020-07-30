@@ -13,14 +13,14 @@ from ensembler.util import  ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
 _conditionCls = ensemblerTypes.condition
 
-from ensembler.potentials._baseclasses import _potential1DClsSymPYPerturbed as _perturbedPotentialCls
+from ensembler.potentials._basicPotentials import _potential1DClsPerturbed as _perturbedPotentialCls
 from ensembler.system.basic_system import system
 
 class perturbedSystem(system):
     """
     
     """
-
+    name = "perturbed system"
     #Lambda Dependend Settings
     state = data.lambdaState
     currentState: data.lambdaState

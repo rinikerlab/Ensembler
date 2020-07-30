@@ -22,7 +22,7 @@ class edsSystem(system):
     """
     
     """
-
+    name = "eds system"
     #Lambda Dependend Settings
     state = data.envelopedPStstate
     currentState: data.envelopedPStstate
@@ -113,5 +113,5 @@ class edsSystem(system):
 
     def set_Eoff(self, Eoff: Iterable[float]):
         self._currentEdsEoffs = Eoff
-        self.potential.set_Eoff(Eoff=self._currentEdsEoffs)
+        self.potential.set_Eoff(self._currentEdsEoffs)
         self.updateSystemProperties()

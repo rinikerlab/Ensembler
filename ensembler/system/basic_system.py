@@ -12,6 +12,7 @@ import scipy.constants as const
 import warnings
 pd.options.mode.use_inf_as_na = True
 #Typing
+from ensembler.util.basic_class import  super_baseClass
 import ensembler.util.ensemblerTypes as ensemblerTypes
 _integratorCls = ensemblerTypes.integrator
 _conditionCls = ensemblerTypes.condition
@@ -24,7 +25,7 @@ from ensembler.integrator import stochastic
 from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential as metadynamicsPotential1D
 from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential as metadynamicsPotential2D
 
-class system:
+class system(super_baseClass):
     """
      [summary]
     
@@ -34,6 +35,7 @@ class system:
     :rtype: [type]
     """
     #static attributes
+    name="system"
     state = data.basicState
 
 
@@ -66,7 +68,7 @@ class system:
     
     @conditions.setter
     def conditions(self, conditions:List[_conditionCls]):
-        if(isinstance(conditions, List) and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
+        if(isinstance(conditions, List) ): #and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
             self.m_conditions = conditions
         else:
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
@@ -161,7 +163,7 @@ class system:
 
         #Try to init the force
         try:
-            self._currentForce = self.potential.dvdpos(self.initial_position)  #initialise forces!    #todo!
+            self._currentForce = self.potential.force(self.initial_position)  #initialise forces!    #todo!
         except:
             warnings.warn("Could not initialize the force of the potential? Check if you need it!")
 

@@ -9,7 +9,7 @@ from ensembler.visualisation import style
 
 
 from ensembler.potentials import OneD as pot, ND as nDPot
-from ensembler.potentials._baseclasses import _potential1DCls, _perturbedPotentialNDCls
+from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.visualisation import plot_layout_settings
 for key, value in plot_layout_settings.items():
@@ -66,7 +66,7 @@ def plot_1DPotential(potential: _potential1DCls, positions:list, color =None,
 def plot_1DPotential_dhdpos(potential: _potential1DCls, positions:list, color =style.potential_color(1),
                             x_range=None, y_range=None, title:str=None, ax=None, yUnit:str="kT"):
     # generat Data
-    energies = potential.dvdpos(positions=positions)
+    energies = potential.force(positions=positions)
 
     # is there already a figure?
     if (ax == None):
@@ -147,7 +147,7 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions:list,
  2D Plotting Functions
 """
 
-def plot_2DPotential(V: pot2D._potential2DClsSymPY, positions2D: List[Tuple[Number, Number]] = None, title: str = None,
+def plot_2DPotential(V: pot2D._potential2DCls, positions2D: List[Tuple[Number, Number]] = None, title: str = None,
                      x_label: str = None, y_label: str = None, space_range: Tuple[Number, Number] = (-10, 10),
                      point_resolution: int = 1000, ax=None, show_plot: bool = False, dpi: int = 300, cmap=style.qualitative_map) -> (
 plt.Figure, plt.Axes, np.array):
@@ -285,7 +285,7 @@ title:str = "Multiple state overlay", label_prefix:str="State", out_path:str=Non
         
     return fig, out_path
 
-def plot_2perturbedEnergy_landscape(potential:_perturbedPotentialNDCls, positions:list, lambdas:list, cmap=style.qualitative_map,
+def plot_2perturbedEnergy_landscape(potential:_potential1DClsPerturbed, positions:list, lambdas:list, cmap=style.qualitative_map,
                                     x_range=None, lam_range=None, title:str=None, colbar:bool=False, ax=None):
 
     energy_map_lin = []

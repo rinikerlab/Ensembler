@@ -73,6 +73,7 @@ class monteCarloIntegrator(stochasticIntegrator):
         This class implements the classic monte carlo integrator.
         It choses its moves purely randomly.
     """
+    name = "Monte Carlo Integrator"
 
     def __init__(self, maxStepSize:Number=1, minStepSize:Number=None, spaceRange:Tuple[Number,Number]=None, fixedStepSize:Number=None):
         """
@@ -159,7 +160,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
                 - $k_b$ as Boltzmann Constant
 
     """
-    
+    name = "Metropolis Monte Carlo Integrator"
     #Parameters:
     metropolisCriterion=None    #use a different Criterion
     randomnessIncreaseFactor:float = 1  #tune randomness of your results
@@ -272,7 +273,7 @@ Langevin stochastic integration
 '''
 
 class langevinIntegrator(stochasticIntegrator):
-
+    name="Langevin Integrator"
 
     def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
         """
@@ -335,7 +336,7 @@ class langevinIntegrator(stochasticIntegrator):
         # energy is expected to be in units of k_B
         self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
         #calculation of forces:
-        self.newForces = -system.potential.dvdpos(self.currentPosition)
+        self.newForces = -system.potential.force(self.currentPosition)
 
         #Brünger-Brooks-Karplus integrator for positions
         new_position = (1 / (1 + self.gamma * self.dt/2)) * (2 * self.currentPosition - self._oldPosition
@@ -426,7 +427,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
         You need to implement this function in the subclass (i.e. in your integrator)
 
     """
-
+    name = "Velocity Langevin Integrator"
     def update_positon(self, system):
         """
         update for position Lanvevin
@@ -443,7 +444,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
             # energy is expected to be in units of k_B
             self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
             #calculate of forces:
-            self.newForces = -system.potential.dvdpos(self.currentPosition)
+            self.newForces = -system.potential.force(self.currentPosition)
 
             self._first_step = False
 
@@ -461,7 +462,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
         self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
 
         #calculate of forces:
-        self.newForces = -system.potential.dvdpos(full_step_position)
+        self.newForces = -system.potential.force(full_step_position)
 
         # last half step
         full_step_velocity = (1 / (1 + self.gamma * self.dt/2)) * (half_step_velocity +self.dt/(1*system.mass)*(self.newForces + self.R_x))

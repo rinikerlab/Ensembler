@@ -61,7 +61,7 @@ class conjugate_gradient(optimizer):
             (new Position, None, position Shift)
         """
         f = system.potential.ene
-        f_prime = system.potential.dvdpos
+        f_prime = system.potential.force
 
         self.oldpos = system.currentState.position
         self.newPos = np.squeeze(fmin_cg(f=f, fprime=f_prime, x0=self.oldpos, epsilon=self.epsilon, maxiter=1, disp=False))
@@ -102,8 +102,8 @@ class conjugate_gradient(optimizer):
 
         """
 
-        cg_out = fmin_cg(f=potential.ene, fprime=potential.dvdpos, x0=x0, epsilon=self.epsilon, maxiter=maxiter,
-                         full_output=True,retall=True)
+        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maxiter,
+                         full_output=True, retall=True)
         opt_position, Vmin, function_iterations, gradient_iterations, warn_flag, traj_positions = cg_out
 
         if(warn_flag==1):

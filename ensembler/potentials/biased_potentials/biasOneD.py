@@ -8,7 +8,7 @@ import numpy as np
 import sympy as sp
 
 
-from ensembler.potentials._baseclasses import _potential1DClsSymPY
+from ensembler.potentials._basicPotentials import _potential1DCls
 from ensembler.potentials.OneD import gaussPotential
 
 """
@@ -16,7 +16,7 @@ from ensembler.potentials.OneD import gaussPotential
 """
 
 
-class _bias_baseclass(_potential1DClsSymPY):
+class _bias_baseclass(_potential1DCls):
 
     name: str = "bias_baseclass"
     nDim = 1
@@ -105,7 +105,7 @@ class _bias_baseclass(_potential1DClsSymPY):
     TIME INDEPENDENT BIASES 
 """
 
-class addedPotentials(_potential1DClsSymPY):
+class addedPotentials(_potential1DCls):
     '''
     Adds two different potentials on top of each other. Can be used to generate
     harmonic potential umbrella sampling or scaled potentials
@@ -145,7 +145,7 @@ class addedPotentials(_potential1DClsSymPY):
 """
     TIME DEPENDENT BIASES 
 """
-class metadynamicsPotential(_potential1DClsSymPY):
+class metadynamicsPotential(_potential1DCls):
 
     '''
     The metadynamics bias potential adds 1D Gaussian potentials on top of
@@ -273,7 +273,7 @@ class metadynamicsPotential(_potential1DClsSymPY):
 
 
 
-    def dvdpos(self, positions):
+    def force(self, positions):
         '''
         calculates derivative with respect to position also takes bias into account
 
@@ -315,7 +315,7 @@ class metadynamicsPotential(_potential1DClsSymPY):
 
 #### OLD FUNCTIONS ###
 
-class timedependendBias(_potential1DClsSymPY):
+class timedependendBias(_potential1DCls):
     '''
     The timedependend bias potential adds a user defined potential on top of
     the original potential.
@@ -386,7 +386,7 @@ class timedependendBias(_potential1DClsSymPY):
         self.dVdpos = sp.diff(self.V, self.position)
 
 
-class metadynamicsPotentialSympy(_potential1DClsSymPY):
+class metadynamicsPotentialSympy(_potential1DCls):
     '''
     The metadynamics bias potential adds Gaussian potentials on top of
     the original potential. The added gaussian potential is centered on the current position.

@@ -5,7 +5,7 @@
 
 #Generic Types
 from typing import TypeVar
-from typing import Tuple, List, Callable, Union, Iterable
+from typing import Tuple, List, Callable, Union, Iterable, Sized
 from numbers import Number
 
 #Dummy defs:

@@ -8,7 +8,7 @@ import numpy as np
 import sympy as sp
 
 
-from ensembler.potentials._baseclasses import _potential2DClsSymPY
+from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.potentials.TwoD import gaussPotential
 
 
@@ -16,7 +16,7 @@ from ensembler.potentials.TwoD import gaussPotential
     TIME INDEPENDENT BIASES 
 """
 
-class addedPotentials(_potential2DClsSymPY):
+class addedPotentials(_potential2DCls):
     '''
     Adds two different potentials on top of each other. Can be used to generate
     harmonic potential umbrella sampling or scaled potentials
@@ -61,7 +61,7 @@ class addedPotentials(_potential2DClsSymPY):
     TIME DEPENDENT BIASES 
 """
 
-class metadynamicsPotential(_potential2DClsSymPY):
+class metadynamicsPotential(_potential2DCls):
     '''
     The metadynamics bias potential adds 2D Gaussian potentials on top of
     the original 2D potential. The added gaussian potential is centered on the current position.
@@ -196,7 +196,7 @@ class metadynamicsPotential(_potential2DClsSymPY):
 
 
 
-    def dvdpos(self, positions):
+    def force(self, positions):
         '''
         calculates derivative with respect to position also takes bias into account
 

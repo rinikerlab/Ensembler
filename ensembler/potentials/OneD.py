@@ -6,81 +6,21 @@ This module shall be used to implement subclasses of Potential. This module cont
 import numpy as np
 import sympy as sp
 import typing as t
+import io
 import scipy.constants as const
+from ensembler.util.ensemblerTypes import Union, Number, Sized
 
 from ensembler.potentials import ND
-from ensembler.potentials._baseclasses import _potential1DCls, _potential1DClsSymPY, _potential1DClsSymPYPerturbed
+from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 
 """
     SIMPLE POTENTIALS
 """
-
-class dummyPotential(_potential1DClsSymPY):
-
-    name:str = "Dummy Potential"
-    position, y_shift = sp.symbols("r Voffset")
-
-    def __init__(self, y_shift: float = 0):
-        """
-        This Class is representing the a dummy potential. 
-        It returns a constant value equalling the y_shift parameter.
-        
-        :param y_shift: This will be the constant return value, defaults to 0
-        :type y_shift: float, optional
-        """
-
-        self.V_orig = sp.Lambda(self.position, self.y_shift)
-
-        self.constants = {self.y_shift:y_shift}
-        self.V = self.V_orig.subs(self.constants)
-        self.dVdpos = sp.diff(self.V, self.position)
-        super().__init__()
-        
-        self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
-        self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
-
-
-class flatwellPotential(_potential1DCls):
-    name:str = "Flat Well"
-
-    x_min: float = None
-    x_max: float = None
-    y_max:float = None
-    y_min:float = None
-
-    def __init__(self, x_range: list = (0, 1), y_max: float = 1000, y_min: float = 0):
-        """
-        __init__ This potential is a flatwell potential. 
-        The flatwell potential is a function similar to an if case.
-        If a position is inside a the x_range, it returns the y_min val.
-        If a position is outside, the y_max val will be returned.
-
-        :param x_range: range inside this the y_min val will be returned, defaults to (0, 1)
-        :type x_range: list, optional
-        :param y_max: outside of the range this value will be returned, defaults to 1000
-        :type y_max: float, optional
-        :param y_min: inside the range this value will be returned, defaults to 0
-        :type y_min: float, optional
-        """
-        super().__init__()
-        self.x_min = min(x_range)
-        self.x_max = max(x_range)
-        self.y_max = y_max
-        self.y_min = y_min
-
-    def _calculate_energies_singlePos(self, position: float) -> float:
-        return self.y_min if (position >= self.x_min and position <= self.x_max) else self.y_max
-
-    def _calculate_dvdpos_singlePos(self, positions: float) -> float:
-        x = np.inf if(positions == self.x_min or positions == self.x_max) else 1
-        return x
-
-
-class harmonicOscillatorPotential(_potential1DClsSymPY):
+class harmonicOscillatorPotential(_potential1DCls):
     name:str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
-    V_orig = 0.5*k*(position-x_shift)**2+y_shift
+    V_functional = 0.5 * k * (position - x_shift) ** 2 + y_shift
 
     def __init__(self, k: float = 1.0, x_shift: float = 0.0, y_shift: float = 0.0):
         """
@@ -94,16 +34,16 @@ class harmonicOscillatorPotential(_potential1DClsSymPY):
         :type y_shift: float, optional
         """
         self.constants = {self.k:k, self.x_shift:x_shift, self.y_shift:y_shift}
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
 
-class wavePotential(_potential1DClsSymPY):
+class wavePotential(_potential1DCls):
     name:str = "Wave Potential"
     amplitude, phase_shift, position, y_shift, multiplicity = sp.symbols("A w r Voff m")
-    V_orig = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
+    V_functional = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
 
     def __init__(self, amplitude: float = 1.0,  multiplicity:float =1.0, phase_shift: float = 0.0, y_shift: float = 0.0, radians: bool = False):
         """
@@ -122,19 +62,19 @@ class wavePotential(_potential1DClsSymPY):
         """
 
         self.constants = {self.amplitude:amplitude, self.multiplicity:multiplicity,  self.phase_shift:phase_shift, self.y_shift:y_shift}
-        self.V = self.V_orig.subs(self.constants)
-        self.dVdpos = sp.diff(self.V, self.position)
-
         super().__init__()
-        
-        #self.set_radians(radians)
+        self.set_radians(radians)
 
-    """
+    #OVERRIDE
+    def _update_functions(self):
+        super()._update_functions()
+
+        self.tmp_Vfunc = self._calculate_energies
+        self.tmp_dVdpfunc = self._calculate_dVdpos
+
     def set_degrees(self, degrees: bool = True):
+        self.radians = not degrees
         if(degrees):
-            self.tmp_Vfunc = self._calculate_energies
-            self.tmp_dVdpfunc = self._calculate_dVdpos
-
             self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
             self._calculate_dVdpos = lambda positions: self.tmp_dVdpfunc(np.deg2rad(positions))
         else:
@@ -147,13 +87,12 @@ class wavePotential(_potential1DClsSymPY):
             self._calculate_dVdpos = self.tmp_dVdpfunc
         else:
             self.set_degrees(degrees=not radians)
-    """
 
 
-class coulombPotential(_potential1DClsSymPY):
+class coulombPotential(_potential1DCls):
     name = "Coulomb Potential"
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
-    V_orig = (charge1 * charge2)/(position * electric_permetivity * 4 * sp.pi)
+    V_functional = (charge1 * charge2) / (position * electric_permetivity * 4 * sp.pi)
 
     def __init__(self, q1=1, q2=1, epsilon=1):
         """
@@ -167,16 +106,16 @@ class coulombPotential(_potential1DClsSymPY):
         :type epsilon: int, optional
         """
         self.constants = {self.charge1:q1, self.charge2:q2, self.electric_permetivity:epsilon}
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
 
-class LennardJonesPotential(_potential1DClsSymPY):
+class lennardJonesPotential(_potential1DCls):
     name:str = "Lennard Jones Potential"
     sigma, epsilon, x_shift, y_shift, position = sp.symbols("s e r_0 V_off r")
-    V_orig = 4 * epsilon * ((sigma/(position-x_shift))**12 - (sigma/(position-x_shift))**6) + y_shift 
+    V_functional = 4 * epsilon * ((sigma / (position - x_shift)) ** 12 - (sigma / (position - x_shift)) ** 6) + y_shift
 
     def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0, y_shift=0):
         """
@@ -193,17 +132,17 @@ class LennardJonesPotential(_potential1DClsSymPY):
         """
         self.constants = {self.sigma:sigma, self.epsilon:epsilon, self.x_shift:x_shift, self.y_shift:y_shift}
 
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
 
-class lennardJonesForceFieldPotential(_potential1DClsSymPY):
+class lennardJonesForceFieldPotential(_potential1DCls):
 
     name:str = "Lennard Jones Potential"
     c6, c12, x_shift, y_shift, position = sp.symbols("c6 c12 r_0 V_off r")
-    V_orig = (c12/(position-x_shift)**12)-(c6/(position-x_shift**6))+y_shift
+    V_functional = (c12 / (position - x_shift) ** 12) - (c6 / (position - x_shift ** 6)) + y_shift
 
     def __init__(self, c6: float = 0.2, c12: float = 0.0001, x_shift: float = 0, y_shift:float=0):
         """
@@ -211,7 +150,7 @@ class lennardJonesForceFieldPotential(_potential1DClsSymPY):
         
         :param c6: [description], defaults to 0.2
         :type c6: float, optional
-        :param c12: [description], defaults to 0.0001
+        :param c12: [descripftion], defaults to 0.0001
         :type c12: float, optional
         :param x_shift: [description], defaults to 0
         :type x_shift: float, optional
@@ -219,16 +158,16 @@ class lennardJonesForceFieldPotential(_potential1DClsSymPY):
         :type y_shift: float, optional
         """
         self.constants = {self.c6:c6, self.c12:c12, self.x_shift:x_shift, self.y_shift:y_shift}
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
 
-class doubleWellPotential(_potential1DClsSymPY):
+class doubleWellPotential(_potential1DCls):
     name:str = "Double Well"
     a, b, Vmax, position = sp.symbols("a b V_max r")
-    V_orig = (Vmax/(b**4)) * ((position - a/2)**2 - b**2) **2
+    V_functional = (Vmax / (b ** 4)) * ((position - a / 2) ** 2 - b ** 2) ** 2
 
     def __init__(self, Vmax=5, a=-1, b=1):
         """
@@ -241,15 +180,15 @@ class doubleWellPotential(_potential1DClsSymPY):
         :param b: [description], defaults to 1
         :type b: int, optional
         """
-        
+
         self.constants = {self.Vmax:Vmax, self.a:a, self.b:b}
-        self.V = self.V_orig.subs(self.constants)
+        super().__init__()
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
 
 
-class fourWellPotential(_potential1DClsSymPY):
+class fourWellPotential(_potential1DCls):
     '''
         Unperturbed four well potential
     '''
@@ -258,7 +197,7 @@ class fourWellPotential(_potential1DClsSymPY):
     a, ah, b, bh, c, ch, d, dh, Vmax, position = sp.symbols("a ah b bh c ch d dh V_max r")
 
 
-    V_orig = -Vmax * sp.log(sp.exp(-(position - a)**2 - ah)+ sp.exp(-(position - b)**2 - bh)+ sp.exp(-(position - c)**2 - ch)+ sp.exp(-(position - d)**2 - dh))
+    V_functional = -Vmax * sp.log(sp.exp(-(position - a) ** 2 - ah) + sp.exp(-(position - b) ** 2 - bh) + sp.exp(-(position - c) ** 2 - ch) + sp.exp(-(position - d) ** 2 - dh))
 
     def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1. ):
         '''
@@ -287,13 +226,13 @@ class fourWellPotential(_potential1DClsSymPY):
 
 
         self.constants = {self.Vmax:Vmax, self.a:a, self.b:b, self.c:c, self.d:d, self.ah:ah, self.bh:bh, self.ch:ch, self.dh:dh}
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
 
-class gaussPotential(_potential1DClsSymPY):
+class gaussPotential(_potential1DCls):
     '''
         Gaussian like potential, usually used for metadynamics
     '''
@@ -302,7 +241,7 @@ class gaussPotential(_potential1DClsSymPY):
     mu, sigma, A, position = sp.symbols("mu sigma A r")
 
 
-    V_orig = A * sp.exp(-(position-mu)**2/(2*sigma**2))
+    V_functional = A * sp.exp(-(position - mu) ** 2 / (2 * sigma ** 2))
 
     def __init__(self, A=1., mu=0., sigma=1. ):
         '''
@@ -318,7 +257,7 @@ class gaussPotential(_potential1DClsSymPY):
         '''
 
         self.constants = {self.A:A, self.mu:mu, self.sigma:sigma}
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
@@ -327,7 +266,8 @@ class gaussPotential(_potential1DClsSymPY):
 """
     COMBINED POTENTIALS
 """
-class torsionPotential(_potential1DClsSymPY):
+
+class torsionPotential(_potential1DCls):
 
     name:str = "Torsion Potential"
 
@@ -335,19 +275,42 @@ class torsionPotential(_potential1DClsSymPY):
     position = sp.symbols("r")
     wavePotentials = sp.Array([1])
     i, N = sp.symbols("i N")    #sum symbols
-    V_orig = sp.Sum(wavePotentials[i,0], (i, 0, N))
+    V_functional = sp.Sum(wavePotentials[i,0], (i, 0, N))
 
-    def __init__(self, wavePotentials):
+    def __init__(self, wavePotentials=[wavePotential(), wavePotential(multiplicity=3)], radians=False):
         '''
         initializes torsions Potential
         '''
+        wavePotentials = np.array(wavePotentials, ndmin=1)
         self.constants = {**{"wave_"+str(key): wave.V for key, wave in enumerate(wavePotentials)}, **{self.N:len(wavePotentials)-1}}
         self.wavePotentials = sp.Matrix([sp.symbols("wave_" + str(i)) for i in range(len(wavePotentials))])
-
-        self.V_orig = sp.Sum(self.wavePotentials[self.i,0], (self.i, 0,self.N))
-        self.V = self.V_orig.subs(self.constants).subs(self.N, len(wavePotentials))
+        self.V_functional = sp.Sum(self.wavePotentials[self.i,0], (self.i, 0,self.N))
 
         super().__init__()
+        self.set_radians(radians=radians)
+
+    # OVERRIDE
+    def _update_functions(self):
+        super()._update_functions()
+
+        self.tmp_Vfunc = self._calculate_energies
+        self.tmp_dVdpfunc = self._calculate_dVdpos
+
+    def set_degrees(self, degrees: bool = True):
+        self.radians = not degrees
+        if (degrees):
+            self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
+            self._calculate_dVdpos = lambda positions: self.tmp_dVdpfunc(np.deg2rad(positions))
+        else:
+            self.set_radians(radians=not degrees)
+
+    def set_radians(self, radians: bool = True):
+        self.radians = radians
+        if (radians):
+            self._calculate_energies = self.tmp_Vfunc
+            self._calculate_dVdpos = self.tmp_dVdpfunc
+        else:
+            self.set_degrees(degrees=not radians)
 
 
 class forceField:
@@ -355,18 +318,17 @@ class forceField:
     def __init__(self):
         raise NotImplementedError("Not implemented yet, but this calss shall be used to link potential terms! ") 
 
-
 """
     Multi State Potentials - PERTURBED POTENTIALS
 """
-class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
+class linearCoupledPotentials(_potential1DClsPerturbed):
     name:str = "Linear Coupled System"
-    lam, position = sp.symbols(u'λ r')
-    Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
-    Coupling = (1-lam) * Va(position) + lam * Vb(position)
+    lam, position = sp.symbols('λ r')
+    Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
+    coupling = (1-lam) * Va + lam * Vb
     
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  lam:float = 0.5):
         """
         Linear Coupled Potentials, like in FEP or TI simulations.
@@ -380,19 +342,18 @@ class linearCoupledPotentials(_potential1DClsSymPYPerturbed):
         """
         self.statePotentials =  {self.Va:Va, self.Vb:Vb}
         self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.lam: lam}
-        self.V_orig = self.Coupling
         super().__init__()
 
 
-class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
+class exponentialCoupledPotentials(_potential1DCls):
     name:str = "exponential Coupled System"
-    position, s, temp, eoffA, eoffB = sp.symbols(u'r s T eoffI eoffJ')
-    Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
+    position, s, temp, eoffA, eoffB = sp.symbols('r s T eoffI eoffJ')
+    Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
     beta = const.gas_constant / 1000.0 * temp
-    Coupling = -1/(beta*s) * sp.log(sp.exp(-beta*s*Vb(position)-eoffA) + sp.exp(-beta*s*Va(position)-eoffB))
+    coupling = -1/(beta*s) * sp.log(sp.exp(-beta*s*Vb-eoffA) + sp.exp(-beta*s*Va-eoffB))
 
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  eoffA:float=0, eoffB:float=0, s:float = 1.0, temp:float = 298):
         """
         exponential Coupled Potentials, this is a mixture of EDS and TI
@@ -411,8 +372,9 @@ class exponentialCoupledPotentials(_potential1DClsSymPYPerturbed):
 
         self.statePotentials =  {self.Va:Va, self.Vb:Vb}
         self.constants = {self.Va:Va.V, self.Vb:Vb.V, self.eoffA:eoffA, self.eoffB:eoffB, self.s:s, self.temp:temp}
-        
-        super().__init__()
+        self.V_functional = self.coupling.expand()
+
+        super().__init__(nStates=2)
 
     def set_s(self, s:float):
         self.constants.update({self.s:s})
@@ -438,7 +400,7 @@ class envelopedPotential(ND.envelopedPotential):
     Vis = sp.Matrix([1])
     Eoffis = sp.Matrix([1])
     i, N = sp.symbols("i N")
-    V_orig = -1/(beta*s_s) * sp.log(sp.Sum(sp.exp(-beta * s_s * (Vis[i,0]-Eoffis[i, 0])),(i, 0, N)))
+    V_functional = -1 / (beta * s_s) * sp.log(sp.Sum(sp.exp(-beta * s_s * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, N)))
 
 
     def __init__(self, V_is: t.List[_potential1DCls], s: float = 1.0, Eoff_i: t.List[float] = None, T:float=298):
@@ -452,9 +414,12 @@ class envelopedPotential(ND.envelopedPotential):
         super().__init__(V_is=V_is, s=s, Eoff_i=Eoff_i)
 
 
-        self.V_orig = -1/(self.beta*self.s_s) * sp.log(sp.Sum(sp.exp(-self.beta * self.s_s * (self.states[self.i,0])),(self.i, 0, self.N-1)))
-        self.V = self.V_orig.subs(self.constants)
+        self.V_functional = -1/(self.beta*self.s_s) * sp.log(sp.Sum(sp.exp(-self.beta * self.s_s * (self.states[self.i,0])),(self.i, 0, self.N-1)))
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
+
+    def _initialize_functions(self):
+        pass
 
 
     def _calculate_dvdpos_singlePos(self, position:(t.Iterable[float])) -> np.array:
@@ -466,7 +431,7 @@ class envelopedPotential(ND.envelopedPotential):
         ###CHECK!THIS FUNC!!! not correct
         V_R_ene = self.ene(position)
         V_Is_ene = np.array([statePot.ene(state_pos) for statePot, state_pos in zip(self.V_is, position)])
-        V_Is_dhdpos = np.array([statePot.dvdpos(state_pos) for statePot, state_pos in zip(self.V_is, position)])
+        V_Is_dhdpos = np.array([statePot.force(state_pos) for statePot, state_pos in zip(self.V_is, position)])
         dhdpos = []
 
 
@@ -503,15 +468,15 @@ class envelopedPotential(ND.envelopedPotential):
         return  dhdpos_R.item() if(len(dhdpos_R.shape) == 1 and dhdpos_R.shape[0] == 1) else np.array(dhdpos_R) 
 
 
-class hybridCoupledPotentials(_potential1DClsSymPYPerturbed):
+class hybridCoupledPotentials(_potential1DClsPerturbed):
     name:str = "hybrid Coupled System"
     lam, position, s, temp = sp.symbols(u'λ r s T')
-    Va, Vb = (sp.Function("V_a"), sp.Function("V_b"))
+    Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
     beta = const.gas_constant / 1000.0 * temp
-    Coupling = -1/(beta*s) * sp.log(lam * sp.exp(-beta*s*Vb(position)) + (1-lam) * sp.exp(-beta*s*Va(position)))
+    coupling = -1/(beta*s) * sp.log(lam * sp.exp(-beta*s*Vb) + (1-lam) * sp.exp(-beta*s*Va))
 
-    def __init__(self, Va: _potential1DClsSymPY = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DClsSymPY = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  lam:float = 0.5, s:float = 1.0, temp:float = 298):
         """
         exponential Coupled Potentials, this is a mixture of EDS and TI
@@ -541,6 +506,73 @@ class hybridCoupledPotentials(_potential1DClsSymPYPerturbed):
         self.constants.update({self.Eoff:Eoff})
         self._update_functions()
 
+
+class dummyPotential(_potential1DCls):
+    name: str = "Dummy Potential"
+    position, y_shift = sp.symbols("r Voffset")
+
+    def __init__(self, y_shift: float = 0):
+        """
+        This Class is representing the a dummy potential.
+        It returns a constant value equalling the y_shift parameter.
+
+        :param y_shift: This will be the constant return value, defaults to 0
+        :type y_shift: float, optional
+        """
+
+        self.V_functional = sp.Lambda(self.position, self.y_shift)
+
+        self.constants = {self.y_shift: y_shift}
+        self.V = self.V_functional.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
+        super().__init__()
+
+        self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
+        self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
+
+
+class flatwellPotential(_potential1DCls):
+    name: str = "Flat Well"
+
+    x_min: float = None
+    x_max: float = None
+    y_max: float = None
+    y_min: float = None
+
+    def __init__(self, x_range: list = (0, 1), y_max: float = 1000, y_min: float = 0):
+        """
+        __init__ This potential is a flatwell potential.
+        The flatwell potential is a function similar to an if case.
+        If a position is inside a the x_range, it returns the y_min val.
+        If a position is outside, the y_max val will be returned.
+
+        :param x_range: range inside this the y_min val will be returned, defaults to (0, 1)
+        :type x_range: list, optional
+        :param y_max: outside of the range this value will be returned, defaults to 1000
+        :type y_max: float, optional
+        :param y_min: inside the range this value will be returned, defaults to 0
+        :type y_min: float, optional
+        """
+        self.x_min = min(x_range)
+        self.x_max = max(x_range)
+        self.y_max = y_max
+        self.y_min = y_min
+
+        self.constants.update({self.nStates: 1, self.nDim: 1})
+        self._update_functions = None
+
+
+    def _calculate_energies(self, position: Union[Number, np.array]) -> Union[Number, np.array]:
+        return np.squeeze([self.y_min if (pos >= self.x_min and pos <= self.x_max) else self.y_max for pos in np.array(np.squeeze(position), ndmin=1)])
+
+    def _calculate_dVdpos(self, positions: Union[Number, np.array]) -> Union[Number, np.array]:
+        return np.squeeze([np.inf if (pos == self.x_min or pos == self.x_max) else 0 for pos in np.array(np.squeeze(positions), ndmin=1)])
+
+    def __setstate__(self, state):
+        """
+        Setting up after pickling. Catch special features fo function
+        """
+        self.__dict__ = state
 
 """
 Biased potentials
