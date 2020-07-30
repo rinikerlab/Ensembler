@@ -11,6 +11,7 @@ import numpy as np, pandas as pd
 import scipy.constants as const
 
 from ensembler.util.ensemblerTypes import system
+from ensembler.util.basic_class import  super_baseClass
 
 from ensembler.ensemble import exchange_pattern
 
@@ -18,7 +19,7 @@ from ensembler.ensemble import exchange_pattern
 import multiprocessing as mult
 
 
-class MultiReplicaApproach():
+class MultiReplicaApproach(super_baseClass):
     ##Parameters - to build replica graphs
     ### EDGES - Exchange parameters - gradients
     coordinate_dimensions:int
@@ -57,8 +58,8 @@ class MultiReplicaApproach():
 
         #generate all parameter combinations
         if(len(self.exchange_dimensions) > 1):
-            coord_it=it.product(*[list(self.exchange_dimensions[r]) for r in sorted(self.exchange_dimensions)])
-            coordinates = [self.coord_set({name: x for name, x in zip(self.coord_names, x)}) for x in coord_it]
+            coord_it=list(it.product(*[list(self.exchange_dimensions[r]) for r in sorted(self.exchange_dimensions)]))
+            coordinates = [self.coord_set(**{name: x for name, x in zip(self.coord_names, x)}) for x in coord_it]
         elif(len(self.exchange_dimensions) == 1):
             coordinates = list(map(lambda x: self.coord_set(x), self.exchange_dimensions[self.coord_dims[0]]))
         else:
@@ -72,6 +73,8 @@ class MultiReplicaApproach():
         ## deepcopy all
         self.nReplicas = len(list(coordinates))
         replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]#generate deepcopies
+        print(replicas[0].potential)
+        print(replicas[0].integrator)
 
         # build up graph - set parameters
         replicaID = 0

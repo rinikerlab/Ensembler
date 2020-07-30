@@ -162,7 +162,6 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
     """
     name = "Metropolis Monte Carlo Integrator"
     #Parameters:
-    metropolisCriterion=None    #use a different Criterion
     randomnessIncreaseFactor:float = 1  #tune randomness of your results
     maxIterationTillAccept:float = np.inf  #how often shall the integrator iterate till it accepts a step forcefully
     convergence_limit:int=1000  # after reaching a certain limit abort iteration
@@ -171,10 +170,12 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
     ##random part of Metropolis Criterion:
     _defaultRandomness = lambda self, ene_new, currentState: ((1/self.randomnessIncreaseFactor)*np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
     ##default Metropolis Criterion
-    _defaultMetropolisCriterion = lambda self, ene_new, currentState: (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
+    def metropolisCriterion(self, ene_new, currentState):
+        (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
 
-    def __init__(self, minStepSize:float=None, maxStepSize:float=1, spaceRange:tuple=None, fixedStepSize=None, 
-                metropolisCriterion=None, randomnessIncreaseFactor=1, maxIterationTillAccept:int=np.inf):
+
+    def __init__(self, minStepSize:float=None, maxStepSize:float=1, spaceRange:tuple=None, fixedStepSize=None,
+                 randomnessIncreaseFactor=1, maxIterationTillAccept:int=np.inf):
         """
         __init__ 
             This is the Constructor of the Metropolis-MonteCarlo integrator.
@@ -212,11 +213,6 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
         self.randomnessIncreaseFactor = randomnessIncreaseFactor
         self.maxIterationTillAccept = maxIterationTillAccept
         self.convergence_limit = self.convergence_limit if(isinstance(maxIterationTillAccept, type(None))) else maxIterationTillAccept+1
-        
-        if(metropolisCriterion == None):
-            self.metropolisCriterion = self._defaultMetropolisCriterion
-        else:
-            self.metropolisCriterion = metropolisCriterion
 
 
     def step(self, system:systemType)-> Tuple[float, None, float]:
@@ -250,6 +246,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
             ene = system.totPot()
 
             #MetropolisCriterion
+            print(self._critInSpaceRange,  self.metropolisCriterion, ene, current_state)
             if ((self._critInSpaceRange(system._currentPosition) and self.metropolisCriterion(ene, current_state))):
                 break
             else:   #not accepted

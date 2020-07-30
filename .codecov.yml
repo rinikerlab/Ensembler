@@ -3,6 +3,8 @@ coverage:
   status:
     patch: false
     project:
+      branches:
+        - build_release_1
       default:
         threshold: 50%
 comment:
@@ -12,3 +14,6 @@ comment:
   behavior: default
   flags: null
   paths: null
+
+  ignore:
+    - "ensembler/visualisation"  # ignore folders and all its contents

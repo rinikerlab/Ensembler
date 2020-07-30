@@ -45,6 +45,8 @@ REQUIRED = [  'typing',
             'matplotlib',
             'jupyter',
             'ipywidgets',
+            'sphinx',
+            'sphinx_rtd_theme',
             'tqdm',
 
               ]

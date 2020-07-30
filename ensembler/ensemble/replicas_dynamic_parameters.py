@@ -3,17 +3,12 @@
     This module shall be used to implement subclasses of ensemble.
     It is a class, that is using multiple system. It can be used for RE or Conveyor belt
 """
-
-
 import numpy as np
 import pandas as pd
-from collections import Iterable
-import scipy.constants as const
-from typing import List, Dict, Tuple
-import copy
-import itertools as it
+from typing import Dict
 
-from ensembler import system, potentials as pot, integrator
+
+from ensembler import potentials as pot
 from ensembler.ensemble._replica_graph import ReplicaExchange
 from ensembler.system import perturbed_system
 from ensembler.integrator import stochastic
@@ -28,7 +23,7 @@ class ConveyorBelt(ReplicaExchange):
     coordinate_dimensions:int = 1
     replica_graph_dimensions:int = 1
     exchange_dimensions:Dict[str, np.array]
-    nSteps_between_trials:int = 1
+    nSteps_between_trials:int = 2
 
     exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda","TotE", "biasE", "doAccept"])
     system_trajs: dict = {}
