@@ -12,7 +12,7 @@ from ensembler.visualisation import style
 from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential
 
 
-def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
+def static_sim_plots(sys: system, x_range: tuple = None, y_lim_Pot:tuple=None, title: str = "", out_path: str = None, resolution_full_space=style.potential_resolution) -> str:
     """
     Plot giving the sampled space, position distribution and forces
     :param sys:
@@ -47,6 +47,9 @@ def static_sim_plots(sys: system, x_range: tuple = None, title: str = "", out_pa
     ax1.plot(x_pot, ytot_space, c=style.potential_light)
     ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)   #start_point
     ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)   #end_point
+
+    if(not isinstance(y_lim_Pot, type(None))):
+        ax1.set_ylim(y_lim_Pot)
 
     color = style.potential_color(2)
     viol = ax2.violinplot(x, showmeans=False, showextrema=False)
