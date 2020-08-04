@@ -8,13 +8,15 @@ coverage:
   status:
     patch: false
     project:
+      branches:
+        - build_release_1
       ignore:
         - "ensembler/visualisation"  # ignore folders and all its contents
         - "visualisation"  # ignore folders and all its contents
         - "/ensembler/visualisation"  # ignore folders and all its contents
-
-      branches:
-        - build_release_1
+        - "ensembler/visualisation/*"  # ignore folders and all its contents
+        - "visualisation/*"  # ignore folders and all its contents
+        - "/ensembler/visualisation/*"  # ignore folders and all its contents
       default:
         threshold: 50%
 
