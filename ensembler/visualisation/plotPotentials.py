@@ -8,7 +8,7 @@ import ensembler.potentials.TwoD as pot2D
 from ensembler.visualisation import style
 
 
-from ensembler.potentials import OneD as pot, ND as nDPot
+from ensembler.potentials import OneD as pot
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.visualisation import plot_layout_settings
@@ -315,7 +315,7 @@ def plot_2perturbedEnergy_landscape(potential:_potential1DClsPerturbed, position
     return fig, ax, surf
 
 #show feature landscape per s
-def envPot_differentS_overlay_min0_plot(eds_potential:nDPot.envelopedPotential, s_values:list, positions:list,
+def envPot_differentS_overlay_min0_plot(eds_potential:pot.envelopedPotential, s_values:list, positions:list,
                                         y_range:tuple=None, hide_legend:bool=False, title:str=None, out_path:str=None):
     #generate energy values
     ys = []
@@ -351,7 +351,7 @@ def envPot_differentS_overlay_min0_plot(eds_potential:nDPot.envelopedPotential, 
     return fig, axes
 
 #show feature landscape per s
-def envPot_differentS_overlay_plot(eds_potential:nDPot.envelopedPotential, s_values:list, positions:list,
+def envPot_differentS_overlay_plot(eds_potential:pot.envelopedPotential, s_values:list, positions:list,
                                    y_range:tuple=None, hide_legend:bool=False, title:str=None, out_path:str=None, axes=None):
     #generate energy values
     ys = []
@@ -389,7 +389,7 @@ def envPot_differentS_overlay_plot(eds_potential:nDPot.envelopedPotential, s_val
 
     return fig, axes
 
-def envPot_diffS_compare(eds_potential:nDPot.envelopedPotential, s_values:list, positions:list,
+def envPot_diffS_compare(eds_potential:pot.envelopedPotential, s_values:list, positions:list,
                          y_range:tuple=None,title:str=None, out_path:str=None):
     ##row/column ratio
     per_row =4
@@ -418,7 +418,7 @@ def envPot_diffS_compare(eds_potential:nDPot.envelopedPotential, s_values:list, 
     fig.show()
     return fig, axes
 
-def plot_envelopedPotential_system(eds_potential:nDPot.envelopedPotential, positions:list, s_value:float=None, Eoffi:list=None,
+def plot_envelopedPotential_system(eds_potential:pot.envelopedPotential, positions:list, s_value:float=None, Eoffi:list=None,
                                    y_range:tuple=None,title:str=None, out_path:str=None):
     if(s_value!=None):
         eds_potential.s = s_value       #set new s
@@ -454,7 +454,7 @@ def plot_envelopedPotential_system(eds_potential:nDPot.envelopedPotential, posit
     fig.show()
     return fig, axes
 
-def plot_envelopedPotential_2State_System(eds_potential: nDPot.envelopedPotential, positions:list, s_value:float=None, Eoffi:list=None,
+def plot_envelopedPotential_2State_System(eds_potential: pot.envelopedPotential, positions:list, s_value:float=None, Eoffi:list=None,
                                           title:str=None, out_path:str=None, V_max:float=600, V_min:float=None):
 
     if(len(eds_potential.V_is)>2):

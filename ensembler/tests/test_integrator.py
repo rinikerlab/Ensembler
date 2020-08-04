@@ -261,22 +261,23 @@ class test_cg_Integrator(standard_IntegratorTests):
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
+        position = 1
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, integrator=integrator, position=position)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
 
         self.assertNotEqual(old_pos, newPos, msg="Nothing happened here!")
-        self.assertNotEqual(oldForce, posShift, msg="Nothing happened here!")
 
     def test_integrate(self):
+        position = 1
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, integrator=integrator, position=position)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
