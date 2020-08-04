@@ -577,6 +577,7 @@ class envelopedPotential(_potential1DCls):
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
 
+
 class hybridCoupledPotentials(_potential1DClsPerturbed):
     name: str = "hybrid Coupled Potential"
     lam, position, s, temp = sp.symbols(u'λ r s T')
@@ -629,10 +630,10 @@ class lambdaEDSPotential(envelopedPotential):
 
     i, nStates = sp.symbols("i N")
     V_functional = -1 / (beta * sis[0, 0]) * sp.log(
-        sp.Sum(lamis[i,0]*sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+        sp.Sum(lamis[i, 0] * sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
 
     def __init__(self, V_is: t.List[_potential1DCls] = (
-            harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)), lam:Number=0.5,
+            harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)), lam: Number = 0.5,
                  s: float = 1.0, Eoff_i: t.List[float] = None, T: float = 1, kb: float = 1):
         """
 
@@ -664,8 +665,10 @@ class lambdaEDSPotential(envelopedPotential):
         keys = zip(sorted(self.statePotentials.keys()), sorted(Eoffis.keys()), sorted(sis.keys()))
 
         self.states = sp.Matrix([sp.symbols(l) * (sp.symbols(j) - sp.symbols(k)) for j, k, l in keys])
-        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
-        inner_log = sp.Sum(sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1))
+        self.constants.update(
+            {**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
+        inner_log = sp.Sum(sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]),
+                           (self.i, 0, self.nStates - 1))
         self.V_functional = -1 / (self.beta * self.sis[0, 0]) * sp.log(inner_log)
         self._update_functions()
 
@@ -675,7 +678,7 @@ class lambdaEDSPotential(envelopedPotential):
         self.ene = self._calculate_energies_singlePos_overwrite
         self.force = self._calculate_dvdpos_singlePos_overwrite
 
-    def set_lam(self, lam:Union[Number, Iterable[Number]]):
+    def set_lam(self, lam: Union[Number, Iterable[Number]]):
         self.lam_i = lam
 
     @property
@@ -724,9 +727,9 @@ class lambdaEDSPotential(envelopedPotential):
 
         adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1)
         # print("ADAPT: ",adapt.shape, adapt)
-        #print(self.lam_i)
-        scaling = self.lam_i*np.exp(V_Is_ene - adapt)
-        #print("scaling: ", scaling.shape, scaling)
+        # print(self.lam_i)
+        scaling = self.lam_i * np.exp(V_Is_ene - adapt)
+        # print("scaling: ", scaling.shape, scaling)
         dVdpos_state = np.multiply(scaling,
                                    V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
         # print("state_contributions: ",dVdpos_state.shape, dVdpos_state)
@@ -738,8 +741,8 @@ class lambdaEDSPotential(envelopedPotential):
     def _prefactor_calc_efficient(self, position):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
-        partA = self.lam_i[0]*np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
-        partB = self.lam_i[1]*np.array(-beta * self.s_i[1] * (self.V_is[1].ene(position) - self.Eoff_i[1]), ndmin=1)
+        partA = self.lam_i[0] * np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
+        partB = self.lam_i[1] * np.array(-beta * self.s_i[1] * (self.V_is[1].ene(position) - self.Eoff_i[1]), ndmin=1)
 
         partAB = np.array([partA, partB]).T
         log_prefac = 1 + np.exp(np.min(partAB, axis=1) - np.max(partAB, axis=1))
@@ -750,12 +753,18 @@ class lambdaEDSPotential(envelopedPotential):
 
         # more than two states!
         for state in range(2, self.constants[self.nStates]):
-            partN = self.lam_i[state]*np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
+            partN = self.lam_i[state] * np.array(
+                -beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
             prefactors.append(partN)
             sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(1 + np.exp(
                 np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
+
+
+"""
+special potentials
+"""
 
 
 class dummyPotential(_potential1DCls):

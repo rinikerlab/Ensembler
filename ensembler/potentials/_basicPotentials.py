@@ -4,6 +4,8 @@ import numpy as np, sympy as sp
 from numbers import Number
 from typing import Iterable, Sized, Union, Dict
 from ensembler.util.basic_class import super_baseClass, notImplementedERR
+
+
 # from concurrent.futures.thread import ThreadPoolExecutor
 
 class _potentialCls(super_baseClass):
@@ -14,28 +16,28 @@ class _potentialCls(super_baseClass):
     """
     nDim: sp.Symbol = sp.symbols("nDims")
     nStates: sp.Symbol = sp.symbols("nStates")
-    #threads: int = 1
+    # threads: int = 1
 
-    #hidden attributes
+    # hidden attributes
     __constants: Dict[sp.Symbol, Union[Number, Iterable]] = {}
 
     def __init__(self):
         self.name = self.__class__.__name__
 
-
     """
         Non-Class Attributes
     """
+
     @property
-    def constants(self)->dict:
+    def constants(self) -> dict:
         """
         This Attribute is giving all the necessary Constants to a function
         """
         return self.__constants
 
     @constants.setter
-    def constants(self, constants:Dict[sp.Symbol, Union[Number, Iterable]]):
-        self.__constants=constants
+    def constants(self, constants: Dict[sp.Symbol, Union[Number, Iterable]]):
+        self.__constants = constants
 
 
 class _potentialNDCls(_potentialCls):
@@ -45,7 +47,7 @@ class _potentialNDCls(_potentialCls):
     @Strategy Pattern
     '''
 
-    #generated during construction:
+    # generated during construction:
     position: sp.Symbol("r")
 
     V_functional: sp.Function = notImplementedERR
@@ -54,10 +56,10 @@ class _potentialNDCls(_potentialCls):
     V: sp.Function = notImplementedERR
     dVdpos = notImplementedERR
 
-    def __init__(self, nDim: int = -1, nStates:int =1):
+    def __init__(self, nDim: int = -1, nStates: int = 1):
         super().__init__()
 
-        self.constants.update({self.nDim: nDim, self.nStates:nStates})
+        self.constants.update({self.nDim: nDim, self.nStates: nStates})
         # needed for multi dim functions to be generated dynamically
         self._initialize_functions()
         # apply potential simplification and update calc functions
@@ -104,28 +106,26 @@ class _potentialNDCls(_potentialCls):
         self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
         self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
 
-
     """
         public
     """
     _calculate_energies = lambda x: notImplementedERR()
     _calculate_dVdpos = lambda x: notImplementedERR()
 
-    def ene(self, positions: Union[Number, Sized])->Union[Number, Sized]:
+    def ene(self, positions: Union[Number, Sized]) -> Union[Number, Sized]:
         return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim])))
 
-
-    def force(self, positions: Union[Number, Sized])->Union[Number,Sized]:
+    def force(self, positions: Union[Number, Sized]) -> Union[Number, Sized]:
         return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim])))
 
-    #just alternative name
-    def dvdpos(self, positions:Union[Number, Sized])->Union[Number, Sized]:
+    # just alternative name
+    def dvdpos(self, positions: Union[Number, Sized]) -> Union[Number, Sized]:
         return self.force(positions)
 
 
 class _potential1DCls(_potentialNDCls):
 
-    def __init__(self, nStates:int=1):
+    def __init__(self, nStates: int = 1):
         super().__init__(nDim=1, nStates=nStates)
 
     def _initialize_functions(self):
@@ -139,7 +139,6 @@ class _potential1DCls(_potentialNDCls):
         '''
         return np.squeeze(self._calculate_energies(np.array(positions)))
 
-
     def force(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):
         '''
         calculates derivative with respect to position
@@ -150,13 +149,12 @@ class _potential1DCls(_potentialNDCls):
 
 
 class _potential2DCls(_potentialNDCls):
-    def __init__(self, nStates:int=1):
+    def __init__(self, nStates: int = 1):
         super().__init__(nDim=2, nStates=nStates)
 
 
 class _potential1DClsPerturbed(_potential1DCls):
-
-    coupling:sp.Function = notImplementedERR
+    coupling: sp.Function = notImplementedERR
 
     lam = sp.symbols(u"λ")
     statePotentials: Dict[sp.Function, sp.Function]
@@ -164,10 +162,8 @@ class _potential1DClsPerturbed(_potential1DCls):
     dVdlam_functional: sp.Function
     dVdlam = notImplementedERR
 
-
-
-    def __init__(self, nStates:int=1):
-        self.constants.update({self.nDim:1, self.nStates:nStates})
+    def __init__(self, nStates: int = 1):
+        self.constants.update({self.nDim: 1, self.nStates: nStates})
 
         super().__init__(nStates=nStates)
 

@@ -491,6 +491,48 @@ class potentialCls_fourWellPot1D(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!",
                                        decimal=2)
 
+
+class potentialCls_gaussPotential1D(test_potentialCls):
+    potential_class = OneD.gaussPotential
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
+
+    def test_energies(self):
+        Vmax = 100
+        a = 0
+        b = 8
+
+        positions = np.linspace(-10, 10, num=5)
+        expected_result = np.array([1.93e-22, 3.73e-06, 1.00e+00, 3.73e-06, 1.93e-22])
+
+        potential = self.potential_class()
+        energies = potential.ene(positions)
+
+        # print(energies)
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
+                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+
+    def test_dVdpos(self):
+        Vmax = 100
+        a = 0
+        b = 8
+
+        positions = [ 0.1, 0.2, 0.5, 1, 2, 3, 6]
+        expected_result = np.array([ -9.95e-02, -1.96e-01, -4.41e-01, -6.07e-01, -2.71e-01, -3.33e-02, -9.14e-08])
+
+        potential = self.potential_class()
+        energies = potential.force(positions)
+
+        # print(energies)
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
+                                       err_msg="The results of " + potential.name + " are not correct!",
+                                       decimal=2)
+
+
+
 """
 TEST for perturbed Potentials 1D
 """
@@ -1293,6 +1335,43 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
         self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
         np.testing.assert_almost_equal(desired=list(expected_result), actual=list(forces), err_msg="The results of "+potential.name+" are not correct!", decimal=8)
 
+
+"""
+Test Simple ND Potentials:
+"""
+from ensembler.potentials import ND
+
+class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
+    potential_class = ND.harmonicOscillatorPotential
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
+
+    def test_energies3DNPos(self):
+
+        positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, 1], [0, 1, 0], [0, -1, -1], [-1, -1,1]])
+        expected_result = np.array([0. , 1, 1, 0.5, 1, 1.5 ])
+
+        potential = self.potential_class(nDim=3)
+        energies = potential.ene(positions)
+
+        print(energies)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies), err_msg="The results of "+potential.name+" are not correct!", decimal=8)
+
+    def test_dHdpos3DNPos(self):
+        positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, -1], [0, 1, 0], [0, -1, 0], [-1, -1, -1]])
+        expected_result = np.array([[ 0.,  1., -1.,  0.,  0., -1.],
+                                    [ 0.,  0.,  0.,  1., -1., -1.],
+                                    [ 0.,  1., -1.,  0.,  0., -1.]])
+
+        potential = self.potential_class(nDim=3)
+        forces = potential.force(positions)
+
+        self.assertEqual(type(expected_result), type(forces),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+
+        #for ind, (expected, actual) in enumerate(zip(expected_result, forces.T)):
 
 
 
