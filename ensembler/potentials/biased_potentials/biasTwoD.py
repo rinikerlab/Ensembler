@@ -10,7 +10,7 @@ import sympy as sp
 
 from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.potentials.TwoD import gaussPotential
-
+from ensembler.util.ensemblerTypes import system
 
 """
     TIME INDEPENDENT BIASES 
@@ -73,6 +73,7 @@ class metadynamicsPotential(_potential2DCls):
 
     name: str = "Metadynamics Enhanced Sampling System using grid bias in 2D"
     position = sp.symbols("r")
+    system: system #metadyn-coupled to system
 
     def __init__(self, origPotential, amplitude=1., sigma=(1.,1.), n_trigger=100, bias_grid_min=(0,0), bias_grid_max=(10,10), numbins=(100,100)  ):
         '''
@@ -130,6 +131,17 @@ class metadynamicsPotential(_potential2DCls):
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
 
+
+    """
+    BIAS
+    """
+    #Beautiful integration to system as Condition.
+    def apply(self):
+        self.check_for_metastep(self.system._currentPosition)
+
+    def coupleSystem(self, system):
+        self.system = system
+
     def check_for_metastep(self, curr_position):
         '''
         Checks if the bias potential should be added at the current step
@@ -142,11 +154,17 @@ class metadynamicsPotential(_potential2DCls):
         -------
 
         '''
+        if(self.system.step % self.n_trigger == 0):
+            self._update_potential(curr_position)
+        """
+        TODO: Remove
         if self.current_n%self.n_trigger == 0:
             self._update_potential(curr_position)
             self.current_n += 1
         else:
             self.current_n += 1
+        """
+
 
     def _update_potential(self, curr_position):
         '''

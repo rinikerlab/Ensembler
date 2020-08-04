@@ -6,12 +6,13 @@
 import numpy as np
 import pandas as pd
 from typing import Dict
-
+from tqdm.notebook import tqdm
 
 from ensembler import potentials as pot
 from ensembler.ensemble._replica_graph import ReplicaExchange
 from ensembler.system import perturbed_system
 from ensembler.integrator import stochastic
+
 
 class ConveyorBelt(ReplicaExchange):
     '''
@@ -19,15 +20,14 @@ class ConveyorBelt(ReplicaExchange):
         organizes the replicas and their coupling
     '''
 
-    _parameter_name:str = "lam"
-    coordinate_dimensions:int = 1
-    replica_graph_dimensions:int = 1
-    exchange_dimensions:Dict[str, np.array]
-    nSteps_between_trials:int = 2
+    _parameter_name: str = "lam"
+    coordinate_dimensions: int = 1
+    replica_graph_dimensions: int = 1
+    exchange_dimensions: Dict[str, np.array]
+    nSteps_between_trials: int = 2
 
-    exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda","TotE", "biasE", "doAccept"])
+    exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
     system_trajs: dict = {}
-    
 
     def __str__(self):
         '''
@@ -36,7 +36,8 @@ class ConveyorBelt(ReplicaExchange):
         outstr = ''
         print(self.replicas)
         for i in self.replicas:
-            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLam, float(self.replicas[i].getTotEnergy()))
+            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLam,
+                                                        float(self.replicas[i].getTotEnergy()))
         return outstr
 
     def __repr__(self):
@@ -44,11 +45,12 @@ class ConveyorBelt(ReplicaExchange):
         :return: ensemble state string
         '''
         return self.__str__()
-    
-    def __init__(self, capital_lambda:float, nReplicas:int, 
-                    system=perturbed_system.perturbedSystem(temperature=300.0, lam=0.0, 
-                    potential=pot.OneD.linearCoupledPotentials(),
-                    integrator=stochastic.metropolisMonteCarloIntegrator()), build=False):
+
+    def __init__(self, capital_lambda: float, nReplicas: int,
+                 system=perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
+                                                         potential=pot.OneD.linearCoupledPotentials(),
+                                                         integrator=stochastic.metropolisMonteCarloIntegrator()),
+                 build=False):
         '''
         initialize Ensemble object
         :param capital_lambda: state of ensemble, 0 <= capital_lambda < pi
@@ -63,20 +65,20 @@ class ConveyorBelt(ReplicaExchange):
         self.nReplicas = nReplicas
         self.system = system
         self.capital_lambda = capital_lambda
-        self.build = build  #build
+        self.build = build  # build
 
         self.dis = 2.0 * np.pi / nReplicas
-        self.exchange_dimensions = {self._parameter_name: np.arange(0, 2*np.pi, self.dis )}
+        self.exchange_dimensions = {self._parameter_name: np.arange(0, 2 * np.pi, self.dis)}
 
         self._temperature_exchange = system.temperature
 
         self.initialise()
 
-        self.exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda","TotE", "biasE", "doAccept"])
+        self.exchange_information: pd.DataFrame = pd.DataFrame(
+            columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
         self.system_trajs: dict = {}
 
-
-    #public functions
+    # public functions
     def initialise(self):
         ##Simulation
         self._currentTrial = 0
@@ -90,7 +92,6 @@ class ConveyorBelt(ReplicaExchange):
         self.biasene = None
         self.init_mem()
 
-
         # BUILD replicas
         self._initialise_replica_graph()
 
@@ -98,29 +99,27 @@ class ConveyorBelt(ReplicaExchange):
         for i in self.replicas:
             self.replicas[i]._update_dHdlambda()
 
+    def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False,
+                 verbosity: bool = True):
 
-    def simulate(self, ntrials:int, steps_between_trials:int=None, reset_ensemble:bool=False):
-
-        if(isinstance(steps_between_trials, int)):
+        if (isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
 
-        for trial in range(ntrials):
+        for trial in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
             self.run()
             self.accept_move()
 
-        #self.exchange_information = self.exchange_information
-
+        # self.exchange_information = self.exchange_information
 
     def run(self):
         self._currentTrial += 1
         for replica_coords, replica in self.replicas.items():
-            replica.simulate(steps=self.nSteps_between_trials)
-
+            replica.simulate(steps=self.nSteps_between_trials, verbosity=False)
 
     def accept_move(self):
         self.state = []
 
-        #metropolis criterium for moving capital_lambda?
+        # metropolis criterium for moving capital_lambda?
         oldEne = self.calculate_conveyorBelt_totEne()
         oldBiasene = self.biasene
         oldBlam = self.capital_lambda
@@ -129,12 +128,14 @@ class ConveyorBelt(ReplicaExchange):
         self.capital_lambda = self.capital_lambda % (2.0 * np.pi)
         self.updateBlam(self.capital_lambda)
 
-        newEne = self.calculate_conveyorBelt_totEne()       
+        newEne = self.calculate_conveyorBelt_totEne()
         if self._defaultMetropolisCriterion(originalParams=oldEne, swappedParams=newEne):
             for i in self.replicas:
                 self.replicas[i]._update_dHdlambda()
-            
-            self.exchange_information = self.exchange_information.append({"Step": self._currentTrial, "capital_lambda":self.capital_lambda, "TotE": float(newEne), "biasE": float(newEne), "doAccept": True}, ignore_index=True)
+
+            self.exchange_information = self.exchange_information.append(
+                {"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
+                 "biasE": float(newEne), "doAccept": True}, ignore_index=True)
 
         else:
             self.reject += 1
@@ -143,11 +144,12 @@ class ConveyorBelt(ReplicaExchange):
             for i in self.replicas:
                 self.replicas[i]._update_dHdlambda()
 
-            self.exchange_information = self.exchange_information.append({"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne), "biasE": float(oldBiasene), "doAccept": False}, ignore_index=True)
+            self.exchange_information = self.exchange_information.append(
+                {"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),
+                 "biasE": float(oldBiasene), "doAccept": False}, ignore_index=True)
 
         if self.build:
             self.build_mem()
-
 
     def revert(self):
         '''
@@ -159,8 +161,7 @@ class ConveyorBelt(ReplicaExchange):
         self.calculate_conveyorBelt_totEne()
         self.exchange_information = self.exchange_information[:-1]
 
-
-    def add_replica(self, clam:float, addNReplicas:int=1)->None:
+    def add_replica(self, clam: float, addNReplicas: int = 1) -> None:
         '''
             Not Implemented!!!
         adds a replica to the ensemble
@@ -170,7 +171,7 @@ class ConveyorBelt(ReplicaExchange):
 
     # PRIVATE functions
     ## * Move the belt
-    def calculate_conveyorBelt_totEne(self)->float:
+    def calculate_conveyorBelt_totEne(self) -> float:
         '''
         calculates energy of Conveyor Belt Ensemble
         :return: total energy of the Conveyor Belt Ensemble.
@@ -179,12 +180,11 @@ class ConveyorBelt(ReplicaExchange):
         ene = 0.0
         for i in self.replicas:
             ene += self.replicas[i]._currentTotPot
-            ene += self.replicas[i]._currentTotKin if(not np.isnan(self.replicas[i]._currentTotKin)) else 0
+            ene += self.replicas[i]._currentTotKin if (not np.isnan(self.replicas[i]._currentTotKin)) else 0
         ene = ene + self.biasene
         return ene
 
-
-    def calc_lam(self, capital_lambda:float, i:int)->float:
+    def calc_lam(self, capital_lambda: float, i: int) -> float:
         '''
         calculates lam_i for replica i depending on ensemble state capital_lambda
 
@@ -201,8 +201,7 @@ class ConveyorBelt(ReplicaExchange):
             ome = 2.0 * np.pi - ome
         return ome / np.pi
 
-
-    def updateBlam(self, capital_lambda:float)->float:
+    def updateBlam(self, capital_lambda: float) -> float:
         '''
         updates the state of the ensemble and the replicas accordingly
         :param capital_lambda: capital lambda 0 <= capital_lambda < 2 pi
@@ -216,7 +215,6 @@ class ConveyorBelt(ReplicaExchange):
         self.apply_mem()
 
         return capital_lambda
-
 
     ## * Bias Memory Functions
     def init_mem(self):
@@ -243,13 +241,13 @@ class ConveyorBelt(ReplicaExchange):
         '''
         active_gp = int(np.floor((self.capital_lambda % self.dis) / self.gp_spacing + 0.5))
         self.mem[active_gp % (self.num_gp - 1)] += self.mem_fc
-    
+
     def apply_mem(self):
         """
             applies memory biasing
         
         :return: None
-        """        
+        """
         active_gp = int(np.floor((self.capital_lambda % self.dis) / self.gp_spacing + 0.5))
         dg = (self.capital_lambda % self.dis) / self.gp_spacing - float(active_gp)
         if dg < 0:
@@ -261,19 +259,18 @@ class ConveyorBelt(ReplicaExchange):
         # print("{:5.2f}{:5.2f}{:8.3f}{:3d}{:8.3f}{:8.3f}{:8.3f} {:s}".format(self.capital_lambda, (self.capital_lambda%self.dis),
         # (self.capital_lambda%self.dis)/self.gp_spacing, active_gp,
         # self.gp_spacing*active_gp, dg, ene, np.array2string(self.mem)))
- 
+
     ## * Trajectories 
-    def get_trajs(self)->(pd.DataFrame, Dict[int, pd.DataFrame]):
+    def get_trajs(self) -> (pd.DataFrame, Dict[int, pd.DataFrame]):
         """
         returns all Trajectories of this Ensemble.
         
         :return: Conveyor Belt Trajectory, Replica Trajectories.
         :rtype: (pd.DataFrame, Dict[int, pd.DataFrame])
-        """        
+        """
         return self.get_conveyorbelt_trajectory(), self.get_replica_trajectories()
-    
 
-    def get_conveyorbelt_trajectory(self)->pd.DataFrame:
+    def get_conveyorbelt_trajectory(self) -> pd.DataFrame:
         """
         get_conveyorbelt_trajectory returns the pandas DataFrame of the conveyorbelt trajectory
         
@@ -281,9 +278,8 @@ class ConveyorBelt(ReplicaExchange):
         :rtype: pd.DataFrame
         """
         return self.exchange_information
-    
 
-    def get_replica_trajectories(self)->Dict[int, pd.DataFrame]:
+    def get_replica_trajectories(self) -> Dict[int, pd.DataFrame]:
         """
         get_replica_trajectories 
         
@@ -295,7 +291,6 @@ class ConveyorBelt(ReplicaExchange):
             self.system_trajs.update({i: self.replicas[i].getTrajectory()})
         return self.system_trajs
 
-
     def clear_all_trajs(self):
         '''
         deletes trajectories of replicas
@@ -305,11 +300,10 @@ class ConveyorBelt(ReplicaExchange):
         self.exchange_information = []
 
     # Todo: should be inherited.
-    def set_simulation_steps_between_trials(self, nsteps:int):
+    def set_simulation_steps_between_trials(self, nsteps: int):
         self.nSteps_between_trials = nsteps
         for coord, replica in self.replicas.items():
             replica.nsteps = self.nSteps_between_trials
-
 
     # Todo: PUT SOMEWHERE ELSE OR NUMPY?.
     @staticmethod

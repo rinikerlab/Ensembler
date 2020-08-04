@@ -531,7 +531,7 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
     first = True
 
     for ax, s in zip(axes, s_values):
-        eds_potential.s = s
+        eds_potential.s_i = s
         min_e = 0
         energy_map = []
         for x in positions:
@@ -608,7 +608,7 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
 
         # calc energies for total space
     # subPotentials
-    eds_pot.s = s
+    eds_pot.s_i = s
     V1 = eds_pot.V_is[0]
     V2 = eds_pot.V_is[1]
     # Energies
@@ -685,8 +685,8 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
 
     ax1.set_title("State 0", fontsize=20)
     ax2.set_title("State 1", fontsize=20)
-    ax3.set_title("$s=" + str(eds_pot.s) + "$", fontsize=16)
-    fig.suptitle("EDS potential: s=" + str(eds_pot.s))
+    ax3.set_title("$s=" + str(eds_pot.s_i) + "$", fontsize=16)
+    fig.suptitle("EDS potential: s=" + str(eds_pot.s_i))
 
     if (isinstance(out_path, type(None))):
         return fig
@@ -743,7 +743,7 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
         if (verbose): print(s)
 
         # eds pot energies
-        eds_pot.s = s
+        eds_pot.s_i = s
         energiesEds = eds_pot.ene(positions2D)
         energiesEdsMap = energiesEds.reshape([point_resolution, point_resolution])
         energyMaps[-1] = energiesEdsMap

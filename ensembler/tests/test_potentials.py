@@ -1,5 +1,6 @@
 import os, unittest, tempfile
 import numpy as np
+from numbers import Number
 
 tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_potentials")
 
@@ -490,7 +491,6 @@ class potentialCls_fourWellPot1D(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!",
                                        decimal=2)
 
-
 """
 TEST for perturbed Potentials 1D
 """
@@ -665,6 +665,164 @@ class potentialCls_perturbed_exponentialCoupledPotentials(test_potentialCls):
                          msg="returnType of potential was not correct! it should be an np.array")
 
 
+class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
+    potential_class = OneD.envelopedPotential
+    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
+
+    def test_ene_1Pos(self):
+        potential = self.potential_class(s=100)
+        positions = 0
+        expected_results = np.squeeze(np.array([0.0]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+        positions = 3
+        expected_results = np.squeeze(np.array([0.0]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+        positions = 1.5
+        expected_results = np.squeeze(np.array([1.1180685281944005]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+        positions = 6
+        expected_results = np.squeeze(np.array([4.5]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+        positions = -3
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+
+    def test_ene_NPos(self):
+        potential = self.potential_class(s=100)
+        positions = (-100, -3, 0, 2, 3, 6, 103)
+        expected_results = np.array([5.0e+03, 4.5, 0, 0.5, 0, 4.5, 5.0e+03])
+
+        actual_energies = potential.ene(positions)
+        print(actual_energies)
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
+                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tForces: " + str(
+                                           actual_energies), decimal=1)
+
+    def test_s_change(self):
+        potential = self.potential_class(s=100)
+        positions = 1.5
+        expected_results = np.squeeze(np.array([1.1180685281944005]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+        potential.s_i = 0.01
+        expected_results = np.squeeze(np.array([-68.18971805599453]))
+        actual_energies = potential.ene(positions)
+
+        #CHECK
+        self.assertEqual(type(expected_results), type(actual_energies),
+                         msg="returnType of potential was not correct! got actually: "+str(actual_energies)+" expected: "+str(expected_results))
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001, msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(actual_energies))
+
+    def test_force_1Pos(self):
+        potential = self.potential_class(s=100)
+        positions = 0
+        expected_results = np.squeeze(np.array([0.0]))
+        actual_energies = potential.force(positions)
+        print("Actual Result1: ", actual_energies)
+
+        # CHECK
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
+                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                   positions) + "\n\tForces: " + str(actual_energies))
+
+        positions = 3
+        expected_results = np.squeeze(np.array([0.0]))
+        actual_energies = potential.force(positions)
+        print("Actual Result2: ", actual_energies)
+
+        # CHECK
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
+                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                   positions) + "\n\tForces: " + str(actual_energies))
+
+        positions = 1.5
+        expected_results = np.squeeze(0.0)
+        actual_energies = potential.force(positions)
+        print("Actual Result3: ", actual_energies)
+
+        # CHECK
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
+                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                   positions) + "\n\tForces: " + str(actual_energies))
+
+        positions = 6
+        expected_results = np.squeeze(np.array([-3]))
+        actual_energies = potential.force(positions)
+        print("Actual Result4: ", actual_energies)
+
+
+        # CHECK
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
+                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                   positions) + "\n\tForces: " + str(actual_energies))
+
+        positions = -3
+        expected_results = np.squeeze(np.array([3]))
+        actual_energies = potential.force(positions)
+
+        # CHECK
+        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
+                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                   positions) + "\n\tForces: " + str(actual_energies))
+
+    def test_force_NPos(self):
+        potential = self.potential_class(s=100)
+        positions = (-100, -15, -3, 0, 1, 1.5, 2, 3, 6, 18, 103)
+        expected_results = np.array([100, 15, 3, 0, -1, 0, 1, 0, -3, -15, -100])
+        actual_energies = potential.force(positions)
+
+        #CHECK
+        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
+                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+                                           positions) + "\n\tEnergies: " + str(
+                                           actual_energies), decimal=1)
+
+
 class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
     potential_class = OneD.hybridCoupledPotentials
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
@@ -790,6 +948,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
                                    err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
                                        lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
                                        energies))
+
 
 """
 Test Simple 2D Potentials:

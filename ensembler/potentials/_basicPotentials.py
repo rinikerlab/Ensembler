@@ -112,11 +112,11 @@ class _potentialNDCls(_potentialCls):
     _calculate_dVdpos = lambda x: notImplementedERR()
 
     def ene(self, positions: Union[Number, Sized])->Union[Number, Sized]:
-        return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions), self.constants[self.nDim])))
+        return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim])))
 
 
     def force(self, positions: Union[Number, Sized])->Union[Number,Sized]:
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions), self.constants[self.nDim])))
+        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim])))
 
     #just alternative name
     def dvdpos(self, positions:Union[Number, Sized])->Union[Number, Sized]:
@@ -137,7 +137,7 @@ class _potential1DCls(_potentialNDCls):
         :param pos: position on 1D potential energy surface
         :return: energy
         '''
-        return np.squeeze(self._calculate_energies(np.squeeze(np.array(positions))))
+        return np.squeeze(self._calculate_energies(np.array(positions)))
 
 
     def force(self, positions: (Iterable[Number] or Number)) -> (Iterable[Number] or Number):

@@ -91,7 +91,7 @@ class andersonThermostat(thermostat):
         self._lambda = self._new_temperature/self._currentTemperature  #(1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5
 
 
-    def apply(self):
+    def apply_coupled(self):
         if(self._collision()):
             self._calculate_scaling_factor()
             self._rescale_velocities()
@@ -122,7 +122,7 @@ class berendsenThermostate(thermostat):
         if(system != None):
             self.system = system
 
-    def apply(self):
+    def apply_coupled(self):
         self._calculate_current_temperature()
         self._calculate_scaling_factor()
         self._rescale_velocities()

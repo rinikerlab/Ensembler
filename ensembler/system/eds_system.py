@@ -106,12 +106,27 @@ class edsSystem(system):
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
-    def set_s(self, s):
+    @property
+    def s(self):
+        return self._currentEdsS
+    @s.setter
+    def s(self, s:Number):
         self._currentEdsS = s
-        self.potential.set_s(s=self._currentEdsS)
+        self.potential.set_s(self._currentEdsS)
+        self.updateSystemProperties()
+
+    def set_s(self, s:Number):
+        self.s = s
+
+    @property
+    def Eoff(self):
+        return self._currentEdsEoffs
+
+    @Eoff.setter
+    def Eoff(self, Eoff: Iterable[float]):
+        self._currentEdsEoffs = Eoff
+        self.potential.Eoff_i=self._currentEdsEoffs
         self.updateSystemProperties()
 
     def set_Eoff(self, Eoff: Iterable[float]):
-        self._currentEdsEoffs = Eoff
-        self.potential.set_Eoff(self._currentEdsEoffs)
-        self.updateSystemProperties()
+        self.Eoff = Eoff

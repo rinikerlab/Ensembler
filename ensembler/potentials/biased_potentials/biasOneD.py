@@ -205,24 +205,42 @@ class metadynamicsPotential(_potential1DCls):
 
         super().__init__()
 
+
+
+    """
+    BIAS
+    """
+    #Beautiful integration to system as Condition.
+    def apply(self):
+        self.check_for_metastep(self.system._currentPosition)
+
+    def coupleSystem(self, system):
+        self.system = system
+
     def check_for_metastep(self, curr_position):
         '''
         Checks if the bias potential should be added at the current step
         Parameters
         ----------
-        curr_position: float
-            current x position
+        curr_position: tuple
+            current x,y position
 
         Returns
         -------
-        '''
 
-        if self.current_n%self.n_trigger == 0:
+        '''
+        if(self.system.step % self.n_trigger == 0):
             self._update_potential(curr_position)
             self.finished_steps += 1
-            self.current_n = 1
+
+        """
+        TODO: Remove
+        if self.current_n%self.n_trigger == 0:
+            self._update_potential(curr_position)
+            self.current_n += 1
         else:
             self.current_n += 1
+        """
 
     def _update_potential(self, curr_position):
         '''

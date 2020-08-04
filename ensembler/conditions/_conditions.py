@@ -4,17 +4,22 @@ Module: Conditions
 """
 
 from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.basic_class import super_baseClass, notImplementedERR
 
-class _conditionCls:
+class _conditionCls(super_baseClass):
     _tau:float  #tau = apply every tau steps
     nDim:int=0
-    def __init__(self , sys:systemType):   #system):
-        raise NotImplementedError("This " + __class__ + " class is not implemented")
 
-    def apply(self):#, system:system):
-        raise NotImplementedError("The function step in " + __class__ + " class is not implemented")
+    def __init__(self , sys:systemType):
+        notImplementedERR()
 
-    def coupleSystem(self, system): #sys):
+    def apply(self):
+        notImplementedERR()
+
+    def apply_coupled(self):
+        notImplementedERR()
+
+    def coupleSystem(self, system):
         self.system = system
         self.nDim = system.nDim
         self.nStates = system.nStates

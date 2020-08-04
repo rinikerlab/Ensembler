@@ -7,8 +7,6 @@ from matplotlib import cm
 from matplotlib import pyplot as plt
 from scipy import constants
 
-
-
 def cm2inch(value:float):
     return value/2.54
 
@@ -16,6 +14,10 @@ def cm2inch(value:float):
 #GENERAL SETTINGS
 dpi=300
 dpi_animation=100
+
+#settings:
+figsize=[cm2inch(8.6), cm2inch(8.6/constants.golden)]
+figsize_doubleColumn =[cm2inch(2*8.6), cm2inch(2*8.6/constants.golden)]
 
 #COLORS:
 alpha_val = 1
