@@ -1,8 +1,6 @@
 # Codecov configuration to make it a bit less noisy
-ignore:
-  - "ensembler/visualisation"  # ignore folders and all its contents
-  - "visualisation"  # ignore folders and all its contents
-  - "/ensembler/visualisation"  # ignore folders and all its contents
+codecov:
+  branch: build_release_1
 
 coverage:
   status:
