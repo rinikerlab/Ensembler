@@ -122,7 +122,6 @@ class leapFrogIntegrator(newtonianIntegrator):
         """
 
         #init
-        old_step = system.trajectory.iloc[-2]
         currentPosition = system._currentPosition
         currentVelocity = system._currentVelocities
         currentForces = system._currentForce
