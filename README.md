@@ -2,7 +2,7 @@ Ensembler
 ==============================
 [//]: # (Badges)
 [![GitHub Actions Build Status](https://github.com/rinikerlab/ensembler/workflows/CI/badge.svg)](https://github.com/rinikerlab/ensembler/actions?query=branch%3Amaster+workflow%3ACI)
-[![codecov](https://codecov.io/gh/rinikerlab/Ensembler/branch/master/graph/badge.svg)](https://codecov.io/gh/rinikerlab/Ensembler/branch/master)
+[![codecov](https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1/graph/badge.svg)](https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1)
 
 
 Code to sample ensembles of simple (toy) models with various algorithms. 
