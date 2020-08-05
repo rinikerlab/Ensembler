@@ -3,7 +3,7 @@ Ensembler
 Code to sample ensembles of simple (toy) models with various algorithms. 
 """
 import sys
-from setuptools import setup, find_packages
+
 import versioneer
 
 short_description = __doc__.split("\n")
@@ -17,8 +17,6 @@ try:
         long_description = handle.read()
 except:
     long_description = "\n".join(short_description[2:])
-
-
 
 import io
 import os
@@ -36,8 +34,8 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # What packages are required for this module to be executed?
-REQUIRED = [  'typing',
-              'pytest',
+REQUIRED = ['typing',
+            'pytest',
             'pandas',
             'numpy',
             'sympy',
@@ -49,7 +47,7 @@ REQUIRED = [  'typing',
             'sphinx_rtd_theme',
             'tqdm',
 
-              ]
+            ]
 
 # What packages are optional?
 EXTRAS = {
@@ -113,7 +111,7 @@ class UploadCommand(Command):
         self.status('Pushing git tags…')
         os.system('git tag v{0}'.format(about['__version__']))
         os.system('git push --tags')
-        
+
         sys.exit()
 
 
@@ -141,14 +139,14 @@ setup(
     include_package_data=True,
 
     # Allows `setup.py test` to work correctly with pytest
-    setup_requires=[ 'typing',
-                     'pandas',
-                     'numpy',
-                     'sympy',
-                     'scipy',
-                     'tqdm',
-                     'ipywidgets',
-                     'matplotlib'] + pytest_runner,
+    setup_requires=['typing',
+                    'pandas',
+                    'numpy',
+                    'sympy',
+                    'scipy',
+                    'tqdm',
+                    'ipywidgets',
+                    'matplotlib'] + pytest_runner,
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     # url='http://www.my_package.com',  # Website

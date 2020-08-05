@@ -2,12 +2,9 @@
 Newtonian Integrators
 """
 
-import numpy as np
-import scipy.constants as const
-
-from ensembler.util.ensemblerTypes import system as systemType
-from ensembler.util.ensemblerTypes import Union, List, Tuple, Number, Callable
 from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.util.ensemblerTypes import Union
+from ensembler.util.ensemblerTypes import system as systemType
 
 
 class newtonianIntegrator(_integratorCls):
@@ -15,14 +12,15 @@ class newtonianIntegrator(_integratorCls):
     newtonianIntegrator [summary]
 
     """
-    currentPosition:float
-    currentVelocity:float
-    currentForces:float
+    currentPosition: float
+    currentVelocity: float
+    currentForces: float
 
-    dt:float
+    dt: float
 
     def __init__(self, dt=0.0005):
         self.dt = dt
+
 
 class velocityVerletIntegrator(newtonianIntegrator):
     """
@@ -32,7 +30,7 @@ class velocityVerletIntegrator(newtonianIntegrator):
     """
     name = "Verlocity Verlet Integrator"
 
-    def step(self, system:systemType)->Union[float, float, float]:
+    def step(self, system: systemType) -> Union[float, float, float]:
         """
         step [summary]
 
@@ -41,32 +39,32 @@ class velocityVerletIntegrator(newtonianIntegrator):
         system : systemType
             [description]
         """
-        #init
+        # init
         currentPosition = system._currentPosition
         currentVelocity = system._currentVelocities
         currentForces = system._currentForce
 
-        #calculation:
-        new_position = currentPosition+ currentVelocity * self.dt -(( 0.5*currentForces * (self.dt**2))/system.mass)
+        # calculation:
+        new_position = currentPosition + currentVelocity * self.dt - (
+                    (0.5 * currentForces * (self.dt ** 2)) / system.mass)
         new_forces = system.potential.force(new_position)
-        new_velocity = currentVelocity - ((0.5*(currentForces+new_forces)*self.dt)/system.mass)
-        
+        new_velocity = currentVelocity - ((0.5 * (currentForces + new_forces) * self.dt) / system.mass)
 
-        if(self.verbose):
-            print(str(self.__name__)+": current forces\t ", new_forces)
-            print(str(self.__name__)+": current Velocities\t ", currentVelocity)
-            print(str(self.__name__)+": current_position\t ", currentPosition)
-            print(str(self.__name__)+": newVel\t ", new_velocity)
-            print(str(self.__name__)+": newPosition\t ", new_position)
+        if (self.verbose):
+            print(str(self.__name__) + ": current forces\t ", new_forces)
+            print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
+            print(str(self.__name__) + ": current_position\t ", currentPosition)
+            print(str(self.__name__) + ": newVel\t ", new_velocity)
+            print(str(self.__name__) + ": newPosition\t ", new_position)
             print("\n")
-        
-        return new_position, new_velocity, new_forces
 
+        return new_position, new_velocity, new_forces
 
 
 class positionVerletIntegrator(newtonianIntegrator):
     name = "Position Verlet Integrator"
-    def step(self, system:systemType)->Union[float, float, float]:
+
+    def step(self, system: systemType) -> Union[float, float, float]:
         """
         step [summary]
 
@@ -80,21 +78,21 @@ class positionVerletIntegrator(newtonianIntegrator):
         Union[float, float, float]
             [description]
         """
-        #init
+        # init
         currentPosition = system._currentPosition
         currentVelocity = system._currentVelocities
 
-        #calculation:
+        # calculation:
         new_forces = system.potential.force(currentPosition)
         new_velocity = currentVelocity - (new_forces / system.mass)
-        new_position = currentPosition+ new_velocity * self.dt
+        new_position = currentPosition + new_velocity * self.dt
 
-        if(self.verbose):
-            print(str(self.__name__)+": current forces\t ", new_forces)
-            print(str(self.__name__)+": current Velocities\t ", currentVelocity)
-            print(str(self.__name__)+": current_position\t ", currentPosition)
-            print(str(self.__name__)+": newVel\t ", new_velocity)
-            print(str(self.__name__)+": newPosition\t ", new_position)
+        if (self.verbose):
+            print(str(self.__name__) + ": current forces\t ", new_forces)
+            print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
+            print(str(self.__name__) + ": current_position\t ", currentPosition)
+            print(str(self.__name__) + ": newVel\t ", new_velocity)
+            print(str(self.__name__) + ": newPosition\t ", new_position)
             print("\n")
         return new_position, new_velocity, new_forces
 
@@ -106,7 +104,8 @@ class leapFrogIntegrator(newtonianIntegrator):
 
     """
     name = "Leap Frog Integrator"
-    def step(self, system:systemType)->Union[float, float, float]:
+
+    def step(self, system: systemType) -> Union[float, float, float]:
         """
         step [summary]
 
@@ -121,24 +120,23 @@ class leapFrogIntegrator(newtonianIntegrator):
             [description]
         """
 
-        #init
+        # init
         currentPosition = system._currentPosition
         currentVelocity = system._currentVelocities
         currentForces = system._currentForce
 
-        #calculation:
-        v_halft = currentVelocity-((0.5*self.dt*currentForces)/system.mass)
-        new_position = currentPosition+v_halft * self.dt
+        # calculation:
+        v_halft = currentVelocity - ((0.5 * self.dt * currentForces) / system.mass)
+        new_position = currentPosition + v_halft * self.dt
         new_forces = system.potential.force(new_position)
-        new_velocity = v_halft - ((0.5*new_forces*self.dt)/system.mass)
+        new_velocity = v_halft - ((0.5 * new_forces * self.dt) / system.mass)
 
-
-        if(self.verbose):
-            print(str(self.__name__)+": current forces\t ", new_forces)
-            print(str(self.__name__)+": current Velocities\t ", currentVelocity)
-            print(str(self.__name__)+": current_position\t ", currentPosition)
-            print(str(self.__name__)+": newVel\t ", new_velocity)
-            print(str(self.__name__)+": newPosition\t ", new_position)
+        if (self.verbose):
+            print(str(self.__name__) + ": current forces\t ", new_forces)
+            print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
+            print(str(self.__name__) + ": current_position\t ", currentPosition)
+            print(str(self.__name__) + ": newVel\t ", new_velocity)
+            print(str(self.__name__) + ": newPosition\t ", new_position)
             print("\n")
-        
+
         return new_position, new_velocity, new_forces

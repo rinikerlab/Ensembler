@@ -2,15 +2,13 @@
 Module: Potential
     This module shall be used to implement subclasses of Potential. This module contains all available potentials.
 """
-import os
+
+from typing import List
 
 import numpy as np
 import sympy as sp
-import math
-from numbers import Number
-from typing import Iterable, List, Sized, Union
 
-from ensembler.potentials._basicPotentials import _potential2DCls, _potential2DCls
+from ensembler.potentials._basicPotentials import _potential2DCls
 
 
 class harmonicOscillatorPotential(_potential2DCls):
@@ -254,4 +252,3 @@ class gaussPotential(_potential2DCls):
 
 
 # Biased potentials
-from ensembler.potentials.biased_potentials.biasTwoD import addedPotentials, metadynamicsPotential

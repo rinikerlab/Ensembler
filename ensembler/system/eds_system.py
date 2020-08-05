@@ -1,16 +1,17 @@
+from numbers import Number
+from typing import Iterable
 
 import numpy as np
-from typing import Iterable, NoReturn
-from numbers import Number
 import pandas as pd
-import scipy.constants as const
+
 pd.options.mode.use_inf_as_na = True
 
 from ensembler.util import dataStructure as data
 
 from ensembler.potentials import OneD as pot
 
-from ensembler.util import  ensemblerTypes as ensemblerTypes
+from ensembler.util import ensemblerTypes as ensemblerTypes
+
 _integratorCls = ensemblerTypes.integrator
 _conditionCls = ensemblerTypes.condition
 
@@ -23,28 +24,28 @@ class edsSystem(system):
     
     """
     name = "eds system"
-    #Lambda Dependend Settings
+    # Lambda Dependend Settings
     state = data.envelopedPStstate
     currentState: data.envelopedPStstate
     potential: pot.envelopedPotential
 
-    #current lambda
-    _currentEdsS:float = np.nan
-    _currentEdsEoffs:float = np.nan
+    # current lambda
+    _currentEdsS: float = np.nan
+    _currentEdsEoffs: float = np.nan
 
-
-    def __init__(self, potential:pot.envelopedPotential=pot.envelopedPotential(V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], Eoff_i=[0, 0]),
-                 integrator: _integratorCls=metropolisMonteCarloIntegrator(), conditions: Iterable[_conditionCls]=[],
-                 temperature: float = 298.0, position:(Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
-
+    def __init__(self, potential: pot.envelopedPotential = pot.envelopedPotential(
+        V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], Eoff_i=[0, 0]),
+                 integrator: _integratorCls = metropolisMonteCarloIntegrator(),
+                 conditions: Iterable[_conditionCls] = [],
+                 temperature: float = 298.0, position: (Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
         ################################
         # Declare Attributes
         #################################
-        
+
         self.state = data.envelopedPStstate
         self._currentEdsS = eds_s
         self._currentEdsEoffs = eds_Eoff
-        
+
         ##Physical parameters
         self.temperature: float = 298.0
         self.mass: float = 1  # for one particle systems!!!!
@@ -68,14 +69,15 @@ class edsSystem(system):
         self._currentForce: (Number or Iterable[Number]) = np.nan
         self._currentTemperature: (Number or Iterable[Number]) = np.nan
 
-
-        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature, position=position)
+        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature,
+                         position=position)
         self.set_s(self._currentEdsS)
         self.set_Eoff(self._currentEdsEoffs)
 
-    def set_current_state(self, currentPosition:(Number or Iterable), currentLambda:(Number or Iterable),
-                          currentVelocities:(Number or Iterable)=0,  current_s:(Number or Iterable)=0, current_Eoff:(Number or Iterable)=0,
-                          currentForce:(Number or Iterable)=0, currentTemperature:Number=298):
+    def set_current_state(self, currentPosition: (Number or Iterable), currentLambda: (Number or Iterable),
+                          currentVelocities: (Number or Iterable) = 0, current_s: (Number or Iterable) = 0,
+                          current_Eoff: (Number or Iterable) = 0,
+                          currentForce: (Number or Iterable) = 0, currentTemperature: Number = 298):
         self._currentPosition = currentPosition
         self._currentForce = currentForce
         self._currentVelocities = currentVelocities
@@ -109,13 +111,14 @@ class edsSystem(system):
     @property
     def s(self):
         return self._currentEdsS
+
     @s.setter
-    def s(self, s:Number):
+    def s(self, s: Number):
         self._currentEdsS = s
         self.potential.set_s(self._currentEdsS)
         self.updateSystemProperties()
 
-    def set_s(self, s:Number):
+    def set_s(self, s: Number):
         self.s = s
 
     @property
@@ -125,7 +128,7 @@ class edsSystem(system):
     @Eoff.setter
     def Eoff(self, Eoff: Iterable[float]):
         self._currentEdsEoffs = Eoff
-        self.potential.Eoff_i=self._currentEdsEoffs
+        self.potential.Eoff_i = self._currentEdsEoffs
         self.updateSystemProperties()
 
     def set_Eoff(self, Eoff: Iterable[float]):

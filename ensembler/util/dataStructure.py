@@ -3,25 +3,25 @@ Module: dataStructure
     This module shall be used to implement all needed data Structures for the project.
 """
 from collections import namedtuple
+
 import __main__
 
-#states:
+# states:
 basicState = namedtuple("State", ["position", "temperature",
                                   "totEnergy", "totPotEnergy", "totKinEnergy",
                                   "dhdpos", "velocity"])
 
-
 lambdaState = namedtuple("Lambda_State", ["position", "temperature",
-                                   "totEnergy", "totPotEnergy", "totKinEnergy",
-                                   "dhdpos",  "velocity",
-                                   "lam", "dhdlam"])
+                                          "totEnergy", "totPotEnergy", "totKinEnergy",
+                                          "dhdpos", "velocity",
+                                          "lam", "dhdlam"])
 
 envelopedPStstate = namedtuple("EDS_State", ["position", "temperature",
-                                         "totEnergy", "totPotEnergy", "totKinEnergy",
-                                         "dhdpos",  "velocity",
-                                         "s", "Eoff"])
+                                             "totEnergy", "totPotEnergy", "totKinEnergy",
+                                             "dhdpos", "velocity",
+                                             "s", "Eoff"])
 
-#make pickleable
+# make pickleable
 setattr(__main__, basicState.__name__, basicState)
 basicState.__module__ = "__main__"
 

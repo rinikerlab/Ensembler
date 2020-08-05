@@ -1,9 +1,10 @@
 import unittest
-from ensembler.system.basic_system import system
-from ensembler.system.perturbed_system import perturbedSystem
+
 from ensembler.ensemble.replicas_dynamic_parameters import ConveyorBelt
-from ensembler.integrator.stochastic import metropolisMonteCarloIntegrator, monteCarloIntegrator
+from ensembler.integrator.stochastic import monteCarloIntegrator
 from ensembler.potentials import OneD
+from ensembler.system.perturbed_system import perturbedSystem
+
 
 class testEnsemble(unittest.TestCase):
     convBelt = ConveyorBelt
@@ -84,9 +85,10 @@ class testEnsemble(unittest.TestCase):
         # print(ens.run(())
         # ens = ensemble.ConveyorBelt(0.0, 8, system=sys)
         #
-        #ensemble.calc_traj_file(steps=100, ens=ens)
-        #import os
-        #os.remove(os.getcwd()+"/traj_*.dat")
+        # ensemble.calc_traj_file(steps=100, ens=ens)
+        # import os
+        # os.remove(os.getcwd()+"/traj_*.dat")
+
 
 if __name__ == '__main__':
     unittest.main()

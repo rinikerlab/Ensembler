@@ -6,27 +6,29 @@
 import numpy as np
 import scipy.constants as const
 
-from ensembler.util.ensemblerTypes import system as systemType
-from ensembler.util.ensemblerTypes import Union, List, Tuple, Number, Callable
 from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.util.ensemblerTypes import Union, List, Tuple, Number
+from ensembler.util.ensemblerTypes import system as systemType
+
 
 class stochasticIntegrator(_integratorCls):
-    #Params
-    minStepSize:Number=None
-    maxStepSize:Number=1
+    # Params
+    minStepSize: Number = None
+    maxStepSize: Number = 1
 
-    spaceRange:Tuple[Number, Number] = None
-    resolution:float = 0.01   #increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions. only used with space_range
+    spaceRange: Tuple[Number, Number] = None
+    resolution: float = 0.01  # increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions. only used with space_range
 
     fixedStepSize: (Number or List[Number])
 
-    #calculation
-    posShift:float = 0  
-    
-    #Limits:
-    _critInSpaceRange = lambda self,pos: self.spaceRange == None or (self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange))
+    # calculation
+    posShift: float = 0
 
-    def randomShift(self, nDim:int)->Union[float, np.array]:
+    # Limits:
+    _critInSpaceRange = lambda self, pos: self.spaceRange == None or (
+                self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange))
+
+    def randomShift(self, nDim: int) -> Union[float, np.array]:
         """
         randomShift 
             This function calculates the shift for the current position.
@@ -42,30 +44,30 @@ class stochasticIntegrator(_integratorCls):
             returns the Shifts
         """
 
-        #which sign will the shift have?
-        sign = np.array([-1 if(x <50) else 1 for x in np.random.randint(low=0, high=100, size=nDim)])
+        # which sign will the shift have?
+        sign = np.array([-1 if (x < 50) else 1 for x in np.random.randint(low=0, high=100, size=nDim)])
 
-        #Check if there is a space restriction? - converges faster
-        if(not isinstance(self.fixedStepSize, type(None))):
+        # Check if there is a space restriction? - converges faster
+        if (not isinstance(self.fixedStepSize, type(None))):
             shift = np.array(np.full(shape=nDim, fill_value=self.fixedStepSize), ndmin=1)
-        elif(not isinstance(self.spaceRange, type(None))):
-            shift = np.array(np.multiply(np.abs(np.random.randint(low=np.min(self.spaceRange)/self.resolution, high=np.max(self.spaceRange)/self.resolution, size=nDim)), self.resolution), ndmin=1)
+        elif (not isinstance(self.spaceRange, type(None))):
+            shift = np.array(np.multiply(np.abs(np.random.randint(low=np.min(self.spaceRange) / self.resolution,
+                                                                  high=np.max(self.spaceRange) / self.resolution,
+                                                                  size=nDim)), self.resolution), ndmin=1)
         else:
-            shift = np.array(np.abs(np.random.rand(nDim)), ndmin=1)*self.maxStepSize
+            shift = np.array(np.abs(np.random.rand(nDim)), ndmin=1) * self.maxStepSize
 
         self.posShift = np.multiply(sign, shift)
 
-        
-        #Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
-        if(self.minStepSize != None and any([s < self.minStepSize for s in shift])):
-            self.posShift = np.multiply(sign, np.array([s if(s>self.minStepSize) else self.minStepSize for s in shift]) )
+        # Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
+        if (self.minStepSize != None and any([s < self.minStepSize for s in shift])):
+            self.posShift = np.multiply(sign,
+                                        np.array([s if (s > self.minStepSize) else self.minStepSize for s in shift]))
         else:
             self.posShift = np.multiply(sign, shift)
-        
 
         return np.squeeze(self.posShift)
 
-    
 
 class monteCarloIntegrator(stochasticIntegrator):
     """
@@ -75,7 +77,8 @@ class monteCarloIntegrator(stochasticIntegrator):
     """
     name = "Monte Carlo Integrator"
 
-    def __init__(self, maxStepSize:Number=1, minStepSize:Number=None, spaceRange:Tuple[Number,Number]=None, fixedStepSize:Number=None):
+    def __init__(self, maxStepSize: Number = 1, minStepSize: Number = None, spaceRange: Tuple[Number, Number] = None,
+                 fixedStepSize: Number = None):
         """
         __init__ 
             This is the Constructor of the MonteCarlo integrator.
@@ -92,13 +95,13 @@ class monteCarloIntegrator(stochasticIntegrator):
         fixedStepSize : Number, optional
             this option restrains each integration step to a certain size in each dimension, by default None
         """
-        self.fixedStepSize =  None if(isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
+        self.fixedStepSize = None if (isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
         self.maxStepSize = maxStepSize
         self.minStepSize = minStepSize
         self.spaceRange = spaceRange
         pass
-    
-    def step(self, system:systemType)-> Tuple[float, None, float]:
+
+    def step(self, system: systemType) -> Tuple[float, None, float]:
         """
         step 
             This function is performing an integration step in MonteCarlo fashion.
@@ -119,23 +122,22 @@ class monteCarloIntegrator(stochasticIntegrator):
         # while no value in spaceRange was found, terminates in first run if no spaceRange
         current_state = system.currentState
         self.oldpos = current_state.position
-        
-        while(True):
-            self.randomShift(system.nDim)
-            self.newPos = np.add(self.oldpos,self.posShift)
 
-            #only get positions in certain range or accept if no range
-            if(self._critInSpaceRange(self.newPos)):
+        while (True):
+            self.randomShift(system.nDim)
+            self.newPos = np.add(self.oldpos, self.posShift)
+
+            # only get positions in certain range or accept if no range
+            if (self._critInSpaceRange(self.newPos)):
                 break
 
-        if(self.verbose):
-            print(str(self.__name__)+": current position\t ", self.oldpos)
-            print(str(self.__name__)+": shift\t ", self.posShift)
-            print(str(self.__name__)+": newPosition\t ", self.newPos)
+        if (self.verbose):
+            print(str(self.__name__) + ": current position\t ", self.oldpos)
+            print(str(self.__name__) + ": shift\t ", self.posShift)
+            print(str(self.__name__) + ": newPosition\t ", self.newPos)
             print("\n")
 
         return np.squeeze(self.newPos), np.nan, np.squeeze(self.posShift)
-    
 
 
 class metropolisMonteCarloIntegrator(stochasticIntegrator):
@@ -161,21 +163,23 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
 
     """
     name = "Metropolis Monte Carlo Integrator"
-    #Parameters:
-    randomnessIncreaseFactor:float = 1  #tune randomness of your results
-    maxIterationTillAccept:float = np.inf  #how often shall the integrator iterate till it accepts a step forcefully
-    convergence_limit:int=1000  # after reaching a certain limit abort iteration
+    # Parameters:
+    randomnessIncreaseFactor: float = 1  # tune randomness of your results
+    maxIterationTillAccept: float = np.inf  # how often shall the integrator iterate till it accepts a step forcefully
+    convergence_limit: int = 1000  # after reaching a certain limit abort iteration
 
-    #METROPOLIS CRITERION
+    # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
-    _defaultRandomness = lambda self, ene_new, currentState: ((1/self.randomnessIncreaseFactor)*np.random.rand() <= np.exp(-1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
+    _defaultRandomness = lambda self, ene_new, currentState: (
+                (1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(
+            -1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
+
     ##default Metropolis Criterion
     def metropolisCriterion(self, ene_new, currentState):
         return (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
 
-
-    def __init__(self, minStepSize:float=None, maxStepSize:float=1, spaceRange:tuple=None, fixedStepSize=None,
-                 randomnessIncreaseFactor=1, maxIterationTillAccept:int=np.inf):
+    def __init__(self, minStepSize: float = None, maxStepSize: float = 1, spaceRange: tuple = None, fixedStepSize=None,
+                 randomnessIncreaseFactor=1, maxIterationTillAccept: int = np.inf):
         """
         __init__ 
             This is the Constructor of the Metropolis-MonteCarlo integrator.
@@ -202,20 +206,19 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
             number, after which a step is accepted, regardless its likelihood (turned off if np.inf). By default None
         """
 
-        #Integration Step Constrains
-        self.fixedStepSize = None if(isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
+        # Integration Step Constrains
+        self.fixedStepSize = None if (isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
         self.maxStepSize = maxStepSize
         self.minStepSize = minStepSize
         self.spaceRange = spaceRange
 
-
-        #Metropolis Criterions
+        # Metropolis Criterions
         self.randomnessIncreaseFactor = randomnessIncreaseFactor
         self.maxIterationTillAccept = maxIterationTillAccept
-        self.convergence_limit = self.convergence_limit if(isinstance(maxIterationTillAccept, type(None))) else maxIterationTillAccept+1
+        self.convergence_limit = self.convergence_limit if (
+            isinstance(maxIterationTillAccept, type(None))) else maxIterationTillAccept + 1
 
-
-    def step(self, system:systemType)-> Tuple[float, None, float]:
+    def step(self, system: systemType) -> Tuple[float, None, float]:
         """
         step 
             This function is performing an Metropolis Monte Carlo integration step.
@@ -236,42 +239,46 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
         current_state = system.currentState
         self.oldpos = current_state.position
         nDim = system.nDim
-        
+
         # integrate position
-        while(current_iteration <= self.convergence_limit and current_iteration<=self.maxIterationTillAccept):    #while no value in spaceRange was found, terminates in first run if no spaceRange
+        while (
+                current_iteration <= self.convergence_limit and current_iteration <= self.maxIterationTillAccept):  # while no value in spaceRange was found, terminates in first run if no spaceRange
             self.randomShift(nDim)
-            #eval new Energy
+            # eval new Energy
             system._currentPosition = np.add(self.oldpos, self.posShift)
             system._currentForce = self.posShift
             ene = system.totPot()
 
-            #MetropolisCriterion
+            # MetropolisCriterion
             if ((self._critInSpaceRange(system._currentPosition) and self.metropolisCriterion(ene, current_state))):
                 break
-            else:   #not accepted
+            else:  # not accepted
                 current_iteration += 1
                 continue
-        if(current_iteration >= self.convergence_limit):
-            raise ValueError("Metropolis-MonteCarlo integrator did not converge! Think about the maxIterationTillAccept")
+        if (current_iteration >= self.convergence_limit):
+            raise ValueError(
+                "Metropolis-MonteCarlo integrator did not converge! Think about the maxIterationTillAccept")
 
-        self.newPos=self.oldpos
-        if(self.verbose):
-            print(str(self.__name__)+": current position\t ", self.oldpos)
-            print(str(self.__name__)+": shift\t ", self.posShift)
-            print(str(self.__name__)+": newPosition\t ", self.newPos)
-            print(str(self.__name__)+": iteration "+str(current_iteration)+"/"+str(self.convergence_limit))
+        self.newPos = self.oldpos
+        if (self.verbose):
+            print(str(self.__name__) + ": current position\t ", self.oldpos)
+            print(str(self.__name__) + ": shift\t ", self.posShift)
+            print(str(self.__name__) + ": newPosition\t ", self.newPos)
+            print(str(self.__name__) + ": iteration " + str(current_iteration) + "/" + str(self.convergence_limit))
             print("\n")
 
         return np.squeeze(system._currentPosition), np.nan, np.squeeze(self.posShift)
+
 
 '''
 Langevin stochastic integration
 '''
 
-class langevinIntegrator(stochasticIntegrator):
-    name="Langevin Integrator"
 
-    def __init__(self, dt:float=0.005, gamma:float=50, oldPosition:float=None):
+class langevinIntegrator(stochasticIntegrator):
+    name = "Langevin Integrator"
+
+    def __init__(self, dt: float = 0.005, gamma: float = 50, oldPosition: float = None):
         """
           __init__
               This is the Constructor of the Langevin integrator.
@@ -290,12 +297,11 @@ class langevinIntegrator(stochasticIntegrator):
         self.dt = dt
         self.gamma = gamma
         self._oldPosition = oldPosition
-        self._first_step = True # only neede for velocity Langevin
+        self._first_step = True  # only neede for velocity Langevin
         self.R_x = None
         self.newForces = None
         self.currentPosition = None
         self.currentVelocity = None
-
 
     def update_positon(self, system):
         """
@@ -326,17 +332,19 @@ class langevinIntegrator(stochasticIntegrator):
         """
 
         nDim = system.nDim
-        #get random number, normal distributed for nDim dimentions
-        curr_random = np.squeeze(np.random.normal(0,1,nDim))
-        #scale random number according to fluctuation-dissipation theorem
+        # get random number, normal distributed for nDim dimentions
+        curr_random = np.squeeze(np.random.normal(0, 1, nDim))
+        # scale random number according to fluctuation-dissipation theorem
         # energy is expected to be in units of k_B
         self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
-        #calculation of forces:
+        # calculation of forces:
         self.newForces = -system.potential.force(self.currentPosition)
 
-        #Brünger-Brooks-Karplus integrator for positions
-        new_position = (1 / (1 + self.gamma * self.dt/2)) * (2 * self.currentPosition - self._oldPosition
-            + self.gamma * (self.dt / 2) * (self._oldPosition) + (self.dt**2 / system.mass) * (self.R_x + self.newForces))
+        # Brünger-Brooks-Karplus integrator for positions
+        new_position = (1 / (1 + self.gamma * self.dt / 2)) * (2 * self.currentPosition - self._oldPosition
+                                                               + self.gamma * (self.dt / 2) * (self._oldPosition) + (
+                                                                           self.dt ** 2 / system.mass) * (
+                                                                           self.R_x + self.newForces))
 
         return new_position, None
 
@@ -381,21 +389,18 @@ class langevinIntegrator(stochasticIntegrator):
         # update position
         self._oldPosition = self.currentPosition
 
-
-
-        if(self.verbose):
-            print(str(self.__name__)+": current forces\t ", self.newForces)
-            print(str(self.__name__)+": old Position\t ", sef._oldPosition)
-            print(str(self.__name__)+": current_position\t ", currentPosition)
-            print(str(self.__name__)+": current_velocity\t ", currentVelocity)
-            print(str(self.__name__)+": newPosition\t ", new_position)
-            print(str(self.__name__)+": newVelocity\t ", new_velocity)
+        if (self.verbose):
+            print(str(self.__name__) + ": current forces\t ", self.newForces)
+            print(str(self.__name__) + ": old Position\t ", sef._oldPosition)
+            print(str(self.__name__) + ": current_position\t ", currentPosition)
+            print(str(self.__name__) + ": current_velocity\t ", currentVelocity)
+            print(str(self.__name__) + ": newPosition\t ", new_position)
+            print(str(self.__name__) + ": newVelocity\t ", new_velocity)
             print("\n")
         return new_position, new_velocity, self.newForces  # add random number
 
 
 class langevinVelocityIntegrator(langevinIntegrator):
-
     """
     Integrate step according to Velocity Langevin BKK integrator
     Designed after:
@@ -424,6 +429,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
 
     """
     name = "Velocity Langevin Integrator"
+
     def update_positon(self, system):
         """
         update for position Lanvevin
@@ -439,28 +445,30 @@ class langevinVelocityIntegrator(langevinIntegrator):
             # scale random number according to fluctuation-dissipation theorem
             # energy is expected to be in units of k_B
             self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
-            #calculate of forces:
+            # calculate of forces:
             self.newForces = -system.potential.force(self.currentPosition)
 
             self._first_step = False
 
-        #Brünger-Brooks-Karplus integrator for velocities
+        # Brünger-Brooks-Karplus integrator for velocities
 
-        half_step_velocity = (1-self.gamma*self.dt/2)*self.currentVelocity + self.dt/(2*system.mass) * (self.newForces + self.R_x)
+        half_step_velocity = (1 - self.gamma * self.dt / 2) * self.currentVelocity + self.dt / (2 * system.mass) * (
+                    self.newForces + self.R_x)
 
-        full_step_position = self.currentPosition + half_step_velocity*self.dt
+        full_step_position = self.currentPosition + half_step_velocity * self.dt
 
         # calculate forces and random number for new position
         # get random number, normal distributed for nDim dimentions
-        curr_random = np.squeeze(np.random.normal(0,1,nDim)) # for n dimentions
+        curr_random = np.squeeze(np.random.normal(0, 1, nDim))  # for n dimentions
         # scale random number according to fluctuation-dissipation theorem
         # energy is expected to be in units of k_B
         self.R_x = np.sqrt(2 * system.temperature * self.gamma * system.mass / self.dt) * curr_random
 
-        #calculate of forces:
+        # calculate of forces:
         self.newForces = -system.potential.force(full_step_position)
 
         # last half step
-        full_step_velocity = (1 / (1 + self.gamma * self.dt/2)) * (half_step_velocity +self.dt/(1*system.mass)*(self.newForces + self.R_x))
+        full_step_velocity = (1 / (1 + self.gamma * self.dt / 2)) * (
+                    half_step_velocity + self.dt / (1 * system.mass) * (self.newForces + self.R_x))
 
         return full_step_position, full_step_velocity

@@ -1,6 +1,7 @@
-import pickle
 import io
-from typing import Iterable, Sized, Union, Dict, Callable
+import pickle
+from typing import Union, Callable
+
 
 def notImplementedERR():
     raise NotImplementedError("This function needs to be implemented in sympy")
@@ -11,7 +12,7 @@ class super_baseClass:
     This class is a scaffold, containing functionality all classes should have.
     """
 
-    name:str = "Unknown"
+    name: str = "Unknown"
 
     def __name__(self) -> str:
         return str(self.name)
@@ -27,8 +28,8 @@ class super_baseClass:
         for key in keys:
             value = dict[key]
 
-            #print(key, '\t', isinstance(dict[key], Callable) ,"\t", value, hasattr(value, "__getstate__"))
-            if(isinstance(dict[key], Callable)):
+            # print(key, '\t', isinstance(dict[key], Callable) ,"\t", value, hasattr(value, "__getstate__"))
+            if (isinstance(dict[key], Callable)):
                 del dict[key]
 
         return dict
@@ -39,30 +40,31 @@ class super_baseClass:
     """
     Methods
     """
-    def save(self, path:Union[str, io.FileIO]=None)->str:
+
+    def save(self, path: Union[str, io.FileIO] = None) -> str:
         """
         This method stores the Class as binary obj to a given path or fileBuffer.
         """
-        if(isinstance(path, str)):
+        if (isinstance(path, str)):
             bufferdWriter = open(path, "wb")
-        elif(isinstance(path, io.BufferedWriter)):
-            bufferdWriter =path
+        elif (isinstance(path, io.BufferedWriter)):
+            bufferdWriter = path
             path = bufferdWriter.name
         else:
-            raise IOError("Please give as parameter a path:str or a File Buffer. To "+str(self.__class__)+".save")
+            raise IOError("Please give as parameter a path:str or a File Buffer. To " + str(self.__class__) + ".save")
 
         pickle.dump(obj=self, file=bufferdWriter)
         bufferdWriter.close()
         return path
 
     @classmethod
-    def load(cls, path:Union[str, io.FileIO]=None)->object:
+    def load(cls, path: Union[str, io.FileIO] = None) -> object:
         """
         This method stores the Class as binary obj to a given path or fileBuffer.
         """
-        if(isinstance(path, str)):
+        if (isinstance(path, str)):
             bufferedReader = open(path, "rb")
-        elif(isinstance(path, io.BufferedReader)):
+        elif (isinstance(path, io.BufferedReader)):
             bufferedReader = path
         else:
             raise IOError("Please give as parameter a path:str or a File Buffer.")

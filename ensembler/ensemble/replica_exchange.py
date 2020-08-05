@@ -2,10 +2,12 @@
 [summary]
 """
 
-import numpy as np
 from collections import Iterable
-from ensembler.ensemble._replica_graph import ReplicaExchange
+
+import numpy as np
+
 from ensembler.ensemble import exchange_pattern
+from ensembler.ensemble._replica_graph import ReplicaExchange
 
 
 class TemperatureReplicaExchange(ReplicaExchange):

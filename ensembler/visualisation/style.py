@@ -2,27 +2,26 @@
     This style file is used to control the styling of the visualizations followed
 """
 
-import matplotlib as mpl 
 from matplotlib import cm
-from matplotlib import pyplot as plt
 from scipy import constants
 
-def cm2inch(value:float):
-    return value/2.54
+
+def cm2inch(value: float):
+    return value / 2.54
 
 
-#GENERAL SETTINGS
-dpi=300
-dpi_animation=100
+# GENERAL SETTINGS
+dpi = 300
+dpi_animation = 100
 
-#settings:
-figsize=[cm2inch(8.6), cm2inch(8.6/constants.golden)]
-figsize_doubleColumn =[cm2inch(2*8.6), cm2inch(2*8.6/constants.golden)]
+# settings:
+figsize = [cm2inch(8.6), cm2inch(8.6 / constants.golden)]
+figsize_doubleColumn = [cm2inch(2 * 8.6), cm2inch(2 * 8.6 / constants.golden)]
 
-#COLORS:
+# COLORS:
 alpha_val = 1
 alpha_traj = 0.8
-aplha_light=0.3
+aplha_light = 0.3
 
 traj_current = "k"
 traj_start = "blue"
@@ -32,7 +31,7 @@ animation_traj = cm.get_cmap("inferno")
 
 potential_color = cm.get_cmap("tab10")
 potential_light = "grey"
-potential_resolution=1000
+potential_resolution = 1000
 
 ##Maps:
 ###1 information dimension - binary information

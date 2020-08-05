@@ -1,5 +1,8 @@
-import os, unittest, tempfile
-from ensembler import integrator as integ, potentials as pot, system
+import os
+import tempfile
+import unittest
+
+from ensembler import potentials as pot, system
 from ensembler.integrator import _basicIntegrators
 from ensembler.integrator import stochastic, newtonian, optimizers
 

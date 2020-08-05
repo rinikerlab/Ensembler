@@ -1,10 +1,9 @@
 import unittest
-import numpy as np
 
-from ensembler.system import basic_system as system
-from ensembler.integrator import stochastic, newtonian
-from ensembler.potentials import OneD
 from ensembler.ensemble import replica_exchange, _replica_graph
+from ensembler.integrator import stochastic
+from ensembler.potentials import OneD
+from ensembler.system import basic_system as system
 
 
 class test_ReplicaExchangeCls(unittest.TestCase):
@@ -13,34 +12,29 @@ class test_ReplicaExchangeCls(unittest.TestCase):
     potential = OneD.harmonicOscillatorPotential()
     sys = system.system(potential=potential, integrator=integrator)
 
-
     def test_tearDown(self) -> None:
         self.RE.replicas = {}
 
     def test_init_1DREnsemble(self):
-        from ensembler import ensemble
         exchange_dimensions = {"temperature": range(288, 310)}
         _replica_graph.ReplicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
 
     def test_init_2DREnsemble(self):
-        from ensembler import ensemble
         exchange_dimensions = {"temperature": range(288, 310),
-                               "mass": range(1,10)}
+                               "mass": range(1, 10)}
 
         _replica_graph.ReplicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
 
     def test_run_1DREnsemble(self):
-        from ensembler import ensemble
         exchange_dimensions = {"temperature": range(288, 310)}
 
         group = _replica_graph.ReplicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
         group.run()
 
     def test_getTraj_1DREnsemble(self):
-        replicas =22
+        replicas = 22
         nsteps = 100
         group = None
-        from ensembler import ensemble
         exchange_dimensions = {"temperature": range(288, 310)}
 
         group = _replica_graph.ReplicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
@@ -48,24 +42,22 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         group.run()
         trajectories = group.get_trajectories()
 
-
         ##print(len(trajectories))
         ##print([len(trajectories[t]) for t in trajectories])
 
         self.assertEqual(len(trajectories), 22, msg="not enough trajectories were retrieved!")
-        self.assertEquals([len(trajectories[t]) for t in trajectories], second=[nsteps+1 for x in range(replicas)], msg="traj lengths are not correct!")
+        self.assertEquals([len(trajectories[t]) for t in trajectories], second=[nsteps + 1 for x in range(replicas)],
+                          msg="traj lengths are not correct!")
 
     def test_getTotPot_1DREnsemble(self):
-        replicas =22
+        replicas = 22
         nsteps = 100
-        from ensembler import ensemble
         exchange_dimensions = {"temperature": range(288, 310)}
 
-        group = _replica_graph.ReplicaExchange(system=self.sys,exchange_dimensions=exchange_dimensions)
+        group = _replica_graph.ReplicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
         group.nSteps_between_trials = nsteps
         group.run()
         totPots = group.get_total_energy()
-
 
         ##print(len(totPots))
         ##print(totPots)
@@ -93,6 +85,7 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         self.assertEqual(setted_pos, list(expected_pos), msg="The positions were not set correctly!")
     """
 
+
 class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     TRE = replica_exchange.TemperatureReplicaExchange
 
@@ -101,20 +94,20 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, integrator=integrator)
 
-        replicas =22
+        replicas = 22
         nsteps = 100
-        T_range=range(288, 310)
+        T_range = range(288, 310)
         setattr(self, "group", None)
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
 
     def test_run(self):
         integrator = stochastic.monteCarloIntegrator()
-        potential =OneD.harmonicOscillatorPotential()
+        potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, integrator=integrator)
 
-        replicas =22
+        replicas = 22
         nsteps = 100
-        T_range=range(288, 310)
+        T_range = range(288, 310)
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
         ##print(group.get_Total_Energy())
         group.nSteps_between_trials = nsteps
@@ -126,23 +119,22 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, integrator=integrator)
 
-        T_range=range(1, 10)
+        T_range = range(1, 10)
         nReplicas = len(T_range)
         positions = list([float(1) for x in range(nReplicas)])
         velocities = list([float(0) for x in range(nReplicas)])
 
-
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
         group.set_replicas_positions(positions)
         group.set_replicas_velocities(velocities)
-        group._defaultRandomness= lambda x,y: False
+        group._defaultRandomness = lambda x, y: False
 
         group.exchange()
         all_exchanges = group._current_exchanges
         finpositions = list(group.get_replicas_positions().values())
         finvelocities = list(group.get_replicas_velocities().values())
 
-        #Checking:
+        # Checking:
         ##constant params?
         self.assertEqual(len(group.replicas), nReplicas, msg="not enough trajectories were retrieved!")
         self.assertListEqual(finpositions, positions, msg="Positions should not change during exchange!")
@@ -198,9 +190,9 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, integrator=integrator)
 
-        replicas =22
+        replicas = 22
         nsteps = 100
-        T_range=range(288, 310)
+        T_range = range(288, 310)
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
         ##print(group.get_Total_Energy())
         group.nSteps_between_trials = nsteps
@@ -251,6 +243,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
 
         self.assertFalse(any(list(group.exchange_information.doExchange)), msg="No Exchange should happen!")
     """
+
 
 if __name__ == '__main__':
     unittest.main()

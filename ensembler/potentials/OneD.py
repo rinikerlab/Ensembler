@@ -3,14 +3,14 @@ Module: Potential
 This module shall be used to implement subclasses of Potential. This module contains all available potentials.
 """
 
-import numpy as np
-import sympy as sp
 import typing as t
-import scipy.constants as const
-from ensembler.util.ensemblerTypes import Union, Number, Sized, List, Iterable
 
-from ensembler.potentials import ND
+import numpy as np
+import scipy.constants as const
+import sympy as sp
+
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
+from ensembler.util.ensemblerTypes import Union, Number, List, Iterable
 
 """
     SIMPLE POTENTIALS
@@ -445,7 +445,10 @@ class envelopedPotential(_potential1DCls):
         # also make sure that states are up to work:
         [V._update_functions() for V in self.V_is]
 
-        self.ene = self._calculate_energies_singlePos_overwrite
+        if (all([self.s_i[0] == s for s in self.s_i[1:]])):
+            self.ene = self._calculate_energies_singlePos_overwrite_oneS
+        else:
+            self.ene = self._calculate_energies_singlePos_overwrite_multiS
         self.force = self._calculate_dvdpos_singlePos_overwrite
 
     @property
@@ -512,13 +515,21 @@ class envelopedPotential(_potential1DCls):
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
 
-    def _calculate_energies_singlePos_overwrite(self, position) -> np.array:
+    def _calculate_energies_singlePos_overwrite_multiS(self, position) -> np.array:
         # print("Positions: ",position)
         # print("s_i: ",self.s_i)
-        sum_prefactors, _ = self._prefactor_calc_efficient(position)
-        # TODO: check out how Multi S- is solving this
+        sum_prefactors, _ = self._exponent_calc_efficient(position)
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
-        Vr = (-1 / (beta * float(self.s_i[0]))) * sum_prefactors
+        Vr = (-1 / (beta)) * sum_prefactors
+        # print("finalVR", Vr)
+        return np.squeeze(Vr)
+
+    def _calculate_energies_singlePos_overwrite_oneS(self, position) -> np.array:
+        # print("Positions: ",position)
+        # print("s_i: ",self.s_i)
+        sum_prefactors, _ = self._exponent_calc_efficient(position)
+        beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
+        Vr = (-1 / (beta * self.s_i[0])) * sum_prefactors
         # print("finalVR", Vr)
         return np.squeeze(Vr)
 
@@ -536,7 +547,7 @@ class envelopedPotential(_potential1DCls):
         position = np.array(position, ndmin=2)
         # print("Pos: ", position)
 
-        V_R_part, V_Is_ene = self._prefactor_calc_efficient(position)
+        V_R_part, V_Is_ene = self._exponent_calc_efficient(position)
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
         # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
@@ -555,7 +566,7 @@ class envelopedPotential(_potential1DCls):
 
         return np.squeeze(dVdpos)
 
-    def _prefactor_calc_efficient(self, position):
+    def _exponent_calc_efficient(self, position):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
         partA = np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
@@ -617,6 +628,7 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
         self._update_functions()
 
 
+"""
 class lambdaEDSPotential(envelopedPotential):
     name: str = "lambda enveloped Potential"
 
@@ -635,17 +647,7 @@ class lambdaEDSPotential(envelopedPotential):
     def __init__(self, V_is: t.List[_potential1DCls] = (
             harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)), lam: Number = 0.5,
                  s: float = 1.0, Eoff_i: t.List[float] = None, T: float = 1, kb: float = 1):
-        """
 
-        Parameters
-        ----------
-        V_is
-        lam
-        s
-        Eoff_i
-        T
-        kb
-        """
         nStates = len(V_is)
         self.constants.update({self.nStates: nStates})
         self._Eoff_i = [0 for x in range(nStates)]
@@ -705,16 +707,6 @@ class lambdaEDSPotential(envelopedPotential):
                 lam) + "\t states in Vi" + str(len(self.V_is)))
 
     def _calculate_dvdpos_singlePos_overwrite(self, position: (t.Iterable[float])) -> np.array:
-        """
-            Todo: improve numerical stability.
-        Parameters
-        ----------
-        position
-
-        Returns
-        -------
-
-        """
         position = np.array(position, ndmin=2)
         # print("Pos: ", position)
 
@@ -741,8 +733,8 @@ class lambdaEDSPotential(envelopedPotential):
     def _prefactor_calc_efficient(self, position):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
-        partA = self.lam_i[0] * np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
-        partB = self.lam_i[1] * np.array(-beta * self.s_i[1] * (self.V_is[1].ene(position) - self.Eoff_i[1]), ndmin=1)
+        partA = np.log(self.lam_i[0]) * np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
+        partB = np.log(self.lam_i[1]) * np.array(-beta * self.s_i[1] * (self.V_is[1].ene(position) - self.Eoff_i[1]), ndmin=1)
 
         partAB = np.array([partA, partB]).T
         log_prefac = 1 + np.exp(np.min(partAB, axis=1) - np.max(partAB, axis=1))
@@ -753,14 +745,14 @@ class lambdaEDSPotential(envelopedPotential):
 
         # more than two states!
         for state in range(2, self.constants[self.nStates]):
-            partN = self.lam_i[state] * np.array(
+            partN = np.log(self.lam_i[state]) * np.array(
                 -beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
             prefactors.append(partN)
             sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(1 + np.exp(
                 np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
-
+"""
 
 """
 special potentials
@@ -839,4 +831,3 @@ class flatwellPotential(_potential1DCls):
 """
 Biased potentials
 """
-from ensembler.potentials.biased_potentials.biasOneD import addedPotentials, metadynamicsPotential

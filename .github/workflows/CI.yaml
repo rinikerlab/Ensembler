@@ -23,47 +23,47 @@ jobs:
         python-version: [3.6, 3.7]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Additional info about the build
-      shell: bash
-      run: |
-        uname -a
-        df -h
-        ulimit -a
-            
-    # More info on options: https://github.com/goanpeca/setup-miniconda
-    - uses: goanpeca/setup-miniconda@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-        environment-file: devtools/conda-envs/test_env.yaml
+      - name: Additional info about the build
+        shell: bash
+        run: |
+          uname -a
+          df -h
+          ulimit -a
 
-        channels: conda-forge,defaults
+      # More info on options: https://github.com/goanpeca/setup-miniconda
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          environment-file: devtools/conda-envs/test_env.yaml
 
-        activate-environment: test
-        auto-update-conda: true
-        auto-activate-base: false
-        show-channel-urls: true
-                
-    - name: Install package
+          channels: conda-forge,defaults
 
-      # conda setup requires this special shell
-      shell: bash -l {0}
-      run: |
-        python -m pip install . --no-deps
-        conda list
-        
-    - name: Run tests
+          activate-environment: test
+          auto-update-conda: true
+          auto-activate-base: false
+          show-channel-urls: true
 
-      # conda setup requires this special shell
-      shell: bash -l {0}
+      - name: Install package
 
-      run: |
-        pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
+        # conda setup requires this special shell
+        shell: bash -l {0}
+        run: |
+          python -m pip install . --no-deps
+          conda list
 
-    - name: CodeCov
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage.xml
-        flags: unittests
-        name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
+      - name: Run tests
+
+        # conda setup requires this special shell
+        shell: bash -l {0}
+
+        run: |
+          pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
+
+      - name: CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}

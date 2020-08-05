@@ -2,20 +2,20 @@
 .. automodule: _replica graph
 
 """
-from typing import List, Dict, Tuple, Iterable
+import copy
+import itertools as it
+import multiprocessing as mult
 from collections import namedtuple
-import copy, itertools as it
+from typing import List, Dict, Tuple, Iterable
+
+import numpy as np
+import pandas as pd
+import scipy.constants as const
 from tqdm import tqdm_notebook as tqdm
 
-import numpy as np, pandas as pd
-import scipy.constants as const
-
-from ensembler.util.ensemblerTypes import system
-from ensembler.util.basic_class import super_baseClass
-
 from ensembler.ensemble import exchange_pattern
-
-import multiprocessing as mult
+from ensembler.util.basic_class import super_baseClass
+from ensembler.util.ensemblerTypes import system
 
 
 class MultiReplicaApproach(super_baseClass):
@@ -120,17 +120,17 @@ class ReplicaExchange(MultiReplicaApproach):
     ###METROPOLIS CRITERION
     ###default Metropolis Criterion
     _defaultMetropolisCriterion = lambda self, originalParams, swappedParams: (
-                np.greater_equal(originalParams, swappedParams) or self._defaultRandomness(originalParams,
-                                                                                           swappedParams))
+            np.greater_equal(originalParams, swappedParams) or self._defaultRandomness(originalParams,
+                                                                                       swappedParams))
     exchange_criterium = _defaultMetropolisCriterion
 
     ###random part of Metropolis Criterion:
     randomnessIncreaseFactor = 0.1
     _temperature_exchange: float = 298
     _defaultRandomness = lambda self, originalParams, swappedParams: (
-                (1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(
-            -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
-                        originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
+            (1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(
+        -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
+                originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
 
     def __init__(self, system: system, exchange_dimensions: Dict[str, Iterable], exchange_criterium=None,
                  steps_between_trials: int = 10):

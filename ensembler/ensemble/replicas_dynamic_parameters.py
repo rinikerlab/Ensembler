@@ -3,15 +3,16 @@
     This module shall be used to implement subclasses of ensemble.
     It is a class, that is using multiple system. It can be used for RE or Conveyor belt
 """
+from typing import Dict
+
 import numpy as np
 import pandas as pd
-from typing import Dict
 from tqdm.notebook import tqdm
 
 from ensembler import potentials as pot
 from ensembler.ensemble._replica_graph import ReplicaExchange
-from ensembler.system import perturbed_system
 from ensembler.integrator import stochastic
+from ensembler.system import perturbed_system
 
 
 class ConveyorBelt(ReplicaExchange):

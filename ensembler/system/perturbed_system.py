@@ -1,45 +1,47 @@
+from numbers import Number
+from typing import Iterable, NoReturn
 
 import numpy as np
-from typing import Iterable, NoReturn
-from numbers import Number
 import pandas as pd
-import scipy.constants as const
-pd.options.mode.use_inf_as_na = True
 
+pd.options.mode.use_inf_as_na = True
 
 from ensembler.util import dataStructure as data
 
-from ensembler.util import  ensemblerTypes as ensemblerTypes
+from ensembler.util import ensemblerTypes as ensemblerTypes
+
 _integratorCls = ensemblerTypes.integrator
 _conditionCls = ensemblerTypes.condition
 
 from ensembler.potentials._basicPotentials import _potential1DClsPerturbed as _perturbedPotentialCls
 from ensembler.system.basic_system import system
 
+
 class perturbedSystem(system):
     """
     
     """
     name = "perturbed system"
-    #Lambda Dependend Settings
+    # Lambda Dependend Settings
     state = data.lambdaState
     currentState: data.lambdaState
     potential: _perturbedPotentialCls
 
-    #current lambda
-    _currentLam:float = np.nan
-    _currentdHdLam:float = np.nan
+    # current lambda
+    _currentLam: float = np.nan
+    _currentdHdLam: float = np.nan
 
-
-    def __init__(self, potential:_perturbedPotentialCls, integrator: _integratorCls, conditions: Iterable[_conditionCls]=[],
-                 temperature: float = 298.0, position:(Iterable[Number] or float) = None, lam:float=0.0):
+    def __init__(self, potential: _perturbedPotentialCls, integrator: _integratorCls,
+                 conditions: Iterable[_conditionCls] = [],
+                 temperature: float = 298.0, position: (Iterable[Number] or float) = None, lam: float = 0.0):
         self._currentLam = lam
-        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature, position=position)
+        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature,
+                         position=position)
         self.set_lam(lam)
 
-    def set_current_state(self, currentPosition:(Number or Iterable), currentLambda:(Number or Iterable),
-                          currentVelocities:(Number or Iterable)=0,  currentdHdLam:(Number or Iterable)=0,
-                          currentForce:(Number or Iterable)=0, currentTemperature:Number=298):
+    def set_current_state(self, currentPosition: (Number or Iterable), currentLambda: (Number or Iterable),
+                          currentVelocities: (Number or Iterable) = 0, currentdHdLam: (Number or Iterable) = 0,
+                          currentForce: (Number or Iterable) = 0, currentTemperature: Number = 298):
         self._currentPosition = currentPosition
         self._currentForce = currentForce
         self._currentVelocities = currentVelocities
@@ -49,7 +51,7 @@ class perturbedSystem(system):
         self._update_dHdlambda()
         self.updateCurrentState()
 
-    def updateSystemProperties(self)-> NoReturn:
+    def updateSystemProperties(self) -> NoReturn:
         self._updateEne()
         self._updateTemp()
         self._update_dHdlambda()
@@ -74,7 +76,7 @@ class perturbedSystem(system):
 
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
-    def set_lam(self, lam:float):
+    def set_lam(self, lam: float):
         self._currentLam = lam
         self.potential.set_lam(lam=self._currentLam)
         self._updateEne()

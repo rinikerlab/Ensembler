@@ -1,5 +1,6 @@
-from ensembler.util.ensemblerTypes import system as systemType, Tuple
 from ensembler.util.basic_class import super_baseClass, notImplementedERR
+from ensembler.util.ensemblerTypes import system as systemType, Tuple
+
 
 class _integratorCls(super_baseClass):
     """
@@ -13,11 +14,10 @@ class _integratorCls(super_baseClass):
         These functions need to be implemented by the subclass
 
     """
-    #general:
-    verbose:bool = False
-    nDim:int = 0
+    # general:
+    verbose: bool = False
+    nDim: int = 0
 
-    
     def __init__(self):
         """
             This is a default constructor
@@ -29,7 +29,7 @@ class _integratorCls(super_baseClass):
         """
         pass
 
-    def step(self, system:systemType)->Tuple[float, float, float]:
+    def step(self, system: systemType) -> Tuple[float, float, float]:
         """
         step  
             This interface function needs to be implemented for a subclass.
@@ -52,7 +52,7 @@ class _integratorCls(super_baseClass):
         """
         notImplementedERR()
 
-    def integrate(self, system:systemType, steps:int)->None:
+    def integrate(self, system: systemType, steps: int) -> None:
         """
         integrate This function provides an alternative way for System.simulate, just executed by the integrator class.
 
@@ -63,12 +63,12 @@ class _integratorCls(super_baseClass):
         steps : int
             Ammount of integration steps.
         """
-        
+
         for step in range(steps):
             (newPosition, newVelocity, newForces) = self.step(system=system)
             system.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
 
-    def setVerbose(self, verbose:bool=True):
+    def setVerbose(self, verbose: bool = True):
         """
         setVerbose this function sets the verbosity flag of the class.
 
@@ -77,5 +77,5 @@ class _integratorCls(super_baseClass):
         verbose : bool, optional
             set verbosity with this value. If true, it can get loud. By default True
         """
-        
+
         self.verbose = verbose

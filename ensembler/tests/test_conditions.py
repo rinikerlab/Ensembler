@@ -1,4 +1,7 @@
-import os, unittest, tempfile, numpy as np
+import numpy as np
+import os
+import tempfile
+import unittest
 
 from ensembler.conditions.box_conditions import periodicBoundaryCondition, boxBoundaryCondition
 from ensembler.conditions.restrain_conditions import positionRestraintCondition

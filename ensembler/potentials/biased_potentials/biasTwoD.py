@@ -7,14 +7,14 @@ This module shall be used to implement biases on top of Potentials. This module 
 import numpy as np
 import sympy as sp
 
-
-from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.potentials.TwoD import gaussPotential
+from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.util.ensemblerTypes import system
 
 """
     TIME INDEPENDENT BIASES 
 """
+
 
 class addedPotentials(_potential2DCls):
     '''
@@ -22,12 +22,11 @@ class addedPotentials(_potential2DCls):
     harmonic potential umbrella sampling or scaled potentials
     '''
 
-    name:str = "Added Potential Enhanced Sampling System for 2D"
-    nDim:int = sp.symbols("nDim")
+    name: str = "Added Potential Enhanced Sampling System for 2D"
+    nDim: int = sp.symbols("nDim")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
 
     def __init__(self, origPotential, addPotential):
-
         '''
         __init__
               This is the Constructor of the addedPotential class.
@@ -40,7 +39,7 @@ class addedPotentials(_potential2DCls):
             bias the system
         '''
 
-        self.origPotential  = origPotential
+        self.origPotential = origPotential
         self.addPotential = addPotential
 
         self.constants = {**origPotential.constants, **addPotential.constants}
@@ -57,9 +56,11 @@ class addedPotentials(_potential2DCls):
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
 
+
 """
     TIME DEPENDENT BIASES 
 """
+
 
 class metadynamicsPotential(_potential2DCls):
     '''
@@ -73,9 +74,10 @@ class metadynamicsPotential(_potential2DCls):
 
     name: str = "Metadynamics Enhanced Sampling System using grid bias in 2D"
     position = sp.symbols("r")
-    system: system #metadyn-coupled to system
+    system: system  # metadyn-coupled to system
 
-    def __init__(self, origPotential, amplitude=1., sigma=(1.,1.), n_trigger=100, bias_grid_min=(0,0), bias_grid_max=(10,10), numbins=(100,100)  ):
+    def __init__(self, origPotential, amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
+                 bias_grid_max=(10, 10), numbins=(100, 100)):
         '''
 
         Parameters
@@ -99,22 +101,22 @@ class metadynamicsPotential(_potential2DCls):
         self.n_trigger = n_trigger
         self.amplitude = amplitude
         self.sigma = sigma
-        #grid where the bias is stored
-        #for 2D
+        # grid where the bias is stored
+        # for 2D
         self.numbins = numbins
-        self.shape_force = (2,numbins[0],numbins[1])  # 2 because 2D
-        self.bias_grid_energy = np.zeros(self.numbins)   # energy grid
+        self.shape_force = (2, numbins[0], numbins[1])  # 2 because 2D
+        self.bias_grid_energy = np.zeros(self.numbins)  # energy grid
         self.bias_grid_force = np.zeros(self.shape_force)  # force grid
 
         # get center value for each bin
-        bin_half_x = (bias_grid_max[0] - bias_grid_min[0])/(2* self.numbins[0]) # half bin width
+        bin_half_x = (bias_grid_max[0] - bias_grid_min[0]) / (2 * self.numbins[0])  # half bin width
         bin_half_y = (bias_grid_max[1] - bias_grid_min[1]) / (2 * self.numbins[1])  # half bin width
-        self.x_centers = np.linspace(bias_grid_min[0]+bin_half_x, bias_grid_max[0]-bin_half_x, self.numbins[0])
-        self.y_centers = np.linspace(bias_grid_min[1]+bin_half_y, bias_grid_max[0]-bin_half_y, self.numbins[1])
+        self.x_centers = np.linspace(bias_grid_min[0] + bin_half_x, bias_grid_max[0] - bin_half_x, self.numbins[0])
+        self.y_centers = np.linspace(bias_grid_min[1] + bin_half_y, bias_grid_max[0] - bin_half_y, self.numbins[1])
         self.bin_centers = np.array(np.meshgrid(self.x_centers, self.y_centers))
         self.positions_grid = np.array([self.bin_centers[0].flatten(), self.bin_centers[1].flatten()]).T
 
-        #current_n counts when next metadynamic step should be applied
+        # current_n counts when next metadynamic step should be applied
         self.current_n = 1
 
         self.constants = {**origPotential.constants}
@@ -131,11 +133,11 @@ class metadynamicsPotential(_potential2DCls):
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
 
-
     """
     BIAS
     """
-    #Beautiful integration to system as Condition.
+
+    # Beautiful integration to system as Condition.
     def apply(self):
         self.check_for_metastep(self.system._currentPosition)
 
@@ -154,7 +156,7 @@ class metadynamicsPotential(_potential2DCls):
         -------
 
         '''
-        if(self.system.step % self.n_trigger == 0):
+        if (self.system.step % self.n_trigger == 0):
             self._update_potential(curr_position)
         """
         TODO: Remove
@@ -164,7 +166,6 @@ class metadynamicsPotential(_potential2DCls):
         else:
             self.current_n += 1
         """
-
 
     def _update_potential(self, curr_position):
         '''
@@ -210,9 +211,9 @@ class metadynamicsPotential(_potential2DCls):
         current_bin_x = self._find_nearest(self.x_centers, positions[0])
         current_bin_y = self._find_nearest(self.y_centers, positions[1])
         # due to transposed position matrix, x and y are changed here
-        return np.squeeze(self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_energy[current_bin_y,current_bin_x ])
-
-
+        return np.squeeze(
+            self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_energy[
+                current_bin_y, current_bin_x])
 
     def force(self, positions):
         '''
@@ -231,8 +232,10 @@ class metadynamicsPotential(_potential2DCls):
         current_bin_x = self._find_nearest(self.x_centers, positions[0])
         current_bin_y = self._find_nearest(self.y_centers, positions[1])
         # due to transposed position matrix, x and y are changed here
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim]))+self.bias_grid_force[:, current_bin_y,current_bin_x].reshape(2,1,1))
-
+        return np.squeeze(
+            self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_force[:,
+                                                                                       current_bin_y,
+                                                                                       current_bin_x].reshape(2, 1, 1))
 
     def _find_nearest(self, array, value):
         '''

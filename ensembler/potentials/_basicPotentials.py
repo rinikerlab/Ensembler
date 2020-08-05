@@ -1,8 +1,9 @@
-import pickle
-import io
-import numpy as np, sympy as sp
 from numbers import Number
 from typing import Iterable, Sized, Union, Dict
+
+import numpy as np
+import sympy as sp
+
 from ensembler.util.basic_class import super_baseClass, notImplementedERR
 
 

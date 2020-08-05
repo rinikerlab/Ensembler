@@ -1,10 +1,12 @@
+import warnings
+
+import numpy as np
+from scipy import constants as const
+from scipy.stats import maxwell
+
 from ensembler.conditions._conditions import _conditionCls
 from ensembler.util.ensemblerTypes import system as systemType
 
-import warnings
-import numpy as np
-from scipy import constants as const
-from scipy.stats import boltzmann, maxwell
 
 class thermostat(_conditionCls):
     """
@@ -13,13 +15,14 @@ class thermostat(_conditionCls):
         The apply function of this class is not implemented and needs to be overwritten by each subclass.
     """
 
-    _currentTemperature:float
-    system:systemType #system
-    verbose:bool = False
+    _currentTemperature: float
+    system: systemType  # system
+    verbose: bool = False
 
-    def __init__(self, system:systemType, tau:float, ):
+    def __init__(self, system: systemType, tau: float, ):
         self.system = system
         self.tau = tau
+
 
 class andersonThermostat(thermostat):
     """ -UnderConstuction-
@@ -33,37 +36,39 @@ class andersonThermostat(thermostat):
         FIX MAXWWELL POSITIONING!
     """
 
-    #collision parameters
-    kb:float = const.k*const.Avogadro
-    a:float = 1 #dimensionless constant
-    k:float = 1 #thermal konductivity
-    N_dens:float = 0.1 #particle density
-    N:float =10 #particle
+    # collision parameters
+    kb: float = const.k * const.Avogadro
+    a: float = 1  # dimensionless constant
+    k: float = 1  # thermal konductivity
+    N_dens: float = 0.1  # particle density
+    N: float = 10  # particle
 
-    #temperaturebath:
-    temperature:float   #desired temperature area
-    temperature_noise_range:float 
-    _new_temperature:float
-    _lambda:float =1  #scaling factor for velocities
+    # temperaturebath:
+    temperature: float  # desired temperature area
+    temperature_noise_range: float
+    _new_temperature: float
+    _lambda: float = 1  # scaling factor for velocities
 
     """Under COnstructurion"""
-    def __init__(self, temperature:float=298, temperature_noise_range:float=25, MConstraintsDims:int=1, system:systemType=None,
-                 kb=const.k*const.Avogadro, a:float = 1, k:float=1, N_dens:float=0.005, N:float=1, verbose:bool=False):
-        warnings.warn("__Under construction___!")
-        #Collision parameters
-        self.kb = kb
-        self.a = a #dimensionless constant
-        self.k = k #thermal konductivity
-        self.N_dens = N_dens #particle density
-        self.N =N #particle
 
-        #Temperature Scalingparameters
+    def __init__(self, temperature: float = 298, temperature_noise_range: float = 25, MConstraintsDims: int = 1,
+                 system: systemType = None,
+                 kb=const.k * const.Avogadro, a: float = 1, k: float = 1, N_dens: float = 0.005, N: float = 1,
+                 verbose: bool = False):
+        warnings.warn("__Under construction___!")
+        # Collision parameters
+        self.kb = kb
+        self.a = a  # dimensionless constant
+        self.k = k  # thermal konductivity
+        self.N_dens = N_dens  # particle density
+        self.N = N  # particle
+
+        # Temperature Scalingparameters
         self.temperature_noise_range = temperature_noise_range
-        
+
         self.M = MConstraintsDims
 
-
-        if(system != None):
+        if (system != None):
             self.system = system
             self.temperature = self.system.temperature
         else:
@@ -71,39 +76,43 @@ class andersonThermostat(thermostat):
 
         self.verbose = verbose
 
-    def _collision(self)->bool:
-        p_collision = (2*self.a*self.k)/(3*self.kb*self.N_dens**(1/3)*self.N**(2/3))
+    def _collision(self) -> bool:
+        p_collision = (2 * self.a * self.k) / (3 * self.kb * self.N_dens ** (1 / 3) * self.N ** (2 / 3))
         options = [True, False]
-        collision = np.random.choice(a=options, p=(p_collision, 1-p_collision))
+        collision = np.random.choice(a=options, p=(p_collision, 1 - p_collision))
         return collision
 
     def _rescale_velocities(self):
         orig_vels = self.system._currentVelocities
-        new_vels = self._lambda * orig_vels if(self._lambda * orig_vels) else 0.0001    #do not allow 0 vel
+        new_vels = self._lambda * orig_vels if (self._lambda * orig_vels) else 0.0001  # do not allow 0 vel
         self.system._currentVelocities = new_vels
 
     def _calculate_scaling_factor(self):
-        #pick new temperature randomly
-        self._new_temperature = maxwell.rvs(loc=self.temperature-self.temperature_noise_range, scale=self.temperature_noise_range)
-        self._currentTemperature = (self.system._currentTemperature if (self.system._currentTemperature!=0) else 0.000001)
+        # pick new temperature randomly
+        self._new_temperature = maxwell.rvs(loc=self.temperature - self.temperature_noise_range,
+                                            scale=self.temperature_noise_range)
+        self._currentTemperature = (
+            self.system._currentTemperature if (self.system._currentTemperature != 0) else 0.000001)
         self.system._currentTemperature = self._new_temperature
-        #scaling factor
-        self._lambda = self._new_temperature/self._currentTemperature  #(1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5
-
+        # scaling factor
+        self._lambda = self._new_temperature / self._currentTemperature  # (1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5
 
     def apply_coupled(self):
-        if(self._collision()):
+        if (self._collision()):
             self._calculate_scaling_factor()
             self._rescale_velocities()
 
-            if(self.verbose):
-                print("THERMOSTAT: get to temp: ", self.system._currentTemperature,"\n"
-                        'THERMOSTAT: tot_kin: ', self.system.totKin(),"\n"
-                        "THERMOSTAT: lambda: ", self._lambda,"\n"
-                        "THERMOSTAT: current_Velocity: ", self.system._currentVelocities, "\n"
-                        "\n")
+            if (self.verbose):
+                print("THERMOSTAT: get to temp: ", self.system._currentTemperature, "\n"
+                                                                                    'THERMOSTAT: tot_kin: ',
+                      self.system.totKin(), "\n"
+                                            "THERMOSTAT: lambda: ", self._lambda, "\n"
+                                                                                  "THERMOSTAT: current_Velocity: ",
+                      self.system._currentVelocities, "\n"
+                                                      "\n")
         else:
             pass
+
 
 class berendsenThermostate(thermostat):
     """
@@ -112,32 +121,34 @@ class berendsenThermostate(thermostat):
         reference: Molecular dynamics with coupling to an external bath; H.J.C. Berendsen
     """
 
-    def __init__(self, tau:float, dt:float, MConstraintsDims:int=1, system:systemType=None):
-        self._lambda:float=1   #scaling factor of velocities
+    def __init__(self, tau: float, dt: float, MConstraintsDims: int = 1, system: systemType = None):
+        self._lambda: float = 1  # scaling factor of velocities
         self._current_temperatur = 1
         self.tau = tau
         self.dt = dt
         self.M = MConstraintsDims
 
-        if(system != None):
+        if (system != None):
             self.system = system
 
     def apply_coupled(self):
         self._calculate_current_temperature()
         self._calculate_scaling_factor()
         self._rescale_velocities()
-        
-        if(self.verbose):
-            print("THERMOSTAT: get to temp: ", self.system.temperature,"\n"
-                  'THERMOSTAT: tot_kin: ', self.system.totKin(),"\n"
-                  "THERMOSTAT: curr temp: ", self._current_temperatur,"\n"
-                  "THERMOSTAT: lambda: ", self._lambda,"\n"
-                  "THERMOSTAT: current_Velocity: ", self.system._currentVelocities, "\n"
-                  "\n")
+
+        if (self.verbose):
+            print("THERMOSTAT: get to temp: ", self.system.temperature, "\n"
+                                                                        'THERMOSTAT: tot_kin: ', self.system.totKin(),
+                  "\n"
+                  "THERMOSTAT: curr temp: ", self._current_temperatur, "\n"
+                                                                       "THERMOSTAT: lambda: ", self._lambda, "\n"
+                                                                                                             "THERMOSTAT: current_Velocity: ",
+                  self.system._currentVelocities, "\n"
+                                                  "\n")
 
     def _rescale_velocities(self):
         orig_vels = self.system._currentVelocities
-        new_vels = abs(self._lambda) * orig_vels if(self._lambda * orig_vels) else 0.0001    #do not allow 0 vel
+        new_vels = abs(self._lambda) * orig_vels if (self._lambda * orig_vels) else 0.0001  # do not allow 0 vel
         self.system._currentVelocities = new_vels
 
     def _calculate_current_temperature(self):
@@ -145,9 +156,9 @@ class berendsenThermostate(thermostat):
         autofunction: _calculate current Temperature (eq. 32,33)
         :return:
         """
-        #M = constraints
-        N=self.system.nparticles * const.Avogadro
-        self._current_temperatur = (2/(3*N-self.M-3))*self.system.totKin()*N
+        # M = constraints
+        N = self.system.nparticles * const.Avogadro
+        self._current_temperatur = (2 / (3 * N - self.M - 3)) * self.system.totKin() * N
         self.system._currentTemperature = self._current_temperatur
 
     def _calculate_scaling_factor(self):
@@ -156,9 +167,8 @@ class berendsenThermostate(thermostat):
             (eq.34)
         :return:
         """
-        T_t = (self._current_temperatur if (self._current_temperatur!=0) else 0.000001)
-        self._lambda = (1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5
-
+        T_t = (self._current_temperatur if (self._current_temperatur != 0) else 0.000001)
+        self._lambda = (1 + (self.dt / self.tau) * ((self.system.temperature / T_t) - 1)) ** 0.5
 
 
 """

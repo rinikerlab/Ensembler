@@ -1,14 +1,16 @@
 import argparse
+import glob
 import os
 import re
-import glob
 import shutil
 import subprocess as sp
-from tempfile import TemporaryDirectory
 from contextlib import contextmanager
+from tempfile import TemporaryDirectory
+
 # YAML imports
 try:
     import yaml  # PyYAML
+
     loader = yaml.load
 except ImportError:
     try:
@@ -17,6 +19,7 @@ except ImportError:
         try:
             # Load Ruamel YAML from the base conda environment
             from importlib import util as import_util
+
             CONDA_BIN = os.path.dirname(os.environ['CONDA_EXE'])
             ruamel_yaml_path = glob.glob(os.path.join(CONDA_BIN, '..',
                                                       'lib', 'python*.*', 'site-packages',
@@ -28,7 +31,7 @@ except ImportError:
         except (KeyError, ImportError, IndexError):
             raise ImportError("No YAML parser could be found in this or the conda environment. "
                               "Could not find PyYAML or Ruamel YAML in the current environment, "
-                              "AND could not find Ruamel YAML in the base conda environment through CONDA_EXE path. " 
+                              "AND could not find Ruamel YAML in the base conda environment through CONDA_EXE path. "
                               "Environment not created!")
     loader = yaml.YAML(typ="safe").load  # typ="safe" avoids odd typing on output
 

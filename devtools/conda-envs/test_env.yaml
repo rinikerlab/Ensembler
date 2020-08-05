@@ -1,11 +1,11 @@
 name: test
 channels:
 dependencies:
-    # Base depends
+  # Base depends
   - python
   - pip
 
-    # Testing
+  # Testing
   - pytest
   - pytest-cov
   - codecov
@@ -19,7 +19,7 @@ dependencies:
   - ipywidgets
   - matplotlib
 
-    # Pip-only installs
+  # Pip-only installs
   #- pip:
   #  - codecov
 

@@ -1,14 +1,11 @@
-
 """
     This file provides ensembler types, that are used to annotate and enforce certain types throughout the ensembler package.
 """
 
-#Generic Types
+# Generic Types
 from typing import TypeVar
-from typing import Tuple, List, Callable, Union, Iterable, Sized
-from numbers import Number
 
-#Dummy defs:
+# Dummy defs:
 potential = TypeVar("potential")
 condition = TypeVar("condition")
 integrator = TypeVar("integrator")
@@ -17,7 +14,7 @@ system = TypeVar("system")
 
 ensemble = TypeVar("ensemble")
 
-#Ensembler specific Types:
+# Ensembler specific Types:
 """
 from ensembler.potentials._baseclasses import _potentialCls 
 potential = TypeVar("potential", bound=_potentialCls)

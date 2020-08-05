@@ -6,12 +6,12 @@ Module: Potential
 import numpy as np
 import sympy as sp
 
-# Typing
-import numbers
-from typing import Iterable, Union
-
-#Base Classes
+# Base Classes
 from ensembler.potentials._basicPotentials import _potentialNDCls
+
+
+# Typing
+
 
 class harmonicOscillatorPotential(_potentialNDCls):
     """
@@ -31,7 +31,7 @@ class harmonicOscillatorPotential(_potentialNDCls):
     V_functional = sp.Sum(V_dim[i, 0], (i, 0, nDim))
 
     def __init__(self, k: np.array = np.array([1.0, 1.0, 1.0]), r_shift: np.array = np.array([0.0, 0.0, 0.0]),
-                 Voff: np.array = np.array([0.0, 0.0,0.0]), nDim:int=3):
+                 Voff: np.array = np.array([0.0, 0.0, 0.0]), nDim: int = 3):
         self.constants.update({self.nDim: nDim})
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDim])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDim])})
@@ -49,4 +49,3 @@ class harmonicOscillatorPotential(_potentialNDCls):
         self.V_dim = 0.5 * sp.matrix_multiply_elementwise(self.k, (
             (self.position - self.r_shift).applyfunc(lambda x: x ** 2)))  # +self.Voff
         self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
-
