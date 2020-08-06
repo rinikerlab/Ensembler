@@ -3,7 +3,8 @@
 """
 
 # Generic Types
-from typing import TypeVar
+from typing import TypeVar, Union, List, Iterable
+from numbers import Number
 
 # Dummy defs:
 potential = TypeVar("potential")

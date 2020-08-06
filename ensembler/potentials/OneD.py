@@ -628,7 +628,7 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
         self._update_functions()
 
 
-"""
+
 class lambdaEDSPotential(envelopedPotential):
     name: str = "lambda enveloped Potential"
 
@@ -752,7 +752,6 @@ class lambdaEDSPotential(envelopedPotential):
                 np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
-"""
 
 """
 special potentials
