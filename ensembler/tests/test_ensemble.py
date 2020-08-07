@@ -109,10 +109,11 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         nsteps = 100
         T_range = range(288, 310)
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
-        ##print(group.get_Total_Energy())
+        #print(group.get_Total_Energy())
         group.nSteps_between_trials = nsteps
         group.run()
-        ##print(group.get_Total_Energy())
+        #print(group.get_Total_Energy())
+
 
     def test_exchange_all(self):
         integrator = stochastic.monteCarloIntegrator()

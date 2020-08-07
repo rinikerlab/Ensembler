@@ -1,6 +1,7 @@
 import os
 import tempfile
 import unittest
+from numbers import Number
 
 import numpy as np
 
@@ -715,11 +716,11 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
     def test_ene_1Pos(self):
         potential = self.potential_class(s=100)
         positions = 0
-        expected_results = np.squeeze(np.array([0.0]))
+        expected_results = 0.0
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -731,7 +732,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -743,7 +744,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -755,7 +756,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -766,7 +767,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -779,7 +780,6 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         expected_results = np.array([5.0e+03, 4.5, 0, 0.5, 0, 4.5, 5.0e+03])
 
         actual_energies = potential.ene(positions)
-        print(actual_energies)
         # CHECK
         self.assertEqual(type(expected_results), type(actual_energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -795,7 +795,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -807,7 +807,7 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
+        self.assertTrue(isinstance(actual_energies, Number),
                          msg="returnType of potential was not correct! got actually: " + str(
                              actual_energies) + " expected: " + str(expected_results))
         self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
@@ -1011,69 +1011,23 @@ class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
 
     def test_ene_1Pos(self):
         potential = self.potential_class(s=100)
-        positions = 0
-        expected_results = np.squeeze(np.array([0.0]))
-        actual_energies = potential.ene(positions)
+        positions = [0,3, 1.5, 6, -3]
+        expected_results = np.squeeze(np.array([0.007, 0.007, 1.125, 4.507, 4.507]))
+        actual_energies = []
+
+        for position in positions:
+            actual_energy = potential.ene(position)
+            actual_energies.append(actual_energy)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
+                               err_msg="The results of " + potential.name + " are not correct!\n")
 
-        positions = 3
-        expected_results = np.squeeze(np.array([0.0]))
-        actual_energies = potential.ene(positions)
-
-        # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
-
-        positions = 1.5
-        expected_results = np.squeeze(np.array([0.5555685281944005]))
-        actual_energies = potential.ene(positions)
-
-        # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
-
-        positions = 6
-        expected_results = np.squeeze(np.array([2.25]))
-        actual_energies = potential.ene(positions)
-
-        # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
-
-        positions = -3
-        actual_energies = potential.ene(positions)
-
-        # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
 
     def test_ene_NPos(self):
         potential = self.potential_class(s=100)
         positions = (-100, -3, 0, 2, 3, 6, 103)
-        expected_results = np.array([2.5e+03, 2.2e+00, -0.0e+00, 2.5e-01, -0.0e+00, 2.2e+00, 2.5e+03])
+        expected_results = np.array([5.0e+03, 4.5e+00, 6.9e-03, 5.1e-01, 6.9e-03, 4.5e+00, 5.0e+03])
 
         actual_energies = potential.ene(positions)
         print(actual_energies)
@@ -1087,88 +1041,41 @@ class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
 
     def test_s_change(self):
         potential = self.potential_class(s=100)
-        positions = 1.5
-        expected_results = np.squeeze(np.array([0.5555685281944005]))
-        actual_energies = potential.ene(positions)
+        positions = [1.5, 0.01]
+        expected_results = np.squeeze(np.array([1.125, 0.007]))
+        actual_energies =[]
+        for position in positions:
+            actual_energy = potential.ene(position)
+            actual_energies.append(actual_energy)
 
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
-
-        potential.s_i = 0.01
-        expected_results = np.squeeze(np.array([-68.75221805599453]))
-        actual_energies = potential.ene(positions)
-
-        # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
+                               err_msg="The results of " + potential.name + " are not correct!\n")
 
     def test_force_1Pos(self):
         potential = self.potential_class(s=100)
-        positions = 0
-        expected_results = np.squeeze(np.array([0.0]))
-        actual_energies = potential.force(positions)
-        print("Actual Result1: ", actual_energies)
+        positions = [0, 3, 1.5, 6, -3]
+        expected_results = np.array([1.108e-195, -1.108e-195,  0.000e+000, -3.000e+000,  3.000e+000])
 
+
+        actual_energies = []
+        for position in positions:
+            actual_energy = potential.force(position)
+            actual_energies.append(actual_energy)
+        print(actual_energies)
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
+        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
+                               err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
                                    positions) + "\n\tForces: " + str(actual_energies))
 
-        positions = 3
-        expected_results = np.squeeze(np.array([0.0]))
-        actual_energies = potential.force(positions)
-        print("Actual Result2: ", actual_energies)
-
-        # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
-
-        positions = 1.5
-        expected_results = np.squeeze(0.0)
-        actual_energies = potential.force(positions)
-        print("Actual Result3: ", actual_energies)
-
-        # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
-
-        positions = 6
-        expected_results = np.squeeze(np.array([-1.5]))
-        actual_energies = potential.force(positions)
-        print("Actual Result4: ", actual_energies)
-
-        # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
-
-        positions = -3
-        expected_results = np.squeeze(np.array([1.5]))
-        actual_energies = potential.force(positions)
-
-        # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
 
     def test_force_NPos(self):
         potential = self.potential_class(s=100)
         positions = (-100, -15, -3, 0, 1, 1.5, 2, 3, 6, 18, 103)
-        expected_results = np.array(
-            [5.0e+01, 7.5e+00, 1.5e+00, 2.9e-98, -5.0e-01, 0.0e+00, 5.0e-01, -2.9e-98, -1.5e+00, -7.5e+00, -5.0e+01])
+        expected_results = np.array([1.0e+002,  1.5e+001,  3.0e+000,  1.1e-195, -1.0e+000,  0.0e+000,
+               1.0e+000, -1.1e-195, -3.0e+000, -1.5e+001, -1.0e+002])
         actual_energies = potential.force(positions)
-
+        print(actual_energies)
         # CHECK
         np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
                                        err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(

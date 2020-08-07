@@ -56,6 +56,11 @@ class MultiReplicaApproach(super_baseClass):
         self.coord_names = list(sorted(self.exchange_dimensions.keys()))
         self.coord_set = namedtuple("coordinates", self.coord_names)
 
+        # make pickleable
+        import __main__
+        setattr(__main__, self.coord_set.__name__, self.coord_set)
+        self.coord_set.__module__ = "__main__"
+
         # generate all parameter combinations
         if (len(self.exchange_dimensions) > 1):
             coord_it = list(it.product(*[list(self.exchange_dimensions[r]) for r in sorted(self.exchange_dimensions)]))
@@ -196,24 +201,30 @@ class ReplicaExchange(MultiReplicaApproach):
                              verbosity=verbosity)
         pass
 
-    def run_parallel(self, verbosity: bool = False, nProcesses: int = 4):
+    def _run_parallel(self, verbosity: bool = False, nProcesses: int = 4):
+        """this is an ugly work around, but this way the code works on windows and Linux
+        __under construction!___"""
         pool = mult.Pool(processes=nProcesses)
-        sim_params = [self.nSteps_between_trials, False, False, verbosity]
-
+        sim_params = [self.nSteps_between_trials, False, False, True]  # verbosity
+        print("Generated pool^jobs")
         result_replica = {}
         for replica_coords, replica in self.replicas.items():
-            # replica_result = pool.apply_async(sim, [replica, sim_params])
+            print("Submit: ", replica_coords, replica)
             replica_result = pool.apply_async(replica.simulate, sim_params)
             result_replica.update({replica_coords: replica_result})
+        print("Done Submitting")
+
+        #Wait pool close
         pool.close()
         pool.join()
 
-        print(replica_result)
-        print(vars(replica_result))
-        print(dir(replica_result))
-        # [self.replicas.update({replica_coords:result_replica[replica_coords].get()}) for replica_coords in self.replicas]
+        print("Done Simulating")
+        print(result_replica)
+        [self.replicas.update({replica_coords: result_replica[replica_coords].get()}) for replica_coords in
+         self.replicas]
+        print("GrandFinale: ", self.replicas)
         print("Done")
-        pass
+
 
     # getter/setters
     def get_trajectories(self) -> Dict[Tuple, List]:

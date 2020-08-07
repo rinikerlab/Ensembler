@@ -518,19 +518,17 @@ class envelopedPotential(_potential1DCls):
     def _calculate_energies_singlePos_overwrite_multiS(self, position) -> np.array:
         # print("Positions: ",position)
         # print("s_i: ",self.s_i)
-        sum_prefactors, _ = self._exponent_calc_efficient(position)
+        sum_prefactors, _ = self._logsumexp_calc_gromos(position)
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
         Vr = (-1 / (beta)) * sum_prefactors
-        # print("finalVR", Vr)
         return np.squeeze(Vr)
 
     def _calculate_energies_singlePos_overwrite_oneS(self, position) -> np.array:
         # print("Positions: ",position)
         # print("s_i: ",self.s_i)
-        sum_prefactors, _ = self._exponent_calc_efficient(position)
-        beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
+        sum_prefactors, _ = self._logsumexp_calc(position)
+        beta = self.constants[self.T] * self.constants[self.kb]
         Vr = (-1 / (beta * self.s_i[0])) * sum_prefactors
-        # print("finalVR", Vr)
         return np.squeeze(Vr)
 
     def _calculate_dvdpos_singlePos_overwrite(self, position: (t.Iterable[float])) -> np.array:
@@ -547,7 +545,7 @@ class envelopedPotential(_potential1DCls):
         position = np.array(position, ndmin=2)
         # print("Pos: ", position)
 
-        V_R_part, V_Is_ene = self._exponent_calc_efficient(position)
+        V_R_part, V_Is_ene = self._logsumexp_calc_gromos(position)
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
         # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
@@ -566,7 +564,33 @@ class envelopedPotential(_potential1DCls):
 
         return np.squeeze(dVdpos)
 
-    def _exponent_calc_efficient(self, position):
+    def _logsumexp_calc(self, position):
+        prefactors = []
+        beta = self.constants[self.T] * self.constants[self.kb]
+        for state in range( self.constants[self.nStates]):
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
+            prefactors.append(prefactor)
+        prefactors = np.array(prefactors, ndmin=2).T
+
+        from scipy.special import logsumexp
+        #print("Prefactors", prefactors)
+        sum_prefactors = logsumexp(prefactors,axis=1)
+        #print("logexpsum: ", np.squeeze(sum_prefactors))
+
+        return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
+
+    def _logsumexp_calc_gromos(self, position):
+        """
+        code from gromos:
+
+        Parameters
+        ----------
+        position
+
+        Returns
+        -------
+
+        """
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
         partA = np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
@@ -626,7 +650,6 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
     def set_Eoff(self, Eoff: float):
         self.constants.update({self.Eoff: Eoff})
         self._update_functions()
-
 
 
 class lambdaEDSPotential(envelopedPotential):
@@ -698,60 +721,60 @@ class lambdaEDSPotential(envelopedPotential):
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
         if (isinstance(lam, Number)):
-            self._lam_i = [lam for x in range(self.constants[self.nStates])]
+            self._lam_i = np.array([1-lam]+[lam for x in range(1,self.constants[self.nStates])], ndmin=1)
         elif (len(lam) == self.constants[self.nStates]):
-            raise NotImplementedError("Currently Only one s runs supported!")
-            self._lam_i = lam
+            raise NotImplementedError("Currently Only one lam runs supported!")
+            self._lam_i = np.array(lam, ndmin=1)
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 lam) + "\t states in Vi" + str(len(self.V_is)))
 
+    def _calculate_energies_singlePos_overwrite(self, position) -> np.array:
+        # print("Positions: ",position)
+        # print("s_i: ",self.s_i)
+        sum_prefactors, _ = self._logsumexp_calc(position)
+        beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
+        Vr = (-1 / (beta * self.s_i[0])) * sum_prefactors
+        # print("finalVR", Vr)
+        return np.squeeze(Vr)
+
     def _calculate_dvdpos_singlePos_overwrite(self, position: (t.Iterable[float])) -> np.array:
         position = np.array(position, ndmin=2)
         # print("Pos: ", position)
-
-        V_R_part, V_Is_ene = self._prefactor_calc_efficient(position)
+        V_R_part, V_Is_ene = self._logsumexp_calc(position)
+        # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
-        # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
         V_Is_dhdpos = np.array([-statePot.force(position) for statePot in self.V_is], ndmin=1).T
-        # print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
-
-        adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1)
+        #print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
+        from scipy.special import softmax
+        adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1).T
         # print("ADAPT: ",adapt.shape, adapt)
         # print(self.lam_i)
-        scaling = self.lam_i * np.exp(V_Is_ene - adapt)
-        # print("scaling: ", scaling.shape, scaling)
-        dVdpos_state = np.multiply(scaling,
-                                   V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
+        scaling = (np.array(self.lam_i,ndmin=2).T * (np.exp(V_Is_ene-adapt))).T
+
+        #print("scaling: ", scaling.shape, scaling)
+        dVdpos_state = scaling*V_Is_dhdpos
         # print("state_contributions: ",dVdpos_state.shape, dVdpos_state)
         dVdpos = np.sum(dVdpos_state, axis=1)
         # print("forces: ",dVdpos.shape, dVdpos)
 
         return np.squeeze(dVdpos)
 
-    def _prefactor_calc_efficient(self, position):
+
+    def _logsumexp_calc(self, position):
         prefactors = []
-        beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
-        partA = np.log(self.lam_i[0]) * np.array(-beta * self.s_i[0] * (self.V_is[0].ene(position) - self.Eoff_i[0]), ndmin=1)
-        partB = np.log(self.lam_i[1]) * np.array(-beta * self.s_i[1] * (self.V_is[1].ene(position) - self.Eoff_i[1]), ndmin=1)
+        beta = self.constants[self.T] * self.constants[self.kb]
+        for state in range( self.constants[self.nStates]):
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
+            prefactors.append(prefactor)
+        prefactors = np.array(prefactors, ndmin=2).T
 
-        partAB = np.array([partA, partB]).T
-        log_prefac = 1 + np.exp(np.min(partAB, axis=1) - np.max(partAB, axis=1))
-        sum_prefactors = np.max(partAB, axis=1) + np.log(log_prefac)
+        from scipy.special import logsumexp
+        sum_prefactors = logsumexp(prefactors,axis=1, b=self.lam)
 
-        prefactors.append(partA)
-        prefactors.append(partB)
+        return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
 
-        # more than two states!
-        for state in range(2, self.constants[self.nStates]):
-            partN = np.log(self.lam_i[state]) * np.array(
-                -beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
-            prefactors.append(partN)
-            sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(1 + np.exp(
-                np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
-            # print("prefactors: ", sum_prefactors)
-        return sum_prefactors, np.array(prefactors, ndmin=2).T
 
 """
 special potentials

@@ -331,7 +331,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
         # Calc
         dF1r = zwanz.calculate(Vi, Vr)
         dF2r = zwanz.calculate(Vj, Vr)
-        dF = dF2r - dF1r
+        dF = dF1r - dF2r
 
         return dF
 
@@ -419,7 +419,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         # Return free energy difference
         try:
-            ddF = -(1 / self.constants[self.beta]) * self.ln(mean_edV_j / mean_edV_i)  # + self.constants[self.C]
+            ddF = -(1 / self.constants[self.beta]) * self.ln(mean_edV_j / mean_edV_i)
         except ValueError as err:
             raise ValueError(
                 "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
@@ -463,26 +463,24 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             self.constants.update({self.C: C0})
 
         # optimization scheme:
-
+        if (verbose): print("Iterate: \tconvergence raidus: " + str(self.convergence_radius))
         iteration = 0
         convergence = self.convergence_radius + 1
-        while (
-                convergence > self.convergence_radius or self.min_iterations > iteration) and self.max_iterations > iteration:
+        while self.max_iterations > iteration:
 
             dF = self._calc_bar(C=self.constants[self.C], Vj_i=Vj_i, Vi_i=Vi_i, Vi_j=Vi_j, Vj_j=Vj_j)  # calc dF
 
-            newC = dF  # (self.constants[self.C]+dF)/2
+            newC = dF
             convergence = abs(self.constants[self.C] - dF)
 
-            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF) + "\t\ttDiff: ", convergence,
-                                "convRad", self.convergence_radius, "\tnewC", newC, "\n")
+            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF) , "\tconvergence", convergence)
 
-            if (convergence > self.convergence_radius):
+            if (convergence > self.convergence_radius or  self.min_iterations > iteration):
                 iteration += 1
                 self.constants.update({self.C: newC})
             else:
                 break
-
+        print()
         if (iteration >= self.max_iterations):
             raise Exception(
                 "BAR is not converged after " + str(iteration) + " steps. stopped at: " + str(self.constants[self.C]))
@@ -510,7 +508,161 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         self._update_function()
 
-
 # alternative class names
 class bar(bennetAcceptanceRatio):
     pass
+
+
+class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
+    k, T, beta, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T beta C  Vi_i Vj_i Vi_j Vj_j")
+    equation: sp.function = (1 / (k * T)) * (
+                sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C))))
+    constants: dict = {T: 298, k: const.k * const.Avogadro, C: Decimal(0)}
+
+    # Numeric parameters
+    convergence_radius: float
+    max_iterations: int
+    min_iterations: int
+
+    def __init__(self, C: float = 0.0, T: float = 298, k: float = const.k * const.Avogadro,
+                 kT: bool = False, kJ: bool = False, kCal: bool = False,
+                 convergence_radius: float = 10 ** (-5), max_iterations: int = 100, min_iterations: int = 1):
+        """
+        __init__ Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation
+
+        :param T: Temperature in Kelvin, defaults to 398
+        :type T: float, optional
+        :param k: boltzmann Constant, defaults to const.k*const.Avogadro
+        :type k: float, optional
+        """
+
+        self.constants = {}
+        if (kT):
+            self.set_parameters(T=Decimal(1), k=Decimal(1), C=C)
+        elif (kJ):
+            self.set_parameters(T=Decimal(T), k=Decimal(const.k * const.Avogadro / 1000), C=C)
+        elif (kCal):
+            self.set_parameters(T=Decimal(T), k=Decimal(const.k * const.Avogadro * self.J_to_cal / 1000), C=C)
+        else:
+            self.set_parameters(T=Decimal(T), k=Decimal(k))
+
+        # deal with numeric params:
+        self.convergence_radius = convergence_radius
+        self.min_iterations = min_iterations
+        self.max_iterations = max_iterations
+
+        self._update_function()
+
+    def calculate(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
+                  Vi_j: (Iterable[Number], Number), Vj_j: (Iterable[Number], Number)) -> float:
+        """reweighted Zwanzig
+
+        Parameters
+        ----------
+        Vi_i : np.array
+        Vj_i : np.array
+        Vi_j : np.array
+        Vj_j : np.array
+
+        Returns
+        -------
+        float
+            free energy difference
+
+        """
+        return self._calculate_optimize(Vi_i, Vj_i, Vi_j, Vj_j)
+
+    def _calc_mbar(self, C: Decimal, Vj_i: np.array, Vi_i: np.array, Vi_j: np.array, Vj_j: np.array) -> Decimal:
+
+        #state sampled k
+        downfrac = nstatesk * np.sum([np.exp(-self.constants[self.beta] * (C - V_jk)) for V_jk in V_xks])
+        topfracs = []
+        A_iks = []
+        for V_ik in V_xks:
+            topfrac = np.exp(-self.constants[self.beta]*V_ik)
+            print("tops", topfrac)
+            topfracs.append(topfrac)
+            A_ik =topfrac/downfrac
+
+        dF = ddF - C
+        return dF
+
+    def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
+                            Vi_j: (Iterable[Number], Number), Vj_j: (Iterable[Number], Number), C0: float = 0,
+                            verbose: bool = True) -> float:
+        """
+            method  bisection
+
+        Parameters
+        ----------
+        Vi_i : np.array
+        Vj_i : np.array
+        Vi_j : np.array
+        Vj_j : np.array
+
+        Returns
+        -------
+        float
+            free energy difference
+
+        """
+        if (
+        not ((len(Vi_i) == len(Vi_i)) and (len(Vi_j) == len(Vj_j)))):  # I and J simulation don't need the same length.
+            raise ValueError(
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
+                    len(Vi_i) + " \t " + str(len(Vj_i))) + "\n" + str(len(Vi_j) + " \t " + str(len(Vj_j))) + "\n")
+
+        # Type Cast
+        Vi_i, Vj_i, Vi_j, Vj_j = self._prepare_type(Vj_i, Vi_i, Vi_j, Vj_j)
+
+        # Calc Beta
+        self.constants.update({self.beta: Decimal(1 / (self.constants[self.k] * self.constants[self.T]))})
+        # given C?
+        if (not isinstance(C0, type(None))):
+            self.constants.update({self.C: C0})
+
+        # optimization scheme:
+        if (verbose): print("Iterate: \tconvergence raidus: " + str(self.convergence_radius))
+        iteration = 0
+        convergence = self.convergence_radius + 1
+        while self.max_iterations > iteration:
+
+            dF = self._calc_bar(C=self.constants[self.C], Vj_i=Vj_i, Vi_i=Vi_i, Vi_j=Vi_j, Vj_j=Vj_j)  # calc dF
+
+            newC = dF
+            convergence = abs(self.constants[self.C] - dF)
+
+            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF) , "\tconvergence", convergence)
+
+            if (convergence > self.convergence_radius or  self.min_iterations > iteration):
+                iteration += 1
+                self.constants.update({self.C: newC})
+            else:
+                break
+        print()
+        if (iteration >= self.max_iterations):
+            raise Exception(
+                "BAR is not converged after " + str(iteration) + " steps. stopped at: " + str(self.constants[self.C]))
+        print("Final Iterations: ", iteration, " Result: ", dF)
+
+        return float(dF)
+
+    def set_parameters(self, C: float = None, T: float = None, k: float = None):
+        """
+        set_parameters setter for the parameter
+
+        :param T: Temperature in Kelvin, defaults to None
+        :type T: float, optional
+        :param k: Boltzmann Constant, defaults to None
+        :type k: float, optional
+        """
+        if (isinstance(T, Number)):
+            self.constants.update({self.T: Decimal(T)})
+
+        if (isinstance(k, Number)):
+            self.constants.update({self.k: Decimal(k)})
+
+        if (isinstance(C, Number)):
+            self.constants.update({self.C: Decimal(C)})
+
+        self._update_function()

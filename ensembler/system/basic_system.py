@@ -296,7 +296,7 @@ class system(super_baseClass):
     """
 
     def simulate(self, steps: int, withdrawTraj: bool = False, save_every_state: int = 1, initSystem: bool = False,
-                 verbosity: bool = True) -> state:
+                 verbosity: bool = True,     _progress_bar_prefix:str="") -> state:
 
         if (withdrawTraj):
             self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
@@ -311,7 +311,7 @@ class system(super_baseClass):
 
         # progressBar or no ProgressBar
         if (verbosity):
-            iteration_queue = tqdm(range(steps), desc="Simulation: ", mininterval=1.0, leave=verbosity)
+            iteration_queue = tqdm(range(steps), desc=_progress_bar_prefix+" Simulation: ", mininterval=1.0, leave=verbosity)
         else:
             iteration_queue = range(steps)
 
