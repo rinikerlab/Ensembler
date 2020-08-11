@@ -482,8 +482,12 @@ class envelopedPotential(_potential1DCls):
     def Eoff_i(self, Eoff: Union[Number, Iterable[Number], None]):
         if (isinstance(Eoff, type(None))):
             self._Eoff_i = [0.0 for state in range(self.constants[self.nStates])]
+            Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**Eoffis})
         elif (len(Eoff) == self.constants[self.nStates]):
             self._Eoff_i = Eoff
+            Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**Eoffis})
         else:
             raise IOError(
                 "Energy offset Vector and state potentials don't have the same length!\n states in Eoff " + str(
@@ -508,9 +512,14 @@ class envelopedPotential(_potential1DCls):
     def s_i(self, s: Union[Number, Iterable[Number]]):
         if (isinstance(s, Number)):
             self._s = [s for x in range(self.constants[self.nStates])]
+            sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**sis})
         elif (len(s) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one s runs supported!")
             self._s = s
+            self.constants.update({self.sis: self._s})
+            sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**sis})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
@@ -722,9 +731,12 @@ class lambdaEDSPotential(envelopedPotential):
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
         if (isinstance(lam, Number)):
             self._lam_i = np.array([1-lam]+[lam for x in range(1,self.constants[self.nStates])], ndmin=1)
+            lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**lamis})
         elif (len(lam) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one lam runs supported!")
             self._lam_i = np.array(lam, ndmin=1)
+            self.constants.update({self.lamis: self._lam_i})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 lam) + "\t states in Vi" + str(len(self.V_is)))
