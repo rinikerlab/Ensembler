@@ -8,13 +8,6 @@ coverage:
     project:
       branches:
         - build_release_1
-      ignore:
-        - "ensembler/visualisation"  # ignore folders and all its contents
-        - "visualisation"  # ignore folders and all its contents
-        - "/ensembler/visualisation"  # ignore folders and all its contents
-        - "ensembler/visualisation/*"  # ignore folders and all its contents
-        - "visualisation/*"  # ignore folders and all its contents
-        - "/ensembler/visualisation/*"  # ignore folders and all its contents
       default:
         threshold: 50%
 
@@ -25,4 +18,8 @@ comment:
   behavior: default
   flags: null
   paths: null
+  
+ignore:
+  - "ensembler/visualisation"  # ignore folders and all its contents
+  - "ensembler/tests" # ignore test files
 
