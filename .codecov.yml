@@ -1,0 +1,25 @@
+# Codecov configuration to make it a bit less noisy
+codecov:
+  branch: build_release_1
+
+coverage:
+  status:
+    patch: false
+    project:
+      branches:
+        - build_release_1
+      default:
+        threshold: 50%
+
+comment:
+  layout: "header"
+  require_changes: false
+  branches: null
+  behavior: default
+  flags: null
+  paths: null
+  
+ignore:
+  - "ensembler/visualisation"  # ignore folders and all its contents
+  - "ensembler/tests" # ignore test files
+

@@ -1,14 +1,20 @@
-import numpy as np
-from typing import Iterable
+import os
+import sys
 from numbers import Number
+from typing import Iterable
+
+import numpy as np
 from matplotlib import animation, pyplot as plt
 
-import os, sys
-sys.path.append(os.path.dirname(__file__)+"/..")
+sys.path.append(os.path.dirname(__file__) + "/..")
 
 from ensembler.system import system
+from ensembler.visualisation import style
 
-def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None, out_path:str=None, out_writer:str="pillow", dpi:int=100)-> (animation.Animation, (str or None)):
+
+def animation_trajectory(sys: system, x_range=None, y_range=None, title: str = None, out_path: str = None,
+                         out_writer: str = "pillow", dpi: int = style.dpi_animation) -> (
+animation.Animation, (str or None)):
     # plotting
     x1data = sys.trajectory.position
     y1data = sys.trajectory.totPotEnergy
@@ -34,15 +40,16 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
     # figures
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.plot(xtot_space, ytot_space, label="wholePot")
+    ax.plot(xtot_space, ytot_space, label="Potential", c=style.potential_light)
     # data structures in ani
-    line, = ax.plot([], [], c="blue", alpha=0.3, lw=2)
+    line, = ax.plot([], [], c=style.potential_light, alpha=0.3, lw=2)
     line.set_data(xtot_space, ytot_space)
 
-    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap='inferno')  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
-    start_p, = ax.plot([], [], "bo", c="g", ms=10)
-    end_p, = ax.plot([], [], "bo", c="r", ms=10)
-    curr_p, = ax.plot([], [], "bo", c="k", ms=10)
+    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1,
+                         cmap=style.animation_traj)  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
+    start_p, = ax.plot([], [], "bo", c=style.traj_start, ms=10)
+    end_p, = ax.plot([], [], "bo", c=style.traj_end, ms=10)
+    curr_p, = ax.plot([], [], "bo", c=style.traj_current, ms=10)
 
     # Params
     ax.set_xlabel("$r$")
@@ -70,10 +77,10 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
     def run(data):
         # update the data
         x, V = data
-        lastindx = x1data.shape[-1]-1
-        lastindy = np.array(list(y1data)).shape[-1]-1
+        lastindx = x1data.shape[-1] - 1
+        lastindy = np.array(list(y1data)).shape[-1] - 1
 
-        if ( x == x1data[lastindx]): #x.all(x1data[-1])):  # last step of traj
+        if (x == x1data[lastindx]):  # x.all(x1data[-1])):  # last step of traj
             curr_p.set_data([], [])
             end_p.set_data(x1data[lastindx], y1data[lastindy])
         else:
@@ -81,10 +88,11 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
             xdata.append(x)
             ydata.append(V)
 
-            if(len(xdata)>active_dots):
-                c=np.concatenate((np.array([0.6 for x in range(len(xdata)-active_dots)]), np.linspace(0.6, 0, active_dots)))
+            if (len(xdata) > active_dots):
+                c = np.concatenate(
+                    (np.array([0.6 for x in range(len(xdata) - active_dots)]), np.linspace(0.6, 0, active_dots)))
             else:
-                c=np.linspace(0.6, 0, len(xdata))
+                c = np.linspace(0.6, 0, len(xdata))
 
             scatter.set_offsets(np.c_[xdata, ydata])
             scatter.set_array(c)
@@ -103,12 +111,15 @@ def animation_trajectory(sys: system, x_range=None, y_range=None, title:str=None
 
     return ani, out_path
 
-def animation_EDS_trajectory(system: system, x_range=None, title:str=None, out_path:str=None, hide_legend:bool=True,
-                             s_values:list=[1.0], step_size:float=1, out_writer:str="pillow", dpi:int=100, tot_pot_resolution:int=100)-> (animation.Animation, (str or None)):
+
+def animation_EDS_trajectory(system: system, x_range=None, title: str = None, out_path: str = None,
+                             hide_legend: bool = True,
+                             s_values: list = [1.0], step_size: float = 1, out_writer: str = "pillow", dpi: int = 100,
+                             tot_pot_resolution: int = 100) -> (animation.Animation, (str or None)):
     # plotting
     x1data = np.array(system.trajectory.position)
     y1data = system.trajectory.totPotEnergy
- 
+
     x_max = max(x1data)
     x_min = min(x1data)
     active_dots = 20
@@ -118,7 +129,7 @@ def animation_EDS_trajectory(system: system, x_range=None, title:str=None, out_p
     else:
         xtot_space = np.array(np.linspace(min(x_range), max(x_range) + 1, tot_pot_resolution), ndmin=1)
 
-    tmax = len(y1data) - 1-step_size
+    tmax = len(y1data) - 1 - step_size
     t0 = 0
 
     xdata, ydata = [], []
@@ -161,19 +172,21 @@ def animation_EDS_trajectory(system: system, x_range=None, title:str=None, out_p
     def run(data):
         # update the data
         x, V = data
-        if (type(x) == type(x1data[-1])==list and all([xi == x1i for xi, x1i in zip(x, x1data[-1])]) ):  # last step of traj
+        if (type(x) == type(x1data[-1]) == list and all(
+                [xi == x1i for xi, x1i in zip(x, x1data[-1])])):  # last step of traj
             curr_p.set_data([], [])
             end_p.set_data(x1data[-1], y1data[-1])
-        elif (type(x) == type(x1data[-1])==Number and x==x1data[-1] ):  # last step of traj
+        elif (type(x) == type(x1data[-1]) == Number and x == x1data[-1]):  # last step of traj
             curr_p.set_data([], [])
             end_p.set_data(x1data[-1], y1data[-1])
         else:
             curr_p.set_data([x], [V])
-            xdata.append(x) if(not isinstance(x, Iterable)) else xdata.append(x[0])
+            xdata.append(x) if (not isinstance(x, Iterable)) else xdata.append(x[0])
             ydata.append(V)
 
-            if (len(xdata) > active_dots+10):
-                c = np.concatenate((np.array([0.6 for x in range(len(xdata) - active_dots)]), np.linspace(0.6, 0, active_dots)))
+            if (len(xdata) > active_dots + 10):
+                c = np.concatenate(
+                    (np.array([0.6 for x in range(len(xdata) - active_dots)]), np.linspace(0.6, 0, active_dots)))
             else:
                 c = np.linspace(0.6, 0, len(xdata))
 
