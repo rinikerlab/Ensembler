@@ -7,7 +7,7 @@ from matplotlib.figure import figaspect
 
 sys.path.append(os.path.dirname(__file__) + "/..")
 
-from ensembler.integrator import stochastic, newtonian, optimizers
+from ensembler.samplers import stochastic, newtonian, optimizers
 
 from ensembler.system import system
 from ensembler.visualisation import style
@@ -33,7 +33,7 @@ def static_sim_plots(sys: system, x_range: tuple = None, y_lim_Pot: tuple = None
     shift = traj.dhdpos
 
     # dynamic plot range
-    if (x_range == None):
+    if (isinstance(x_range, type(None))):
         x_pot = np.linspace(min(x) + min(x) * 0.25, max(x) + max(x) * 0.25, resolution_full_space)
     elif (type(x_range) == range):
         x_pot = x_range
@@ -51,6 +51,9 @@ def static_sim_plots(sys: system, x_range: tuple = None, y_lim_Pot: tuple = None
     ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)  # start_point
     ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)  # end_point
 
+    if(isinstance(sys.potential, metadynamicsPotential)):   #for metadynamics, show original potential
+        ax1.plot(x_pot, sys.potential.origPotential.ene(x_pot), c="k", alpha=style.alpha_val, zorder=10, label="original Potential")
+
     if (not isinstance(y_lim_Pot, type(None))):
         ax1.set_ylim(y_lim_Pot)
 
@@ -59,11 +62,19 @@ def static_sim_plots(sys: system, x_range: tuple = None, y_lim_Pot: tuple = None
     ax2.boxplot(x)
     ax2.scatter([1], [x[0]], c=style.traj_start, alpha=style.alpha_val)  # start_point
     ax2.scatter([1], [x[last_frame]], c=style.traj_end, alpha=style.alpha_val)  # end_point
-    print(viol)
     viol["bodies"][0].set_facecolor(color)
 
     color = style.potential_color(3)
     ax3.plot(range(len(x)), shift, color=color)
+
+    #visual_ranges:
+    min_pos = min(x_pot)-min(x_pot)*0.05
+    max_pos = max(x_pot)+min(x_pot)*0.05
+    diff = max_pos-min_pos
+    min_pos -= diff * 0.05
+    max_pos += diff * 0.05
+    ax1.set_xlim([min_pos, max_pos])
+    ax2.set_ylim([min_pos, max_pos])
 
     # Labels
     ax1.set_ylabel("$V[kT]$")
@@ -72,29 +83,29 @@ def static_sim_plots(sys: system, x_range: tuple = None, y_lim_Pot: tuple = None
 
     ax2.set_ylabel("$r$")
     ax2.set_xlabel("$simulation$")
-    ax2.set_title("r-Distribution")
+    ax2.set_title("Explored Space")
 
     ax3.set_xlabel("$t$")
 
-    if (issubclass(system.integrator.__class__, (stochastic.stochasticIntegrator, optimizers.optimizer))):
+    if (issubclass(system.sampler.__class__, (stochastic.stochasticSampler, optimizers.optimizer))):
         ax3.set_title("Shifts")
         ax3.set_ylabel("$dr$")
 
-    elif (issubclass(system.integrator.__class__, (newtonian.newtonianIntegrator))):
+    elif (issubclass(system.sampler.__class__, (newtonian.newtonianSampler))):
         ax3.set_title("Forces")
         ax3.set_ylabel("$\partial V/ \partial r$")
 
     else:
         ax3.set_title("Shifts")  # FIX this part!
         ax3.set_ylabel("$dr$")
-        # raise Exception("Did not find integrator type  >"+str(system.integrator.__class__)+"< ")
+        # raise Exception("Did not find samplers type  >"+str(system.samplers.__class__)+"< ")
 
     ax2.set_xticks([])
 
-    fig.tight_layout()
 
-    fig.suptitle(title, y=0.97)
+    fig.suptitle(title, y=1.1)
     fig.subplots_adjust(top=0.85)
+    fig.tight_layout()
 
     if (out_path):
         fig.savefig(out_path)

@@ -2,12 +2,12 @@
 Newtonian Integrators
 """
 
-from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.samplers._basicSamplers import _samplerCls
 from ensembler.util.ensemblerTypes import Union
 from ensembler.util.ensemblerTypes import system as systemType
 
 
-class newtonianIntegrator(_integratorCls):
+class newtonianSampler(_samplerCls):
     """
     newtonianIntegrator [summary]
 
@@ -18,11 +18,12 @@ class newtonianIntegrator(_integratorCls):
 
     dt: float
 
-    def __init__(self, dt=0.0005):
+    def __init__(self, dt=0.002):
+        super().__init__()
         self.dt = dt
 
 
-class velocityVerletIntegrator(newtonianIntegrator):
+class velocityVerletIntegrator(newtonianSampler):
     """
     velocityVerletIntegrator [summary]
     
@@ -61,7 +62,7 @@ class velocityVerletIntegrator(newtonianIntegrator):
         return new_position, new_velocity, new_forces
 
 
-class positionVerletIntegrator(newtonianIntegrator):
+class positionVerletIntegrator(newtonianSampler):
     name = "Position Verlet Integrator"
 
     def step(self, system: systemType) -> Union[float, float, float]:
@@ -97,7 +98,7 @@ class positionVerletIntegrator(newtonianIntegrator):
         return new_position, new_velocity, new_forces
 
 
-class leapFrogIntegrator(newtonianIntegrator):
+class leapFrogIntegrator(newtonianSampler):
     """
     leapFrogIntegrator [summary]
 

@@ -8,7 +8,7 @@ import sympy as sp
 
 from ensembler.potentials.OneD import gaussPotential
 from ensembler.potentials._basicPotentials import _potential1DCls
-
+from ensembler.samplers.stochastic import  langevinIntegrator
 """
     BIAS BASECLASS
 """
@@ -33,19 +33,19 @@ class _bias_baseclass(_potential1DCls):
 
         self.V_orig = sp.Lambda(self.position, self.y_shift)
 
-        self.constants = {self.y_shift: y_shift}
+        self.constants = {}#{self.y_shift: y_shift}
         self.V = self.V_orig.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
-        self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
+        self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), self.y_shift))
         self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
 
     def return_bias_action(self):
 
         # important for reweighting
-        # check if integrator is Langevin
+        # check if samplers is Langevin
         if isinstance(self.integrator, langevinIntegrator):
             # calculate path action biased
             # todo: check how to best use the R_x for biased and unbiased
@@ -63,12 +63,12 @@ class _bias_baseclass(_potential1DCls):
         # important for reweighting
 
         # only works with Langevin
-        Pass
+        pass
 
     def return_bias_energy(self):
         # important for reweighting
 
-        Pass
+        pass
 
     def return_path_correction_term(self):
         # important for reweighting
@@ -81,16 +81,16 @@ class _bias_baseclass(_potential1DCls):
         #:return: bias structure
 
         # calculate new force and corresponding random number
-        F_rw = -system.potential.unbiased_system_dhdpos(currentPosition)  # has to be defined
+        F_rw = -self.system.potential.unbiased_system_dhdpos(self.currentPosition)  # has to be defined
         R_rw = (self.newForces - F_rw) + self.R_x
 
         # calculate path action unbiased
-        P_x_rw = (1 / (np.sqrt(2 * np.pi) * np.sqrt(2 * system.temperature * self.gamma * system.mass))) * np.exp(
-            -(R_rw ** 2) / (2 * (2 * system.temperature * self.gamma * system.mass)))
+        P_x_rw = (1 / (np.sqrt(2 * np.pi) * np.sqrt(2 * self.system.temperature * self.gamma * self.system.mass))) * np.exp(
+            -(R_rw ** 2) / (2 * (2 * self.system.temperature * self.gamma * self.system.mass)))
         A_rw = -np.log(P_x_rw)
 
         # get action difference for this step
-        A_diff = A - A_rw
+        A_diff = self.A - A_rw
 
         return A_diff
 
@@ -127,9 +127,9 @@ class addedPotentials(_potential1DCls):
 
         self.constants = {**origPotential.constants, **addPotential.constants}
 
-        self.V_orig = origPotential.V + self.addPotential.V
+        self.V_functional = origPotential.V + self.addPotential.V
 
-        self.V = self.V_orig.subs(self.constants)
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
@@ -152,7 +152,7 @@ class metadynamicsPotential(_potential1DCls):
     name: str = "Metadynamics Enhanced Sampling System using grid bias"
     position = sp.symbols("r")
 
-    def __init__(self, origPotential, amplitude=0.1, sigma=0.1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
+    def __init__(self, origPotential, amplitude=0.1, sigma=1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
                  numbins=100):
 
         '''
@@ -179,6 +179,8 @@ class metadynamicsPotential(_potential1DCls):
         self.n_trigger = n_trigger
         self.amplitude = amplitude
         self.sigma = sigma
+        self.biasPotentialType = gaussPotential
+
         # grid where the bias is stored
         # currently only for 1D
         self.bias_grid_energy = np.zeros(numbins)  # energy grid
@@ -191,10 +193,10 @@ class metadynamicsPotential(_potential1DCls):
         # count how often the potential was updated
         self.finished_steps = 0
 
-        self.constants = {**origPotential.constants, **gaussPotential.constants}
+        self.constants = {**origPotential.constants}
 
-        self.V_orig = origPotential.V
-        self.V_orig_part = self.V_orig.subs(self.constants)
+        self.V_functional = origPotential.V
+        self.V_orig_part = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V_orig_part, self.position)
         self.V = self.V_orig_part
 
@@ -206,6 +208,9 @@ class metadynamicsPotential(_potential1DCls):
 
     # Beautiful integration to system as Condition.
     def apply(self):
+        self.check_for_metastep(self.system._currentPosition)
+
+    def apply_coupled(self):
         self.check_for_metastep(self.system._currentPosition)
 
     def coupleSystem(self, system):
@@ -248,14 +253,18 @@ class metadynamicsPotential(_potential1DCls):
 
         Returns
         -------
+
+
         '''
         # do gaussian metadynamics
-        new_bias = gaussPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma)
-        # size energy and force of the new bias in bin structure
-        new_bias_lambda_energy = sp.lambdify('r', new_bias.V)
-        new_bias_lambda_force = sp.lambdify('r', new_bias.dVdpos)
-        new_bias_bin_energy = new_bias_lambda_energy(self.bin_centers)
-        new_bias_bin_force = new_bias_lambda_force(self.bin_centers)
+        #print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
+        biasPotential = self.biasPotentialType(A=self.amplitude, mu=curr_position, sigma=self.sigma)
+        try:
+            new_bias_bin_energy = biasPotential.ene(self.bin_centers)
+            new_bias_bin_force = biasPotential.force(self.bin_centers)
+        except OverflowError:
+            print("Gaussian Overflows!")
+
         # update bias grid
         self.bias_grid_energy = self.bias_grid_energy + new_bias_bin_energy
         self.bias_grid_force = self.bias_grid_force + new_bias_bin_force
@@ -273,6 +282,7 @@ class metadynamicsPotential(_potential1DCls):
         -------
         current energy
         '''
+
         if isinstance(positions, float) or isinstance(positions, int):
             current_bin = self._find_nearest(self.bin_centers, positions)
             return np.squeeze(self._calculate_energies(np.squeeze(positions)) + self.bias_grid_energy[current_bin])
@@ -298,7 +308,8 @@ class metadynamicsPotential(_potential1DCls):
         '''
 
         current_bin = self._find_nearest(self.bin_centers, positions)
-        return np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
+        force= np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
+        return force
 
     def _find_nearest(self, array, value):
         '''
@@ -391,8 +402,8 @@ class timedependendBias(_potential1DCls):
         -------
         '''
         # add potential to the system
-        self.V_orig = self.V + self.addPotential.V
-        self.V = self.V_orig.subs(self.constants)
+        self.V_functional = self.V + self.addPotential.V
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
 
@@ -425,6 +436,7 @@ class metadynamicsPotentialSympy(_potential1DCls):
         '''
 
         self.origPotential = origPotential
+        self.biasPotential = gaussPotential
         self.n_trigger = n_trigger
         self.amplitude = amplitude
         self.sigma = sigma
@@ -433,7 +445,10 @@ class metadynamicsPotentialSympy(_potential1DCls):
         # count how often the potential was updated
         self.finished_steps = 0
 
-        self.constants = {**origPotential.constants, **gaussPotential.constants}
+        self.constants={}
+        self.constants.update(origPotential.constants)
+        self.constants.update(self.biasPotential(A=self.amplitude, sigma=self.sigma).constants)
+
 
         self.V_orig = origPotential.V
         self.V = self.V_orig.subs(self.constants)
@@ -474,6 +489,6 @@ class metadynamicsPotentialSympy(_potential1DCls):
         '''
         # add potential to the system
         # do gaussian metadynamics
-        self.V_orig = self.V + gaussPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma).V
-        self.V = self.V_orig.subs(self.constants)
+        self.V_functional = self.V + self.biasPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma).V
+        self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)

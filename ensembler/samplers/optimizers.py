@@ -6,12 +6,12 @@
 import numpy as np
 from scipy.optimize import fmin_cg
 
-from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.samplers._basicSamplers import _samplerCls
 from ensembler.util.ensemblerTypes import Tuple
 from ensembler.util.ensemblerTypes import system as systemType
 
 
-class optimizer(_integratorCls):
+class optimizer(_samplerCls):
     """
     optimizer [summary]
 
@@ -40,6 +40,8 @@ class conjugate_gradient(optimizer):
         epsilon : float, optional
             [description], by default 10**-20
         """
+        super().__init__()
+
         self.epsilon = epsilon
         self.maxStepSize = max_step_size
 

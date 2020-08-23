@@ -19,10 +19,10 @@ class thermostat(_conditionCls):
     system: systemType  # system
     verbose: bool = False
 
-    def __init__(self, system: systemType, tau: float, ):
+    def __init__(self, system: systemType, tau: float, verbose:bool=False):
         self.system = system
         self.tau = tau
-
+        self.verbose = verbose
 
 class andersonThermostat(thermostat):
     """ -UnderConstuction-
@@ -52,10 +52,39 @@ class andersonThermostat(thermostat):
     """Under COnstructurion"""
 
     def __init__(self, temperature: float = 298, temperature_noise_range: float = 25, MConstraintsDims: int = 1,
-                 system: systemType = None,
+                 system: systemType = None, tau:int=1,
                  kb=const.k * const.Avogadro, a: float = 1, k: float = 1, N_dens: float = 0.005, N: float = 1,
                  verbose: bool = False):
+        """
+            __This Thermostat is underconstruction! __
+
+        Parameters
+        ----------
+        temperature : float, optional
+            desired temperature
+        temperature_noise_range : float, optional
+            noise range
+        MConstraintsDims :
+        system : system, optional
+            a system, that shall be thermostated
+        tau : int, optional
+            every n step apply thermostat
+        kb : float, optional
+            boltzman constant
+        a : float, optional
+            collision parameter
+        k : float, optional
+            collision parameter
+        N_dens : float, optional
+            virtual particle density
+        N : int, optional
+            virtual particle number
+        verbose : bool, optional
+            I can be loud and noisy!
+        """
         warnings.warn("__Under construction___!")
+        super.__init__(system=system, tau=tau, verbose=verbose)
+
         # Collision parameters
         self.kb = kb
         self.a = a  # dimensionless constant
@@ -69,12 +98,10 @@ class andersonThermostat(thermostat):
         self.M = MConstraintsDims
 
         if (system != None):
-            self.system = system
             self.temperature = self.system.temperature
         else:
             self.temperature = temperature
 
-        self.verbose = verbose
 
     def _collision(self) -> bool:
         p_collision = (2 * self.a * self.k) / (3 * self.kb * self.N_dens ** (1 / 3) * self.N ** (2 / 3))
@@ -115,21 +142,34 @@ class andersonThermostat(thermostat):
 
 
 class berendsenThermostate(thermostat):
-    """
-    ..autoclass: berendsen Thermostat
 
-        reference: Molecular dynamics with coupling to an external bath; H.J.C. Berendsen
-    """
+    def __init__(self, tau: float, dt: float, MConstraintsDims: int = 1, system: systemType = None, verbose:bool=False):
+        """
+            __under contsruction! __
+            This thermostat is not tested, no guarantee for correctness!
+                reference: Molecular dynamics with coupling to an external bath; H.J.C. Berendsen
 
-    def __init__(self, tau: float, dt: float, MConstraintsDims: int = 1, system: systemType = None):
+        Parameters
+        ----------
+        tau : int, optional
+            apply every n steps.
+        dt : float, optional
+            time step
+        MConstraintsDims : int, optional
+            number of dimensions
+        system : system, optional
+            a target system to be thermostated
+        verbose : bool, optional
+            More output? You want more output?
+        """
+        super.__init__(system=system, tau=tau, verbose=verbose)
+
         self._lambda: float = 1  # scaling factor of velocities
         self._current_temperatur = 1
-        self.tau = tau
         self.dt = dt
         self.M = MConstraintsDims
 
-        if (system != None):
-            self.system = system
+
 
     def apply_coupled(self):
         self._calculate_current_temperature()
@@ -172,7 +212,7 @@ class berendsenThermostate(thermostat):
 
 
 """
-class nhIntegrator(integrator): Nosehover-leapfrog
+class nhIntegrator(samplers): Nosehover-leapfrog
     def scaleVel(self, sys):
         freetemp = 2.0 / const.gas_constant / 1000.0 * sys.mu * sys.new_velocity ** 2  # t+0.5Dt
         self.oldxi = self.xi  # t-0.5Dt
@@ -199,7 +239,7 @@ class nhIntegrator(integrator): Nosehover-leapfrog
         self.dt = dt
         raise NotImplementedError("This "+__class__+" class is not implemented")
 
-class hmcIntegrator(integrator):
+class hmcIntegrator(samplers):
     def step(self, sys):
         accept = 0
         oldene = sys.totene

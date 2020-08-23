@@ -77,4 +77,3 @@ class ReplicaExchangeEnvelopingDistributionSampling(ReplicaExchange):
             replica = self.replicas[replicaID]
             replica._updateEne()
             replica.updateCurrentState()
-        pass

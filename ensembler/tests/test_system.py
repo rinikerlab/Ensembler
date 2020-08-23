@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 
-from ensembler import integrator
+from ensembler import samplers
 from ensembler import potentials
 from ensembler import system
 from ensembler.util import dataStructure as data
@@ -17,11 +17,11 @@ class test_System(unittest.TestCase):
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
 
     def setUp(self) -> None:
-        self.integ = integrator.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.monteCarloIntegrator()
         self.pot = potentials.OneD.harmonicOscillatorPotential()
 
     def test_system_constructor(self):
-        self.system_class(potential=self.pot, integrator=self.integ)
+        self.system_class(potential=self.pot, sampler=self.sampler)
 
     def test_system_constructor_detail(self):
         """
@@ -38,7 +38,7 @@ class test_System(unittest.TestCase):
                                          totKinEnergy=np.nan, dhdpos=[[np.nan]],
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         curState = sys.getCurrentState()
 
         # check attributes
@@ -78,10 +78,10 @@ class test_System(unittest.TestCase):
                                          totEnergy=62.5, totPotEnergy=50.0, totKinEnergy=12.5,
                                          # tot == totpot because monnte carlo!
                                          dhdpos=3, velocity=newVelocity)
-        # potential: _perturbedPotentialCls, integrator: _integratorCls, conditions: Iterable[Condition] = [],
+        # potential: _perturbedPotentialCls, samplers: _samplerCls, conditions: Iterable[Condition] = [],
         # temperature: float = 298.0, position:(Iterable[Number] or float
-        sys = self.system_class(potential=self.pot, integrator=self.integ, conditions=[], temperature=temperature,
-                                position=position)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, conditions=[], temperature=temperature,
+                                start_position=position)
 
         sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
         curState = sys.getCurrentState()
@@ -113,7 +113,7 @@ class test_System(unittest.TestCase):
         newVelocity2 = -4
         newForces2 = 8
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
 
         sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
         expected_state = sys.getCurrentState()
@@ -164,7 +164,7 @@ class test_System(unittest.TestCase):
                                          totKinEnergy=np.nan,
                                          dhdpos=np.nan, velocity=np.nan)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         initialState = sys.getCurrentState()
         sys.propagate()
 
@@ -189,7 +189,7 @@ class test_System(unittest.TestCase):
         mass = [1]
         steps = 100
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         init_state = sys.getCurrentState()
         sys.simulate(steps=steps, initSystem=False,
                      withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
@@ -224,19 +224,19 @@ class test_System(unittest.TestCase):
                                     ind + 1) + " after propergating in attribute: Position!")
             self.assertEqual(old_frame.temperature, frame.temperature,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: temperature!")  # due to integrator
+                                 ind + 1) + " after propergating in attribute: temperature!")  # due to samplers
             self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy,
                                       msg="The frame " + str(ind) + " equals the frame  " + str(
                                           ind + 1) + " after propergating in attribute: totPotEnergy!")
             self.assertEqual(np.isnan(old_frame.totKinEnergy), np.isnan(frame.totKinEnergy),
                              msg="The frame " + str(ind) + " equals not the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to integrator
+                                 ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to samplers
             self.assertNotEqual(old_frame.dhdpos, frame.dhdpos,
                                 msg="The frame " + str(ind) + " equals the frame  " + str(
                                     ind + 1) + " after propergating in attribute: dhdpos!")
             self.assertEqual(np.isnan(old_frame.velocity), np.isnan(frame.velocity),
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: velocity!")  # due to integrator
+                                 ind + 1) + " after propergating in attribute: velocity!")  # due to samplers
             old_frame = frame
 
     def test_applyConditions(self):
@@ -264,7 +264,7 @@ class test_System(unittest.TestCase):
                                          totEnergy=62.5, totPotEnergy=50.0, totKinEnergy=12.5,
                                          dhdpos=3, velocity=newVelocity)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys._init_velocities()
 
         cur_velocity = sys._currentVelocities
@@ -287,7 +287,7 @@ class test_System(unittest.TestCase):
                                          totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
                                          totKinEnergy=np.nan, dhdpos=np.nan, velocity=np.nan)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         initialState = sys.getCurrentState()
         sys.propagate()
         sys._updateEne()
@@ -319,7 +319,7 @@ class test_System(unittest.TestCase):
                                          totKinEnergy=0,
                                          dhdpos=None, velocity=None)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         self.assertAlmostEqual(sys.totPot(), 0.5, msg="The initialised totPotEnergy is not correct!")
 
     def test_totKin(self):
@@ -335,7 +335,7 @@ class test_System(unittest.TestCase):
                                          totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
                                          totKinEnergy=np.nan, dhdpos=np.nan, velocity=np.nan)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         self.assertEqual(np.isnan(sys.totKin()), np.isnan(np.nan), msg="The initialised totKinEnergy is not correct!")
 
         newPosition = 10
@@ -351,7 +351,7 @@ class test_System(unittest.TestCase):
         position = [0.1]
         mass = [1]
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys._currentVelocities = 100
         sys.updateCurrentState()
         initialState = sys.getCurrentState()
@@ -380,7 +380,7 @@ class test_System(unittest.TestCase):
                                          totEnergy=0.005, totPotEnergy=0.005, totKinEnergy=0,
                                          dhdpos=None, velocity=None)
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         self.assertEqual(0.005000000000000001, sys.getTotPot(), msg="Could not get the correct Pot Energy!")
 
     def test_get_Trajectory(self):
@@ -389,18 +389,18 @@ class test_System(unittest.TestCase):
         position = [0.1]
         mass = [1]
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys.simulate(steps=10)
         traj_pd = sys.getTrajectory()
 
     def test_save_obj_str(self):
         path = self.tmp_out_path
-        out_path = self.system_class(potential=self.pot, integrator=self.integ).save(path=path)
+        out_path = self.system_class(potential=self.pot, sampler=self.sampler).save(path=path)
         print(out_path)
 
     def test_load_str_path(self):
         path = self.tmp_out_path
-        out_path = self.system_class(potential=self.pot, integrator=self.integ).save(path=path)
+        out_path = self.system_class(potential=self.pot, sampler=self.sampler).save(path=path)
 
         cls = self.system_class.load(path=out_path)
         print(cls)
@@ -411,7 +411,7 @@ class test_perturbedSystem1D(test_System):
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
 
     def setUp(self) -> None:
-        self.integ = integrator.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.monteCarloIntegrator()
         self.pot = potentials.OneD.linearCoupledPotentials()
 
     def test_system_constructor(self):
@@ -419,7 +419,7 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=1.0)
@@ -432,7 +432,7 @@ class test_perturbedSystem1D(test_System):
                                           totEnergy=12.5, totPotEnergy=12.5, totKinEnergy=np.nan,
                                           dhdpos=np.nan, velocity=np.nan, dhdlam=np.nan)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         curState = sys.getCurrentState()
 
@@ -473,7 +473,7 @@ class test_perturbedSystem1D(test_System):
                                          totKinEnergy=np.nan, dhdpos=[[np.nan]],
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
-        sys = self.system_class(potential=self.pot, integrator=self.integ, position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         curState = sys.getCurrentState()
 
         # check attributes
@@ -495,7 +495,7 @@ class test_perturbedSystem1D(test_System):
                          msg="The initialised velocity is not correct!")
 
     def test_append_state(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -514,7 +514,7 @@ class test_perturbedSystem1D(test_System):
                                           totEnergy=125.0, totPotEnergy=112.5, totKinEnergy=12.5,
                                           dhdpos=newForces, velocity=newVelocity, dhdlam=np.nan)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature)
 
         sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
@@ -547,7 +547,7 @@ class test_perturbedSystem1D(test_System):
         newForces2 = 8
         newLam2 = 0.5
 
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -557,7 +557,7 @@ class test_perturbedSystem1D(test_System):
         position = [0]
         mass = [1]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
 
         sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
@@ -605,7 +605,7 @@ class test_perturbedSystem1D(test_System):
                          msg="The initialised dHdlam is not correct!")
 
     def test_propergate(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -614,7 +614,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         initialState = sys.getCurrentState()
         sys.propagate()
@@ -638,7 +638,7 @@ class test_perturbedSystem1D(test_System):
                          msg="The initialState does not equal the currentState after propergating in attribute: dHdLam!")
 
     def test_simulate(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -648,7 +648,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         init_state = sys.getCurrentState()
         sys.simulate(steps=steps, initSystem=False,
@@ -682,19 +682,19 @@ class test_perturbedSystem1D(test_System):
                                     ind + 1) + " after propergating in attribute: Position!")
             self.assertEqual(old_frame.temperature, frame.temperature,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: temperature!")  # due to integrator
+                                 ind + 1) + " after propergating in attribute: temperature!")  # due to samplers
             self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy,
                                       msg="The frame " + str(ind) + " equals the frame  " + str(
                                           ind + 1) + " after propergating in attribute: totPotEnergy!")
             self.assertAlmostEqual(np.isnan(old_frame.totKinEnergy), np.isnan(frame.totKinEnergy),
                                    msg="The frame " + str(ind) + " equals the frame  " + str(
-                                       ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to integrator
+                                       ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to samplers
             self.assertNotEqual(old_frame.dhdpos, frame.dhdpos,
                                 msg="The frame " + str(ind) + " equals the frame  " + str(
                                     ind + 1) + " after propergating in attribute: dhdpos!")
             self.assertEqual(np.isnan(old_frame.velocity), np.isnan(frame.velocity),
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: velocity!")  # due to integrator
+                                 ind + 1) + " after propergating in attribute: velocity!")  # due to samplers
             self.assertEqual(init_state.lam, old_frame.lam,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: lam!")
@@ -714,7 +714,7 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -723,7 +723,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         sys._init_velocities()
 
@@ -739,7 +739,7 @@ class test_perturbedSystem1D(test_System):
         pass
 
     def test_updateEne(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -748,7 +748,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         initialState = sys.getCurrentState()
         sys.propagate()
@@ -773,7 +773,7 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -782,7 +782,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         self.assertAlmostEqual(sys.totPot(), 12.5, msg="The initialised totPotEnergy is not correct!")
 
@@ -791,7 +791,7 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -800,7 +800,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         self.assertTrue(np.isnan(sys.totKin()), msg="The initialised totPotEnergy is not correct!")
 
@@ -812,7 +812,7 @@ class test_perturbedSystem1D(test_System):
         self.assertAlmostEqual(sys.totKin(), 12.5, msg="The initialised totPotEnergy is not correct!")
 
     def test_setTemperature(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -822,7 +822,7 @@ class test_perturbedSystem1D(test_System):
         temperature2 = 600
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         sys._currentVelocities = 100
         sys.updateCurrentState()
@@ -844,7 +844,7 @@ class test_perturbedSystem1D(test_System):
                          msg="The initialState does equal the currentState after propergating in attribute: velocity!")
 
     def test_get_Pot(self):
-        integ = integrator.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
@@ -853,7 +853,7 @@ class test_perturbedSystem1D(test_System):
         temperature = 300
         position = [5]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, integrator=integ, position=position,
+        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, lam=lam)
         self.assertEqual(50.0, sys.getTotPot(), msg="Could not get the correct Pot Energy!")
 
@@ -864,7 +864,7 @@ class test_edsSystem(test_System):
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
 
     def setUp(self) -> None:
-        self.integ = integrator.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.monteCarloIntegrator()
         self.pot = potentials.OneD.exponentialCoupledPotentials()
 """
 if __name__ == '__main__':

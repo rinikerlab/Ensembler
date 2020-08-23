@@ -72,12 +72,12 @@ class boxBoundaryCondition(_boundaryCondition):
                 diff = abs(currentPosition[dim] - self.lowerbounds[dim])
                 if self.verbose: print("Lower:", diff, "Vel: ", currentVelocity)
                 currentPosition[dim] = (self.lowerbounds[dim] + diff)
-                currentVelocity[dim] = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
+                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
             elif (currentPosition[dim] > self.higherbounds[dim]):
                 diff = abs(currentPosition[dim] - self.higherbounds[dim])
                 if self.verbose: print("Higher:", diff)
                 currentPosition[dim] = (self.higherbounds[dim] - diff)
-                currentVelocity = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
+                if(not isinstance(currentVelocity, type(None))): currentVelocity = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
 
         if self.verbose: print("box boundary_condition: after: ", currentPosition)
         return np.squeeze(currentPosition), np.squeeze(currentVelocity)
@@ -95,7 +95,7 @@ class boxBoundaryCondition(_boundaryCondition):
 
 class periodicBoundaryCondition(_boundaryCondition):
     name: str = "Periodic Boundary Condition"
-    verbose: bool = True
+    verbose: bool = False
 
     def __init__(self, boundary: Union[Iterable[Number], Iterable[Iterable[Number]]], every_step: int = 1,
                  system: systemType = None):
@@ -128,11 +128,11 @@ class periodicBoundaryCondition(_boundaryCondition):
             if (currentPosition[dim] < self.lowerbounds[dim]):
                 if self.verbose: print("LOWER")
                 currentPosition[dim] = self.higherbounds[dim] - (self.lowerbounds[dim] - currentPosition[dim])
-                currentVelocity[dim] *= -1
+                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] *= -1
             elif (currentPosition[dim] > self.higherbounds[dim]):
                 if self.verbose: print("UPPER")
                 currentPosition[dim] = self.lowerbounds[dim] + (currentPosition[dim] - self.higherbounds[dim])
-                currentVelocity[dim] *= -1
+                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] *= -1
         if self.verbose: print("periodic boundary_condition: after: ", currentPosition)
 
         return currentPosition, currentVelocity
