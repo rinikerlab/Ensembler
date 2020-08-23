@@ -42,35 +42,15 @@ class edsSystem(system):
         # Declare Attributes
         #################################
 
-        self.state = data.envelopedPStstate
         self._currentEdsS = eds_s
         self._currentEdsEoffs = eds_Eoff
-
-        ##Physical parameters
-        self.temperature: float = 298.0
-        self.mass: float = 1  # for one particle systems!!!!
-        self.nparticles: int = 1  # Todo: adapt it to be multiple particles
-
-        self.nDim: int = -1
-        self.nStates: int = 1
-
-        # Output
-        self.initial_position: Iterable[float] or float
-
-        self.currentState: data.basicState = data.basicState(np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
-        self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-
-        # tmpvars - private:
-        self._currentTotE: (Number) = np.nan
-        self._currentTotPot: (Number) = np.nan
-        self._currentTotKin: (Number) = np.nan
-        self._currentPosition: (Number or Iterable[Number]) = np.nan
-        self._currentVelocities: (Number or Iterable[Number]) = np.nan
-        self._currentForce: (Number or Iterable[Number]) = np.nan
-        self._currentTemperature: (Number or Iterable[Number]) = np.nan
+        self.state = data.envelopedPStstate
 
         super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
                          start_position=start_position)
+
+
+        # Output
         self.set_s(self._currentEdsS)
         self.set_Eoff(self._currentEdsEoffs)
 

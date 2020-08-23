@@ -106,8 +106,8 @@ class system(super_baseClass):
         self.nparticles = 1  # Todo: adapt it to be multiple particles
 
         # Output
-        self.currentState: data.basicState = data.basicState(np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
-        self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+        self.currentState = self.state(**{key: np.nan for key in self.state.__dict__["_fields"]})
+        self.trajectory= pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
 
         # tmpvars - private:
         self._currentTotE: (Number) = np.nan
@@ -212,8 +212,8 @@ class system(super_baseClass):
             self.initial_position = initial_position
         else:
             raise Exception("did not understand the initial position!")
-
         self._currentPosition = self.initial_position
+
         self.updateCurrentState()
         return self.initial_position
 
