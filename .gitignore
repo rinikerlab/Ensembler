@@ -117,7 +117,7 @@ examples/dev/ttt.ipynb
 
 
 #test results:
-ensembler/tests/test*
+ensembler/tests/tmp_test_*
 
 #jupyter_nB
 **/.ipynb_checkpoints
