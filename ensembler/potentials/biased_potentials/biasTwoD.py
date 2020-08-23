@@ -7,7 +7,7 @@ This module shall be used to implement biases on top of Potentials. This module 
 import numpy as np
 import sympy as sp
 
-from ensembler.potentials.TwoD import gaussPotential
+from ensembler.potentials.TwoD import gaussPotential, harmonicOscillatorPotential
 from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.util.ensemblerTypes import system
 
@@ -26,7 +26,7 @@ class addedPotentials(_potential2DCls):
     nDim: int = sp.symbols("nDim")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
 
-    def __init__(self, origPotential, addPotential):
+    def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
         '''
         __init__
               This is the Constructor of the addedPotential class.
@@ -44,10 +44,7 @@ class addedPotentials(_potential2DCls):
 
         self.constants = {**origPotential.constants, **addPotential.constants}
 
-        self.V_orig = origPotential.V + self.addPotential.V
-
-        self.V = self.V_orig.subs(self.constants)
-        self.dVdpos = sp.diff(self.V, self.position)
+        self.V_functional = origPotential.V_functional + self.addPotential.V_functional
 
         super().__init__()
 
@@ -76,7 +73,7 @@ class metadynamicsPotential(_potential2DCls):
     position = sp.symbols("r")
     system: system  # metadyn-coupled to system
 
-    def __init__(self, origPotential, amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
+    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
                  bias_grid_max=(10, 10), numbins=(100, 100)):
         '''
 
@@ -121,10 +118,8 @@ class metadynamicsPotential(_potential2DCls):
 
         self.constants = {**origPotential.constants}
 
-        self.V_orig = origPotential.V
-        self.V_orig_part = self.V_orig.subs(self.constants)
-        self.dVdpos = sp.diff(self.V_orig_part, self.position)
-        self.V = self.V_orig_part
+        self.V_functional = origPotential.V
+        self.V_orig_part = self.V_functional.subs(self.constants)
 
         super().__init__()
 
