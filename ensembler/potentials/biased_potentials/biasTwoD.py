@@ -58,7 +58,8 @@ class addedPotentials(_potential2DCls):
     TIME DEPENDENT BIASES 
 """
 
-
+"""
+#TODO: I don't think this does, what it should!
 class metadynamicsPotential(_potential2DCls):
     '''
     The metadynamics bias potential adds 2D Gaussian potentials on top of
@@ -128,11 +129,11 @@ class metadynamicsPotential(_potential2DCls):
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
 
-    """
+    '''
     BIAS
-    """
+    '''
 
-    # Beautiful integration to system as Condition.
+    #Beautiful integration to system as Condition.
     def apply(self):
         self.check_for_metastep(self.system._currentPosition)
 
@@ -158,14 +159,6 @@ class metadynamicsPotential(_potential2DCls):
         '''
         if (self.system.step % self.n_trigger == 0):
             self._update_potential(curr_position)
-        """
-        TODO: Remove
-        if self.current_n%self.n_trigger == 0:
-            self._update_potential(curr_position)
-            self.current_n += 1
-        else:
-            self.current_n += 1
-        """
 
     def _update_potential(self, curr_position):
         '''
@@ -208,8 +201,9 @@ class metadynamicsPotential(_potential2DCls):
         -------
         current energy
         '''
-        current_bin_x = self._find_nearest(self.x_centers, positions[0])
-        current_bin_y = self._find_nearest(self.y_centers, positions[1])
+        current_bin_x = np.apply_over_axes(self._find_nearest, a= np.array(positions).T[0], axes=0) #self._find_nearest(self.bin_centers, positions)
+        current_bin_y = np.apply_over_axes(self._find_nearest, a= np.array(positions).T[1], axes=0) #self._find_nearest(self.bin_centers, positions)
+
         # due to transposed position matrix, x and y are changed here
         return np.squeeze(
             self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_energy[
@@ -228,10 +222,13 @@ class metadynamicsPotential(_potential2DCls):
         current derivative dh/dpos
         -------
         '''
+        current_bin_x = np.apply_over_axes(lambda x: self._find_nearest(self.bin_centers_x, x), a= np.array(positions).T[0], axes=0) #self._find_nearest(self.bin_centers, positions)
+        current_bin_y = np.apply_over_axes(lambda x: self._find_nearest(self.bin_centers_y, x), a= np.array(positions).T[1], axes=0) #self._find_nearest(self.bin_centers, positions)
 
-        current_bin_x = self._find_nearest(self.x_centers, positions[0])
-        current_bin_y = self._find_nearest(self.y_centers, positions[1])
+        print(current_bin_x)
         # due to transposed position matrix, x and y are changed here
+        print( self.bias_grid_force[:,current_bin_y,
+                                      current_bin_x].reshape(2, 1, 1))
         return np.squeeze(
             self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_force[:,
                                                                                        current_bin_y,
@@ -258,3 +255,4 @@ class metadynamicsPotential(_potential2DCls):
             return idx - 1
         else:
             return idx
+"""

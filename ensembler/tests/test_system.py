@@ -9,7 +9,7 @@ from ensembler import potentials
 from ensembler import system
 from ensembler.util import dataStructure as data
 
-tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_systems")
+tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_systems")
 
 
 class test_System(unittest.TestCase):

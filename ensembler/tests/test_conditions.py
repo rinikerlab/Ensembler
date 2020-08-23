@@ -6,7 +6,7 @@ import unittest
 from ensembler.conditions.box_conditions import periodicBoundaryCondition, boxBoundaryCondition
 from ensembler.conditions.restrain_conditions import positionRestraintCondition
 
-tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_conditions")
+tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_conditions")
 
 
 class boxBoundaryCondition(unittest.TestCase):

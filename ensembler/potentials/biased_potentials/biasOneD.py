@@ -308,8 +308,7 @@ class metadynamicsPotential(_potential1DCls):
         -------
         '''
 
-        print(positions)
-        current_bin = self._find_nearest(self.bin_centers, positions)
+        current_bin = np.apply_over_axes(self._find_nearest, a= np.array(positions), axes=0) #self._find_nearest(self.bin_centers, positions)
         force= np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
         return force
 
