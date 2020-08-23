@@ -18,27 +18,19 @@ pd.options.mode.use_inf_as_na = True
 from ensembler.util.basic_class import super_baseClass
 import ensembler.util.ensemblerTypes as ensemblerTypes
 
-_integratorCls = ensemblerTypes.integrator
+_samplerCls = ensemblerTypes.sampler
 _conditionCls = ensemblerTypes.condition
 _potentialCls = ensemblerTypes.potential
 
 from ensembler.util import dataStructure as data
 
-from ensembler.integrator.newtonian import newtonianIntegrator
-from ensembler.integrator import stochastic
+from ensembler.samplers.newtonian import newtonianSampler
+from ensembler.samplers import stochastic
 from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential as metadynamicsPotential1D
 from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential as metadynamicsPotential2D
 
 
 class system(super_baseClass):
-    """
-     [summary]
-    
-    :raises IOError: [description]
-    :raises Exception: [description]
-    :return: [description]
-    :rtype: [type]
-    """
     # static attributes
     name = "system"
     state = data.basicState
@@ -60,11 +52,11 @@ class system(super_baseClass):
         #     raise ValueError("Potential needs to be a subclass of potential")
 
     @property
-    def integrator(self) -> _integratorCls:
+    def sampler(self) -> _samplerCls:
         return self.m_integrator
 
-    @integrator.setter
-    def integrator(self, integrator: _integratorCls):
+    @sampler.setter
+    def sampler(self, integrator: _samplerCls):
         self.m_integrator = integrator
 
     @property
@@ -79,24 +71,41 @@ class system(super_baseClass):
         else:
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
 
-    def __init__(self, potential: _potentialCls, integrator: _integratorCls, conditions: Iterable[_conditionCls] = [],
-                 temperature: Number = 298.0, position: (Iterable[Number] or Number) = None, mass: Number = 1,
+    def __init__(self, potential: _potentialCls, sampler: _samplerCls, conditions: Iterable[_conditionCls] = [],
+                 temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
                  verbose: bool = True) -> NoReturn:
+        """
+            The system class is wrapping all components needed for a simulation.
+            It can be used as the control unit for executing a simulation (simulate) and also to manage the generated data or input data.
+
+        Parameters
+        ----------
+        potential : _potentialCls
+            gives the potential function to be explored/sampled
+        sampler : _samplerCls
+            gives the method of choice to sample/explore the potential function
+        conditions : Iterable[_conditionCls], optional
+            apply the given conditions to the systems in a preset (tau) step iteration
+        temperature : float, optional
+            temperature of the system
+        start_position : float, optional
+            starting position of the system during the simulation
+        mass : float, optional
+            mass of the single particle
+        verbose : bool, optional
+            I can tell you a long iterative story...
+        """
+
         ################################
         # Declare Attributes
         #################################
 
         ##Physical parameters
-        self.temperature: float = temperature
-        self.mass: float = 1  # for one particle systems!!!!
-        self.nparticles: int = 1  # Todo: adapt it to be multiple particles
-
-        self.nDim: int = -1
-        self.nStates: int = 1
+        self.temperature = temperature
+        self.mass = mass # for one particle systems!!!!
+        self.nparticles = 1  # Todo: adapt it to be multiple particles
 
         # Output
-        self.initial_position: Iterable[float] or float
-
         self.currentState: data.basicState = data.basicState(np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan)
         self.trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
 
@@ -112,13 +121,13 @@ class system(super_baseClass):
         # BUILD System
         ## Fundamental Parts:
         self.m_potential = potential
-        self.m_integrator = integrator
+        self.m_integrator = sampler
         self.m_conditions = conditions
 
         ## set dim
-        if (potential.constants[potential.nDim] < 1 and isinstance(position, Iterable) and all(
-                [isinstance(pos, Number) for pos in position])):  # one  state system.
-            self.nDim = len(position)
+        if (potential.constants[potential.nDim] < 1 and isinstance(start_position, Iterable) and all(
+                [isinstance(pos, Number) for pos in start_position])):  # one  state system.
+            self.nDim = len(start_position)
             self.potential.constants.update({potential.nDim: self.nDim})
         elif (potential.constants[potential.nDim] > 0):
             self.nDim = potential.constants[potential.nDim]
@@ -138,13 +147,13 @@ class system(super_baseClass):
             self.nstates = 1
 
         # PREPARE THE SYSTEM
-        # Only init velocities, if the integrator uses them
-        if (issubclass(integrator.__class__, (newtonianIntegrator, stochastic.langevinIntegrator))):
+        # Only init velocities, if the samplers uses them
+        if (issubclass(sampler.__class__, (newtonianSampler, stochastic.langevinIntegrator))):
             init_velocity = True
         else:
             init_velocity = False
         self.initialise(withdraw_Traj=True, init_position=True, init_velocity=init_velocity,
-                        set_initial_position=position)
+                        set_initial_position=start_position)
 
         ##check if system should be coupled to conditions:
 
@@ -159,8 +168,8 @@ class system(super_baseClass):
             else:
                 # warnings.warn("Decoupling system and coupling it again!")
                 condition.coupleSystem(self)
-            if (not hasattr(condition, "dt") and hasattr(self.integrator, "dt")):
-                condition.dt = self.integrator.dt
+            if (not hasattr(condition, "dt") and hasattr(self.sampler, "dt")):
+                condition.dt = self.sampler.dt
             else:
                 condition.dt = 1
 
@@ -191,9 +200,9 @@ class system(super_baseClass):
         self._currentTemperature = self.temperature
 
         # update current state
+        self.step = 0
         self.updateSystemProperties()
         self.updateCurrentState()
-
         self.trajectory = self.trajectory.append(self.currentState._asdict(), ignore_index=True)
 
     def _init_position(self, initial_position=None):
@@ -274,7 +283,8 @@ class system(super_baseClass):
 
     def _updateTemp(self) -> NoReturn:
         """ this looks like a thermostat like thing! not implemented!@ TODO calc velocity from speed"""
-        self._currentTemperature = self._currentTemperature
+        pass
+        #self._currentTemperature = self._currentTemperature
 
     def _updateEne(self) -> NoReturn:
         self._currentTotPot = self.totPot()
@@ -342,7 +352,7 @@ class system(super_baseClass):
         return self.currentState
 
     def propagate(self) -> NoReturn:
-        self._currentPosition, self._currentVelocities, self._currentForce = self.integrator.step(self)
+        self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
 
     def applyConditions(self) -> NoReturn:
         for aditional in self.conditions:

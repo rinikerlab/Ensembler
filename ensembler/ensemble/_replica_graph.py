@@ -188,7 +188,7 @@ class ReplicaExchange(MultiReplicaApproach):
         if (isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
 
-        for trial in tqdm(range(ntrials), desc="Running trials", leave=True):
+        for _ in tqdm(range(ntrials), desc="Running trials", leave=True):
             self.run()
             self.exchange()
 
@@ -199,7 +199,6 @@ class ReplicaExchange(MultiReplicaApproach):
         for replica_coords, replica in self.replicas.items():
             replica.simulate(steps=self.nSteps_between_trials, withdrawTraj=False, initSystem=False,
                              verbosity=verbosity)
-        pass
 
     def _run_parallel(self, verbosity: bool = False, nProcesses: int = 4):
         """this is an ugly work around, but this way the code works on windows and Linux

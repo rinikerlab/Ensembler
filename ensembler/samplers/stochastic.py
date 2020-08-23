@@ -6,12 +6,12 @@
 import numpy as np
 import scipy.constants as const
 
-from ensembler.integrator._basicIntegrators import _integratorCls
+from ensembler.samplers._basicSamplers import _samplerCls
 from ensembler.util.ensemblerTypes import Union, List, Tuple, Number
 from ensembler.util.ensemblerTypes import system as systemType
 
 
-class stochasticIntegrator(_integratorCls):
+class stochasticSampler(_samplerCls):
     # Params
     minStepSize: Number = None
     maxStepSize: Number = 1
@@ -69,10 +69,10 @@ class stochasticIntegrator(_integratorCls):
         return np.squeeze(self.posShift)
 
 
-class monteCarloIntegrator(stochasticIntegrator):
+class monteCarloIntegrator(stochasticSampler):
     """
     monteCarloIntegrator 
-        This class implements the classic monte carlo integrator.
+        This class implements the classic monte carlo samplers.
         It choses its moves purely randomly.
     """
     name = "Monte Carlo Integrator"
@@ -81,7 +81,7 @@ class monteCarloIntegrator(stochasticIntegrator):
                  fixedStepSize: Number = None):
         """
         __init__ 
-            This is the Constructor of the MonteCarlo integrator.
+            This is the Constructor of the MonteCarlo samplers.
 
         Parameters
         ----------
@@ -95,11 +95,12 @@ class monteCarloIntegrator(stochasticIntegrator):
         fixedStepSize : Number, optional
             this option restrains each integration step to a certain size in each dimension, by default None
         """
+        super().__init__()
         self.fixedStepSize = None if (isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
         self.maxStepSize = maxStepSize
         self.minStepSize = minStepSize
         self.spaceRange = spaceRange
-        pass
+
 
     def step(self, system: systemType) -> Tuple[float, None, float]:
         """
@@ -140,11 +141,11 @@ class monteCarloIntegrator(stochasticIntegrator):
         return np.squeeze(self.newPos), np.nan, np.squeeze(self.posShift)
 
 
-class metropolisMonteCarloIntegrator(stochasticIntegrator):
+class metropolisMonteCarloIntegrator(stochasticSampler):
     """
     metropolisMonteCarloIntegrator 
         This class is implementing a metropolis monte carlo Integrator.
-        In opposite to the Monte Carlo Integrator, that is completley random, this integrator has limitations to the randomness.
+        In opposite to the Monte Carlo Integrator, that is completley random, this samplers has limitations to the randomness.
         Theis limitation is expressed in the Metropolis Criterion.
 
         There is a standard Metropolis Criterion implemented, but it can also be exchanged with a different one.
@@ -165,7 +166,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
     name = "Metropolis Monte Carlo Integrator"
     # Parameters:
     randomnessIncreaseFactor: float = 1  # tune randomness of your results
-    maxIterationTillAccept: float = np.inf  # how often shall the integrator iterate till it accepts a step forcefully
+    maxIterationTillAccept: float = np.inf  # how often shall the samplers iterate till it accepts a step forcefully
     convergence_limit: int = 1000  # after reaching a certain limit abort iteration
 
     # METROPOLIS CRITERION
@@ -182,7 +183,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
                  randomnessIncreaseFactor=1, maxIterationTillAccept: int = np.inf):
         """
         __init__ 
-            This is the Constructor of the Metropolis-MonteCarlo integrator.
+            This is the Constructor of the Metropolis-MonteCarlo samplers.
 
 
         Parameters
@@ -205,6 +206,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
         maxIterationTillAccept : int, optional
             number, after which a step is accepted, regardless its likelihood (turned off if np.inf). By default None
         """
+        super().__init__()
 
         # Integration Step Constrains
         self.fixedStepSize = None if (isinstance(fixedStepSize, type(None))) else np.array(fixedStepSize)
@@ -257,7 +259,7 @@ class metropolisMonteCarloIntegrator(stochasticIntegrator):
                 continue
         if (current_iteration >= self.convergence_limit):
             raise ValueError(
-                "Metropolis-MonteCarlo integrator did not converge! Think about the maxIterationTillAccept")
+                "Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept")
 
         self.newPos = self.oldpos
         if (self.verbose):
@@ -275,13 +277,13 @@ Langevin stochastic integration
 '''
 
 
-class langevinIntegrator(stochasticIntegrator):
+class langevinIntegrator(stochasticSampler):
     name = "Langevin Integrator"
 
     def __init__(self, dt: float = 0.005, gamma: float = 50, oldPosition: float = None):
         """
           __init__
-              This is the Constructor of the Langevin integrator.
+              This is the Constructor of the Langevin samplers.
 
 
           Parameters
@@ -305,7 +307,7 @@ class langevinIntegrator(stochasticIntegrator):
 
     def update_positon(self, system):
         """
-        Integrate step according to Position Langevin BBK integrator
+        Integrate step according to Position Langevin BBK samplers
         Designed after:
         Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html
 
@@ -327,7 +329,7 @@ class langevinIntegrator(stochasticIntegrator):
         Raises
         ------
         NotImplementedError
-            You need to implement this function in the subclass (i.e. in your integrator)
+            You need to implement this function in the subclass (i.e. in your samplers)
 
         """
 
@@ -340,7 +342,7 @@ class langevinIntegrator(stochasticIntegrator):
         # calculation of forces:
         self.newForces = -system.potential.force(self.currentPosition)
 
-        # Brünger-Brooks-Karplus integrator for positions
+        # Brünger-Brooks-Karplus samplers for positions
         new_position = (1 / (1 + self.gamma * self.dt / 2)) * (2 * self.currentPosition - self._oldPosition
                                                                + self.gamma * (self.dt / 2) * (self._oldPosition) + (
                                                                            self.dt ** 2 / system.mass) * (
@@ -367,7 +369,7 @@ class langevinIntegrator(stochasticIntegrator):
         Raises
         ------
         NotImplementedError
-            You need to implement this function in the subclass (i.e. in your integrator)
+            You need to implement this function in the subclass (i.e. in your samplers)
 
         """
         # get current positiona and velocity form system class
@@ -391,9 +393,9 @@ class langevinIntegrator(stochasticIntegrator):
 
         if (self.verbose):
             print(str(self.__name__) + ": current forces\t ", self.newForces)
-            print(str(self.__name__) + ": old Position\t ", sef._oldPosition)
-            print(str(self.__name__) + ": current_position\t ", currentPosition)
-            print(str(self.__name__) + ": current_velocity\t ", currentVelocity)
+            print(str(self.__name__) + ": old Position\t ", self._oldPosition)
+            print(str(self.__name__) + ": current_position\t ", self.currentPosition)
+            print(str(self.__name__) + ": current_velocity\t ", self.currentVelocity)
             print(str(self.__name__) + ": newPosition\t ", new_position)
             print(str(self.__name__) + ": newVelocity\t ", new_velocity)
             print("\n")
@@ -402,7 +404,7 @@ class langevinIntegrator(stochasticIntegrator):
 
 class langevinVelocityIntegrator(langevinIntegrator):
     """
-    Integrate step according to Velocity Langevin BKK integrator
+    Integrate step according to Velocity Langevin BKK samplers
     Designed after:
     Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html
 
@@ -425,7 +427,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
     Raises
     ------
     NotImplementedError
-        You need to implement this function in the subclass (i.e. in your integrator)
+        You need to implement this function in the subclass (i.e. in your samplers)
 
     """
     name = "Velocity Langevin Integrator"
@@ -450,7 +452,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
 
             self._first_step = False
 
-        # Brünger-Brooks-Karplus integrator for velocities
+        # Brünger-Brooks-Karplus samplers for velocities
 
         half_step_velocity = (1 - self.gamma * self.dt / 2) * self.currentVelocity + self.dt / (2 * system.mass) * (
                     self.newForces + self.R_x)

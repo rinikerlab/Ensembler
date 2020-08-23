@@ -262,7 +262,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
     equation: sp.function = -(1 / (k * T)) * (
                 sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
 
-    def __init__(self, kCal: bool = False, T: float = 398, k: float = const.k * const.Avogadro, kT: bool = False,
+    def __init__(self, kCal: bool = False, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False,
                  kJ: bool = False):
         """
         __init__ Here you can set Class wide the parameters T and k for the Zwanzig Equation
@@ -272,15 +272,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
         :param k: boltzmann Constant, defaults to const.k*const.Avogadro
         :type k: float, optional
         """
-        self.constants = {}
-        if (kT):
-            self.set_parameters(T=Decimal(1), k=Decimal(1))
-        elif (kJ):
-            self.set_parameters(T=Decimal(T), k=Decimal(const.k * const.Avogadro / 1000))
-        elif (kCal):
-            self.set_parameters(T=Decimal(T), k=Decimal(const.k * const.Avogadro * self.J_to_cal / 1000))
-        else:
-            self.set_parameters(T=Decimal(T), k=Decimal(k))
+        super().__init__(kCal=kCal, T=T, k=k, kT=kT, kJ=kJ)
 
     def calculate(self, Vi: (Iterable[Number], Number), Vj: (Iterable[Number], Number),
                   Vr: (Iterable[Number], Number)) -> float:
@@ -298,7 +290,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
             free energy difference
 
         """
-        return float(self._calculate_implementation_useZwanzig(Vi, Vj, Vr))
+        return float(self._calculate_implementation_useZwanzig(Vi=Vi, Vj=Vj, Vr=Vr))
 
     def _calculate_implementation_useZwanzig(self, Vi: (Iterable, Number), Vj: (Iterable, Number),
                                              Vr: (Iterable[Number], Number)) -> float:
@@ -329,8 +321,11 @@ class threeStateZwanzigReweighting(zwanzigEquation):
         zwanz.constants = self.constants
 
         # Calc
-        dF1r = zwanz.calculate(Vi, Vr)
-        dF2r = zwanz.calculate(Vj, Vr)
+        #   VR <- V1
+        dF1r = zwanz.calculate(Vi=Vi, Vj=Vr)
+        #   VR <- V2
+        dF2r = zwanz.calculate(Vi=Vj, Vj=Vr)
+        #   V1 <- VR - VR -> V2
         dF = dF1r - dF2r
 
         return dF

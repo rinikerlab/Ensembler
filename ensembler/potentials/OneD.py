@@ -240,7 +240,7 @@ class gaussPotential(_potential1DCls):
 
     mu, sigma, A, position = sp.symbols("mu sigma A r")
 
-    V_functional = A * sp.exp(-(position - mu) ** 2 / (2 * sigma ** 2))
+    V_functional = A * sp.exp(-(position - mu)**2 / (2 * sigma**2))
 
     def __init__(self, A=1., mu=0., sigma=1.):
         '''
@@ -253,14 +253,12 @@ class gaussPotential(_potential1DCls):
             mean of the gauss function
         sigma: float
             standard deviation of the gauss function
+
+                TODO: make numerical stable
         '''
 
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
-        self.V = self.V_functional.subs(self.constants)
-        self.dVdpos = sp.diff(self.V, self.position)
-
         super().__init__()
-
 
 """
     COMBINED POTENTIALS
@@ -516,10 +514,10 @@ class envelopedPotential(_potential1DCls):
             self.constants.update({**sis})
         elif (len(s) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one s runs supported!")
-            self._s = s
-            self.constants.update({self.sis: self._s})
-            sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
-            self.constants.update({**sis})
+            #self._s = s
+            #self.constants.update({self.sis: self._s})
+            #sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
+            #self.constants.update({**sis})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
@@ -730,13 +728,13 @@ class lambdaEDSPotential(envelopedPotential):
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
         if (isinstance(lam, Number)):
-            self._lam_i = np.array([1-lam]+[lam for x in range(1,self.constants[self.nStates])], ndmin=1)
+            self._lam_i = np.array([lam]+[1-lam for x in range(1,self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
         elif (len(lam) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one lam runs supported!")
-            self._lam_i = np.array(lam, ndmin=1)
-            self.constants.update({self.lamis: self._lam_i})
+            #self._lam_i = np.array(lam, ndmin=1)
+            #self.constants.update({self.lamis: self._lam_i})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 lam) + "\t states in Vi" + str(len(self.V_is)))
@@ -825,7 +823,7 @@ class flatwellPotential(_potential1DCls):
     y_max: float = None
     y_min: float = None
 
-    def __init__(self, x_range: list = (0, 1), y_max: float = 1000, y_min: float = 0):
+    def __init__(self, x_range: list = (0, 1), y_max: float = 4, y_min: float = 0):
         """
         __init__ This potential is a flatwell potential.
         The flatwell potential is a function similar to an if case.
@@ -865,3 +863,4 @@ class flatwellPotential(_potential1DCls):
 """
 Biased potentials
 """
+from ensembler.potentials.biased_potentials.biasOneD import *

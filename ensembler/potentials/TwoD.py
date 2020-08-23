@@ -204,8 +204,7 @@ class gaussPotential(_potential2DCls):
     amplitude = sp.symbols("A_gauss")
 
     # we assume that the two dimentions are uncorrelated
-    V_dim = amplitude * (
-        sp.matrix_multiply_elementwise((position - mean) ** 2, (2 * sigma ** 2) ** (-1)).applyfunc(sp.exp))
+    #V_dim = amplitude * (sp.matrix_multiply_elementwise((position - mean) ** 2, (2 * sigma ** 2) ** (-1)).applyfunc(sp.exp))
     V_dim = amplitude * (sp.matrix_multiply_elementwise(-(position - mean).applyfunc(lambda x: x ** 2),
                                                         0.5 * (sigma).applyfunc(lambda x: x ** (-2))).applyfunc(sp.exp))
 
@@ -246,9 +245,12 @@ class gaussPotential(_potential2DCls):
             sp.matrix_multiply_elementwise(-(self.position - self.mean).applyfunc(lambda x: x ** 2),
                                            0.5 * (self.sigma).applyfunc(lambda x: x ** (-2))).applyfunc(sp.exp))
 
-        # self.V_orig = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
+        # self.V_functional = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDim - 1))
         # Not too beautiful, but sp.Product raises errors
-        self.V_orig = self.V_dim[0, 0] * self.V_dim[1, 0]
+        self.V_functional = self.V_dim[0, 0] * self.V_dim[1, 0]
 
 
-# Biased potentials
+"""
+Biased potentials
+"""
+from ensembler.potentials.biased_potentials.biasTwoD import *

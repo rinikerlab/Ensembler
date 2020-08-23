@@ -1,7 +1,7 @@
 import unittest
 
 from ensembler.ensemble import replica_exchange, _replica_graph
-from ensembler.integrator import stochastic
+from ensembler.samplers import stochastic
 from ensembler.potentials import OneD
 from ensembler.system import basic_system as system
 
@@ -10,7 +10,7 @@ class test_ReplicaExchangeCls(unittest.TestCase):
     RE = _replica_graph.ReplicaExchange
     integrator = stochastic.monteCarloIntegrator()
     potential = OneD.harmonicOscillatorPotential()
-    sys = system.system(potential=potential, integrator=integrator)
+    sys = system.system(potential=potential, sampler=integrator)
 
     def test_tearDown(self) -> None:
         self.RE.replicas = {}
@@ -70,9 +70,9 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         replicas =len(exchange_dimensions["temperature"])
         expected_pos= range(replicas)
 
-        integrator = stochastic.monteCarloIntegrator()
+        samplers = stochastic.monteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, samplers=samplers)
 
         group = _replica_graph.ReplicaExchange(system=sys, exchange_dimensions=exchange_dimensions)
 
@@ -92,7 +92,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     def test_init(self):
         integrator = stochastic.monteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, sampler=integrator)
 
         replicas = 22
         nsteps = 100
@@ -103,7 +103,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     def test_run(self):
         integrator = stochastic.monteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, sampler=integrator)
 
         replicas = 22
         nsteps = 100
@@ -118,7 +118,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     def test_exchange_all(self):
         integrator = stochastic.monteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, sampler=integrator)
 
         T_range = range(1, 10)
         nReplicas = len(T_range)
@@ -150,9 +150,9 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     def test_exchange_none(self):
         
 
-        integrator = newtonian.positionVerletIntegrator()
+        samplers = newtonian.positionVerletIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, samplers=samplers)
 
         T_range = [1, 200, 500]
         nReplicas = len(T_range)
@@ -189,7 +189,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     def test_simulate_good_exchange(self):
         integrator = stochastic.monteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, sampler=integrator)
 
         replicas = 22
         nsteps = 100
@@ -203,10 +203,10 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
 
     """
     def test_simulate_bad_exchange(self):
-        integrator = newtonian.positionVerletIntegrator()
+        samplers = newtonian.positionVerletIntegrator()
 
         potential = OneD.harmonicOscillatorPotential()
-        sys = system.system(potential=potential, integrator=integrator)
+        sys = system.system(potential=potential, samplers=samplers)
 
         replicas =3
         nsteps = 1

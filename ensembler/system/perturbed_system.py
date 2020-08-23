@@ -10,7 +10,7 @@ from ensembler.util import dataStructure as data
 
 from ensembler.util import ensemblerTypes as ensemblerTypes
 
-_integratorCls = ensemblerTypes.integrator
+_integratorCls = ensemblerTypes.sampler
 _conditionCls = ensemblerTypes.condition
 
 from ensembler.potentials._basicPotentials import _potential1DClsPerturbed as _perturbedPotentialCls
@@ -31,12 +31,12 @@ class perturbedSystem(system):
     _currentLam: float = np.nan
     _currentdHdLam: float = np.nan
 
-    def __init__(self, potential: _perturbedPotentialCls, integrator: _integratorCls,
+    def __init__(self, potential: _perturbedPotentialCls, sampler: _integratorCls,
                  conditions: Iterable[_conditionCls] = [],
-                 temperature: float = 298.0, position: (Iterable[Number] or float) = None, lam: float = 0.0):
+                 temperature: float = 298.0, start_position: (Iterable[Number] or float) = None, lam: float = 0.0):
         self._currentLam = lam
-        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature,
-                         position=position)
+        super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
+                         start_position=start_position)
         self.set_lam(lam)
 
     def set_current_state(self, currentPosition: (Number or Iterable), currentLambda: (Number or Iterable),

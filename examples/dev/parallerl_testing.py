@@ -1,7 +1,7 @@
 
 import numpy as np
 from ensembler.ensemble import replica_exchange, _replica_graph
-from ensembler.integrator import stochastic
+from ensembler.samplers import stochastic
 from ensembler.potentials import OneD
 from ensembler.system import basic_system as system
 
@@ -13,7 +13,7 @@ def main():
 
     integrator = stochastic.monteCarloIntegrator()
     potential = OneD.harmonicOscillatorPotential()
-    sys = system.system(potential=potential, integrator=integrator)
+    sys = system.system(potential=potential, sampler=integrator)
 
     replicas = 2
     nsteps = 10

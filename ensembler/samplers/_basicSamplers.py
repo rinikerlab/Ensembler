@@ -2,9 +2,9 @@ from ensembler.util.basic_class import super_baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import system as systemType, Tuple
 
 
-class _integratorCls(super_baseClass):
+class _samplerCls(super_baseClass):
     """
-            This class is the parent class for all integrator classes. 
+            This class is the parent class for all samplers classes.
             The constructor is a interface method. 
             Each subclass should implement it's own constructor.  
 
@@ -25,7 +25,7 @@ class _integratorCls(super_baseClass):
         Raises
         ------
         NotImplementedError
-            You need to implement this function in the subclass (i.e. in your integrator)
+            You need to implement this function in the subclass (i.e. in your samplers)
         """
         pass
 
@@ -48,13 +48,13 @@ class _integratorCls(super_baseClass):
         Raises
         ------
         NotImplementedError
-            You need to implement this function in the subclass (i.e. in your integrator)
+            You need to implement this function in the subclass (i.e. in your samplers)
         """
         notImplementedERR()
 
     def integrate(self, system: systemType, steps: int) -> None:
         """
-        integrate This function provides an alternative way for System.simulate, just executed by the integrator class.
+        integrate This function provides an alternative way for System.simulate, just executed by the samplers class.
 
         Parameters
         ----------

@@ -13,12 +13,12 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
         import ensembler.potentials.OneD as pot
         import ensembler.system.perturbed_system as system
         import ensembler.ensemble.replicas_dynamic_parameters as cvb
-        import ensembler.integrator as integ
+        import ensembler.samplers as integ
 
         integrat = integ.stochastic.metropolisMonteCarloIntegrator()
         potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillatorPotential(k=1.0),
                                                 Vb=pot.harmonicOscillatorPotential(k=2.0))
-        syst = system.perturbedSystem(potential=potential, integrator=integrat)
+        syst = system.perturbedSystem(potential=potential, sampler=integrat)
         conveyorBelt = cvb.ConveyorBelt(0.0, 8, system=syst, build=False)
         conveyorBelt.simulate(steps)
 

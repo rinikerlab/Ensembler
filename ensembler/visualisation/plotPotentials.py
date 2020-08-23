@@ -34,8 +34,8 @@ def significant_decimals(s: float) -> float:
 """
 
 
-def plot_1DPotential(potential: _potential1DCls, positions: list, color=None,
-                     x_range=None, y_range=None, title: str = None, ax=None, yUnit: str = "kT"):
+def plot_1DPotential_V(potential: _potential1DCls, positions: list, color=None,
+                       x_range=None, y_range=None, title: str = None, ax=None, yUnit: str = "kT"):
     # generat Data
     energies = potential.ene(positions=positions)
 
@@ -63,7 +63,6 @@ def plot_1DPotential(potential: _potential1DCls, positions: list, color=None,
         return fig, ax
     else:
         return ax
-    pass
 
 
 def plot_1DPotential_dhdpos(potential: _potential1DCls, positions: list, color=style.potential_color(1),
@@ -91,20 +90,19 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions: list, color=s
         return fig, ax
     else:
         return ax
-    pass
 
 
-def plot_1DPotential_Term(potential: _potential1DCls, positions: list, out_path: str = None,
-                          x_range=None, y_range=None, title: str = None, ax=None):
+def plot_1DPotential(potential: _potential1DCls, positions: list, out_path: str = None,
+                     x_range=None, y_range=None, title: str = None, ax=None):
     fig, axes = plt.subplots(nrows=1, ncols=2)
-    plot_1DPotential(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range,
-                     title="Potential function V", color=style.potential_color(0))
+    plot_1DPotential_V(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range,
+                       title="", color=style.potential_color(0))
     plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range,
-                            title="First derivative $\partial V / \partial r$")
+                            title="")
 
     fig.tight_layout()
-    fig.subplots_adjust(top=0.85)
-    fig.suptitle(title, y=0.96) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
+    fig.subplots_adjust(top=0.8)
+    fig.suptitle(title, y=0.95) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
 
     if (out_path):
         fig.savefig(out_path)
@@ -278,13 +276,13 @@ def plot_2DEnergy_landscape(potential1: _potential1DCls, potential2: _potential1
 
 def multiState_overlays(states: list, positions: list = np.linspace(-8, 8, 500), y_range: tuple = (0, 10),
                         title: str = "Multiple state overlay", label_prefix: str = "State", out_path: str = None):
-    fig, ax = plot_1DPotential(potential=states[0], positions=positions)
+    fig, ax = plot_1DPotential_V(potential=states[0], positions=positions)
     for state in states[1:-1]:
-        plot_1DPotential(potential=state, positions=positions, ax=ax)
-    plot_1DPotential(potential=states[-1], positions=positions, ax=ax, y_range=[0, 10], title=title)
+        plot_1DPotential_V(potential=state, positions=positions, ax=ax)
+    plot_1DPotential_V(potential=states[-1], positions=positions, ax=ax, y_range=[0, 10], title=title)
 
     for num, line in enumerate(ax.lines):
-        line._label = label_prefix + " " + str(num + 1)
+        line._label = label_prefix + " " + chr(num + 65)
 
     ax.legend()
 
@@ -725,7 +723,6 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
                                              plot_trajs=False, space_range=[-180, 180], point_resolution=500,
                                              positions2D=None, x_label="$\phi/[^{\circ}$]", y_label="$\psi/[^{\circ}$]",
                                              verbose=False):
-    cmap = "tab20b"
     traj_color = "orange"
     ##positions
     # build positions

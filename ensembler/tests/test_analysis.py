@@ -138,4 +138,6 @@ class test_threeStateZwanzigReweighting(test_ZwanzigEquation):
         dF_ana = state_2 - state_1
         dFRew_zwanz = feCalc.calculate(Vi=V1, Vj=V2, Vr=Vr)
 
+        zwanz = zwanzigEquation(kT=True)
+
         np.testing.assert_almost_equal(desired=dF_ana, actual=dFRew_zwanz, decimal=2)

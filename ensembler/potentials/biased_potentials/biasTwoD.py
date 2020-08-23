@@ -141,6 +141,11 @@ class metadynamicsPotential(_potential2DCls):
     def apply(self):
         self.check_for_metastep(self.system._currentPosition)
 
+
+    def apply_coupled(self):
+        self.check_for_metastep(self.system._currentPosition)
+
+
     def coupleSystem(self, system):
         self.system = system
 

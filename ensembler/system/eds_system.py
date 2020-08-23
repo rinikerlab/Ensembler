@@ -12,11 +12,11 @@ from ensembler.potentials import OneD as pot
 
 from ensembler.util import ensemblerTypes as ensemblerTypes
 
-_integratorCls = ensemblerTypes.integrator
+_integratorCls = ensemblerTypes.sampler
 _conditionCls = ensemblerTypes.condition
 
 from ensembler.system.basic_system import system
-from ensembler.integrator.stochastic import metropolisMonteCarloIntegrator
+from ensembler.samplers.stochastic import metropolisMonteCarloIntegrator
 
 
 class edsSystem(system):
@@ -35,9 +35,9 @@ class edsSystem(system):
 
     def __init__(self, potential: pot.envelopedPotential = pot.envelopedPotential(
         V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], Eoff_i=[0, 0]),
-                 integrator: _integratorCls = metropolisMonteCarloIntegrator(),
+                 sampler: _integratorCls = metropolisMonteCarloIntegrator(),
                  conditions: Iterable[_conditionCls] = [],
-                 temperature: float = 298.0, position: (Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
+                 temperature: float = 298.0, start_position: (Iterable[Number] or float) = None, eds_s=1, eds_Eoff=[0, 0]):
         ################################
         # Declare Attributes
         #################################
@@ -69,8 +69,8 @@ class edsSystem(system):
         self._currentForce: (Number or Iterable[Number]) = np.nan
         self._currentTemperature: (Number or Iterable[Number]) = np.nan
 
-        super().__init__(potential=potential, integrator=integrator, conditions=conditions, temperature=temperature,
-                         position=position)
+        super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
+                         start_position=start_position)
         self.set_s(self._currentEdsS)
         self.set_Eoff(self._currentEdsEoffs)
 

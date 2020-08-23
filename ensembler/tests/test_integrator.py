@@ -3,8 +3,8 @@ import tempfile
 import unittest
 
 from ensembler import potentials as pot, system
-from ensembler.integrator import _basicIntegrators
-from ensembler.integrator import stochastic, newtonian, optimizers
+from ensembler.samplers import _basicSamplers
+from ensembler.samplers import stochastic, newtonian, optimizers
 
 """
 STOCHASTIC INTEGRATORS
@@ -13,7 +13,7 @@ tmp_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_integrators")
 
 
 class standard_IntegratorTests(unittest.TestCase):
-    integrator_class = _basicIntegrators._integratorCls
+    integrator_class = _basicSamplers._samplerCls
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_constructor(self):
@@ -39,7 +39,7 @@ class test_MonteCarlo_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -52,7 +52,7 @@ class test_MonteCarlo_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -71,7 +71,7 @@ class test_MetropolisMonteCarlo_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -84,7 +84,7 @@ class test_MetropolisMonteCarlo_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -102,7 +102,7 @@ class test_Langevin_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -115,7 +115,7 @@ class test_Langevin_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -133,7 +133,7 @@ class test_LangevinVelocity_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -146,7 +146,7 @@ class test_LangevinVelocity_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -169,7 +169,7 @@ class test_verlocityVerletIntegrator_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -182,7 +182,7 @@ class test_verlocityVerletIntegrator_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -200,7 +200,7 @@ class test_positionVerletIntegrator_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -212,7 +212,7 @@ class test_positionVerletIntegrator_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -230,7 +230,7 @@ class test_leapFrogIntegrator_Integrator(standard_IntegratorTests):
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -243,7 +243,7 @@ class test_leapFrogIntegrator_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator)
+        sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
@@ -267,7 +267,7 @@ class test_cg_Integrator(standard_IntegratorTests):
         position = 1
         potent = pot.OneD.harmonicOscillatorPotential()
         integrator = self.integrator_class()
-        sys = system.system(potential=potent, integrator=integrator, position=position)
+        sys = system.system(potential=potent, sampler=integrator, start_position=position)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         newPos, _, posShift = integrator.step(system=sys)
@@ -280,7 +280,7 @@ class test_cg_Integrator(standard_IntegratorTests):
         integrator = self.integrator_class()
 
         steps = 42
-        sys = system.system(potential=potent, integrator=integrator, position=position)
+        sys = system.system(potential=potent, sampler=integrator, start_position=position)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)

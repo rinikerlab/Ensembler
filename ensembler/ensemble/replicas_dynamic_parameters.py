@@ -11,7 +11,7 @@ from tqdm.notebook import tqdm
 
 from ensembler import potentials as pot
 from ensembler.ensemble._replica_graph import ReplicaExchange
-from ensembler.integrator import stochastic
+from ensembler.samplers import stochastic
 from ensembler.system import perturbed_system
 
 
@@ -50,7 +50,7 @@ class ConveyorBelt(ReplicaExchange):
     def __init__(self, capital_lambda: float, nReplicas: int,
                  system=perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
                                                          potential=pot.OneD.linearCoupledPotentials(),
-                                                         integrator=stochastic.metropolisMonteCarloIntegrator()),
+                                                         sampler=stochastic.metropolisMonteCarloIntegrator()),
                  build=False):
         '''
         initialize Ensemble object
@@ -106,7 +106,7 @@ class ConveyorBelt(ReplicaExchange):
         if (isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
 
-        for trial in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
+        for _ in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
             self.run()
             self.accept_move()
 
