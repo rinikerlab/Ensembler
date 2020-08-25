@@ -58,7 +58,6 @@ class addedPotentials(_potential2DCls):
     TIME DEPENDENT BIASES 
 """
 
-"""
 #TODO: I don't think this does, what it should!
 class metadynamicsPotential(_potential2DCls):
     '''
@@ -255,4 +254,3 @@ class metadynamicsPotential(_potential2DCls):
             return idx - 1
         else:
             return idx
-"""
