@@ -114,3 +114,10 @@ ENV/
 ensembler/potentials/look_up_tables
 examples/dev/img
 examples/dev/ttt.ipynb
+
+
+#test results:
+ensembler/tests/tmp_test_*
+
+#jupyter_nB
+**/.ipynb_checkpoints

@@ -6,9 +6,10 @@ This module shall be used to implement biases on top of Potentials. This module 
 import numpy as np
 import sympy as sp
 
-from ensembler.potentials.OneD import gaussPotential
+from ensembler.potentials.OneD import gaussPotential, harmonicOscillatorPotential
 from ensembler.potentials._basicPotentials import _potential1DCls
-from ensembler.samplers.stochastic import  langevinIntegrator
+
+from ensembler.samplers.stochastic import langevinIntegrator
 """
     BIAS BASECLASS
 """
@@ -109,7 +110,7 @@ class addedPotentials(_potential1DCls):
     name: str = "Added Potential Enhanced Sampling System"
     position = sp.symbols("r")
 
-    def __init__(self, origPotential, addPotential):
+    def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
         '''
         __init__
               This is the Constructor of the addedPotential class.
@@ -152,7 +153,7 @@ class metadynamicsPotential(_potential1DCls):
     name: str = "Metadynamics Enhanced Sampling System using grid bias"
     position = sp.symbols("r")
 
-    def __init__(self, origPotential, amplitude=0.1, sigma=1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
+    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=0.1, sigma=1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
                  numbins=100):
 
         '''
@@ -307,7 +308,7 @@ class metadynamicsPotential(_potential1DCls):
         -------
         '''
 
-        current_bin = self._find_nearest(self.bin_centers, positions)
+        current_bin = np.apply_over_axes(self._find_nearest, a= np.array(positions), axes=0) #self._find_nearest(self.bin_centers, positions)
         force= np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
         return force
 

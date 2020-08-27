@@ -9,7 +9,7 @@ from ensembler.samplers import stochastic, newtonian, optimizers
 """
 STOCHASTIC INTEGRATORS
 """
-tmp_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_integrators")
+tmp_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_integrators")
 
 
 class standard_IntegratorTests(unittest.TestCase):

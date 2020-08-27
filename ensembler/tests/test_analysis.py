@@ -6,7 +6,7 @@ import unittest
 
 from ensembler.analysis.freeEnergyCalculation import  zwanzigEquation, threeStateZwanzigReweighting, bennetAcceptanceRatio
 
-#tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="test_conditions")
+#tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_conditions")
 
 
 class test_ZwanzigEquation(unittest.TestCase):
