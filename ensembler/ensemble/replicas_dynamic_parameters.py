@@ -81,6 +81,11 @@ class ConveyorBelt(ReplicaExchange):
 
     # public functions
     def initialise(self):
+        '''
+        Initialises a conveyor belt ensemble: deletes biasing potential,
+        initialises the replica graph and updates the systems.
+        :return: None
+        '''
         ##Simulation
         self._currentTrial = 0
         self.reject = 0
@@ -102,7 +107,14 @@ class ConveyorBelt(ReplicaExchange):
 
     def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False,
                  verbosity: bool = True):
-
+        '''
+        Integrates the conveyor belt ensemble
+        :param ntrials: Number of conveyor belt steps
+        :param steps_between_trials: number of integration steps of replicas between a move of the conveyor belt
+        :param reset_ensemble: reset ensemble for starting the simulaton?
+        :param verbosity: verbose output?
+        :return: None
+        '''
         if (isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
 
@@ -113,11 +125,20 @@ class ConveyorBelt(ReplicaExchange):
         # self.exchange_information = self.exchange_information
 
     def run(self):
+        '''
+        Integrates the systems of the ensemble for the :var:nSteps_between_trials.
+        :return: None
+        '''
         self._currentTrial += 1
         for replica_coords, replica in self.replicas.items():
             replica.simulate(steps=self.nSteps_between_trials, verbosity=False)
 
     def accept_move(self):
+        '''
+        Performs one trial move of the capital lambda, either accepts or rejects it and updates
+        the lambdas of all replicas.
+        :return: None
+        '''
         self.state = []
 
         # metropolis criterium for moving capital_lambda?
@@ -302,6 +323,11 @@ class ConveyorBelt(ReplicaExchange):
 
     # Todo: should be inherited.
     def set_simulation_steps_between_trials(self, nsteps: int):
+        """
+        Sets the integration steps of the replicas between a trail move.
+        :param nsteps: number of steps
+        :return: None
+        """
         self.nSteps_between_trials = nsteps
         for coord, replica in self.replicas.items():
             replica.nsteps = self.nSteps_between_trials
