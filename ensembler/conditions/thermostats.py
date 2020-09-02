@@ -16,13 +16,9 @@ class thermostat(_conditionCls):
     """
 
     _currentTemperature: float
-    system: systemType  # system
-    verbose: bool = False
 
-    def __init__(self, system: systemType, tau: float, verbose:bool=False):
-        self.system = system
-        self.tau = tau
-        self.verbose = verbose
+    def __init__(self, system: systemType, tau: int, verbose:bool=False):
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
 class andersonThermostat(thermostat):
     """ -UnderConstuction-
@@ -83,7 +79,7 @@ class andersonThermostat(thermostat):
             I can be loud and noisy!
         """
         warnings.warn("__Under construction___!")
-        super.__init__(system=system, tau=tau, verbose=verbose)
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
         # Collision parameters
         self.kb = kb
@@ -162,7 +158,7 @@ class berendsenThermostate(thermostat):
         verbose : bool, optional
             More output? You want more output?
         """
-        super.__init__(system=system, tau=tau, verbose=verbose)
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
         self._lambda: float = 1  # scaling factor of velocities
         self._current_temperatur = 1

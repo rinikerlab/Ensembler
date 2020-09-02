@@ -38,6 +38,17 @@ class super_baseClass:
         self.__dict__ = state
 
     """
+    Attributes
+    """
+    @property
+    def verbose(self)->bool:
+        return self._verbose
+
+    @verbose.setter
+    def verbose(self, verbose:bool):
+        self._verbose=verbose
+
+    """
     Methods
     """
 
