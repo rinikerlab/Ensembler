@@ -295,6 +295,7 @@ class langevinIntegrator(stochasticSampler):
           oldPosition : Iterable[Number, Number] of size nDim, optional
               determins position at step -1, if not set the system will use the velocity to determine tis position
           """
+        super().__init__()
 
         self.dt = dt
         self.gamma = gamma

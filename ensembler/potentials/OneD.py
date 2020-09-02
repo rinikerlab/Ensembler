@@ -622,9 +622,9 @@ class envelopedPotential(_potential1DCls):
 
 class hybridCoupledPotentials(_potential1DClsPerturbed):
     name: str = "hybrid Coupled Potential"
-    lam, position, s, temp = sp.symbols(u'λ r s T')
+    lam, position, s, T = sp.symbols(u'λ r s T')
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
-    beta = const.gas_constant / 1000.0 * temp
+    beta = 1# const.gas_constant / 1000.0 * temp
     coupling = -1 / (beta * s) * sp.log(lam * sp.exp(-beta * s * Vb) + (1 - lam) * sp.exp(-beta * s * Va))
 
     def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
@@ -646,7 +646,7 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
         """
 
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
-        self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.lam: lam, self.s: s, self.temp: temp}
+        self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.lam: lam, self.s: s, self.T: temp}
 
         super().__init__()
 
@@ -727,8 +727,12 @@ class lambdaEDSPotential(envelopedPotential):
 
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
-        if (isinstance(lam, Number)):
+        if (isinstance(lam, Number) and self.constants[self.nStates] == 2):
             self._lam_i = np.array([lam]+[1-lam for x in range(1,self.constants[self.nStates])], ndmin=1)
+            lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
+            self.constants.update({**lamis})
+        elif(isinstance(lam, Number)): # a bit klunky here! TODO: think about a nice solution
+            self._lam_i = np.array([1/self.constants[self.nStates] for x in range(self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
         elif (len(lam) == self.constants[self.nStates]):

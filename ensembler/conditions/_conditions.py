@@ -8,11 +8,28 @@ from ensembler.util.ensemblerTypes import system as systemType
 
 
 class _conditionCls(super_baseClass):
-    _tau: float  # tau = apply every tau steps
     nDim: int = 0
 
-    def __init__(self, sys: systemType):
-        notImplementedERR()
+    def __init__(self, system: systemType, tau:int, verbose:bool=False):
+        self._tau = tau
+        self._verbose = verbose
+        self._system = system
+
+    @property
+    def tau(self)->int:
+        return self._tau
+
+    @tau.setter
+    def tau(self, tau:int):
+        self._tau = tau
+
+    @property
+    def system(self)->systemType:
+        return self._system
+
+    @system.setter
+    def system(self, system: systemType):
+        self._system = system
 
     def apply(self):
         notImplementedERR()

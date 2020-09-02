@@ -19,8 +19,6 @@ class optimizer(_samplerCls):
     """
     maxStepSize: float
 
-    pass
-
 
 class conjugate_gradient(optimizer):
     """
