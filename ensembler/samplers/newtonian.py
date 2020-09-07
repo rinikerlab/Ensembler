@@ -9,8 +9,9 @@ from ensembler.util.ensemblerTypes import system as systemType
 
 class newtonianSampler(_samplerCls):
     """
-    newtonianIntegrator [summary]
-
+    This class is the parent class for all newtonian samplers. The pre-implemented
+    newtonian type samplers currently comprise the Velocity Verlet, Position Verlet and
+    Leapfrog integrator.
     """
     currentPosition: float
     currentVelocity: float
@@ -19,13 +20,24 @@ class newtonianSampler(_samplerCls):
     dt: float
 
     def __init__(self, dt=0.002):
+        """
+        __init__
+            This is the Constructor of the newtonian samplers.
+
+        Parameters
+        ----------
+        dt: Number, optional
+            time step of an integration, by default 0.002
+        """
         super().__init__()
         self.dt = dt
 
 
 class velocityVerletIntegrator(newtonianSampler):
     """
-    velocityVerletIntegrator [summary]
+    The velocity Verlet Integrator is one of the simplest integrators that provides good numerical stability as well
+    as time-reversibility and symplectic properties.
+    It's local error in position is of order dt^4 and the local error in verlocity is of order dt^2.
     
     Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
     """
@@ -33,12 +45,18 @@ class velocityVerletIntegrator(newtonianSampler):
 
     def step(self, system: systemType) -> Union[float, float, float]:
         """
-        step [summary]
+        step
+            This function is performing an integration step in Verlocity Verlet fashion.
 
         Parameters
         ----------
         system : systemType
-            [description]
+            A system, that should be integrated.
+
+        Returns
+        -------
+        Tuple[float, float, float]
+            This Tuple contains the new: (new Position, new Velocity, new Force)
         """
         # init
         currentPosition = system._currentPosition
@@ -63,21 +81,28 @@ class velocityVerletIntegrator(newtonianSampler):
 
 
 class positionVerletIntegrator(newtonianSampler):
+    """
+        The position Verlet Integrator has similar properties as the verlocity Verlet Integrator. However, the
+        velocities are not explicitly calculated. Therefore, the kinetic energy is undefined.
+
+        Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
+        """
     name = "Position Verlet Integrator"
 
     def step(self, system: systemType) -> Union[float, float, float]:
         """
-        step [summary]
+        step
+            This function is performing an integration step in Position Verlet fashion.
 
         Parameters
         ----------
         system : systemType
-            [description]
+            A system, that should be integrated.
 
         Returns
         -------
-        Union[float, float, float]
-            [description]
+        Tuple[float, float, float]
+            This Tuple contains the new: (new Position, new Velocity, new Force)
         """
         # init
         currentPosition = system._currentPosition
@@ -100,25 +125,26 @@ class positionVerletIntegrator(newtonianSampler):
 
 class leapFrogIntegrator(newtonianSampler):
     """
-    leapFrogIntegrator [summary]
-
-
+     The leapFrogIntegrator is similar to the velocity Verlet method. Leapfrog integration is equivalent to
+     updating positions and velocities at interleaved time points, staggered in such a way that they "leapfrog"
+     over each other.
     """
     name = "Leap Frog Integrator"
 
     def step(self, system: systemType) -> Union[float, float, float]:
         """
-        step [summary]
+        step
+            This function is performing an integration step in leapFrog fashion.
 
         Parameters
         ----------
         system : systemType
-            [description]
+            A system, that should be integrated.
 
         Returns
         -------
-        Union[float, float, float]
-            [description]
+        Tuple[float, float, float]
+            This Tuple contains the new: (new Position, new Velocity, new Force)
         """
 
         # init

@@ -288,7 +288,7 @@ class langevinIntegrator(stochasticSampler):
     """
     This class implements the Position Langevin sampler. In Contrast to the Monte Carlo Methods,
     Langevin integrators provide information on the kinetics of the system.  The Position Langevin
-    Integrator does not calculate velocities. Therefore, the kinetic energy is undefinded.
+    Integrator does not calculate velocities. Therefore, the kinetic energy is undefined.
     """
     name = "Langevin Integrator"
 
@@ -419,7 +419,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
     This class implements the Velocity Langevin sampler. It can provide information on the kinetics of the system.
     In Contrast to the Position Langevin Integrator, the Velocity Langevin sampler does calculate velocities.
     Therefore, the kinetic energy is definded. It inherits the function step from the Position Langevin Integrator
-    and overwrites update_position. 
+    and overwrites update_position.
     """
 
     name = "Velocity Langevin Integrator"
