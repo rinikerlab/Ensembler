@@ -31,7 +31,7 @@ This project tries to give users very easy to use and simple functionality to de
 
    This module is used to setup a simulation. It gets a potential, integrator and other parameters.
 
-### Integrators
+### Samplers
 
    This module provides integrators for integrating potential functions. E.g. Monte Carlo, Velocity Verlet,...
 
