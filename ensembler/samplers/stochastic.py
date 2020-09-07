@@ -182,10 +182,6 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
                 (1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(
             -1.0 / (const.gas_constant / 1000.0 * currentState.temperature) * (ene_new - currentState.totPotEnergy)))
 
-    ##default Metropolis Criterion
-    def metropolisCriterion(self, ene_new, currentState):
-        return (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
-
     def __init__(self, minStepSize: float = None, maxStepSize: float = 1, spaceRange: tuple = None, fixedStepSize=None,
                  randomnessIncreaseFactor=1, maxIterationTillAccept: int = np.inf):
         """
@@ -204,10 +200,6 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
             If not fullfilled, step is rejected. By default None
         fixedStepSize : Number, optional
             this option restrains each integration step to a certain size in each dimension, by default None
-
-        metropolisCriterion : Callable, optional
-            The metropolis criterion decides if a step is accepted.
-            It can be adapted by user providing a function as argument. By default None
         randomnessIncreaseFactor : int, optional
             arbitrary factor, controlling the amount of randomness(the bigger the more random steps), by default 1
         maxIterationTillAccept : int, optional
@@ -227,6 +219,25 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         self.convergence_limit = self.convergence_limit if (
             isinstance(maxIterationTillAccept, type(None))) else maxIterationTillAccept + 1
 
+    ##default Metropolis Criterion
+    def metropolisCriterion(self, ene_new, currentState):
+        """
+        metropolisCriterion
+            The metropolis criterion decides if a step is accepted.
+
+        Parameters
+        ----------
+        ene_new: float
+            new energy in case the step is accepted
+        currentState: stateType
+            state of the current step
+
+        Returns boolean
+            defines if step is accepted or not
+        -------
+
+        """
+        return (ene_new < currentState.totEnergy or self._defaultRandomness(ene_new, currentState))
     def step(self, system: systemType) -> Tuple[float, None, float]:
         """
         step 

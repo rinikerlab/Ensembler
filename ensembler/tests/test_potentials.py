@@ -1211,7 +1211,7 @@ class potentialCls_2D_wavePotential(test_potentialCls):
 
 
 class potentialCls_2D_torsionPotential(test_potentialCls):
-    potential_class = TwoD.torsionPotential
+    potential_class = TwoD.addedWavePotential
     _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor_ListPotentials(self):

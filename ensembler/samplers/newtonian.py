@@ -82,8 +82,7 @@ class velocityVerletIntegrator(newtonianSampler):
 
 class positionVerletIntegrator(newtonianSampler):
     """
-        The position Verlet Integrator has similar properties as the verlocity Verlet Integrator. However, the
-        velocities are not explicitly calculated. Therefore, the kinetic energy is undefined.
+        The position Verlet Integrator has similar properties as the verlocity Verlet Integrator.
 
         Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
         """
@@ -110,7 +109,7 @@ class positionVerletIntegrator(newtonianSampler):
 
         # calculation:
         new_forces = system.potential.force(currentPosition)
-        new_velocity = currentVelocity - (new_forces / system.mass)
+        new_velocity = currentVelocity - (new_forces * self.dt / system.mass)
         new_position = currentPosition + new_velocity * self.dt
 
         if (self.verbose):

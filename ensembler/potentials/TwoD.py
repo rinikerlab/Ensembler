@@ -186,9 +186,9 @@ class wavePotential(_potential2DCls):
             self.set_degrees(degrees=not radians)
 
 
-class torsionPotential(_potential2DCls):
+class addedWavePotential(_potential2DCls):
     """
-    Torsion potential that represents the energy potential of a torsion angle
+    Adds two wave potentials
     """
     name: str = "Torsion Potential"
 
@@ -204,12 +204,12 @@ class torsionPotential(_potential2DCls):
                  degrees: bool = True):
         """
         __init__
-            This is the Constructor of a Torsion Potential
+            This is the Constructor of an added wave Potential
 
         Parameters
         ----------
-        wavePotentials: list of two 2D potentialTypes, optionel
-            Torsion potential use the 2D wave potential class to generate its potential,
+        wavePotentials: list of two 2D potentialTypes, optional
+            is uses the 2D wave potential class to generate its potential,
             default to (wavePotential(), wavePotential(multiplicity=[3, 3]))
         radians: bool, optional
             set potential to radians or degrees, defaults to False

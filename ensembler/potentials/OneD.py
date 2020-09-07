@@ -71,7 +71,7 @@ class wavePotential(_potential1DCls):
         y_offset: float, optional
             shift on the y Axis, defaults to 0.0
         radians: bool, optional
-            in radians or degrees - NOT IMPLEMNTED!, defaults to False
+            in radians or degrees, defaults to False
         """
 
         self.constants = {self.amplitude: amplitude, self.multiplicity: multiplicity, self.phase_shift: phase_shift,
