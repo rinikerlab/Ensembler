@@ -13,7 +13,7 @@ from ensembler.potentials._basicPotentials import _potential2DCls
 
 class harmonicOscillatorPotential(_potential2DCls):
     """
-        2D  harmonic oscillator potential
+        Implementation of an 2D  harmonic oscillator potential following hooke's law
     """
 
     name: str = "harmonicOscilator"
@@ -30,6 +30,19 @@ class harmonicOscillatorPotential(_potential2DCls):
 
     def __init__(self, k: np.array = np.array([1.0, 1.0]), r_shift: np.array = np.array([0.0, 0.0]),
                  Voff: np.array = np.array([0.0, 0.0])):
+        """
+        __init__
+            This is the Constructor of the 2D harmonic oscillator
+
+        Parameters
+        ----------
+        k: array, optional
+            force constants in x and y direction, defaults to [1.0, 1.0]
+        r_shift: array, optional
+            shift of the minimum in the x and y direction, defaults to [0.0, 0.0]
+        Voff: array, optional
+            offset of the minimum, defaults to [0.0, 0.0]
+        """
         self.constants.update({self.nDim: 2})
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDim])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDim])})
@@ -37,6 +50,11 @@ class harmonicOscillatorPotential(_potential2DCls):
         super().__init__()
 
     def _initialize_functions(self):
+        """
+        _initialize_functions
+            converts the symbolic mathematics of sympy to a matrix representation that is compatible
+            with multi-dimentionality.
+        """
         # Parameters
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDim])])
@@ -50,6 +68,9 @@ class harmonicOscillatorPotential(_potential2DCls):
 
 
 class wavePotential(_potential2DCls):
+    """
+    Simple 2D wave potential consisting of cosine functions with given multiplicity, that can be shifted and elongated
+    """
     name: str = "Wave Potential"
     nDim: sp.Symbol = sp.symbols("nDim")
 
@@ -67,6 +88,22 @@ class wavePotential(_potential2DCls):
 
     def __init__(self, amplitude=(1, 1), multiplicity=(1, 1), phase_shift=(0, 0), y_offset=(0, 0),
                  radians: bool = False):
+        """
+        __init__
+            This is the Constructor of the 2D wave potential function
+        Parameters
+        ----------
+        amplitude: tuple, optional
+            absolute min and max of the potential for the cosines in x and y direction, defaults to (1, 1)
+        multiplicity: tuple, optional
+            amount of minima in one phase for the cosines in x and y direction, defaults to (1, 1)
+        phase_shift: tuple, optional
+            position shift of the potential for the cosines in x and y direction, defaults to (0, 0)
+        y_offset: tuple, optional
+            potential shift for the cosines in x and y direction, defaults to (0, 0)
+        radians: bool, optional
+            in radians or degrees, defaults to False
+        """
         nDim = 2
         self.constants.update({"amp_" + str(j): amplitude[j] for j in range(nDim)})
         self.constants.update({"mult_" + str(j): multiplicity[j] for j in range(nDim)})
@@ -83,6 +120,11 @@ class wavePotential(_potential2DCls):
         self.set_radians(radians=radians)
 
     def _initialize_functions(self):
+        """
+        _initialize_functions
+            converts the symbolic mathematics of sympy to a matrix representation that is compatible
+            with multi-dimentionality.
+        """
         # Parameters
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
@@ -100,12 +142,24 @@ class wavePotential(_potential2DCls):
 
     # OVERRIDE
     def _update_functions(self):
+        """
+        _update_functions
+            calculates the current energy and derivative of the energy
+        """
         super()._update_functions()
 
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
     def set_degrees(self, degrees: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        degrees: bool, optional,
+            if True, output will be given in degrees, otherwise in radians, default: True
+        """
         self.radians = not degrees
         if (degrees):
             self._calculate_energies = lambda positions, positions2: self.tmp_Vfunc(np.deg2rad(positions),
@@ -116,6 +170,14 @@ class wavePotential(_potential2DCls):
             self.set_radians(radians=not degrees)
 
     def set_radians(self, radians: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        radians: bool, optional,
+            if True, output will be given in radians, otherwise in degree, default: True
+        """
         self.radians = radians
         if (radians):
             self._calculate_energies = self.tmp_Vfunc
@@ -125,6 +187,9 @@ class wavePotential(_potential2DCls):
 
 
 class torsionPotential(_potential2DCls):
+    """
+    Torsion potential that represents the energy potential of a torsion angle
+    """
     name: str = "Torsion Potential"
 
     position = sp.symbols("r")
@@ -137,9 +202,18 @@ class torsionPotential(_potential2DCls):
 
     def __init__(self, wave_potentials: List[wavePotential] = (wavePotential(), wavePotential(multiplicity=[3, 3])),
                  degrees: bool = True):
-        '''
-        initializes torsions Potential
-        '''
+        """
+        __init__
+            This is the Constructor of a Torsion Potential
+
+        Parameters
+        ----------
+        wavePotentials: list of two 2D potentialTypes, optionel
+            Torsion potential use the 2D wave potential class to generate its potential,
+            default to (wavePotential(), wavePotential(multiplicity=[3, 3]))
+        radians: bool, optional
+            set potential to radians or degrees, defaults to False
+        """
         self.constants.update({self.nWavePotentials: len(wave_potentials)})
         self.constants.update({"V_" + str(i): wave_potentials[i].V for i in range(len(wave_potentials))})
 
@@ -147,6 +221,11 @@ class torsionPotential(_potential2DCls):
         self.set_degrees(degrees=degrees)
 
     def _initialize_functions(self):
+        """
+        _initialize_functions
+            converts the symbolic mathematics of sympy to a matrix representation that is compatible
+            with multi-dimentionality.
+        """
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDim])])
         self.wave_potentials = sp.Matrix(
             [sp.symbols("V_" + str(i)) for i in range(self.constants[self.nWavePotentials])])
@@ -168,12 +247,24 @@ class torsionPotential(_potential2DCls):
 
     # OVERRIDE
     def _update_functions(self):
+        """
+        _update_functions
+            calculates the current energy and derivative of the energy
+        """
         super()._update_functions()
 
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
     def set_degrees(self, degrees: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        degrees: bool, optional,
+            if True, output will be given in degrees, otherwise in radians, default: True
+        """
         self.radians = not degrees
         if (degrees):
             self._calculate_energies = lambda positions, positions2: self.tmp_Vfunc(np.deg2rad(positions),
@@ -184,6 +275,14 @@ class torsionPotential(_potential2DCls):
             self.set_radians(radians=not degrees)
 
     def set_radians(self, radians: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        radians: bool, optional,
+            if True, output will be given in radians, otherwise in degree, default: True
+        """
         self.radians = radians
         if (radians):
             self._calculate_energies = self.tmp_Vfunc
@@ -215,14 +314,17 @@ class gaussPotential(_potential2DCls):
 
     def __init__(self, amplitude=1., mu=(0., 0.), sigma=(1., 1.)):
         '''
+         __init__
+            This is the Constructor of a 2D Gauss Potential
+
         Parameters
         ----------
-        A: float
-            scaling of the gauss function
-        mu: tupel
-            mean of the gauss function
-        sigma: tupel
-            standard deviation of the gauss function
+        A: float, optional
+            scaling of the gauss function, defaults to 1.
+        mu: tupel, optional
+            mean of the gauss function, defaults to (0., 0.)
+        sigma: tupel, optional
+            standard deviation of the gauss function, defaults to (1., 1.)
         '''
         nDim = 2
         self.constants.update({"A_gauss": amplitude})
@@ -233,6 +335,11 @@ class gaussPotential(_potential2DCls):
         super().__init__()
 
     def _initialize_functions(self):
+        """
+        _initialize_functions
+            converts the symbolic mathematics of sympy to a matrix representation that is compatible
+            with multi-dimentionality.
+        """
         # Parameters
         nDim = self.constants[self.nDim]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])

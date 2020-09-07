@@ -18,21 +18,28 @@ from ensembler.util.ensemblerTypes import Union, Number, List, Iterable
 
 
 class harmonicOscillatorPotential(_potential1DCls):
+    """
+        Implementation of an 2D  harmonic oscillator potential following hooke's law
+    """
     name: str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
     V_functional = 0.5 * k * (position - x_shift) ** 2 + y_shift
 
     def __init__(self, k: float = 1.0, x_shift: float = 0.0, y_shift: float = 0.0):
         """
-        implementation of an Harmonic Oscilator following hooke's law
-        
-        :param k: force constant, defaults to 1.0
-        :type k: float, optional
-        :param x_shift: shift on the x Axis, defaults to 0.0
-        :type x_shift: float, optional
-        :param y_shift: shift on the y Axis, defaults to 0.0
-        :type y_shift: float, optional
+        __init__
+            This is the Constructor of the 1D harmonic oscillator
+
+        Parameters
+        ----------
+        k: float, optional
+            force constant, defaults to 1.0
+        x_shift: float, optional
+            shift of the minimum in the x Axis, defaults to 0.0
+        y_shift: float, optional
+            shift on the y Axis, defaults to 0.0
         """
+
         self.constants = {self.k: k, self.x_shift: x_shift, self.y_shift: y_shift}
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
@@ -41,6 +48,9 @@ class harmonicOscillatorPotential(_potential1DCls):
 
 
 class wavePotential(_potential1DCls):
+    """
+       Simple qD wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
+       """
     name: str = "Wave Potential"
     amplitude, phase_shift, position, y_shift, multiplicity = sp.symbols("A w r Voff m")
     V_functional = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
@@ -48,18 +58,20 @@ class wavePotential(_potential1DCls):
     def __init__(self, amplitude: float = 1.0, multiplicity: float = 1.0, phase_shift: float = 0.0,
                  y_shift: float = 0.0, radians: bool = False):
         """
-        Implemenation of a wave function.
-        
-        :param amplitude: absolute min and max of the potential, defaults to 1.0
-        :type amplitude: float, optional
-        :param multiplicity: ammount of minima in one phase, defaults to 1.0
-        :type multiplicity: float, optional
-        :param phase_shift: shift of the potential on the x Axis, defaults to 0.0
-        :type phase_shift: float, optional
-        :param y_shift: shift on the y Axis, defaults to 0.0
-        :type y_shift: float, optional
-        :param radians: in radians or degrees - NOT IMPLEMNTED!, defaults to False
-        :type radians: bool, optional
+        __init__
+            This is the Constructor of the 1D wave potential function
+        Parameters
+        ----------
+        amplitude: float, optional
+            absolute min and max of the potential, defaults to 1.0
+        multiplicity: float, optional
+            amount of minima in one phase, defaults to 1.0
+        phase_shift: float, optional
+            shift of the potential on the x Axis, defaults to 0.0
+        y_offset: float, optional
+            shift on the y Axis, defaults to 0.0
+        radians: bool, optional
+            in radians or degrees - NOT IMPLEMNTED!, defaults to False
         """
 
         self.constants = {self.amplitude: amplitude, self.multiplicity: multiplicity, self.phase_shift: phase_shift,
@@ -69,12 +81,24 @@ class wavePotential(_potential1DCls):
 
     # OVERRIDE
     def _update_functions(self):
+        """
+        _update_functions
+            calculates the current energy and derivative of the energy
+        """
         super()._update_functions()
 
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
     def set_degrees(self, degrees: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        degrees: bool, optional,
+            if True, output will be given in degrees, otherwise in radians, default: True
+        """
         self.radians = not degrees
         if (degrees):
             self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
@@ -83,6 +107,14 @@ class wavePotential(_potential1DCls):
             self.set_radians(radians=not degrees)
 
     def set_radians(self, radians: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        radians: bool, optional,
+            if True, output will be given in radians, otherwise in degree, default: True
+        """
         self.radians = radians
         if (radians):
             self._calculate_energies = self.tmp_Vfunc
@@ -92,21 +124,27 @@ class wavePotential(_potential1DCls):
 
 
 class coulombPotential(_potential1DCls):
+    """
+    Coulomb potential representing the pairwise electrostatic interaction of two charged particles
+    """
     name = "Coulomb Potential"
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
     V_functional = (charge1 * charge2) / (position * electric_permetivity * 4 * sp.pi)
 
     def __init__(self, q1=1, q2=1, epsilon=1):
         """
-        Implemenation of Coulomb Law
-        
-        :param q1: Charge of atom 1, defaults to 1
-        :type q1: int, optional
-        :param q2: Charge of atom 2, defaults to 1
-        :type q2: int, optional
-        :param epsilon: Electric Permetivitty, defaults to 1
-        :type epsilon: int, optional
+        __init__
+            This is the Constructor of the Coulomb potential
+        Parameters
+        ----------
+        q1: int, optional
+            Charge of atom 1, defaults to 1
+        q2: int, optional
+            Charge of atom 2, defaults to 1
+        epsilon: int, optional
+            Electric Permetivitty, defaults to 1
         """
+
         self.constants = {self.charge1: q1, self.charge2: q2, self.electric_permetivity: epsilon}
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
@@ -115,23 +153,30 @@ class coulombPotential(_potential1DCls):
 
 
 class lennardJonesPotential(_potential1DCls):
+    """
+     Lennard Jones potential representing the pairwise van-der-Waals interaction of two particles
+     """
     name: str = "Lennard Jones Potential"
     sigma, epsilon, x_shift, y_shift, position = sp.symbols("s e r_0 V_off r")
     V_functional = 4 * epsilon * ((sigma / (position - x_shift)) ** 12 - (sigma / (position - x_shift)) ** 6) + y_shift
 
     def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0, y_shift=0):
         """
-        Implementation of lennard Jones Implementation.
-        
-        :param sigma: x - Position of the minimum, defaults to 1.5
-        :type sigma: float, optional
-        :param epsilon: y position of minima, defaults to 2
-        :type epsilon: float, optional
-        :param x_shift: movement of potential on x Axis, defaults to 0
-        :type x_shift: float, optional
-        :param y_shift: movement of potential on y Axis, defaults to 0
-        :type y_shift: int, optional
+        __init__
+            This is the Constructor of the Lennard-Jones Potential
+
+        Parameters
+        ----------
+        sigma: float, optional
+            x - Position of the minimum, defaults to 1.5
+        epsilon: float, optional
+            y - position of minimum, defaults to 2
+        x_shift: float, optional
+            shift of potential on x Axis, defaults to 0
+        y_shift: int, optional
+            shift of potential on y Axis, defaults to 0
         """
+
         self.constants = {self.sigma: sigma, self.epsilon: epsilon, self.x_shift: x_shift, self.y_shift: y_shift}
 
         self.V = self.V_functional.subs(self.constants)
@@ -141,22 +186,27 @@ class lennardJonesPotential(_potential1DCls):
 
 
 class lennardJonesForceFieldPotential(_potential1DCls):
+    """
+            This is a forcefield like implementation of  a lennard Jones Potential
+    """
     name: str = "Lennard Jones Potential"
     c6, c12, x_shift, y_shift, position = sp.symbols("c6 c12 r_0 V_off r")
     V_functional = (c12 / (position - x_shift) ** 12) - (c6 / (position - x_shift ** 6)) + y_shift
 
     def __init__(self, c6: float = 0.2, c12: float = 0.0001, x_shift: float = 0, y_shift: float = 0):
         """
-        This is a forcefield like implementation of  a lennard Jones Potential
-        
-        :param c6: [description], defaults to 0.2
-        :type c6: float, optional
-        :param c12: [descripftion], defaults to 0.0001
-        :type c12: float, optional
-        :param x_shift: [description], defaults to 0
-        :type x_shift: float, optional
-        :param y_shift: [description], defaults to 0
-        :type y_shift: float, optional
+        __init__
+            This is the Constructor of the Lennard-Jones Field Potential
+        Parameters
+        ----------
+        c6: float, optional
+            prefactor of the interaction term that scales with **6, defaults to 0.2
+        c12: float, optional
+            prefactor of the interaction term that scales with **12, defaults to 0.0001
+        x_shift: float, optional
+            shift of potential on x Axis, defaults to 0
+        y_shift: float, optional
+            shift of potential on y Axis, defaults to 0
         """
         self.constants = {self.c6: c6, self.c12: c12, self.x_shift: x_shift, self.y_shift: y_shift}
         self.V = self.V_functional.subs(self.constants)
@@ -166,20 +216,26 @@ class lennardJonesForceFieldPotential(_potential1DCls):
 
 
 class doubleWellPotential(_potential1DCls):
+    """
+            This is an implementation of a double Well potential
+    """
     name: str = "Double Well"
     a, b, Vmax, position = sp.symbols("a b V_max r")
     V_functional = (Vmax / (b ** 4)) * ((position - a / 2) ** 2 - b ** 2) ** 2
 
     def __init__(self, Vmax=5, a=-1, b=1):
         """
-        This is an implementation of a double Well potential
-        
-        :param Vmax: Maximal barrier between minima, defaults to 5
-        :type Vmax: int, optional
-        :param a: [description], defaults to -1
-        :type a: int, optional
-        :param b: [description], defaults to 1
-        :type b: int, optional
+        __init__
+            This is the Constructor of the double well Potential
+
+        Parameters
+        ----------
+        Vmax: int, optional
+            Maximal barrier between minima, defaults to 5
+        a: int, optional
+            defines x position of the minimum of the first well, defaults to -1
+        b: int, optional
+            defines x position of the minimum of the second well, defaults to 1
         """
 
         self.constants = {self.Vmax: Vmax, self.a: a, self.b: b}
@@ -201,26 +257,28 @@ class fourWellPotential(_potential1DCls):
 
     def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0, ah=2., bh=0., ch=0.5, dh=1.):
         '''
+        __init__
+            This is the Constructor of the four well Potential
 
         Parameters
         ----------
-        Vmax: float
+        Vmax: float, optional
             scaling of the whole potential
-        a: float
+        a: float, optional
             x position of the minimum of the first well
-        b: float
+        b: float, optional
             x position of the minimum of the second well
-        c: float
+        c: float, optional
             x position of the minimum of the third well
-        d: float
+        d: float, optional
             x position of the minimum of the fourth well
-        ah: str
+        ah: str, optional
             ah*Vmax = y position of the first well
-        bh: str
+        bh: str, optional
             bh*Vmax = y position of the second well
-        ch: str
+        ch: str, optional
             ch*Vmax = y position of the third well
-        dh: str
+        dh: str, optional
             dh*Vmax = y position of the fourth well
         '''
 
@@ -244,15 +302,17 @@ class gaussPotential(_potential1DCls):
 
     def __init__(self, A=1., mu=0., sigma=1.):
         '''
+        __init__
+            This is the Constructor of a 1D Gauss Potential
 
         Parameters
         ----------
-        A: float
-            scaling of the gauss function
-        mu: float
-            mean of the gauss function
-        sigma: float
-            standard deviation of the gauss function
+        A: float, optional
+            scaling of the gauss function, defaults to 1.
+        mu: float, optional
+            mean of the gauss function, defautls to 0.
+        sigma: float, optional
+            standard deviation of the gauss function, defaults to 1.
 
                 TODO: make numerical stable
         '''
@@ -266,6 +326,9 @@ class gaussPotential(_potential1DCls):
 
 
 class torsionPotential(_potential1DCls):
+    """
+    Torsion potential that represents the energy potential of a torsion angle
+    """
     name: str = "Torsion Potential"
 
     phase: float = 1.0
@@ -275,6 +338,18 @@ class torsionPotential(_potential1DCls):
     V_functional = sp.Sum(wavePotentials[i, 0], (i, 0, N))
 
     def __init__(self, wavePotentials=[wavePotential(), wavePotential(multiplicity=3)], radians=False):
+        """
+        __init__
+            This is the Constructor of a Torsion Potential
+
+        Parameters
+        ----------
+        wavePotentials: list of two potentialTypes, optionel
+            Torsion potential use the wave potential class to generate its potential, default to
+            [wavePotential(), wavePotential(multiplicity=3)]
+        radians: bool, optional
+            set potential to radians or degrees, defaults to False
+        """
         '''
         initializes torsions Potential
         '''
@@ -289,12 +364,24 @@ class torsionPotential(_potential1DCls):
 
     # OVERRIDE
     def _update_functions(self):
+        """
+        _update_functions
+            calculates the current energy and derivative of the energy
+        """
         super()._update_functions()
 
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
     def set_degrees(self, degrees: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        degrees: bool, optional,
+            if True, output will be given in degrees, otherwise in radians, default: True
+        """
         self.radians = not degrees
         if (degrees):
             self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
@@ -303,6 +390,14 @@ class torsionPotential(_potential1DCls):
             self.set_radians(radians=not degrees)
 
     def set_radians(self, radians: bool = True):
+        """
+        Sets output to either degrees or radians
+
+        Parameters
+        ----------
+        radians: bool, optional,
+            if True, output will be given in radians, otherwise in degree, default: True
+        """
         self.radians = radians
         if (radians):
             self._calculate_energies = self.tmp_Vfunc
@@ -312,6 +407,9 @@ class torsionPotential(_potential1DCls):
 
 
 class forceField:
+    """
+    Force fiel potential energy that combines Coulomb, Lennard Jones and Torsion potentials
+    """
 
     def __init__(self):
         raise NotImplementedError("Not implemented yet, but this calss shall be used to link potential terms! ")
