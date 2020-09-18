@@ -5,7 +5,7 @@ from scipy import constants as const
 from scipy.stats import maxwell
 
 from ensembler.conditions._conditions import _conditionCls
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class thermostat(_conditionCls):
@@ -128,7 +128,7 @@ class andersonThermostat(thermostat):
             if (self.verbose):
                 print("THERMOSTAT: get to temp: ", self.system._currentTemperature, "\n"
                                                                                     'THERMOSTAT: tot_kin: ',
-                      self.system.totKin(), "\n"
+                      self.system.calculate_total_kinetic_energy(), "\n"
                                             "THERMOSTAT: lambda: ", self._lambda, "\n"
                                                                                   "THERMOSTAT: current_Velocity: ",
                       self.system._currentVelocities, "\n"
@@ -174,7 +174,7 @@ class berendsenThermostate(thermostat):
 
         if (self.verbose):
             print("THERMOSTAT: get to temp: ", self.system.temperature, "\n"
-                                                                        'THERMOSTAT: tot_kin: ', self.system.totKin(),
+                                                                        'THERMOSTAT: tot_kin: ', self.system.calculate_total_kinetic_energy(),
                   "\n"
                   "THERMOSTAT: curr temp: ", self._current_temperatur, "\n"
                                                                        "THERMOSTAT: lambda: ", self._lambda, "\n"
@@ -194,7 +194,7 @@ class berendsenThermostate(thermostat):
         """
         # M = constraints
         N = self.system.nparticles * const.Avogadro
-        self._current_temperatur = (2 / (3 * N - self.M - 3)) * self.system.totKin() * N
+        self._current_temperatur = (2 / (3 * N - self.M - 3)) * self.system.calculate_total_kinetic_energy() * N
         self.system._currentTemperature = self._current_temperatur
 
     def _calculate_scaling_factor(self):

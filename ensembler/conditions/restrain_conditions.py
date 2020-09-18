@@ -1,6 +1,6 @@
 from ensembler.conditions._conditions import _conditionCls
 from ensembler.potentials import OneD
-from ensembler.util.ensemblerTypes import system as systemType, potential as potentialType, Iterable, Number, Union
+from ensembler.util.ensemblerTypes import systemCls as systemType, potentialCls as potentialType, Iterable, Number, Union
 
 
 class restraint(_conditionCls):

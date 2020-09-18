@@ -1,6 +1,8 @@
 """
- Stochastic Integrators
+Module: Sampler
+    The sampler module is provides methods exploring the potential functions.
 
+    Optimization Methods
 """
 
 import numpy as np
@@ -8,7 +10,7 @@ from scipy.optimize import fmin_cg
 
 from ensembler.samplers._basicSamplers import _samplerCls
 from ensembler.util.ensemblerTypes import Tuple
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class optimizer(_samplerCls):

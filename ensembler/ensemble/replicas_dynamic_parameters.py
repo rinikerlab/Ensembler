@@ -37,7 +37,7 @@ class ConveyorBelt(ReplicaExchange):
         outstr = ''
         print(self.replicas)
         for i in self.replicas:
-            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLam,
+            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLambda,
                                                         float(self.replicas[i].getTotEnergy()))
         return outstr
 
@@ -103,7 +103,7 @@ class ConveyorBelt(ReplicaExchange):
 
         ## * Conveyor belt specifics
         for i in self.replicas:
-            self.replicas[i]._update_dHdlambda()
+            self.replicas[i]._update_dHdLambda()
 
     def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False,
                  verbosity: bool = True):
@@ -153,7 +153,7 @@ class ConveyorBelt(ReplicaExchange):
         newEne = self.calculate_conveyorBelt_totEne()
         if self._defaultMetropolisCriterion(originalParams=oldEne, swappedParams=newEne):
             for i in self.replicas:
-                self.replicas[i]._update_dHdlambda()
+                self.replicas[i]._update_dHdLambda()
 
             self.exchange_information = self.exchange_information.append(
                 {"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
@@ -164,7 +164,7 @@ class ConveyorBelt(ReplicaExchange):
             self.updateBlam(oldBlam)
 
             for i in self.replicas:
-                self.replicas[i]._update_dHdlambda()
+                self.replicas[i]._update_dHdLambda()
 
             self.exchange_information = self.exchange_information.append(
                 {"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),

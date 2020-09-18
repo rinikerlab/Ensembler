@@ -1308,7 +1308,7 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
         positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, 1], [0, 1, 0], [0, -1, -1], [-1, -1, 1]])
         expected_result = np.array([0., 1, 1, 0.5, 1, 1.5])
 
-        potential = self.potential_class(nDim=3)
+        potential = self.potential_class(nDimensions=3)
         energies = potential.ene(positions)
 
         print(energies)
@@ -1326,7 +1326,7 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
                                      [ 0., -1.,  0.],
                                      [-1., -1., -1.]])
 
-        potential = self.potential_class(nDim=3)
+        potential = self.potential_class(nDimensions=3)
         forces = potential.force(positions)
         print(str(forces))
         self.assertEqual(type(expected_result), type(forces),

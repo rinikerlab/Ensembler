@@ -1,7 +1,7 @@
 import numpy as np
 
 from ensembler.conditions._conditions import _conditionCls
-from ensembler.util.ensemblerTypes import system as systemType, Iterable, Number, Union
+from ensembler.util.ensemblerTypes import systemCls as systemType, Iterable, Number, Union
 
 
 class _boundaryCondition(_conditionCls):

@@ -1,10 +1,13 @@
 """
-Newtonian Integrators
+Module: Sampler
+    The sampler module is provides methods exploring the potential functions.
+
+    Newtonian Integrators
+
 """
 
 from ensembler.samplers._basicSamplers import _samplerCls
-from ensembler.util.ensemblerTypes import Union
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType, Union
 
 
 class newtonianSampler(_samplerCls):

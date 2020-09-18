@@ -14,13 +14,13 @@ class _potentialCls(super_baseClass):
     """
 
     #PRIVATE ATTRIBUTES
-    __nDim: sp.Symbol = sp.symbols("nDims")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDim
+    __nDimensions: sp.Symbol = sp.symbols("nDimensionss")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDimensions
     __nStates: sp.Symbol = sp.symbols("nStates") # this Attribute gives the ammount of present states(interesting for free Energy calculus), please access via nStates
     # __threads: int = 1  #Not satisfyingly implemented
     __constants: Dict[sp.Symbol, Union[Number, Iterable]] = {} #contains all set constants and values for the symbols of the potential function, access it via constants
 
-    def __init__(self, nDim:int=1, nStates:int=2):
-        self.constants.update({self.nDim: nDim, self.nStates: nStates})
+    def __init__(self, nDimensions:int=1, nStates:int=2):
+        self.constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
 
         self.name = self.__class__.__name__
 
@@ -28,12 +28,13 @@ class _potentialCls(super_baseClass):
         Non-Class Attributes
     """
     @property
-    def nDim(self)->sp.Symbol:
+    def nDimensions(self)->sp.Symbol:
         """
-        The symbol for the equation representing the dimensionality.
-        @Immutable!
+        #The symbol for the equation representing the dimensionality.
+        #@Immutable!
         """
-        return self.__nDim
+        return self.__nDimensions
+
     @property
     def nStates(self)->sp.Symbol:
         """
@@ -67,19 +68,19 @@ class _potentialNDCls(_potentialCls):
     V: sp.Function = notImplementedERR
     dVdpos = notImplementedERR
 
-    def __init__(self, nDim: int = -1, nStates: int = 1):
+    def __init__(self, nDimensions: int = -1, nStates: int = 1):
         """
             __init__
                 This class constructs the potential class basic functions, initializes the functions if necessary and also does simplfy and derivate the symbolic equations.
         Parameters
         ----------
-        nDim: int, optional
+        nDimensions: int, optional
             number of dimensions of the potential
         nStates: int, optional
             number of states in the potential.
         """
 
-        super().__init__(nDim=nDim, nStates=nStates)
+        super().__init__(nDimensions=nDimensions, nStates=nStates)
 
         # needed for multi dim functions to be generated dynamically
         self._initialize_functions()
@@ -92,7 +93,7 @@ class _potentialNDCls(_potentialCls):
         """
         msg = self.__name__() + "\n"
         msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
-        msg += "\tDimensions: " + str(self.nDim) + "\n"
+        msg += "\tDimensions: " + str(self.nDimensions) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tV:\t" + str(self.V_functional) + "\n"
         msg += "\t\tdVdpos:\t" + str(self.dVdpos_functional) + "\n"
@@ -158,7 +159,7 @@ class _potentialNDCls(_potentialCls):
             the calculated potential energies.
 
         """
-        return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim])))
+        return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
 
     def force(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
         """
@@ -175,7 +176,7 @@ class _potentialNDCls(_potentialCls):
             the calculated potential forces.
 
         """
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDim]))).T
+        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
 
     # just alternative name, same as force
     def dvdpos(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
@@ -191,14 +192,14 @@ class _potential1DCls(_potentialNDCls):
     def __init__(self, nStates: int = 1):
         """
             __init__
-                constructs a N-Dimensional class with nDim =1
+                constructs a N-Dimensional class with nDimensions =1
 
         Parameters
         ----------
         nStates: int, optional
             number of states in the potential.
         """
-        super().__init__(nDim=1, nStates=nStates)
+        super().__init__(nDimensions=1, nStates=nStates)
 
     def _initialize_functions(self):
         """
@@ -250,14 +251,14 @@ class _potential2DCls(_potentialNDCls):
     def __init__(self, nStates: int = 1):
         """
             __init__
-                constructs a N-Dimensional class with nDim =1
+                constructs a N-Dimensional class with nDimensions =1
 
         Parameters
         ----------
         nStates: int, optional
             number of states in the potential. (default: 1)
         """
-        super().__init__(nDim=2, nStates=nStates)
+        super().__init__(nDimensions=2, nStates=nStates)
 
 
 class _potential1DClsPerturbed(_potential1DCls):
@@ -282,7 +283,7 @@ class _potential1DClsPerturbed(_potential1DCls):
         """
         msg = self.__name__() + "\n"
         msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
-        msg += "\tDimensions: " + str(self.nDim) + "\n"
+        msg += "\tDimensions: " + str(self.nDimensions) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tCoupling:\t" + str(self.coupling) + "\n"
         msg += "\t\tV:\t" + str(self.V_functional) + "\n"

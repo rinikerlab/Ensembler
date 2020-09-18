@@ -4,7 +4,7 @@ Module: Conditions
 """
 
 from ensembler.util.basic_class import super_baseClass, notImplementedERR
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class _conditionCls(super_baseClass):
@@ -39,7 +39,7 @@ class _conditionCls(super_baseClass):
 
     def coupleSystem(self, system):
         self.system = system
-        self.nDim = system.nDim
+        self.nDim = system.nDimensions
         self.nStates = system.nStates
 
 

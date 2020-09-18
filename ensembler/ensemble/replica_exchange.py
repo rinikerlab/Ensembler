@@ -31,7 +31,7 @@ class TemperatureReplicaExchange(ReplicaExchange):
         self._exchange_pattern = exchange_pattern.localExchangeScheme(self)
 
     def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
-        [self.replicas[replica]._update_CurrVars() for replica in self.replicas]
+        [self.replicas[replica]._update_current_vars_from_current_state() for replica in self.replicas]
         # self._scale_velocities_fitting_to_temperature(swapped_exCoord, original_exCoord)
 
     def _scale_velocities_fitting_to_temperature(self, original_T, swapped_T):

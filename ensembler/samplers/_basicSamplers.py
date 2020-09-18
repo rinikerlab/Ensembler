@@ -1,5 +1,10 @@
+"""
+Module: Sampler
+    The sampler module is provides methods exploring the potential functions.
+"""
+
 from ensembler.util.basic_class import super_baseClass, notImplementedERR
-from ensembler.util.ensemblerTypes import system as systemType, Tuple
+from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 
 class _samplerCls(super_baseClass):

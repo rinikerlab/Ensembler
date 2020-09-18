@@ -15,7 +15,7 @@ from tqdm import tqdm_notebook as tqdm
 
 from ensembler.ensemble import exchange_pattern
 from ensembler.util.basic_class import super_baseClass
-from ensembler.util.ensemblerTypes import system
+from ensembler.util.ensemblerTypes import systemCls
 
 
 class MultiReplicaApproach(super_baseClass):
@@ -137,7 +137,7 @@ class ReplicaExchange(MultiReplicaApproach):
         -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
                 originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
 
-    def __init__(self, system: system, exchange_dimensions: Dict[str, Iterable], exchange_criterium=None,
+    def __init__(self, system: systemCls, exchange_dimensions: Dict[str, Iterable], exchange_criterium=None,
                  steps_between_trials: int = 10):
 
         # TODO do some fancy parsing
@@ -364,9 +364,9 @@ class ReplicaExchange(MultiReplicaApproach):
             self.exchange_information = self.exchange_information.append(
                 {"nExchange": self._currentTrial, "replicaID": self.replicas[replicaID].replicaID,
                  "replicaPositionI": replicaID, "exchangeCoordinateI": self.replicas[replicaID].exchange_parameters,
-                 "TotEI": self.replicas[replicaID].totPot(),
+                 "TotEI": self.replicas[replicaID].calculate_total_potential_energy(),
                  "replicaPositionJ": replicaID, "exchangeCoordinateJ": self.replicas[replicaID].exchange_parameters,
-                 "TotEJ": self.replicas[replicaID].totPot(),
+                 "TotEJ": self.replicas[replicaID].calculate_total_potential_energy(),
                  "doExchange": exchange}, ignore_index=True)
 
     def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):

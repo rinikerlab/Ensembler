@@ -1096,7 +1096,7 @@ class flatwellPotential(_potential1DCls):
         self.y_max = y_max
         self.y_min = y_min
 
-        self.constants.update({self.nStates: 1, self.nDim: 1})
+        self.constants.update({self.nStates: 1, self.nDimensions: 1})
         self._update_functions = None
 
     def _calculate_energies(self, position: Union[Number, np.array]) -> Union[Number, np.array]:
