@@ -4,13 +4,13 @@ import numpy as np
 from scipy import constants as const
 from scipy.stats import maxwell
 
-from ensembler.conditions._conditions import _conditionCls
+from ensembler.conditions._basicCondition import _conditionCls
 from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class thermostat(_conditionCls):
     """
-    ..autoclass: Thermostat
+    Thermostat
         This is the parent class of Thermostats.
         The apply function of this class is not implemented and needs to be overwritten by each subclass.
     """

@@ -2,7 +2,7 @@
     This file provides ensembler types, that are used to annotate and enforce certain types throughout the ensembler package.
 """
 
-# Generic Types
+# Generic Types - provided to all other files from here
 from typing import TypeVar, Union, List, Tuple, Iterable, Dict, NoReturn
 from numbers import Number
 

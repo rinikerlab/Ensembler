@@ -7,7 +7,7 @@ Module: Sampler
 """
 
 from ensembler.samplers._basicSamplers import _samplerCls
-from ensembler.util.ensemblerTypes import systemCls as systemType, Union
+from ensembler.util.ensemblerTypes import systemCls as systemType, Union, Number
 
 
 class newtonianSampler(_samplerCls):
@@ -16,9 +16,9 @@ class newtonianSampler(_samplerCls):
     newtonian type samplers currently comprise the Velocity Verlet, Position Verlet and
     Leapfrog integrator.
     """
-    currentPosition: float
-    currentVelocity: float
-    currentForces: float
+    currentPosition: Number
+    currentVelocity: Number
+    currentForces: Number
 
     dt: float
 
@@ -46,7 +46,7 @@ class velocityVerletIntegrator(newtonianSampler):
     """
     name = "Verlocity Verlet Integrator"
 
-    def step(self, system: systemType) -> Union[float, float, float]:
+    def step(self, system: systemType) -> Union[Number, Number, Number]:
         """
         step
             This function is performing an integration step in Verlocity Verlet fashion.
@@ -58,7 +58,7 @@ class velocityVerletIntegrator(newtonianSampler):
 
         Returns
         -------
-        Tuple[float, float, float]
+        Tuple[Number, Number, Number]
             This Tuple contains the new: (new Position, new Velocity, new Force)
         """
         # init
@@ -91,7 +91,7 @@ class positionVerletIntegrator(newtonianSampler):
         """
     name = "Position Verlet Integrator"
 
-    def step(self, system: systemType) -> Union[float, float, float]:
+    def step(self, system: systemType) -> Union[Number, Number, Number]:
         """
         step
             This function is performing an integration step in Position Verlet fashion.
@@ -103,7 +103,7 @@ class positionVerletIntegrator(newtonianSampler):
 
         Returns
         -------
-        Tuple[float, float, float]
+        Tuple[Number, Number, Number]
             This Tuple contains the new: (new Position, new Velocity, new Force)
         """
         # init
@@ -133,7 +133,7 @@ class leapFrogIntegrator(newtonianSampler):
     """
     name = "Leap Frog Integrator"
 
-    def step(self, system: systemType) -> Union[float, float, float]:
+    def step(self, system: systemType) -> Union[Number, Number, Number]:
         """
         step
             This function is performing an integration step in leapFrog fashion.
@@ -145,7 +145,7 @@ class leapFrogIntegrator(newtonianSampler):
 
         Returns
         -------
-        Tuple[float, float, float]
+        Tuple[Number, Number, Number]
             This Tuple contains the new: (new Position, new Velocity, new Force)
         """
 

@@ -9,8 +9,7 @@ import numpy as np
 from scipy.optimize import fmin_cg
 
 from ensembler.samplers._basicSamplers import _samplerCls
-from ensembler.util.ensemblerTypes import Tuple
-from ensembler.util.ensemblerTypes import systemCls as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 
 class optimizer(_samplerCls):

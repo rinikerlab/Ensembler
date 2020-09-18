@@ -289,10 +289,10 @@ class system(super_baseClass):
 
         for condition in self.conditions:
             if (not hasattr(condition, "system")):
-                condition.coupleSystem(self)
+                condition.couple_system(self)
             else:
                 # warnings.warn("Decoupling system and coupling it again!")
-                condition.coupleSystem(self)
+                condition.couple_system(self)
             if (not hasattr(condition, "dt") and hasattr(self.sampler, "dt")):
                 condition.dt = self.sampler.dt
             else:

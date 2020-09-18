@@ -1,16 +1,15 @@
 import numpy as np
 
-from ensembler.conditions._conditions import _conditionCls
+from ensembler.conditions._basicCondition import _conditionCls
 from ensembler.util.ensemblerTypes import systemCls as systemType, Iterable, Number, Union
 
 
 class _boundaryCondition(_conditionCls):
     """
-    This parent class is defining some functions for the actual conditions.
+     This parent class is defining some functions for the actual box conditions.
     """
     lowerbounds: Iterable[Number]
     higherbounds: Iterable[Number]
-    verbose: bool = False
 
     def __str__(self) -> str:
         msg = self.name + "\n"

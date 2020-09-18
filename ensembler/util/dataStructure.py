@@ -3,7 +3,6 @@ Module: dataStructure
     This module contains all needed data Structures for the project.
 """
 from collections import namedtuple
-
 import __main__
 
 """

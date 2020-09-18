@@ -1,3 +1,8 @@
+"""
+Module: basic_class
+    This file is giving the basic scaffold for saving & loading any Ensembler class with pickle.
+"""
+
 import io
 import pickle
 from typing import Union, Callable
@@ -11,7 +16,6 @@ class super_baseClass:
     """
     This class is a scaffold, containing functionality all classes should have.
     """
-
     name: str = "Unknown"
 
     def __name__(self) -> str:
@@ -51,7 +55,6 @@ class super_baseClass:
     """
     Methods
     """
-
     def save(self, path: Union[str, io.FileIO] = None) -> str:
         """
         This method stores the Class as binary obj to a given path or fileBuffer.

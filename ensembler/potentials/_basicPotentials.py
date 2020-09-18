@@ -21,7 +21,6 @@ class _potentialCls(super_baseClass):
 
     def __init__(self, nDimensions:int=1, nStates:int=2):
         self.constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
-
         self.name = self.__class__.__name__
 
     """
