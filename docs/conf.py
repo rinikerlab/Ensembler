@@ -21,9 +21,9 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Ensembler'
-copyright = ("2020, Benjamin Schroeder, Stephanie Linker, David Hahn. Project structure based on the "
+copyright = ("2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the "
              "Computational Molecular Science Python Cookiecutter version 1.3")
-author = 'Benjamin Schröder, Stephanie Linker, David Hahn'
+author = 'Benjamin Ries, Stephanie Linker, David Hahn'
 
 # The short X.Y version
 version = ''

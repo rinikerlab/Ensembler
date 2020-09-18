@@ -233,7 +233,7 @@ class ConveyorBelt(ReplicaExchange):
         '''
         self.capital_lambda = capital_lambda
         for i in self.replicas:
-            self.replicas[i].set_lam(self.calc_lam(capital_lambda, i))
+            self.replicas[i].set_lambda(self.calc_lam(capital_lambda, i))
         self.apply_mem()
 
         return capital_lambda

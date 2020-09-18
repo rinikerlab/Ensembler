@@ -80,7 +80,7 @@ class perturbedSystem(system):
 
     def set_lam(self, lam: float):
         self._currentLam = lam
-        self.potential.set_lam(lam=self._currentLam)
+        self.potential.set_lambda(lam=self._currentLam)
         self._updateEne()
 
     def _update_dHdlambda(self):

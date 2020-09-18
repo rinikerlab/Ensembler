@@ -75,13 +75,13 @@ Free Energy Calculations: __Under Construction__
 
 ## Authors
 
-Benjamin Schroeder;
-Stephanie Linker;
-David Hahn
+Benjamin J. Ries;
+Stephanie M. Linker;
+David F. Hahn
 
 ## Copyright
 
-Copyright (c) 2020, Benjamin Schroeder, Stephanie Linker, David Hahn
+Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn
 
 
 ### Acknowledgements

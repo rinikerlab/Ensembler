@@ -21,13 +21,7 @@ class _bias_baseclass(_potential1DCls):
     position, y_shift = sp.symbols("r Voffset")
 
     def __init__(self, integrator, system: float = 0):
-        """
-        This Class is representing the a dummy potential.
-        It returns a constant value equalling the y_shift parameter.
 
-        :param y_shift: This will be the constant return value, defaults to 0
-        :type y_shift: float, optional
-        """
 
         self.integrator = integrator
         self.system = system

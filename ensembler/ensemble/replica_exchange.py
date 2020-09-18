@@ -31,12 +31,11 @@ class TemperatureReplicaExchange(ReplicaExchange):
         self._exchange_pattern = exchange_pattern.localExchangeScheme(self)
 
     def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
-        pass
         [self.replicas[replica]._update_CurrVars() for replica in self.replicas]
         # self._scale_velocities_fitting_to_temperature(swapped_exCoord, original_exCoord)
 
     def _scale_velocities_fitting_to_temperature(self, original_T, swapped_T):
-        if (not any([getattr(self.replicas[replica], "_currentVelocities") == None for replica in
+        if (not any([getattr(self.replicas[replica], "_currentVelocities") is None for replica in
                      self.replicas])):  # are there velocities?
             [setattr(self.replicas[replica], "_currentVelocities",
                      np.multiply(self.replicas[replica]._currentVelocities, np.divide(original_T[i], swapped_T[i]))) for

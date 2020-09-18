@@ -40,7 +40,7 @@ def plot_1DPotential_V(potential: _potential1DCls, positions: list, color=None,
     energies = potential.ene(positions=positions)
 
     # is there already a figure?
-    if (ax == None):
+    if (ax is None):
         fig = plt.figure()
         ax = fig.add_subplot(111)
     else:
@@ -71,7 +71,7 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions: list, color=s
     energies = potential.force(positions=positions)
 
     # is there already a figure?
-    if (ax == None):
+    if (ax is None):
         fig = plt.figure()
         ax = fig.add_subplot(111)
     else:
@@ -118,7 +118,7 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list,
     dVdpos = potential.dhdpos(positions=positions)
 
     # is there already a figure?
-    if (ax == None):
+    if (ax is None):
         fig = plt.figure()
         ax = fig.add_subplot(111)
     else:
@@ -240,14 +240,14 @@ def plot_2DEnergy_landscape(potential1: _potential1DCls, potential2: _potential1
     energy_map = np.array(energy_map)
 
     # is there already a figure?
-    if (ax == None):
+    if (ax is None):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         colbar = True
     else:
         fig = None
 
-    if (z_range == None):
+    if (z_range is None):
         z_range = [min_E, max_E]
 
     # plot
@@ -298,11 +298,11 @@ def plot_2perturbedEnergy_landscape(potential: _potential1DClsPerturbed, positio
                                     x_range=None, lam_range=None, title: str = None, colbar: bool = False, ax=None):
     energy_map_lin = []
     for y in lambdas:
-        potential.set_lam(y)
+        potential.set_lambda(y)
         energy_map_lin.append(potential.ene(positions))
     energy_map_lin = np.array(energy_map_lin)
 
-    if (ax == None):
+    if (ax is None):
         fig = plt.figure(figsize=(15, 5))
         ax = fig.add_subplot(111)
         colbar = True
@@ -374,7 +374,7 @@ def envPot_differentS_overlay_plot(eds_potential: pot.envelopedPotential, s_valu
         ys.append(enes)
 
     # plotting
-    if (axes == None):
+    if (axes is None):
         fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(20, 10))
     else:
         fig = None
@@ -387,7 +387,7 @@ def envPot_differentS_overlay_plot(eds_potential: pot.envelopedPotential, s_valu
     axes.set_xlim(min(positions), max(positions))
     axes.set_ylabel("Vr/[kJ]")
     axes.set_xlabel("r")
-    if (title == None):
+    if (title is None):
         axes.set_title("different $V_{r}$s with different s-values overlayed ")
     else:
         axes.set_title(title)
@@ -501,7 +501,7 @@ def plot_envelopedPotential_2State_System(eds_potential: pot.envelopedPotential,
         if (min(row) < min_e):
             min_e = min(row)
 
-    if (V_min == None):
+    if (V_min is None):
         V_min = min_e
 
     ##plot nicely
@@ -559,7 +559,7 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
             if (min(row) < min_e):
                 min_e = min(row)
 
-        if (V_min == None and first):
+        if (V_min is None and first):
             V_min = min_e
             first = False
             print("emin: ", min_e)

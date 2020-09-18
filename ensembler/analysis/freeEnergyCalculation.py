@@ -128,7 +128,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        return float(self._calculate_implementation_bruteForce(Vi, Vj))
+        return float(self._calculate_efficient(Vi, Vj))
 
     def _calculate_implementation_bruteForce(self, Vi: (Iterable, Number), Vj: (Iterable, Number)) -> float:
         """
@@ -234,6 +234,49 @@ class zwanzigEquation(_FreeEnergyCalculator):
                 "Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
                     np.mean(edVij)))
 
+        return dF
+
+    def _calculate_efficient(self, Vi: (Iterable, Number), Vj: (Iterable, Number)) -> float:
+        """zwanzig
+
+        Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).
+        The initial state of the free energy difference is denoted as 0, the final state is called 1.
+        The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set
+        of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the
+        initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was
+        analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann
+        constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.
+
+        This is an efficient more overflow robust implementation of the Zwanzig Equation.
+
+        @Author: Gerhard König
+        See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409
+
+        Parameters
+        ----------
+        Vi : np.array
+        Vj : np.array
+
+        Returns
+        -------
+        float
+            free energy difference
+
+        """
+        if (not (len(Vi) == len(Vj))):
+            raise ValueError(
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
+                    len(Vi) + " \t " + str(len(Vj))) + "\n")
+
+        Vi, Vj = self._prepare_type(Vi, Vj)
+        beta = 1 / (self.constants[self.k] * self.constants[self.T])
+
+        # Calculate the potential energy difference in reduced units of kT
+        dVij = - beta * np.subtract(Vj, Vi)
+
+        # Return free energy difference
+        from scipy import special as s
+        dF = - np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1/len(dVij))
         return dF
 
     def set_parameters(self, T: float = None, k: float = None):
@@ -508,6 +551,7 @@ class bar(bennetAcceptanceRatio):
     pass
 
 
+"""
 class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
     k, T, beta, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T beta C  Vi_i Vj_i Vi_j Vj_j")
     equation: sp.function = (1 / (k * T)) * (
@@ -522,14 +566,14 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
     def __init__(self, C: float = 0.0, T: float = 298, k: float = const.k * const.Avogadro,
                  kT: bool = False, kJ: bool = False, kCal: bool = False,
                  convergence_radius: float = 10 ** (-5), max_iterations: int = 100, min_iterations: int = 1):
-        """
+        \"""
         __init__ Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation
 
         :param T: Temperature in Kelvin, defaults to 398
         :type T: float, optional
         :param k: boltzmann Constant, defaults to const.k*const.Avogadro
         :type k: float, optional
-        """
+        \"""
 
         self.constants = {}
         if (kT):
@@ -550,7 +594,7 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
 
     def calculate(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
                   Vi_j: (Iterable[Number], Number), Vj_j: (Iterable[Number], Number)) -> float:
-        """reweighted Zwanzig
+        \"""reweighted Zwanzig
 
         Parameters
         ----------
@@ -564,7 +608,7 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
         float
             free energy difference
 
-        """
+        \"""
         return self._calculate_optimize(Vi_i, Vj_i, Vi_j, Vj_j)
 
     def _calc_mbar(self, C: Decimal, Vj_i: np.array, Vi_i: np.array, Vi_j: np.array, Vj_j: np.array) -> Decimal:
@@ -585,7 +629,7 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
     def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
                             Vi_j: (Iterable[Number], Number), Vj_j: (Iterable[Number], Number), C0: float = 0,
                             verbose: bool = True) -> float:
-        """
+        \"""
             method  bisection
 
         Parameters
@@ -600,7 +644,7 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
         float
             free energy difference
 
-        """
+        \"""
         if (
         not ((len(Vi_i) == len(Vi_i)) and (len(Vi_j) == len(Vj_j)))):  # I and J simulation don't need the same length.
             raise ValueError(
@@ -643,14 +687,14 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
         return float(dF)
 
     def set_parameters(self, C: float = None, T: float = None, k: float = None):
-        """
+        \"""
         set_parameters setter for the parameter
 
         :param T: Temperature in Kelvin, defaults to None
         :type T: float, optional
         :param k: Boltzmann Constant, defaults to None
         :type k: float, optional
-        """
+        \"""
         if (isinstance(T, Number)):
             self.constants.update({self.T: Decimal(T)})
 
@@ -661,3 +705,4 @@ class multistatebennetAcceptanceRatio(_FreeEnergyCalculator):
             self.constants.update({self.C: Decimal(C)})
 
         self._update_function()
+"""

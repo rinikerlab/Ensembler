@@ -3,7 +3,7 @@
 """
 
 # Generic Types
-from typing import TypeVar, Union, List, Tuple, Iterable
+from typing import TypeVar, Union, List, Tuple, Iterable, Dict
 from numbers import Number
 
 # Dummy defs:

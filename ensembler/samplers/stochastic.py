@@ -29,7 +29,7 @@ class stochasticSampler(_samplerCls):
     posShift: float = 0
 
     # Limits:
-    _critInSpaceRange = lambda self, pos: self.spaceRange == None or (
+    _critInSpaceRange = lambda self, pos: self.spaceRange is None or (
                 self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange))
 
     def randomShift(self, nDim: int) -> Union[float, np.array]:

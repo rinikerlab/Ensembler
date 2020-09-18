@@ -19,7 +19,7 @@ from ensembler.util.ensemblerTypes import Union, Number, List, Iterable
 
 class harmonicOscillatorPotential(_potential1DCls):
     """
-        Implementation of an 2D  harmonic oscillator potential following hooke's law
+        Implementation of an 1D  harmonic oscillator potential following hooke's law
     """
     name: str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
@@ -49,7 +49,7 @@ class harmonicOscillatorPotential(_potential1DCls):
 
 class wavePotential(_potential1DCls):
     """
-       Simple qD wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
+       Simple 1D wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
        """
     name: str = "Wave Potential"
     amplitude, phase_shift, position, y_shift, multiplicity = sp.symbols("A w r Voff m")
@@ -408,11 +408,11 @@ class torsionPotential(_potential1DCls):
 
 class forceField:
     """
-    Force fiel potential energy that combines Coulomb, Lennard Jones and Torsion potentials
+    Force field potential energy that combines Coulomb, Lennard Jones and Torsion potentials
     """
 
     def __init__(self):
-        raise NotImplementedError("Not implemented yet, but this calss shall be used to link potential terms! ")
+        raise NotImplementedError("Not implemented yet, but this class shall be used to link N potential terms! ")
 
 
 """
@@ -421,6 +421,13 @@ class forceField:
 
 
 class linearCoupledPotentials(_potential1DClsPerturbed):
+    """
+    Linear Coupled Potential combines two potential as linear combinations,
+    $ V_{\lambda} = \lambda * V_a + (1-\lambda)*V_b $
+
+    This variant of coupling states is used for example in FEP, TI or BAR approaches.
+
+    """
     name: str = "Linear Coupled System"
     lam, position = sp.symbols('λ r')
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
@@ -430,21 +437,35 @@ class linearCoupledPotentials(_potential1DClsPerturbed):
                  Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  lam: float = 0.5):
         """
-        Linear Coupled Potentials, like in FEP or TI simulations.
-        
-        :param Va: Potential A, defaults to harmonicOsc(k=1.0, x_shift=0.0)
-        :type Va: _potential1DClsSymPY, optional
-        :param Vb: Potential B, defaults to harmonicOsc(k=11.0, x_shift=0.0)
-        :type Vb: _potential1DClsSymPY, optional
-        :param lam: Coupling factor, defaults to 0.5
-        :type lam: float, optional
+            __init__
+                This constructor builds a linear combination of Va and Vb potentials, with lam as a cofactor.
+                Linear Coupled Potentials, like in FEP or TI simulations.]
+
+        Parameters
+        ----------
+        Va: _potential1DCls, optional
+            Potential A that is mixed to the new potential.
+        Vb:  _potential1DCls, optional
+            Potential B that is mixed to the new potential.
+        lam: float
+            lam is representing the lambda variable
         """
+
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
         self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.lam: lam}
         super().__init__()
 
 
 class exponentialCoupledPotentials(_potential1DCls):
+    """
+    This implementation of exponential Coupling is the symbolic variant of the more robust eds potential implementation.
+    Here N-states are coupled by the log-sum-exp resulting in a new reference state $V_R$,
+
+    $V_R = -1/{\beta} * \ln(\sum_i^Ne^(-\beta*s*(V_i-E^R_i)))$
+
+    This potential coupling is for example used in EDS.
+
+    """
     name: str = "exponential Coupled System"
     position, s, temp, eoffA, eoffB = sp.symbols('r s T eoffI eoffJ')
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
@@ -455,19 +476,26 @@ class exponentialCoupledPotentials(_potential1DCls):
                  Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  eoffA: float = 0, eoffB: float = 0, s: float = 1.0, temp: float = 298):
         """
-        exponential Coupled Potentials, this is a mixture of EDS and TI
-    
-        :param Va: Potential A, defaults to harmonicOsc(k=1.0, x_shift=0.0)
-        :type Va: _potential1DClsSymPY, optional
-        :param Vb: Potential B, defaults to harmonicOsc(k=11.0, x_shift=0.0)
-        :type Vb: _potential1DClsSymPY, optional
-        :param lam: Coupling factor, defaults to 0.5
-        :type lam: float, optional
-        :param s: smoothing factor, defaults to 1.0
-        :type s: float, optional
-        :param temp: Temperature, defaults to 298
-        :type temp: float, optional
+            __init__
+                This constructor is building a exponential coupled Potential out of two given end-states.
+
+        Parameters
+        ----------
+        Va: _potential1DCls, optional
+            potential function of state A (default: harmonic oscillator)
+        Vb: _potential1DCls, optional
+            potential function of state B (default: harmonic oscillator)
+        eoffA: float, optional
+            Energy offset of state A in the reference potential (default: 0)
+        eoffB: float, optional
+            Energy offset of state B in the reference potential (default: 0)
+        s: float, optional
+            smoothing factor of the reference potential (default: 1.0)
+        temp: float, optional
+            Temperature of the reference state. (default: 298)
+
         """
+
 
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
         self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.eoffA: eoffA, self.eoffB: eoffB, self.s: s,
@@ -477,15 +505,50 @@ class exponentialCoupledPotentials(_potential1DCls):
         super().__init__(nStates=2)
 
     def set_s(self, s: float):
+        """
+            set_s
+                sets a new s-value. (please only use this function to change s)
+
+        Parameters
+        ----------
+        s: float
+            the new sval.
+
+        """
         self.constants.update({self.s: s})
         self._update_functions()
 
-    def set_Eoff(self, eoffs: List[float]):
-        self.constants.update({self.eoffA: eoffs[0], self.eoffB: eoffs[1]})
+    def set_Eoff(self, eoffA:float=0, eoffB:float=0):
+        """
+            set_Eoff
+                set the energy offsets for the states in the reference state.
+
+        Parameters
+        ----------
+        eoffA: float, optional
+            set a new offset for state A (default: None)
+        eoffB: float, optional
+            set a new E offset for state B in the reference state (default: None)
+
+        """
+        if(eoffA is None):
+            self.constants.update({self.eoffA: eoffA})
+        if(eoffB is None):
+            self.constants.update({self.eoffB: eoffB})
         self._update_functions()
 
 
 class envelopedPotential(_potential1DCls):
+    """
+    This implementation of exponential Coupling for EDS is a more numeric robust and variable implementation, it allows N states.
+    Therefore the computation of energies and the deviation is not symbolic.
+
+    Here N-states are coupled by the log-sum-exp resulting in a new reference state $V_R$,
+
+    $V_R = -1/{\beta} * \ln(\sum_i^Ne^(-\beta*s*(V_i-E^R_i)))$
+
+    This potential coupling is for example used in EDS.
+    """
     name = "Enveloping Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -502,14 +565,23 @@ class envelopedPotential(_potential1DCls):
             harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)),
                  s: float = 1.0, Eoff_i: t.List[float] = None, T: float = 1, kb: float = 1):
         """
+            __init__
+                This function constructs a enveloped potential, enveloping all given states.
 
-        #const.gas_constant
         Parameters
         ----------
-        V_is
-        s
-        Eoff_i
-        T
+        V_is: List[_potential1DCls], optional
+            The states(potential classes) to be enveloped (default: [harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)])
+
+        s: float, optional
+            the smoothing parameter, lowering the barriers between the states
+        Eoff_i: List[float], optional
+            the energy offsets of the individual states in the reference potential. These can be used to allow a more uniform sampling. (default: seta ll to 0)
+        T: float, optional
+            the temperature of the reference state (default: 1 = T)
+        kb: float, optional
+            the boltzman constant (default: 1 = kb)
+
         """
         self.constants.update({self.T: T, self.kb: kb})
         nStates = len(V_is)
@@ -525,6 +597,9 @@ class envelopedPotential(_potential1DCls):
         super().__init__(nStates=len(V_is))
 
     def _initialize_functions(self):
+        """
+        build the symbolic functionality.
+        """
         # for sympy Sympy Updates - Check!:
         self.statePotentials = {"state_" + str(j): self.V_is[j] for j in range(self.constants[self.nStates])}
         Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
@@ -549,6 +624,13 @@ class envelopedPotential(_potential1DCls):
 
     @property
     def V_is(self) -> t.List[_potential1DCls]:
+        """
+        V_is are the state potential classes enveloped by the reference state.
+
+        Returns
+        -------
+        V_is: t.List[_potential1DCls]
+        """
         return self._V_is
 
     @V_is.setter
@@ -559,11 +641,26 @@ class envelopedPotential(_potential1DCls):
         else:
             raise IOError("Please give the enveloped potential for V_is only 1D-Potential classes in a list.")
 
-    def set_Eoff(self, Eoff: Union[Number, Iterable[Number], None]):
+    def set_Eoff(self, Eoff: Union[Number, Iterable[Number]]):
+        """
+        This function is setting the Energy offsets of the states enveloped by the reference state.
+        Parameters
+        ----------
+        Eoff: Union[Number, Iterable[Number]]
+        """
         self.Eoff_i = Eoff
 
     @property
     def Eoff(self) -> t.List[Number]:
+        """
+        The Energy offsets are used to bias the single states in the reference potential by a constant offset.
+        Therefore each state of the enveloping potential has its own energy offset.
+
+        Returns
+        -------
+        Eoff:t.List[Number]
+
+        """
         return self.Eoff_i
 
     @Eoff.setter
@@ -572,6 +669,15 @@ class envelopedPotential(_potential1DCls):
 
     @property
     def Eoff_i(self) -> t.List[Number]:
+        """
+        The Energy offsets are used to bias the single states in the reference potential by a constant offset.
+        Therefore each state of the enveloping potential has its own energy offset.
+
+        Returns
+        -------
+        Eoff:t.List[Number]
+
+        """
         return self._Eoff_i
 
     @Eoff_i.setter
@@ -590,6 +696,17 @@ class envelopedPotential(_potential1DCls):
                     len(Eoff)) + "\t states in Vi" + str(len(self.V_is)))
 
     def set_s(self, s: Union[Number, Iterable[Number]]):
+        """
+            set_s
+            is a function used to set an smoothing parameter.
+        Parameters
+        ----------
+        s:Union[Number, Iterable[Number]]
+
+        Returns
+        -------
+
+        """
         self.s_i = s
 
     @property
@@ -621,16 +738,12 @@ class envelopedPotential(_potential1DCls):
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
 
     def _calculate_energies_singlePos_overwrite_multiS(self, position) -> np.array:
-        # print("Positions: ",position)
-        # print("s_i: ",self.s_i)
         sum_prefactors, _ = self._logsumexp_calc_gromos(position)
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
         Vr = (-1 / (beta)) * sum_prefactors
         return np.squeeze(Vr)
 
     def _calculate_energies_singlePos_overwrite_oneS(self, position) -> np.array:
-        # print("Positions: ",position)
-        # print("s_i: ",self.s_i)
         sum_prefactors, _ = self._logsumexp_calc(position)
         beta = self.constants[self.T] * self.constants[self.kb]
         Vr = (-1 / (beta * self.s_i[0])) * sum_prefactors
@@ -719,6 +832,16 @@ class envelopedPotential(_potential1DCls):
 
 
 class hybridCoupledPotentials(_potential1DClsPerturbed):
+    """
+    This implementation of exponential Coupling combined with linear compling is called $\lambda$-EDS this function is the purely symbolic class and therefore note very numerical stable (see lambda EDS).
+
+    Here two-states are coupled by the log-sum-exp and weighted by lambda resulting in a new reference state $V_R$,
+
+    $V_R = -\frac{1}{\beta*s} * \ln(\lambda * e^(-\beta*s*(V_A-E^R_A)) + (1-\lambda)*e^(-\beta*s*(V_B-E^R_B)))$
+
+    This potential coupling is for example used in $\lambda$-EDS.
+    """
+
     name: str = "hybrid Coupled Potential"
     lam, position, s, T = sp.symbols(u'λ r s T')
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
@@ -729,18 +852,23 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
                  Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
                  lam: float = 0.5, s: float = 1.0, temp: float = 298):
         """
-        exponential Coupled Potentials, this is a mixture of EDS and TI
-    
-        :param Va: Potential A, defaults to harmonicOsc(k=1.0, x_shift=0.0)
-        :type Va: _potential1DClsSymPY, optional
-        :param Vb: Potential B, defaults to harmonicOsc(k=11.0, x_shift=0.0)
-        :type Vb: _potential1DClsSymPY, optional
-        :param lam: Coupling factor, defaults to 0.5
-        :type lam: float, optional
-        :param s: smoothing factor, defaults to 1.0
-        :type s: float, optional
-        :param temp: Temperature, defaults to 298
-        :type temp: float, optional
+            __init__
+                This function constructs a $\lambda$-enveloped potential, enveloping all given states and weighting them by $\lambda$.
+
+        Parameters
+        ----------
+        V_is: List[_potential1DCls], optional
+            The states(potential classes) to be enveloped (default: [harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)])
+
+        s: float, optional
+            the smoothing parameter, lowering the barriers between the states
+        Eoff_i: List[float], optional
+            the energy offsets of the individual states in the reference potential. These can be used to allow a more uniform sampling. (default: seta ll to 0)
+        T: float, optional
+            the temperature of the reference state (default: 1 = T)
+        kb: float, optional
+            the boltzman constant (default: 1 = kb)
+
         """
 
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
@@ -758,6 +886,16 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
 
 
 class lambdaEDSPotential(envelopedPotential):
+    """
+    This implementation of exponential Coupling combined with linear compling is called $\lambda$-EDS the implementation of function is more numerical robust to the hybrid coupling class.
+
+
+    Here two-states are coupled by the log-sum-exp and weighted by lambda resulting in a new reference state $V_R$,
+
+    $V_R = -\frac{1}{\beta*s} * \ln(\lambda * e^(-\beta*s*(V_A-E^R_A)) + (1-\lambda)*e^(-\beta*s*(V_B-E^R_B)))$
+
+    This potential coupling is for example used in $\lambda$-EDS.
+    """
     name: str = "lambda enveloped Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -894,6 +1032,9 @@ special potentials
 
 
 class dummyPotential(_potential1DCls):
+    """
+    This Dummy potential returns a simple constant value for each position
+    """
     name: str = "Dummy Potential"
     position, y_shift = sp.symbols("r Voffset")
 
@@ -902,8 +1043,12 @@ class dummyPotential(_potential1DCls):
         This Class is representing the a dummy potential.
         It returns a constant value equalling the y_shift parameter.
 
-        :param y_shift: This will be the constant return value, defaults to 0
-        :type y_shift: float, optional
+
+        Parameters
+        ----------
+        y_shift: float, optional
+            This will be the constant return value, defaults to 0
+
         """
 
         self.V_functional = sp.Lambda(self.position, self.y_shift)
@@ -918,6 +1063,10 @@ class dummyPotential(_potential1DCls):
 
 
 class flatwellPotential(_potential1DCls):
+    """
+    A flatwell potential returns a simple constant value (y_max) for each position except positions in the range x_min-x_max.
+    In the defined phase space range the potential always returns a second defined value (y_min)
+    """
     name: str = "Flat Well"
 
     x_min: float = None
@@ -932,13 +1081,16 @@ class flatwellPotential(_potential1DCls):
         If a position is inside a the x_range, it returns the y_min val.
         If a position is outside, the y_max val will be returned.
 
-        :param x_range: range inside this the y_min val will be returned, defaults to (0, 1)
-        :type x_range: list, optional
-        :param y_max: outside of the range this value will be returned, defaults to 1000
-        :type y_max: float, optional
-        :param y_min: inside the range this value will be returned, defaults to 0
-        :type y_min: float, optional
+        Parameters
+        ----------
+        x_range:  (list, range), optional
+        range inside this the y_min val will be returned, defaults to (0, 1)
+        y_max:  float, optional
+        outside of the range this value will be returned, defaults to 1000
+        y_min: float, optional
+        inside the range this value will be returned, defaults to 0
         """
+
         self.x_min = min(x_range)
         self.x_max = max(x_range)
         self.y_max = y_max
@@ -965,4 +1117,4 @@ class flatwellPotential(_potential1DCls):
 """
 Biased potentials
 """
-from ensembler.potentials.biased_potentials.biasOneD import *
+from ensembler.potentials.biased_potentials.biasOneD import timedependendBias, addedPotentials, metadynamicsPotential

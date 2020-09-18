@@ -57,10 +57,10 @@ class harmonicOscillatorPotential(_potential2DCls):
         """
         # Parameters
         nDim = self.constants[self.nDim]
-        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDim])])
-        self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(self.constants[self.nDim])])
-        self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(self.constants[self.nDim])])
-        self.k = sp.Matrix([sp.symbols("k_" + str(i)) for i in range(self.constants[self.nDim])])
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
+        self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(nDim)])
+        self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(nDim)])
+        self.k = sp.Matrix([sp.symbols("k_" + str(i)) for i in range(nDim)])
         # Function
         self.V_dim = 0.5 * sp.matrix_multiply_elementwise(self.k, (
             (self.position - self.r_shift).applyfunc(lambda x: x ** 2)))  # +self.Voff
@@ -326,13 +326,13 @@ class gaussPotential(_potential2DCls):
         sigma: tupel, optional
             standard deviation of the gauss function, defaults to (1., 1.)
         '''
+        super().__init__()
+
         nDim = 2
         self.constants.update({"A_gauss": amplitude})
         self.constants.update({"mu_" + str(j): mu[j] for j in range(nDim)})
         self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDim)})
-        self.constants.update({"nDim": nDim})
 
-        super().__init__()
 
     def _initialize_functions(self):
         """
@@ -360,4 +360,4 @@ class gaussPotential(_potential2DCls):
 """
 Biased potentials
 """
-from ensembler.potentials.biased_potentials.biasTwoD import *
+from ensembler.potentials.biased_potentials.biasTwoD import addedPotentials, metadynamicsPotential

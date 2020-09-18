@@ -151,7 +151,7 @@ def static_sim_plots_bias(sys: system, x_range: tuple = None, y_range: tuple = N
     shift = traj.dhdpos
 
     # dynamic plot range
-    if (x_range == None):
+    if (x_range is None):
         x_pot = np.linspace(min(x) + min(x) * 0.25, max(x) + max(x) * 0.25, resolution_full_space)
     elif (type(x_range) == range):
         x_pot = x_range
@@ -210,7 +210,7 @@ def static_sim_plots_bias(sys: system, x_range: tuple = None, y_range: tuple = N
     ax1.set_title("Potential Sampling")
 
     # dynamic plot range
-    if not (y_range == None):
+    if not (y_range is None):
         ax1.set_ylim(y_range)
 
     ax2.set_ylabel("$x$")

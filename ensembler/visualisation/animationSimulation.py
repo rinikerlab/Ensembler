@@ -23,7 +23,7 @@ animation.Animation, (str or None)):
     x_max = max(x1data)
     x_min = min(x1data)
 
-    if (x_range == None):
+    if (x_range is None):
         xtot_space = np.arange(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1)
     else:
         xtot_space = np.arange(min(x_range), max(x_range) + 1, 1)
@@ -124,7 +124,7 @@ def animation_EDS_trajectory(system: system, x_range=None, title: str = None, ou
     x_min = min(x1data)
     active_dots = 20
 
-    if (x_range == None):
+    if (x_range is None):
         xtot_space = np.array(np.arange(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1), ndmin=1)
     else:
         xtot_space = np.array(np.linspace(min(x_range), max(x_range) + 1, tot_pot_resolution), ndmin=1)
