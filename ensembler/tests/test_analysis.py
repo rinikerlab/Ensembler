@@ -102,7 +102,7 @@ class test_BAR(test_ZwanzigEquation):
         dF_bar = feCalc.calculate(Vi_i=V1_1, Vj_i=V2_1, Vi_j=V1_2, Vj_j=V2_2)
 
         print(dF_bar)
-        dF_ana = 1.000000000000
+        dF_ana = -1.000000000000
         np.testing.assert_almost_equal(desired=dF_ana, actual=dF_bar, decimal=2)
 
 
