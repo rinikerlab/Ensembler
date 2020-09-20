@@ -16,9 +16,9 @@ class newtonianSampler(_samplerCls):
     newtonian type samplers currently comprise the Velocity Verlet, Position Verlet and
     Leapfrog integrator.
     """
-    currentPosition: Number
-    currentVelocity: Number
-    currentForces: Number
+    current_position: Number
+    current_velocity: Number
+    current_forces: Number
 
     dt: float
 

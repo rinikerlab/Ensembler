@@ -82,7 +82,7 @@ class test_System(unittest.TestCase):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, conditions=[], temperature=temperature,
                                 start_position=position)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
         curState = sys.current_state
 
         # check current state intialisation
@@ -114,11 +114,11 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
         expected_state = sys.current_state
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2)
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2)
         not_expected_state = sys.current_state
-        sys.revertStep()
+        sys.revert_step()
         curState = sys.current_state
 
         # check current state intialisation
@@ -190,8 +190,8 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         init_state = sys.current_state
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
         trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
@@ -289,7 +289,7 @@ class test_System(unittest.TestCase):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
@@ -340,7 +340,7 @@ class test_System(unittest.TestCase):
         newPosition = 10
         newVelocity = -5
         newForces = 3
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
         self.assertAlmostEqual(sys.calculate_total_potential_energy(), 50.0, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
@@ -352,9 +352,9 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
+        sys.update_current_state()
         initialState = sys.current_state
-        sys.set_Temperature(temperature2)
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
         self.assertEqual(sys._currentPosition, initialState.position,
@@ -508,7 +508,7 @@ class test_perturbedSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLambda=newLam)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
         curState = sys.current_state
 
         # check current state intialisation
@@ -547,11 +547,11 @@ class test_perturbedSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLambda=newLam)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
         expected_state = sys.current_state
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2, newLambda=newLam2)
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2, new_lambda=newLam2)
         not_expected_state = sys.current_state
-        sys.revertStep()
+        sys.revert_step()
         curState = sys.current_state
 
         # check current state intialisation
@@ -629,8 +629,8 @@ class test_perturbedSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
         init_state = sys.current_state
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
         trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
@@ -721,7 +721,7 @@ class test_perturbedSystem1D(test_System):
                                                       temperature=temperature, lam=lam)
         initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
@@ -769,7 +769,7 @@ class test_perturbedSystem1D(test_System):
         newVelocity = -5
         newForces = 3
         newLam = 1
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLambda=newLam)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
         self.assertAlmostEqual(sys.calculate_total_kinetic_energy(), 12.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
@@ -781,9 +781,9 @@ class test_perturbedSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
+        sys.update_current_state()
         initialState = sys.current_state
-        sys.set_Temperature(temperature2)
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
         self.assertListEqual(list(sys._currentPosition), list(initialState.position),
@@ -827,7 +827,7 @@ class test_edsSystem1D(test_System):
         temperature = 300
         position = 0
         mass = [1]
-        expected_state = data.envelopedPStstate(position=0, temperature=temperature, s=1.0, Eoff=[0,0],
+        expected_state = data.envelopedPStstate(position=0, temperature=temperature, s=1.0, eoff=[0,0],
                                           total_system_energy=-0.011047744848593777, total_potential_energy=-0.011047744848593777, total_kinetic_energy=np.nan,
                                           dhdpos=np.nan, velocity=np.nan)
 
@@ -855,7 +855,7 @@ class test_edsSystem1D(test_System):
                          msg="The initialised velocity is not correct!")
         self.assertEqual(curState.s, expected_state.s,
                          msg="The initialised s is not correct!")
-        self.assertEqual(curState.Eoff,expected_state.Eoff,
+        self.assertEqual(curState.eoff, expected_state.eoff,
                          msg="The initialised Eoff is not correct!")
 
     def test_system_constructor_detail(self):
@@ -906,14 +906,14 @@ class test_edsSystem1D(test_System):
         newEoff = [1,1]
         newS = [2]
 
-        expected_state = data.envelopedPStstate(position=newPosition, temperature=temperature, s=newS, Eoff=newEoff,
+        expected_state = data.envelopedPStstate(position=newPosition, temperature=temperature, s=newS, eoff=newEoff,
                                           total_system_energy=36.99999999999157, total_potential_energy=24.499999999991577, total_kinetic_energy=12.5,
                                           dhdpos=newForces, velocity=newVelocity)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, eds_s=s)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newS=newS, newEoff=newEoff)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
         curState = sys.current_state
 
         # check current state intialisation
@@ -930,7 +930,7 @@ class test_edsSystem1D(test_System):
         self.assertEqual(np.isnan(curState.velocity), np.isnan(expected_state.velocity),
                          msg="The initialised velocity is not correct!")
         self.assertEqual(curState.s, expected_state.s, msg="The initialised s is not correct!")
-        self.assertEqual(curState.Eoff, expected_state.Eoff, msg="The initialised Eoff is not correct!")
+        self.assertEqual(curState.eoff, expected_state.eoff, msg="The initialised Eoff is not correct!")
 
     def test_revertStep(self):
         newPosition = 10
@@ -958,11 +958,11 @@ class test_edsSystem1D(test_System):
         sys = self.system_class(potential=pot, sampler=integ, start_position=position,
                                                       temperature=temperature, eds_s=s)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newS=newS, newEoff=newEoff)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
         expected_state = sys.current_state
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2,  newS=newS2, newEoff=newEoff2)
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2, new_s=newS2, new_eoff=newEoff2)
         not_expected_state = sys.current_state
-        sys.revertStep()
+        sys.revert_step()
         curState = sys.current_state
 
         # check current state intialisation
@@ -981,8 +981,8 @@ class test_edsSystem1D(test_System):
                          msg="The current velocity is not equal to the one two steps before!")
         self.assertEqual(curState.s, expected_state.s,
                          msg="The current s is not equal to the one two steps before!")
-        np.testing.assert_almost_equal(curState.Eoff, expected_state.Eoff,
-                         err_msg="The initialised Eoff is not correct as not equal to two steps before!")
+        np.testing.assert_almost_equal(curState.eoff, expected_state.eoff,
+                                       err_msg="The initialised Eoff is not correct as not equal to two steps before!")
 
         # check that middle step is not sames
         self.assertNotEqual(curState.position, not_expected_state.position,
@@ -999,7 +999,7 @@ class test_edsSystem1D(test_System):
         self.assertNotEqual(curState.velocity, not_expected_state.velocity,
                             msg="The not expected velocity equals the current one")
         self.assertNotEqual(curState.s, not_expected_state.s, msg="The not expected lam equals the current one")
-        self.assertNotEqual(curState.Eoff, not_expected_state.Eoff, msg="The initialised Eoff is not correct!")
+        self.assertNotEqual(curState.eoff, not_expected_state.eoff, msg="The initialised Eoff is not correct!")
 
     def test_propergate(self):
         temperature = 300
@@ -1026,8 +1026,8 @@ class test_edsSystem1D(test_System):
                          msg="The initialState does not equal the currentState after propergating in attribute: velocity!")
         self.assertEqual(sys._currentEdsS, initialState.s,
                          msg="The initialState does not equal the currentState after propergating in attribute: s!")
-        np.testing.assert_almost_equal(sys._currentEdsEoffs, initialState.Eoff,
-                         err_msg="The initialState does not equal the currentState after propergating in attribute: Eoff!")
+        np.testing.assert_almost_equal(sys._currentEdsEoffs, initialState.eoff,
+                                       err_msg="The initialState does not equal the currentState after propergating in attribute: Eoff!")
 
     def test_simulate(self):
         s =1
@@ -1039,8 +1039,8 @@ class test_edsSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, eds_s=s)
         init_state = sys.current_state
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
         trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
@@ -1059,8 +1059,8 @@ class test_edsSystem1D(test_System):
                          msg="The initial state does not equal the frame 0 after propergating in attribute: velocity!")
         self.assertEqual(init_state.s, old_frame.s,
                          msg="The initial state does not equal the frame 0 after propergating in attribute: s!")
-        np.testing.assert_almost_equal(init_state.Eoff, old_frame.Eoff,
-                         err_msg="The initial state does not equal the frame 0 after propergating in attribute: Eoff!")
+        np.testing.assert_almost_equal(init_state.eoff, old_frame.eoff,
+                                       err_msg="The initial state does not equal the frame 0 after propergating in attribute: Eoff!")
 
         # check that the frames are all different from each other.
         for ind, frame in list(trajectory.iterrows())[1:]:
@@ -1086,7 +1086,7 @@ class test_edsSystem1D(test_System):
             self.assertEqual(init_state.s, old_frame.s,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: s!")
-            self.assertEqual(init_state.Eoff, old_frame.Eoff,
+            self.assertEqual(init_state.eoff, old_frame.eoff,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: Eoff!")
             old_frame = frame
@@ -1129,7 +1129,7 @@ class test_edsSystem1D(test_System):
                                                       temperature=temperature, eds_s=s)
         initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
@@ -1176,7 +1176,7 @@ class test_edsSystem1D(test_System):
         newForces = 3
         newS = 2
         newEoff = [0,0]
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newS=newS, newEoff=newEoff)
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
         self.assertAlmostEqual(sys.calculate_total_kinetic_energy(), 12.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
@@ -1188,9 +1188,9 @@ class test_edsSystem1D(test_System):
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, eds_s=s)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
+        sys.update_current_state()
         initialState = sys.current_state
-        sys.set_Temperature(temperature2)
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
         self.assertListEqual(list(sys.position), list(initialState.position),

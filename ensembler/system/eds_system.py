@@ -27,18 +27,20 @@ class edsSystem(system):
     name = "eds system"
     # EDS Dependend Settings
     state = data.envelopedPStstate
+
     current_state: data.envelopedPStstate
     potential: pot.envelopedPotential
 
     # current lambda
-    _currentEdsS: float = np.nan
-    _currentEdsEoffs: float = np.nan
+    _currentEdsS: Number = np.nan
+    _currentEdsEoffs: Iterable[Number] = np.nan
 
     """
     Attributes
     """
+
     @property
-    def s(self):
+    def s(self) -> Number:
         """
             s
                 smoothing parameter for the EDS-potential
@@ -49,7 +51,7 @@ class edsSystem(system):
     def s(self, s: Number):
         self._currentEdsS = s
         self.potential.set_s(self._currentEdsS)
-        self.updateSystemProperties()
+        self.update_system_properties()
 
     def set_s(self, s: Number):
         """
@@ -65,7 +67,7 @@ class edsSystem(system):
         self.s = s
 
     @property
-    def Eoff(self):
+    def eoff(self):
         """
             Eoff
                 Energy Offsets for the EDS-potential
@@ -73,33 +75,35 @@ class edsSystem(system):
         """
         return self._currentEdsEoffs
 
-    @Eoff.setter
-    def Eoff(self, Eoff: Iterable[Number]):
-        self._currentEdsEoffs = Eoff
+    @eoff.setter
+    def eoff(self, eoff: Iterable[Number]):
+        self._currentEdsEoffs = eoff
         self.potential.Eoff_i = self._currentEdsEoffs
-        self.updateSystemProperties()
+        self.update_system_properties()
 
-    def set_Eoff(self, Eoff: Iterable[Number]):
+    def set_eoff(self, eoff: Iterable[Number]):
         """
             set_Eoff
                 setting new Energy offsets.
 
         Parameters
         ----------
-        Eoff: Iterable[Number]
+        eoff: Iterable[Number]
             vector of new energy offsets
 
         """
-        self.Eoff = Eoff
+        self.eoff = eoff
 
     """
     Magics
     """
+
     def __init__(self, potential: pot.envelopedPotential = pot.envelopedPotential(
-        V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], Eoff_i=[0, 0]),
+        V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], eoff=[0, 0]),
                  sampler: samplerCls = metropolisMonteCarloIntegrator(),
                  conditions: Iterable[conditionCls] = [],
-                 temperature: float = 298.0, start_position: Union[Number, Iterable[Number]] = None, eds_s:float=1, eds_Eoff:Iterable[Number]=[0, 0]):
+                 temperature: float = 298.0, start_position: Union[Number, Iterable[Number]] = None,
+                 eds_s: float = 1, eds_Eoff: Iterable[Number] = [0, 0]):
         """
             __init__
                 construct a eds-System that can be used to manage a simulation.
@@ -133,88 +137,93 @@ class edsSystem(system):
         super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
                          start_position=start_position)
 
-
         # Output
         self.set_s(self._currentEdsS)
-        self.set_Eoff(self._currentEdsEoffs)
+        self.set_eoff(self._currentEdsEoffs)
 
     """
     Overwrite Functions to adapt to EDS
     """
-    def set_current_state(self, currentPosition: Union[Number, Iterable[Number]],
-                          currentVelocities: Union[Number, Iterable[Number]]= 0,
-                          currentForce: Union[Number, Iterable[Number]] = 0,
-                          current_s: Union[Number, Iterable[Number]]= 0,
-                          current_Eoff: Union[Number, Iterable[Number]]= 0,
-                          currentTemperature: Number = 298):
+
+    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
+                          current_velocities: Union[Number, Iterable[Number]] = 0,
+                          current_force: Union[Number, Iterable[Number]] = 0,
+                          current_temperature: Union[Number, Iterable[Number]] = 298,
+                          current_s: Union[Number, Iterable[Number]] = 1.0,
+                          current_eoff: Iterable[Number] = None):
         """
             set_current_state
                 set s the current state to the given variables.
 
         Parameters
         ----------
-        currentPosition: Union[Number, Iterable[Number]]
+        current_position: Union[Number, Iterable[Number]]
             The new Position
-        currentVelocities: Union[Number, Iterable[Number]],
+        current_velocities: Union[Number, Iterable[Number]],
             The new Velocities
-        currentForce: Union[Number, Iterable[Number]],
+        current_force: Union[Number, Iterable[Number]],
             The new Forces of the system
-        current_s: Union[Number, Iterable[Number]],
+        current_temperature: Union[Number, Iterable[Number]],
             The new S_value
-        current_Eoff: Union[Number, Iterable[Number]],
-            The new Energy offsets
-        currentTemperature: Union[Number, Iterable[Number]],
-            the new temperature.
+        current_s: Union[Number, Iterable[Number]],
+            the new s values.
+        current_eoff: Iterable[Number],
+            the new eoff values.
         """
-        self._currentPosition = currentPosition
-        self._currentForce = currentForce
-        self._currentVelocities = currentVelocities
-        self._currentTemperature = currentTemperature
+        self._currentPosition = current_position
+        self._currentForce = current_force
+        self._currentVelocities = current_velocities
+        self._currentTemperature = current_temperature
 
         self._currentEdsS = current_s
-        self._currentEdsEoffs = current_Eoff
+        if (current_eoff is None):
+            self._currentEdsEoffs = [0 for x in range(self.nStates)]
+        else:
+            self._currentEdsEoffs = current_eoff
 
-        self.updateSystemProperties()
-        self.updateCurrentState()
+        self.update_system_properties()
+        self.update_current_state()
 
-    def updateCurrentState(self):
+    def update_current_state(self):
         """
             updateCurrentState
                 This function updates the current state from the _current Variables.
         """
         self._currentState = self.state(position=self._currentPosition, temperature=self._currentTemperature,
-                                       total_system_energy =self._currentTotE,
-                                       total_potential_energy =self._currentTotPot, total_kinetic_energy =self._currentTotKin,
-                                       dhdpos=self._currentForce, velocity=self._currentVelocities,
-                                       s=self._currentEdsS, Eoff=self._currentEdsEoffs)
+                                        total_system_energy=self._currentTotE,
+                                        total_potential_energy=self._currentTotPot,
+                                        total_kinetic_energy=self._currentTotKin,
+                                        dhdpos=self._currentForce, velocity=self._currentVelocities,
+                                        s=self._currentEdsS, eoff=self._currentEdsEoffs)
 
-    def append_state(self, newPosition, newVelocity, newForces, newS, newEoff):
+    def append_state(self, new_position: Union[Number, Iterable[Number]], new_velocity: Union[Number, Iterable[Number]],
+                     new_forces: Union[Number, Iterable[Number]], new_s: Union[Number, Iterable[Number]],
+                     new_eoff: Iterable[Number]):
         """
             append_state
                 Append a new state to the trajectory.
 
         Parameters
         ----------
-        newPosition: Union[Number, Iterable[Number]]
+        new_position: Union[Number, Iterable[Number]]
             new position for the system
-        newVelocity: Union[Number, Iterable[Number]]
+        new_velocity: Union[Number, Iterable[Number]]
             new velocity for the system
-        newForces: Union[Number, Iterable[Number]]
+        new_forces: Union[Number, Iterable[Number]]
             new forces for the system
-        newS: Number
-            new s-values
-        newEoff: Iterable[Number]
-            new energy offsets
+        new_s: Union[Number, Iterable[Number]]
+            new s-value for the system
+        new_eoff: Iterable[Number]
+            new eoffs for the system
         """
 
-        self._currentPosition = newPosition
-        self._currentVelocities = newVelocity
-        self._currentForce = newForces
-        self._currentEdsS = newS
-        self._currentEdsEoffs = newEoff
+        self._currentPosition = new_position
+        self._currentVelocities = new_velocity
+        self._currentForce = new_forces
+        self._currentEdsS = new_s
+        self._currentEdsEoffs = new_eoff
 
-        self.updateSystemProperties()
-        self.updateCurrentState()
+        self.update_system_properties()
+        self.update_current_state()
 
         self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
-

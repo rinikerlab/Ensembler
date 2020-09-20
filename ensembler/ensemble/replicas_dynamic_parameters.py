@@ -15,7 +15,7 @@ from ensembler.samplers import stochastic
 from ensembler.system import perturbed_system
 
 
-class ConveyorBelt(ReplicaExchange):
+class conveyorBelt(ReplicaExchange):
     '''
         Conveyor belt ensemble class
         organizes the replicas and their coupling
@@ -116,7 +116,7 @@ class ConveyorBelt(ReplicaExchange):
         :return: None
         '''
         if (isinstance(steps_between_trials, int)):
-            self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
+            self.set_simulation_steps_between_trials(n_steps=steps_between_trials)
 
         for _ in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
             self.run()
@@ -142,15 +142,15 @@ class ConveyorBelt(ReplicaExchange):
         self.state = []
 
         # metropolis criterium for moving capital_lambda?
-        oldEne = self.calculate_conveyorBelt_totEne()
+        oldEne = self.calculate_total_ensemble_energy()
         oldBiasene = self.biasene
         oldBlam = self.capital_lambda
 
         self.capital_lambda += (np.random.rand() * 2.0 - 1.0) * np.pi / 4.0
         self.capital_lambda = self.capital_lambda % (2.0 * np.pi)
-        self.updateBlam(self.capital_lambda)
+        self.update_all_lambda(self.capital_lambda)
 
-        newEne = self.calculate_conveyorBelt_totEne()
+        newEne = self.calculate_total_ensemble_energy()
         if self._defaultMetropolisCriterion(originalParams=oldEne, swappedParams=newEne):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
@@ -161,7 +161,7 @@ class ConveyorBelt(ReplicaExchange):
 
         else:
             self.reject += 1
-            self.updateBlam(oldBlam)
+            self.update_all_lambda(oldBlam)
 
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
@@ -180,10 +180,10 @@ class ConveyorBelt(ReplicaExchange):
         '''
         for j in self.replicas:
             self.replicas[j].revert()
-        self.calculate_conveyorBelt_totEne()
+        self.calculate_total_ensemble_energy()
         self.exchange_information = self.exchange_information[:-1]
 
-    def add_replica(self, clam: float, addNReplicas: int = 1) -> None:
+    def add_replica(self, clam: float, add_n_replicas: int = 1) -> None:
         '''
             Not Implemented!!!
         adds a replica to the ensemble
@@ -193,7 +193,7 @@ class ConveyorBelt(ReplicaExchange):
 
     # PRIVATE functions
     ## * Move the belt
-    def calculate_conveyorBelt_totEne(self) -> float:
+    def calculate_total_ensemble_energy(self) -> float:
         '''
         calculates energy of Conveyor Belt Ensemble
         :return: total energy of the Conveyor Belt Ensemble.
@@ -206,7 +206,7 @@ class ConveyorBelt(ReplicaExchange):
         ene = ene + self.biasene
         return ene
 
-    def calc_lam(self, capital_lambda: float, i: int) -> float:
+    def calculate_replica_lambda(self, capital_lambda: float, i: int) -> float:
         '''
         calculates lam_i for replica i depending on ensemble state capital_lambda
 
@@ -223,7 +223,7 @@ class ConveyorBelt(ReplicaExchange):
             ome = 2.0 * np.pi - ome
         return ome / np.pi
 
-    def updateBlam(self, capital_lambda: float) -> float:
+    def update_all_lambda(self, capital_lambda: float) -> float:
         '''
         updates the state of the ensemble and the replicas accordingly
         :param capital_lambda: capital lambda 0 <= capital_lambda < 2 pi
@@ -233,7 +233,7 @@ class ConveyorBelt(ReplicaExchange):
         '''
         self.capital_lambda = capital_lambda
         for i in self.replicas:
-            self.replicas[i].set_lambda(self.calc_lam(capital_lambda, i))
+            self.replicas[i].set_lambda(self.calculate_replica_lambda(capital_lambda, i))
         self.apply_mem()
 
         return capital_lambda
@@ -322,13 +322,13 @@ class ConveyorBelt(ReplicaExchange):
         self.exchange_information = []
 
     # Todo: should be inherited.
-    def set_simulation_steps_between_trials(self, nsteps: int):
+    def set_simulation_steps_between_trials(self, n_steps: int):
         """
         Sets the integration steps of the replicas between a trail move.
-        :param nsteps: number of steps
+        :param n_steps: number of steps
         :return: None
         """
-        self.nSteps_between_trials = nsteps
+        self.nSteps_between_trials = n_steps
         for coord, replica in self.replicas.items():
             replica.nsteps = self.nSteps_between_trials
 

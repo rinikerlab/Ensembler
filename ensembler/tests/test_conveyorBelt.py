@@ -1,13 +1,13 @@
 import unittest
 
-from ensembler.ensemble.replicas_dynamic_parameters import ConveyorBelt
+from ensembler.ensemble.replicas_dynamic_parameters import conveyorBelt
 from ensembler.samplers.stochastic import monteCarloIntegrator
 from ensembler.potentials import OneD
 from ensembler.system.perturbed_system import perturbedSystem
 
 
 class testEnsemble(unittest.TestCase):
-    convBelt = ConveyorBelt
+    convBelt = conveyorBelt
 
     def test_constructor(self):
         ens = self.convBelt(0, 2)
@@ -22,9 +22,9 @@ class testEnsemble(unittest.TestCase):
         lam = 0.5
         sys.set_lam(lam)
         ens = self.convBelt(0.0, 1, system=sys)
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.run()
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.get_replicas_positions()
 
     def test_run_step(self):
@@ -35,9 +35,9 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         ens = self.convBelt(0.0, 1, system=sys)
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.run()
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.get_replicas_positions()
 
     def test_run_step_lambda1(self):
@@ -51,9 +51,9 @@ class testEnsemble(unittest.TestCase):
         sys.set_lam(lam)
         ens = self.convBelt(0.0, 1, system=sys)
 
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.run()
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.get_replicas_positions()
 
     def test_run_step_lambda2(self):
@@ -66,9 +66,9 @@ class testEnsemble(unittest.TestCase):
         lam = 0.5
         sys.set_lam(lam)
         ens = self.convBelt(0.0, 1, system=sys)
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.run()
-        ens.calculate_conveyorBelt_totEne()
+        ens.calculate_total_ensemble_energy()
         ens.get_replicas_positions()
 
     def testTraj(self):

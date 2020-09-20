@@ -563,7 +563,7 @@ class envelopedPotential(_potential1DCls):
 
     def __init__(self, V_is: t.List[_potential1DCls] = (
             harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)),
-                 s: float = 1.0, Eoff_i: t.List[float] = None, T: float = 1, kb: float = 1):
+                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
         """
             __init__
                 This function constructs a enveloped potential, enveloping all given states.
@@ -575,7 +575,7 @@ class envelopedPotential(_potential1DCls):
 
         s: float, optional
             the smoothing parameter, lowering the barriers between the states
-        Eoff_i: List[float], optional
+        eoff: List[float], optional
             the energy offsets of the individual states in the reference potential. These can be used to allow a more uniform sampling. (default: seta ll to 0)
         T: float, optional
             the temperature of the reference state (default: 1 = T)
@@ -592,7 +592,7 @@ class envelopedPotential(_potential1DCls):
         # for calculate implementations
         self.V_is = V_is
         self.s_i = s
-        self.Eoff_i = Eoff_i
+        self.Eoff_i = eoff
 
         super().__init__(nStates=len(V_is))
 
@@ -912,7 +912,7 @@ class lambdaEDSPotential(envelopedPotential):
 
     def __init__(self, V_is: t.List[_potential1DCls] = (
             harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)), lam: Number = 0.5,
-                 s: float = 1.0, Eoff_i: t.List[float] = None, T: float = 1, kb: float = 1):
+                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
 
         nStates = len(V_is)
         self.constants.update({self.nStates: nStates})
@@ -922,7 +922,7 @@ class lambdaEDSPotential(envelopedPotential):
         self._lam_i = [0 for x in range(nStates)]
         self.lam_i = lam
 
-        super().__init__(V_is=V_is, s=s, Eoff_i=Eoff_i, T=T, kb=kb)
+        super().__init__(V_is=V_is, s=s, eoff=eoff, T=T, kb=kb)
 
     def _initialize_functions(self):
         # for sympy Sympy Updates - Check!:

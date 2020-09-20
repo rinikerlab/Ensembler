@@ -21,7 +21,7 @@ class _samplerCls(super_baseClass):
     """
     # general:
     verbose: bool = False
-    nDim: int = 0
+    nDimensions: int = 0
 
     def __init__(self):
         """
@@ -71,9 +71,9 @@ class _samplerCls(super_baseClass):
 
         for step in range(steps):
             (newPosition, newVelocity, newForces) = self.step(system=system)
-            system.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
+            system.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
 
-    def setVerbose(self, verbose: bool = True):
+    def set_verbose(self, verbose: bool = True):
         """
         setVerbose this function sets the verbosity flag of the class.
 

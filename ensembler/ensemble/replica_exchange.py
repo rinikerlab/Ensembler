@@ -10,7 +10,7 @@ from ensembler.ensemble import exchange_pattern
 from ensembler.ensemble._replica_graph import ReplicaExchange
 
 
-class TemperatureReplicaExchange(ReplicaExchange):
+class temperatureReplicaExchange(ReplicaExchange):
     _parameter_name: str = "temperature"
     coordinate_dimensions: int = 1
     replica_graph_dimensions: int = 1
@@ -26,11 +26,11 @@ class TemperatureReplicaExchange(ReplicaExchange):
         if (exchange_trajs):
             self.exchange_param = "trajectory"
         else:
-            self.exchange_param = "currentState"
+            self.exchange_param = "_currentPosition"
 
         self._exchange_pattern = exchange_pattern.localExchangeScheme(self)
 
-    def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
+    def _adapt_system_to_exchange_coordinate(self, swapped_exchange_coord, original_exchange_coord):
         [self.replicas[replica]._update_current_vars_from_current_state() for replica in self.replicas]
         # self._scale_velocities_fitting_to_temperature(swapped_exCoord, original_exCoord)
 
@@ -46,7 +46,7 @@ class HamiltonianReplicaExchange(ReplicaExchange):
     pass
 
 
-class ReplicaExchangeEnvelopingDistributionSampling(ReplicaExchange):
+class replicaExchangeEnvelopingDistributionSampling(ReplicaExchange):
     _parameter_name: str = "s"
     coordinate_dimensions: int = 1
     replica_graph_dimensions: int = 1
@@ -71,8 +71,8 @@ class ReplicaExchangeEnvelopingDistributionSampling(ReplicaExchange):
         #    replica = self.replicas[replicaID]
         #    #replica.set_s(replica.s_i)
 
-    def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
+    def _adapt_system_to_exchange_coordinate(self, swapped_exchange_coord, original_exchange_coord):
         for replicaID in self.replicas:
             replica = self.replicas[replicaID]
-            replica._updateEne()
-            replica.updateCurrentState()
+            replica._update_energies()
+            replica.update_current_state()

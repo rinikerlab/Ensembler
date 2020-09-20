@@ -21,7 +21,7 @@ class _potentialCls(super_baseClass):
 
     def __init__(self, nDimensions:int=1, nStates:int=2):
         self.constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
-        self.name = self.__class__.__name__
+        self.name = str(self.__class__.__name__)
 
     """
         Non-Class Attributes
@@ -321,7 +321,7 @@ class _potential1DClsPerturbed(_potential1DCls):
         public
     """
 
-    def set_lambda(self, lam: float):
+    def set_lambda(self, lam: Number):
         """
         set the lambda paramter, coupling the states of the system.
 

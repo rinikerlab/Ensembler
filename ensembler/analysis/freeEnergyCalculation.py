@@ -304,7 +304,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
 
         # Return free energy difference
         from scipy import special as s
-        dF = - np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1/len(dVij))
+        dF = - np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1 / len(dVij))
         return dF
 
     def set_parameters(self, T: float = None, k: float = None):
@@ -341,7 +341,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
     """
     k, T, Vi, Vj, Vr = sp.symbols("k T Vi Vj Vr")
     equation: sp.function = -(1 / (k * T)) * (
-                sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
+            sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
 
     def __init__(self, kCal: bool = False, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False,
                  kJ: bool = False):
@@ -447,7 +447,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
     """
     k, T, beta, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T beta C  Vi_i Vj_i Vi_j Vj_j")
     equation: sp.function = (1 / (k * T)) * (
-                sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C))))
+            sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C))))
     constants: dict = {T: 298, k: const.k * const.Avogadro, C: Decimal(0)}
 
     # Numeric parameters
@@ -605,7 +605,8 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         """
         if (
-        not ((len(Vi_i) == len(Vi_i)) and (len(Vi_j) == len(Vj_j)))):  # I and J simulation don't need the same length.
+                not ((len(Vi_i) == len(Vi_i)) and (
+                        len(Vi_j) == len(Vj_j)))):  # I and J simulation don't need the same length.
             raise ValueError(
                 "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
                     len(Vi_i) + " \t " + str(len(Vj_i))) + "\n" + str(len(Vi_j) + " \t " + str(len(Vj_j))) + "\n")
@@ -630,9 +631,9 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             newC = dF
             convergence = abs(self.constants[self.C] - dF)
 
-            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF) , "\tconvergence", convergence)
+            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF), "\tconvergence", convergence)
 
-            if (convergence > self.convergence_radius or  self.min_iterations > iteration):
+            if (convergence > self.convergence_radius or self.min_iterations > iteration):
                 iteration += 1
                 self.constants.update({self.C: newC})
             else:
@@ -671,7 +672,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         self._update_function()
 
+
 # alternative class names
 class bar(bennetAcceptanceRatio):
     pass
-

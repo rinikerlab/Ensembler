@@ -41,7 +41,7 @@ class system(super_baseClass):
     nStates:int
 
     """
-    Attributes:
+        Attributes
     """
     @property
     def potential(self) -> potentialCls:
@@ -140,6 +140,37 @@ class system(super_baseClass):
     def current_state(self) -> state:
         return self._currentState
 
+
+    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
+                          current_velocities: Union[Number, Iterable[Number]] = 0,
+                          current_force: Union[Number, Iterable[Number]] = 0, current_temperature: Number = 298):
+        """
+        set_current_state
+            set the current State of the system.
+
+        Parameters
+        ----------
+        current_position: Union[Number, Iterable[Number]]
+            new current system position
+        current_velocities: Union[Number, Iterable[Number]], optional
+            new current system velocity. (default: 0)
+        current_force: Union[Number, Iterable[Number]], optional
+            new current system force. (default: 0)
+        current_temperature: Union[Number, Iterable[Number]], optional
+            new current system temperature. (default: 298)
+
+        """
+        self._currentPosition = current_position
+        self._currentForce = current_force
+        self._currentVelocities = current_velocities
+        self._currentTemperature = current_temperature
+        self.currentState = self.state(self._currentPosition, self._currentTemperature, np.nan, np.nan, np.nan, np.nan,
+                                       np.nan)
+
+        self._update_energies()
+        self.update_current_state()
+
+
     @property
     def trajectory(self) -> pd.DataFrame:
         return self._trajectory
@@ -153,8 +184,8 @@ class system(super_baseClass):
         self._currentPosition = position
         if (len(self.trajectory) == 0):
             self.initial_position = self._currentPosition
-        self._updateEne()
-        self.updateCurrentState()
+        self._update_energies()
+        self.update_current_state()
 
     def set_position(self, position:Union[Number, Iterable[Number]]):
         self.position = position
@@ -174,8 +205,8 @@ class system(super_baseClass):
     @velocity.setter
     def velocity(self, velocity:Union[Number, Iterable[Number]]):
         self._currentVelocities = velocity
-        self._updateEne()
-        self.updateCurrentState()
+        self._update_energies()
+        self.update_current_state()
 
     def set_velocities(self, velocities):
         self.velocities = velocities
@@ -196,13 +227,28 @@ class system(super_baseClass):
     def temperature(self, temperature:Number):
         self._temperature = temperature
         self._currentTemperature = temperature
-        self._updateEne()
+        self._update_energies()
+
+    def set_temperature(self, temperature:Number):
+        """
+            set Temperature
+                set  the systems current temperature.
+
+        Parameters
+        ----------
+        temperature
+
+        """
+        self.temperature = temperature
+
 
     @property
     def mass(self):
         return self._mass
 
-
+    @mass.setter
+    def mass(self, mass:float):
+        self._mass = mass
 
     def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = [],
                  temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
@@ -346,8 +392,8 @@ class system(super_baseClass):
 
         # update current state
         self.step = 0
-        self.updateSystemProperties()
-        self.updateCurrentState()
+        self.update_system_properties()
+        self.update_current_state()
         self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
     def _init_position(self, initial_position:Union[Number, Iterable[Number]]=None)->NoReturn:
@@ -362,7 +408,7 @@ class system(super_baseClass):
 
         """
         if (isinstance(initial_position, type(None))):
-            self.initial_position = self.randomPos()
+            self.initial_position = self.random_position()
         elif((isinstance(initial_position, Number) and self.nDimensions == 1) or
              (isinstance(initial_position, Iterable) and all([isinstance(x, Number) for x in initial_position]) and self.nDimensions == len(initial_position))):
             self.initial_position = initial_position
@@ -370,7 +416,7 @@ class system(super_baseClass):
             raise Exception("Did not understand the initial position! \n given: " + str(initial_position) +"\n Expected dimensions: " + str(self.nDimensions))
         self._currentPosition = self.initial_position
 
-        self.updateCurrentState()
+        self.update_current_state()
         return self.initial_position
 
     def _init_velocities(self) -> NoReturn:
@@ -389,7 +435,7 @@ class system(super_baseClass):
 
         self.veltemp = self.mass / const.gas_constant / 1000.0 * np.linalg.norm(self._currentVelocities) ** 2  # t
 
-        self.updateCurrentState()
+        self.update_current_state()
         return self._currentVelocities
 
     def _gen_rand_vel(self) -> Number:
@@ -404,7 +450,7 @@ class system(super_baseClass):
         """
         return np.sqrt(const.gas_constant / 1000.0 * self.temperature / self.mass) * np.random.normal()
 
-    def randomPos(self) -> Union[Number, Iterable[Number]]:
+    def random_position(self) -> Union[Number, Iterable[Number]]:
         """
             randomPos
                 returns a randomly selected position for the system.
@@ -451,7 +497,7 @@ class system(super_baseClass):
         """
         return self.potential.ene(self._currentPosition)
 
-    def updateSystemProperties(self) -> NoReturn:
+    def update_system_properties(self) -> NoReturn:
         """
             updateSystemProperties
                 updates the energies and temperature of the system
@@ -461,10 +507,10 @@ class system(super_baseClass):
         NoReturn
 
         """
-        self._updateEne()
-        self._updateTemp()
+        self._update_energies()
+        self._update_temperature()
 
-    def updateCurrentState(self) -> NoReturn:
+    def update_current_state(self) -> NoReturn:
         """
             updateCurrentState
                 update current state from the _current vars.
@@ -477,7 +523,7 @@ class system(super_baseClass):
                                        self._currentTotE, self._currentTotPot, self._currentTotKin,
                                        self._currentForce, self._currentVelocities)
 
-    def _updateTemp(self) -> NoReturn:
+    def _update_temperature(self) -> NoReturn:
         """
 
             this looks like a thermostat like thing! not implemented!@ TODO calc temperature from velocity
@@ -490,7 +536,7 @@ class system(super_baseClass):
         self._currentTemperature = self.temperature
 
 
-    def _updateEne(self) -> NoReturn:
+    def _update_energies(self) -> NoReturn:
         """
             _updateEne
                 update all total energy terms.
@@ -542,8 +588,8 @@ class system(super_baseClass):
     """
 
     def simulate(self, steps: int,
-                 withdrawTraj: bool = False, save_every_state: int = 1,
-                 initSystem: bool = False,
+                 withdraw_traj: bool = False, save_every_state: int = 1,
+                 init_system: bool = False,
                  verbosity: bool = True, _progress_bar_prefix:str="Simulation: ") -> state:
         """
             this function executes the simulation, by exploring the potential energy function with the sampling method for the given n steps.
@@ -552,9 +598,9 @@ class system(super_baseClass):
         ----------
         steps: int
             number of integration steps
-        initSystem: bool, optional
+        init_system: bool, optional
             initialize the system. (default: False)
-        withdrawTraj: bool, optional
+        withdraw_traj: bool, optional
             reset the current simulation trajectory. (default: False)
         save_every_state: int, optional
             save every n step. (and leave out the rest) (default: 1 - each step)
@@ -568,16 +614,16 @@ class system(super_baseClass):
         state
             returns the last current state
         """
-        if (withdrawTraj):
+        if (withdraw_traj):
             self._trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
             self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
-        if (initSystem):
+        if (init_system):
             self._init_position()
             self._init_velocities()
 
-        self.updateCurrentState()
-        self.updateSystemProperties()
+        self.update_current_state()
+        self.update_system_properties()
 
         # progressBar or no ProgressBar
         if (verbosity):
@@ -592,13 +638,13 @@ class system(super_baseClass):
             self.propagate()
 
             # Apply Restraints, Constraints ...
-            self.applyConditions()
+            self.apply_conditions()
 
             # Calc new Energy&and other system properties
-            self.updateSystemProperties()
+            self.update_system_properties()
 
             # Set new State
-            self.updateCurrentState()
+            self.update_current_state()
 
             if (self.step % save_every_state == 0 and self.step != steps - 1):
                 self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
@@ -621,7 +667,7 @@ class system(super_baseClass):
         """
         self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
 
-    def applyConditions(self) -> NoReturn:
+    def apply_conditions(self) -> NoReturn:
         """
             applyConditions
                 this function applies the coupled conditions  to the current state of system.
@@ -634,31 +680,32 @@ class system(super_baseClass):
         for aditional in self.conditions:
             aditional.apply_coupled()
 
-    def append_state(self, newPosition:Union[Iterable[Number], Number], newVelocity:Union[Iterable[Number], Number], newForces:Union[Iterable[Number], Number]) -> NoReturn:
+    def append_state(self, new_position: Union[Iterable[Number], Number], new_velocity: Union[Iterable[Number], Number],
+                     new_forces: Union[Iterable[Number], Number]) -> NoReturn:
         """
             append_state
                 appends a new state, based on the given arguments and updates the system to them.
         Parameters
         ----------
-        newPosition: Union[Iterable[Number], Number]
+        new_position: Union[Iterable[Number], Number]
             a new position
-        newVelocity: Union[Iterable[Number], Number]
+        new_velocity: Union[Iterable[Number], Number]
             a new velocity
-        newForces: Union[Iterable[Number], Number]
+        new_forces: Union[Iterable[Number], Number]
             a new Force
 
         """
-        self._currentPosition = newPosition
-        self._currentVelocities = newVelocity
-        self._currentForce = newForces
+        self._currentPosition = new_position
+        self._currentVelocities = new_velocity
+        self._currentForce = new_forces
 
-        self._updateTemp()
-        self._updateEne()
-        self.updateCurrentState()
+        self._update_temperature()
+        self._update_energies()
+        self.update_current_state()
 
         self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
-    def revertStep(self) -> NoReturn:
+    def revert_step(self) -> NoReturn:
         """
             revertStep
                 removes the last step which was performed from the trajectory and sets back the system to the one before.
@@ -670,7 +717,7 @@ class system(super_baseClass):
         self._currentState = self.trajectory.iloc[-2]
         self._update_current_vars_from_current_state()
 
-    def writeTrajectory(self, out_path: str) -> str:
+    def write_trajectory(self, out_path: str) -> str:
         """
             writeTrajectory
                 Writes the trajectory out to a file.
@@ -693,49 +740,3 @@ class system(super_baseClass):
             raise Exception("Could not find output folder: " + os.path.dirname(out_path))
         self.trajectory.to_csv(out_path, header=True)
         return out_path
-
-    """
-    SETTER
-    """
-
-    def set_current_state(self, currentPosition: Union[Number, Iterable[Number]],
-                          currentVelocities: Union[Number, Iterable[Number]] = 0,
-                          currentForce: Union[Number, Iterable[Number]] = 0, currentTemperature: Number = 298):
-        """
-        set_current_state
-            set the current State of the system.
-
-        Parameters
-        ----------
-        currentPosition
-            new current system position
-        currentVelocities
-            new current system velocity
-        currentForce
-            new current system force
-        currentTemperature
-            new current system temperature
-
-        """
-        self._currentPosition = currentPosition
-        self._currentForce = currentForce
-        self._currentVelocities = currentVelocities
-        self._currentTemperature = currentTemperature
-        self.currentState = self.state(self._currentPosition, self._currentTemperature, np.nan, np.nan, np.nan, np.nan,
-                                       np.nan)
-
-        self._updateEne()
-        self.updateCurrentState()
-
-
-    def set_Temperature(self, temperature:Number):
-        """
-            set Temperature
-                set  the systems current temperature.
-
-        Parameters
-        ----------
-        temperature
-
-        """
-        self.temperature = temperature

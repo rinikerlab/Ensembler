@@ -25,7 +25,7 @@ lambdaState = namedtuple("Lambda_State", ["position", "temperature",
 envelopedPStstate = namedtuple("EDS_State", ["position", "temperature",
                                              "total_system_energy", "total_potential_energy", "total_kinetic_energy",
                                              "dhdpos", "velocity",
-                                             "s", "Eoff"])
+                                             "s", "eoff"])
 
 
 # make states pickle-able

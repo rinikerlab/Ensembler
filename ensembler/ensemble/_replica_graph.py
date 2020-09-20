@@ -95,6 +95,7 @@ class MultiReplicaApproach(super_baseClass):
             for ind, parameter_Name in enumerate(self.coord_dims):
                 if (hasattr(replica, parameter_Name) or True):
                     if (isinstance(coords, Iterable)):
+                        print(parameter_Name)
                         setattr(replica, parameter_Name, coords[ind])
                     else:
                         setattr(replica, parameter_Name, coords)
@@ -197,7 +198,7 @@ class ReplicaExchange(MultiReplicaApproach):
 
     def run(self, verbosity: bool = False):
         for replica_coords, replica in self.replicas.items():
-            replica.simulate(steps=self.nSteps_between_trials, withdrawTraj=False, initSystem=False,
+            replica.simulate(steps=self.nSteps_between_trials, withdraw_traj=False, init_system=False,
                              verbosity=verbosity)
 
     def _run_parallel(self, verbosity: bool = False, nProcesses: int = 4):
@@ -227,7 +228,7 @@ class ReplicaExchange(MultiReplicaApproach):
 
     # getter/setters
     def get_trajectories(self) -> Dict[Tuple, List]:
-        return {coord: replica.getTrajectory() for coord, replica in self.replicas.items()}
+        return {coord: replica.trajectory for coord, replica in self.replicas.items()}
 
     def get_replicas_positions(self) -> Dict:
         """
@@ -269,8 +270,8 @@ class ReplicaExchange(MultiReplicaApproach):
         return vals_dict
 
     def get_total_energy(self) -> Dict[Tuple, float]:
-        [replica._updateEne() for coord, replica in self.replicas.items()]
-        return {coord: replica.getTotEnergy() for coord, replica in self.replicas.items()}
+        [replica._update_energies() for coord, replica in self.replicas.items()]
+        return {coord: replica.total_system_energy for coord, replica in self.replicas.items()}
 
     def set_simulation_steps_between_trials(self, nsteps: int):
         self.nSteps_between_trials = nsteps
@@ -348,7 +349,7 @@ class ReplicaExchange(MultiReplicaApproach):
 
             for coords, replica in zip(coordinates, replicas):
                 # set parameter set
-                # print(coords, replica)
+                #print(coords, replica)
                 if (hasattr(replica, self.parameter_names[0])):
                     setattr(replica, self.parameter_names[0], parameters[coords])
 
@@ -369,5 +370,5 @@ class ReplicaExchange(MultiReplicaApproach):
                  "TotEJ": self.replicas[replicaID].calculate_total_potential_energy(),
                  "doExchange": exchange}, ignore_index=True)
 
-    def _adapt_system_to_exchange_coordinate(self, swapped_exCoord, original_exCoord):
+    def _adapt_system_to_exchange_coordinate(self, swapped_exchange_coord, original_exchange_coord):
         raise NotImplementedError("UPS this func is not implemented please override.")

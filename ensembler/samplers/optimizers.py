@@ -67,7 +67,7 @@ class conjugate_gradient(optimizer):
         f = system.potential.ene
         f_prime = system.potential.force
 
-        self.oldpos = system.currentState.position
+        self.oldpos = system.current_state.position
         self.newPos = np.squeeze(
             fmin_cg(f=f, fprime=f_prime, x0=self.oldpos, epsilon=self.epsilon, maxiter=1, disp=False))
 
@@ -81,7 +81,7 @@ class conjugate_gradient(optimizer):
 
         return self.newPos, np.nan, move_vector
 
-    def optimize(self, potential, x0, maxiter=100) -> dict:
+    def optimize(self, potential, x0, maximal_iterations=100) -> dict:
         """
         Performs the optimization on the basis of the scipy.optimize.fmin_cg function. Raises custim
         errors if the optimization was not sucessfull.
@@ -92,7 +92,7 @@ class conjugate_gradient(optimizer):
             Energy potential of the system
         x0 : array
             A user-supplied initial estimate of xopt, the optimal value of x. Usually the starting position
-        maxiter : int, optional
+        maximal_iterations : int, optional
             Maximum number of iterations to perform, by default 100
 
         Returns
@@ -110,7 +110,7 @@ class conjugate_gradient(optimizer):
 
         """
 
-        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maxiter,
+        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maximal_iterations,
                          full_output=True, retall=True)
         opt_position, Vmin, function_iterations, gradient_iterations, warn_flag, traj_positions = cg_out
 
