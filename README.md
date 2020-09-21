@@ -13,7 +13,6 @@ Ensembler is a python package that allows fast and easy access to simulation of 
 It enables method development using small test systems and to deepen the understanding of a broad spectrum of molecular dynamics (MD) methods, starting from basic techniques to enhanced sampling and free energy calculations.
 The ease of installing and using the package increases shareability, comparability, and reproducibility of scientific code developments.
 Here, we provide insights into the package's implementation, its usage, and an application example for free energy calculation.
-The code of Ensembler is available on GitHub \textit{\hyperlink{https://github.com/rinikerlab/Ensembler}{https://github.com/rinikerlab/Ensembler}}.
 
 ## Contents
 ### Potential functions
