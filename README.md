@@ -9,8 +9,11 @@ Ensembler
 Code to sample ensembles of simple (toy) models with various algorithms. 
 
 ## Description
-This project tries to give users very easy to use and simple functionality to develop code for physical ensembles.
- 
+Ensembler is a python package that allows fast and easy access to simulation of one and two-dimensional model systems.
+It enables method development using small test systems and to deepen the understanding of a broad spectrum of molecular dynamics (MD) methods, starting from basic techniques to enhanced sampling and free energy calculations.
+The ease of installing and using the package increases shareability, comparability, and reproducibility of scientific code developments.
+Here, we provide insights into the package's implementation, its usage, and an application example for free energy calculation.
+
 ## Contents
 ### Potential functions
 
@@ -27,13 +30,13 @@ This project tries to give users very easy to use and simple functionality to de
 
    You can try the code in your Browser here: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb)
 
-### Systems
-
-   This module is used to setup a simulation. It gets a potential, integrator and other parameters.
-
 ### Samplers
 
    This module provides integrators for integrating potential functions. E.g. Monte Carlo, Velocity Verlet,...
+   
+### Systems
+
+   This module is used to setup a simulation. It gets a potential, integrator and other parameters.
 
 ### Ensembles
 
@@ -50,13 +53,16 @@ This project tries to give users very easy to use and simple functionality to de
 ## How To Install
 If you want to use the package you can either install the package with pip:
 
-   ' pip install Ensembler '
+   ' pip install ensembler '
 
 Or you can also add the path to the Ensembler repository, if you want to use the code and modify it.
    UNIX:
    'export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo'
+   
+   if you are using Anaconda:
+    'conda-develop /path/to/local/Ensembler/repo'
 
-   IDE's have their own way of doing this.
+   Keep in mind: IDE's have their own awesome ways of doing this.
 
 ## Examples:
 
@@ -70,7 +76,7 @@ Interactive ConveyorBelt: [![Binder](https://mybinder.org/badge_logo.svg)](https
 
 EDS-Potentials: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FEDS.ipynb)
 
-Free Energy Calculations: __Under Construction__
+Free Energy Calculations: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FFreeEnergyCalculations.ipynb)
 
 
 ## Authors
