@@ -122,8 +122,8 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
 
         T_range = range(1, 10)
         nReplicas = len(T_range)
-        positions = list([float(1) for x in range(nReplicas)])
-        velocities = list([float(0) for x in range(nReplicas)])
+        positions = {x: float(1) for x in range(nReplicas)}
+        velocities = {x: float(0) for x in range(nReplicas)}
 
         group = replica_exchange.temperatureReplicaExchange(system=sys, temperature_range=T_range)
         group.set_replicas_positions(positions)
@@ -138,7 +138,8 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         # Checking:
         ##constant params?
         self.assertEqual(len(group.replicas), nReplicas, msg="not enough trajectories were retrieved!")
-        self.assertListEqual(finpositions, positions, msg="Positions should not change during exchange!")
+        self.assertListEqual(finpositions, list(positions.values()), msg="Positions should not change during exchange!")
+
         #self.assertListEqual(finvelocities, velocities, msg="Velocities should not change during exchange!")
         ##exchange process
         self.assertEqual(nReplicas // 2, len(all_exchanges), msg="length of all exchanges is not correct!")

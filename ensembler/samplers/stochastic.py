@@ -173,14 +173,14 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     """
     name = "Metropolis Monte Carlo Integrator"
     # Parameters:
-    randomnessIncreaseFactor: float = 1  # tune randomness of your results
+    _randomness_factor: float = 1  # tune randomness of your results
     maxIterationTillAccept: float = np.inf  # how often shall the samplers iterate till it accepts a step forcefully
     convergence_limit: int = 1000  # after reaching a certain limit abort iteration
 
     # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
-    _defaultRandomness = lambda self, ene_new, current_state: (
-            (1 / self._randomness_increase_factor) * np.random.rand() <= np.exp(
+    _default_randomness = lambda self, ene_new, current_state: (
+            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
             -1.0 / (const.gas_constant / 1000.0 * current_state.temperature) * (ene_new - current_state.total_potential_energy)))
 
     def __init__(self, minimal_step_size: float = None, maximal_step_size: float = 1, space_range: tuple = None,
@@ -215,7 +215,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         self.spaceRange = space_range
 
         # Metropolis Criterions
-        self.randomnessIncreaseFactor = randomness_increase_factor
+        self._randomness_factor = randomness_increase_factor
         self.maxIterationTillAccept = max_iteration_tillAccept
         self.convergence_limit = self.convergence_limit if (
             isinstance(max_iteration_tillAccept, type(None))) else max_iteration_tillAccept + 1
@@ -238,7 +238,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         -------
 
         """
-        return (ene_new < current_state.total_system_energy or self._defaultRandomness(ene_new, current_state))
+        return (ene_new < current_state.total_system_energy or self._default_randomness(ene_new, current_state))
     def step(self, system: systemType) -> Tuple[float, None, float]:
         """
         step

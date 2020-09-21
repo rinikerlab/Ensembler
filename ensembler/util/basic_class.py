@@ -17,6 +17,7 @@ class _baseClass:
     This class is a scaffold, containing functionality all classes should have.
     """
     name: str = "Unknown"
+    _verbose:bool =False
 
     def __name__(self) -> str:
         return str(self.name)

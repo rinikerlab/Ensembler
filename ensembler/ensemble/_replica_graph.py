@@ -157,15 +157,15 @@ class _replicaExchange(_mutliReplicaApproach):
     ###METROPOLIS CRITERION
     ###default Metropolis Criterion
     _default_metropolis_criterion = lambda self, originalParams, swappedParams: (
-            np.greater_equal(originalParams, swappedParams) or self._defaultRandomness(originalParams,
-                                                                                       swappedParams))
+            np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams,
+                                                                                        swappedParams))
     exchange_criterium = _default_metropolis_criterion
 
     ###random part of Metropolis Criterion:
     _randomness_increase_factor = 0.1
     _temperature_exchange: float = 298
     _defaultRandomness = lambda self, originalParams, swappedParams: (
-            (1 / self._randomness_increase_factor) * np.random.rand() <= np.exp(
+            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
         -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
                 originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
 

@@ -235,13 +235,13 @@ class localExchangeScheme(Exchange_pattern):
 
         # Exchange coordinate paramters:
         ##scaleVel
-        self.replica_graph._adapt_system_to_exchange_coordinate(swapped_exCoord, original_exCoord)
+        self.replica_graph._adapt_system_to_exchange_coordinate()
 
         ##get_swapped energies
         swapped_totPots = self.replica_graph.get_replica_total_energies()  # calc swapped parameter Energies
 
         ##scale Vel back
-        self.replica_graph._adapt_system_to_exchange_coordinate(original_exCoord, swapped_exCoord)
+        self.replica_graph._adapt_system_to_exchange_coordinate()
         self.replica_graph.set_parameter_set(coordinates=original_exCoord,
                                              replicas=replica_values)  # swap back parameters
 
