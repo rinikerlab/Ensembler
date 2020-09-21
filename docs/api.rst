@@ -4,4 +4,6 @@ API Documentation
 .. autosummary::
    :toctree: autosummary
 
-   ensembler.canvas
+    _source
+
+
