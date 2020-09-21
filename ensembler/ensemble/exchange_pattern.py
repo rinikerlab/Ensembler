@@ -1,17 +1,48 @@
 import numpy as np
-
+from ensembler.util.ensemblerTypes import NoReturn, Dict, List, Tuple
 
 class Exchange_pattern:
+    """
+    general Scaffold for an exchange pattern
+    """
     replica_graph = None
 
-    def __init__(self, replica_graph):
+    def __init__(self, replica_graph:dict):
+        """
+            build the exchange scaffold for replica_graph
+
+        Parameters
+        ----------
+        replica_graph: dict
+            representation of the replica graph
+        """
         self.replica_graph = replica_graph
 
     def exchange(self, verbose: bool = False):
+        """
+        @ interface needs to be implemented in subclass
+        Parameters
+        ----------
+        verbose
+
+        Returns
+        -------
+
+        """
         raise NotImplementedError("Not Implemented")
 
-    def _do_exchange(self, exchanges_to_make, verbose: bool = False):
+    def _do_exchange(self, exchanges_to_make: Dict[Tuple[int, int], bool], verbose: bool = False)->NoReturn:
+        """
+            post exchange decision step, executing the exchange
 
+        Parameters
+        ----------
+        exchanges_to_make: Dict[Tuple[int, int], bool]
+            the key of the dictionary is a tuple containing the replica identifiers, which exchange parameters. The value is stating if they should exchang.
+        verbose: bool, optional
+            DADADA (default: False)
+
+        """
         for (I, J), exchange in exchanges_to_make.items():
             if (exchange):
                 if (verbose): print("Exchanging: " + str(I) + "\t" + str(J) + "\t" + str(exchange) + "\n")
@@ -36,7 +67,20 @@ class Exchange_pattern:
             else:
                 if (verbose): print("not Exchanging: " + str(I) + " / " + str(J) + " \n")
 
-    def update_exchange_information(self, original_exchange_coordinates, original_totPots, swapped_totPots):
+    def update_exchange_information(self, original_exchange_coordinates:List, original_totPots:List[float], swapped_totPots:List[float])->NoReturn:
+        """
+            This function keeps track of the exchanges
+
+        Parameters
+        ----------
+        original_exchange_coordinates: List
+            original exchange coordinates
+        original_totPots: List
+            original total potentials
+        swapped_totPots: List
+            swapped original total potentials
+
+        """
         if (self.exchange_offset == 1):
             exchange = False
             IJ = original_exchange_coordinates[0]
@@ -82,13 +126,20 @@ class Exchange_pattern:
 
 
 class localExchangeScheme(Exchange_pattern):
+    """
+    This scheme is exchanging a replica with its neighbour if possible
+    """
     exchange_offset: int = 0
 
     def exchange(self, verbose: bool = False):
         """
-        .. autofunction:: Exchange the Trajectory of T-replicas in pairwise fashion
-        :param verbose:
-        :return:
+            Exchange the Trajectory of T-replicas in pairwise fashion
+
+        Parameters
+        ----------
+        verbose: bool, optional
+            Make some music (Default: False)
+
         """
         self.replica_graph._currentTrial += 1
 
@@ -124,7 +175,20 @@ class localExchangeScheme(Exchange_pattern):
         # update the offset
         self.exchange_offset = (self.exchange_offset + 1) % 2
 
-    def _swap_coordinates(self, original_exCoord):
+    def _swap_coordinates(self, original_exCoord:List[int])->List[int]:
+        """
+            swap the coordinates pairwise of the original exchange coord list
+        Parameters
+        ----------
+        original_exCoord: List
+            Of replicas in order
+
+        Returns
+        -------
+        List
+            return list with swapped replica IDs
+
+        """
         ##take care of offset situations and border replicas
         swapped_exCoord = [] if self.exchange_offset == 0 else [original_exCoord[0]]
         ##generate sequence with swapped params
@@ -138,8 +202,23 @@ class localExchangeScheme(Exchange_pattern):
         return swapped_exCoord
 
     ##Exchange functions
-    def _collect_replica_energies(self, verbose=False):
-        original_totPots = self.replica_graph.get_total_energy()
+    def _collect_replica_energies(self, verbose: bool=False)->Tuple[List[int], List[float], List[int], List[float]]:
+        """
+            _collect_replica_energies
+            collect all rep
+
+        Parameters
+        ----------
+        verbose: bool, optional
+            More noise! More noise!
+
+        Returns
+        -------
+        Tuple[List[int], List[float], List[int], List[float]]
+            original_exCoord, original_totPots, swapped_exCoord, swapped_totPots
+
+        """
+        original_totPots = self.replica_graph.get_replica_total_energies()
         original_exCoord = list(sorted(original_totPots.keys()))
 
         replica_values = list([self.replica_graph.replicas[key] for key in original_exCoord])
@@ -159,7 +238,7 @@ class localExchangeScheme(Exchange_pattern):
         self.replica_graph._adapt_system_to_exchange_coordinate(swapped_exCoord, original_exCoord)
 
         ##get_swapped energies
-        swapped_totPots = self.replica_graph.get_total_energy()  # calc swapped parameter Energies
+        swapped_totPots = self.replica_graph.get_replica_total_energies()  # calc swapped parameter Energies
 
         ##scale Vel back
         self.replica_graph._adapt_system_to_exchange_coordinate(original_exCoord, swapped_exCoord)
@@ -170,6 +249,8 @@ class localExchangeScheme(Exchange_pattern):
 
 
 class globalExchangeScheme(Exchange_pattern):
-
+    """
+    Implement a grlobal exchange scheme here :)
+    """
     def exchange(self, verbose: bool = False):
         pass

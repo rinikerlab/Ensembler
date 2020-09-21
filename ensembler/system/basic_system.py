@@ -5,16 +5,17 @@ Module: System
 import os
 import warnings
 
-import numpy as np, pandas as pd
+import numpy as np
+import pandas as pd
 import scipy.constants as const
-
 from tqdm.notebook import tqdm
 
 pd.options.mode.use_inf_as_na = True
 
 # Typing
-from ensembler.util.basic_class import super_baseClass
-from ensembler.util.ensemblerTypes import samplerCls, conditionCls, potentialCls, Number, Union, Iterable, NoReturn, List
+from ensembler.util.basic_class import _baseClass
+from ensembler.util.ensemblerTypes import samplerCls, conditionCls, potentialCls, Number, Union, Iterable, NoReturn, \
+    List
 
 from ensembler.util import dataStructure as data
 
@@ -25,7 +26,7 @@ from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotentia
 from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential as metadynamicsPotential2D
 
 
-class system(super_baseClass):
+class system(_baseClass):
     """
     The system class is managing the simulation approaches and all system data as well as the simulation results.
 
@@ -33,16 +34,17 @@ class system(super_baseClass):
     # static attributes
     name = "system"
     state = data.basicState
-    verbose:bool
+    verbose: bool
 
-    #general attributes
-    nParticles:int
-    nDimensions:int
-    nStates:int
+    # general attributes
+    nParticles: int
+    nDimensions: int
+    nStates: int
 
     """
         Attributes
     """
+
     @property
     def potential(self) -> potentialCls:
         """
@@ -101,7 +103,7 @@ class system(super_baseClass):
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
 
     @property
-    def total_system_energy(self)->Number:
+    def total_system_energy(self) -> Number:
         """
         the total energy of the current system
 
@@ -113,7 +115,7 @@ class system(super_baseClass):
         return self._currentTotE
 
     @property
-    def total_potential_energy(self)->Number:
+    def total_potential_energy(self) -> Number:
         """
             the total potential energy of the current system
 
@@ -125,7 +127,7 @@ class system(super_baseClass):
         return self._currentTotPot
 
     @property
-    def total_kinetic_energy(self)->Number:
+    def total_kinetic_energy(self) -> Number:
         """
         the total kinetic energy of the current system
 
@@ -139,7 +141,6 @@ class system(super_baseClass):
     @property
     def current_state(self) -> state:
         return self._currentState
-
 
     def set_current_state(self, current_position: Union[Number, Iterable[Number]],
                           current_velocities: Union[Number, Iterable[Number]] = 0,
@@ -170,28 +171,27 @@ class system(super_baseClass):
         self._update_energies()
         self.update_current_state()
 
-
     @property
     def trajectory(self) -> pd.DataFrame:
         return self._trajectory
 
     @property
-    def position(self)->Union[Number, Iterable[Number]]:
+    def position(self) -> Union[Number, Iterable[Number]]:
         return self._currentPosition
 
     @position.setter
-    def position(self, position:Union[Number, Iterable[Number]]):
+    def position(self, position: Union[Number, Iterable[Number]]):
         self._currentPosition = position
         if (len(self.trajectory) == 0):
             self.initial_position = self._currentPosition
         self._update_energies()
         self.update_current_state()
 
-    def set_position(self, position:Union[Number, Iterable[Number]]):
+    def set_position(self, position: Union[Number, Iterable[Number]]):
         self.position = position
 
     @property
-    def velocity(self)->Union[Number, Iterable[Number]]:
+    def velocity(self) -> Union[Number, Iterable[Number]]:
         """
             velocity
                 The current velocity of the system
@@ -203,7 +203,7 @@ class system(super_baseClass):
         return self._currentVelocities
 
     @velocity.setter
-    def velocity(self, velocity:Union[Number, Iterable[Number]]):
+    def velocity(self, velocity: Union[Number, Iterable[Number]]):
         self._currentVelocities = velocity
         self._update_energies()
         self.update_current_state()
@@ -212,7 +212,7 @@ class system(super_baseClass):
         self.velocities = velocities
 
     @property
-    def temperature(self)->Number:
+    def temperature(self) -> Number:
         """
         The set temperature of the system
 
@@ -224,12 +224,12 @@ class system(super_baseClass):
         return self._temperature
 
     @temperature.setter
-    def temperature(self, temperature:Number):
+    def temperature(self, temperature: Number):
         self._temperature = temperature
         self._currentTemperature = temperature
         self._update_energies()
 
-    def set_temperature(self, temperature:Number):
+    def set_temperature(self, temperature: Number):
         """
             set Temperature
                 set  the systems current temperature.
@@ -241,13 +241,12 @@ class system(super_baseClass):
         """
         self.temperature = temperature
 
-
     @property
     def mass(self):
         return self._mass
 
     @mass.setter
-    def mass(self, mass:float):
+    def mass(self, mass: float):
         self._mass = mass
 
     def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = [],
@@ -281,12 +280,12 @@ class system(super_baseClass):
 
         ##Physical parameters
         self.nParticles = 1  # Todo: adapt it to be multiple particles
-        self._mass = mass # for one particle systems!!!!
+        self._mass = mass  # for one particle systems!!!!
         self._temperature = temperature
 
         # Output
         self._currentState = self.state(**{key: np.nan for key in self.state.__dict__["_fields"]})
-        self._trajectory= pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+        self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
 
         # tmpvars - private:
         self._currentTotE: (Number) = np.nan
@@ -304,12 +303,11 @@ class system(super_baseClass):
         self._conditions = conditions
 
         ## set dim
-        if(potential.constants[potential.nDimensions] > 0):
+        if (potential.constants[potential.nDimensions] > 0):
             self.nDimensions = potential.constants[potential.nDimensions]
         else:
             raise IOError(
                 "Could not estimate the disered Dimensionality as potential dim was <1 and no initial position was given.")
-
 
         ###is the potential a state dependent one? - needed for initial pos.
         if (hasattr(potential, "nStates")):
@@ -351,7 +349,7 @@ class system(super_baseClass):
     """
 
     def initialise(self, withdraw_Traj: bool = True, init_position: bool = True, init_velocity: bool = True,
-                   set_initial_position:Union[Number, Iterable[Number]]=None)-> NoReturn:
+                   set_initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
         """
             initialise
                 initialises the system, i.e. can set an initial position, initial velocities and initialize the forces.
@@ -396,7 +394,7 @@ class system(super_baseClass):
         self.update_current_state()
         self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
-    def _init_position(self, initial_position:Union[Number, Iterable[Number]]=None)->NoReturn:
+    def _init_position(self, initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
         """
             _init_position
                 this function initializes the current position of the system.
@@ -409,11 +407,13 @@ class system(super_baseClass):
         """
         if (isinstance(initial_position, type(None))):
             self.initial_position = self.random_position()
-        elif((isinstance(initial_position, Number) and self.nDimensions == 1) or
-             (isinstance(initial_position, Iterable) and all([isinstance(x, Number) for x in initial_position]) and self.nDimensions == len(initial_position))):
+        elif ((isinstance(initial_position, Number) and self.nDimensions == 1) or
+              (isinstance(initial_position, Iterable) and all(
+                  [isinstance(x, Number) for x in initial_position]) and self.nDimensions == len(initial_position))):
             self.initial_position = initial_position
         else:
-            raise Exception("Did not understand the initial position! \n given: " + str(initial_position) +"\n Expected dimensions: " + str(self.nDimensions))
+            raise Exception("Did not understand the initial position! \n given: " + str(
+                initial_position) + "\n Expected dimensions: " + str(self.nDimensions))
         self._currentPosition = self.initial_position
 
         self.update_current_state()
@@ -427,7 +427,8 @@ class system(super_baseClass):
         """
         if (self.nStates > 1):
             self._currentVelocities = [[self._gen_rand_vel() for dim in range(self.nDimensions)] for s in
-                                       range(self.nStates)] if (self.nDimensions > 1) else [self._gen_rand_vel() for state in
+                                       range(self.nStates)] if (self.nDimensions > 1) else [self._gen_rand_vel() for
+                                                                                            state in
                                                                                             range(self.nStates)]
         else:
             self._currentVelocities = [self._gen_rand_vel() for dim in range(self.nDimensions)] if (
@@ -520,8 +521,8 @@ class system(super_baseClass):
         NoReturn
         """
         self._currentState = self.state(self._currentPosition, self._currentTemperature,
-                                       self._currentTotE, self._currentTotPot, self._currentTotKin,
-                                       self._currentForce, self._currentVelocities)
+                                        self._currentTotE, self._currentTotPot, self._currentTotKin,
+                                        self._currentForce, self._currentVelocities)
 
     def _update_temperature(self) -> NoReturn:
         """
@@ -534,7 +535,6 @@ class system(super_baseClass):
 
         """
         self._currentTemperature = self.temperature
-
 
     def _update_energies(self) -> NoReturn:
         """
@@ -590,7 +590,7 @@ class system(super_baseClass):
     def simulate(self, steps: int,
                  withdraw_traj: bool = False, save_every_state: int = 1,
                  init_system: bool = False,
-                 verbosity: bool = True, _progress_bar_prefix:str="Simulation: ") -> state:
+                 verbosity: bool = True, _progress_bar_prefix: str = "Simulation: ") -> state:
         """
             this function executes the simulation, by exploring the potential energy function with the sampling method for the given n steps.
 
@@ -627,7 +627,8 @@ class system(super_baseClass):
 
         # progressBar or no ProgressBar
         if (verbosity):
-            iteration_queue = tqdm(range(steps), desc=_progress_bar_prefix+" Simulation: ", mininterval=1.0, leave=verbosity)
+            iteration_queue = tqdm(range(steps), desc=_progress_bar_prefix + " Simulation: ", mininterval=1.0,
+                                   leave=verbosity)
         else:
             iteration_queue = range(steps)
 
@@ -653,7 +654,8 @@ class system(super_baseClass):
 
         return self.current_state
 
-    def propagate(self) -> (Union[Iterable[Number], Number], Union[Iterable[Number], Number], Union[Iterable[Number], Number]):
+    def propagate(self) -> (
+    Union[Iterable[Number], Number], Union[Iterable[Number], Number], Union[Iterable[Number], Number]):
         """
             propagate
                 Do a single exploration step.

@@ -3,11 +3,11 @@ Module: Conditions
     This module shall be used to implement subclasses of conditions like, thermostat or distance restraints
 """
 
-from ensembler.util.basic_class import super_baseClass, notImplementedERR
+from ensembler.util.basic_class import _baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import systemCls as systemType, NoReturn
 
 
-class _conditionCls(super_baseClass):
+class _conditionCls(_baseClass):
     """
     This class provides the basic functionality for the condition classes.
     """

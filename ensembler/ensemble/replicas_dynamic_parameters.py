@@ -10,12 +10,12 @@ import pandas as pd
 from tqdm.notebook import tqdm
 
 from ensembler import potentials as pot
-from ensembler.ensemble._replica_graph import ReplicaExchange
+from ensembler.ensemble._replica_graph import _replicaExchange
 from ensembler.samplers import stochastic
 from ensembler.system import perturbed_system
 
 
-class conveyorBelt(ReplicaExchange):
+class conveyorBelt(_replicaExchange):
     '''
         Conveyor belt ensemble class
         organizes the replicas and their coupling
@@ -151,7 +151,7 @@ class conveyorBelt(ReplicaExchange):
         self.update_all_lambda(self.capital_lambda)
 
         newEne = self.calculate_total_ensemble_energy()
-        if self._defaultMetropolisCriterion(originalParams=oldEne, swappedParams=newEne):
+        if self._default_metropolis_criterion(originalParams=oldEne, swappedParams=newEne):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 

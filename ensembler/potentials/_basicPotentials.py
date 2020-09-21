@@ -1,11 +1,11 @@
 import numpy as np, sympy as sp
 
-from ensembler.util.basic_class import super_baseClass, notImplementedERR
+from ensembler.util.basic_class import _baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
 
 # from concurrent.futures.thread import ThreadPoolExecutor
 
-class _potentialCls(super_baseClass):
+class _potentialCls(_baseClass):
     """
     potential base class - the mother of all potential classes (or father).
 

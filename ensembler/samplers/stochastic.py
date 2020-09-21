@@ -180,7 +180,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
     _defaultRandomness = lambda self, ene_new, current_state: (
-                (1 / self.randomnessIncreaseFactor) * np.random.rand() <= np.exp(
+            (1 / self._randomness_increase_factor) * np.random.rand() <= np.exp(
             -1.0 / (const.gas_constant / 1000.0 * current_state.temperature) * (ene_new - current_state.total_potential_energy)))
 
     def __init__(self, minimal_step_size: float = None, maximal_step_size: float = 1, space_range: tuple = None,

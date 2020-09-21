@@ -12,7 +12,7 @@ def notImplementedERR():
     raise NotImplementedError("This function needs to be implemented in sympy")
 
 
-class super_baseClass:
+class _baseClass:
     """
     This class is a scaffold, containing functionality all classes should have.
     """

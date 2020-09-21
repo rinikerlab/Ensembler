@@ -3,11 +3,11 @@ Module: Sampler
     The sampler module is provides methods exploring the potential functions.
 """
 
-from ensembler.util.basic_class import super_baseClass, notImplementedERR
+from ensembler.util.basic_class import _baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 
-class _samplerCls(super_baseClass):
+class _samplerCls(_baseClass):
     """
             This class is the parent class for all samplers classes.
             The constructor is a interface method. 
