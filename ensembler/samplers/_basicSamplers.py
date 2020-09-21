@@ -32,6 +32,7 @@ class _samplerCls(_baseClass):
         NotImplementedError
             You need to implement this function in the subclass (i.e. in your samplers)
         """
+        super().__init__()
         pass
 
     def step(self, system: systemType) -> Tuple[float, float, float]:

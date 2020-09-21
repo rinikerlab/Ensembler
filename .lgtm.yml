@@ -4,7 +4,12 @@ extraction:
   python:  # Configure Python
     python_setup:  # Configure the setup
       version: 3  # Specify Version 3
+
 path_classifiers:
+  - ensembler
+  exclude:
+    - ensembler/test
+    - examples
   library:
     - versioneer.py  # Set Versioneer.py to an external "library" (3rd party code)
     - devtools/*

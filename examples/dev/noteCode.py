@@ -28,11 +28,11 @@ sampler = langevinIntegrator(dt=0.1, gamma=10)
 sys = system(potential=V, sampler=sampler, start_position=4, temperature=1)
 
 ##Simulate
-cur_state = sys.simulate(steps=1000)
+sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-fig, out_path = static_sim_plots(sys=sys, title="Langevin Simulation", x_range=positions)
+static_sim_plots(sys=sys, title="Langevin Simulation", x_range=positions)
 
 
 
@@ -53,8 +53,8 @@ sampler = langevinIntegrator(dt=0.1, gamma=10)
 sys=system(potential=V, sampler=sampler, start_position=4, temperature=1)
 
 ##Simulate
-cur_state = sys.simulate(steps=1000)
+sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-fig, out_path = static_sim_plots(sys=sys, title="Local Elevation/Metadynamics Simulation", x_range=positions)
+static_sim_plots(sys=sys, title="Local Elevation/Metadynamics Simulation", x_range=positions)
