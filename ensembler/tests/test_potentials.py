@@ -560,7 +560,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         lam1 = 0
         expected_result1 = np.array([12.5, 0, 12.5, 50, 112.5])
 
-        potential.set_lam(lam=lam1)
+        potential.set_lambda(lam=lam1)
         energies = potential.ene(positions)
         # print(energies)
         self.assertEqual(type(expected_result1), type(energies),
@@ -574,7 +574,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         lam2 = 1
         expected_result2 = np.array([112.5, 50, 12.5, 0, 12.5])
 
-        potential.set_lam(lam=lam2)
+        potential.set_lambda(lam=lam2)
         energies = potential.ene(positions)
         self.assertEqual(type(expected_result2), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -587,7 +587,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         lam3 = 0.5
         expected_result3 = np.array([62.5, 25, 12.5, 25, 62.5])
 
-        potential.set_lam(lam=lam3)
+        potential.set_lambda(lam=lam3)
         energies = potential.ene(positions)
         self.assertEqual(type(expected_result3), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -605,7 +605,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         # energies only for pot HA
         lam = 0
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         expected_result = np.array([-5, 0, 5, 10, 15])
 
         energies = potential.force(positions)
@@ -621,7 +621,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         lam = 1
         expected_result = np.array([-15, -10, -5, 0, 5])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.force(positions)
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -634,7 +634,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         lam = 0.5
         expected_result = np.array([-10, -5, 0, 5, 10])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.force(positions)
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -652,7 +652,7 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         # energies only for pot HA
         lam = 0
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         expected_result = np.array([100, 50, 0, -50, -100])
 
         energies = potential.dvdlam(positions)
@@ -898,7 +898,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         lam = 0
         expected_result = np.array([12.5, 0, 12.5, 50, 112.5])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -911,7 +911,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         lam = 1
         expected_result = np.array([112.5, 50, 12.5, 0, 12.5])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -922,9 +922,9 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
         # energies merged for pot HB and HA
         lam = 0.5
-        expected_result = np.array([12.78, 0.28, 12.5, 0.28, 12.78])
+        expected_result = np.array([13.19,  0.69, 12.5 ,  0.69, 13.19])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
@@ -942,7 +942,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
         # energies only for pot HA
         lam = 0
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         expected_result = np.array(
             [-5.00e+00, -0.00e+00, -0.00e+00, 7.87e-54, 5.00e+00])
 
@@ -957,7 +957,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         expected_result = np.array(
             [-2.6622529026263318e+17, -680412108183.5752, -1304235.5118838537, 0.0, 1.9168317203608185e-05])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.force(positions)
 
         ##print("GOT2",  list(energies))
@@ -972,7 +972,7 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         # [-1.331126451319687e+17, -340206054091.7876, -652117.7559323427, 7.34848768836283e-11,
         # 9.584158602226667e-06])
 
-        potential.set_lam(lam=lam)
+        potential.set_lambda(lam=lam)
         energies = potential.force(positions)
 
         ##print("GOT3",  list(energies))
@@ -992,8 +992,8 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
         # energies only for pot HA
         lam = 0
-        potential.set_lam(lam=lam)
-        expected_result = np.array([4.035985e-001, 4.035985e-001, -0.000000e+000, -2.562923e+053, -1.627502e+107])
+        potential.set_lambda(lam=lam)
+        expected_result = np.array([1.000000e+00,  1.000000e+00, -0.000000e+00, -5.184706e+21,-2.688117e+43])
 
         energies = potential.dvdlam(positions)
 
@@ -1211,7 +1211,7 @@ class potentialCls_2D_wavePotential(test_potentialCls):
 
 
 class potentialCls_2D_torsionPotential(test_potentialCls):
-    potential_class = TwoD.torsionPotential
+    potential_class = TwoD.addedWavePotential
     _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor_ListPotentials(self):
@@ -1308,7 +1308,7 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
         positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, 1], [0, 1, 0], [0, -1, -1], [-1, -1, 1]])
         expected_result = np.array([0., 1, 1, 0.5, 1, 1.5])
 
-        potential = self.potential_class(nDim=3)
+        potential = self.potential_class(nDimensions=3)
         energies = potential.ene(positions)
 
         print(energies)
@@ -1326,7 +1326,7 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
                                      [ 0., -1.,  0.],
                                      [-1., -1., -1.]])
 
-        potential = self.potential_class(nDim=3)
+        potential = self.potential_class(nDimensions=3)
         forces = potential.force(positions)
         print(str(forces))
         self.assertEqual(type(expected_result), type(forces),

@@ -1,16 +1,15 @@
 import numpy as np
 
-from ensembler.conditions._conditions import _conditionCls
-from ensembler.util.ensemblerTypes import system as systemType, Iterable, Number, Union
+from ensembler.conditions._basicCondition import _conditionCls
+from ensembler.util.ensemblerTypes import systemCls as systemType, Iterable, Number, Union
 
 
 class _boundaryCondition(_conditionCls):
     """
-    This parent class is defining some functions for the actual conditions.
+     This parent class is defining some functions for the actual box conditions.
     """
     lowerbounds: Iterable[Number]
     higherbounds: Iterable[Number]
-    verbose: bool = False
 
     def __str__(self) -> str:
         msg = self.name + "\n"
@@ -60,35 +59,35 @@ class boxBoundaryCondition(_boundaryCondition):
             self.nDim = system.nDim
             self.nStates = system.nStates
 
-    def apply(self, currentPosition: Union[Iterable[Number], Number],
-              currentVelocity: Union[Iterable[Number], Number]) -> (
+    def apply(self, current_position: Union[Iterable[Number], Number],
+              current_velocity: Union[Iterable[Number], Number]) -> (
     Union[Iterable[Number], Number], Union[Iterable[Number], Number]):
-        if self.verbose: print("box boundary_condition: before: ", currentPosition)
-        currentPosition = np.array(currentPosition, ndmin=1)
-        if self.verbose: print("CurrPos: ", currentPosition)
-        for dim in range(len(currentPosition)):
+        if self.verbose: print("box boundary_condition: before: ", current_position)
+        current_position = np.array(current_position, ndmin=1)
+        if self.verbose: print("CurrPos: ", current_position)
+        for dim in range(len(current_position)):
             if self.verbose: print("DIM: ", dim)
-            if (currentPosition[dim] < self.lowerbounds[dim]):
-                diff = abs(currentPosition[dim] - self.lowerbounds[dim])
-                if self.verbose: print("Lower:", diff, "Vel: ", currentVelocity)
-                currentPosition[dim] = (self.lowerbounds[dim] + diff)
-                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
-            elif (currentPosition[dim] > self.higherbounds[dim]):
-                diff = abs(currentPosition[dim] - self.higherbounds[dim])
+            if (current_position[dim] < self.lowerbounds[dim]):
+                diff = abs(current_position[dim] - self.lowerbounds[dim])
+                if self.verbose: print("Lower:", diff, "Vel: ", current_velocity)
+                current_position[dim] = (self.lowerbounds[dim] + diff)
+                if(not isinstance(current_velocity, type(None))): current_velocity[dim] = np.nan if (current_velocity == np.nan) else -current_velocity[dim]
+            elif (current_position[dim] > self.higherbounds[dim]):
+                diff = abs(current_position[dim] - self.higherbounds[dim])
                 if self.verbose: print("Higher:", diff)
-                currentPosition[dim] = (self.higherbounds[dim] - diff)
-                if(not isinstance(currentVelocity, type(None))): currentVelocity = np.nan if (currentVelocity == np.nan) else -currentVelocity[dim]
+                current_position[dim] = (self.higherbounds[dim] - diff)
+                if(not isinstance(current_velocity, type(None))): current_velocity = np.nan if (current_velocity == np.nan) else -current_velocity[dim]
 
-        if self.verbose: print("box boundary_condition: after: ", currentPosition)
-        return np.squeeze(currentPosition), np.squeeze(currentVelocity)
+        if self.verbose: print("box boundary_condition: after: ", current_position)
+        return np.squeeze(current_position), np.squeeze(current_velocity)
 
     def apply_coupled(self):
         """
         Applies the box Condition to the coupled system.
         """
         if (self.system.step % self._tau == 0):
-            newCurrentPosition, newCurrentVelocity = self.apply(currentPosition=self.system._currentPosition,
-                                                                currentVelocity=self.system._currentVelocities)
+            newCurrentPosition, newCurrentVelocity = self.apply(current_position=self.system._currentPosition,
+                                                                current_velocity=self.system._currentVelocities)
             self.system._currentPosition = np.squeeze(newCurrentPosition)
             self.system._currentVelocity = np.squeeze(newCurrentVelocity)
 
@@ -120,29 +119,29 @@ class periodicBoundaryCondition(_boundaryCondition):
             self.nDim = system.nDim
             self.nStates = system.nStates
 
-    def apply(self, currentPosition: Union[Iterable[Number], Number],
-              currentVelocity: Union[Iterable[Number], Number]) -> Union[Iterable[Number], Number]:
-        if self.verbose: print("periodic boundary_condition: before: ", currentPosition)
-        currentPosition = np.array(currentPosition, ndmin=1)
+    def apply(self, current_position: Union[Iterable[Number], Number],
+              current_velocity: Union[Iterable[Number], Number]) -> Union[Iterable[Number], Number]:
+        if self.verbose: print("periodic boundary_condition: before: ", current_position)
+        current_position = np.array(current_position, ndmin=1)
         for dim in range(self.nDim):
-            if (currentPosition[dim] < self.lowerbounds[dim]):
+            if (current_position[dim] < self.lowerbounds[dim]):
                 if self.verbose: print("LOWER")
-                currentPosition[dim] = self.higherbounds[dim] - (self.lowerbounds[dim] - currentPosition[dim])
-                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] *= -1
-            elif (currentPosition[dim] > self.higherbounds[dim]):
+                current_position[dim] = self.higherbounds[dim] - (self.lowerbounds[dim] - current_position[dim])
+                if(not isinstance(current_velocity, type(None))): current_velocity[dim] *= -1
+            elif (current_position[dim] > self.higherbounds[dim]):
                 if self.verbose: print("UPPER")
-                currentPosition[dim] = self.lowerbounds[dim] + (currentPosition[dim] - self.higherbounds[dim])
-                if(not isinstance(currentVelocity, type(None))): currentVelocity[dim] *= -1
-        if self.verbose: print("periodic boundary_condition: after: ", currentPosition)
+                current_position[dim] = self.lowerbounds[dim] + (current_position[dim] - self.higherbounds[dim])
+                if(not isinstance(current_velocity, type(None))): current_velocity[dim] *= -1
+        if self.verbose: print("periodic boundary_condition: after: ", current_position)
 
-        return currentPosition, currentVelocity
+        return current_position, current_velocity
 
     def apply_coupled(self):
         """
         Applies the box Condition to the coupled system.
         """
         if (self.system.step % self._tau == 0):
-            newCurrentPosition, newCurrentVelocity = self.apply(currentPosition=self.system._currentPosition,
-                                                                currentVelocity=self.system._currentVelocities)
+            newCurrentPosition, newCurrentVelocity = self.apply(current_position=self.system._currentPosition,
+                                                                current_velocity=self.system._currentVelocities)
             self.system._currentPosition = np.squeeze(newCurrentPosition)
             self.system._currentVelocity = np.squeeze(newCurrentVelocity)

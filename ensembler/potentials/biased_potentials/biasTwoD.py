@@ -9,7 +9,7 @@ import sympy as sp
 
 from ensembler.potentials.TwoD import gaussPotential, harmonicOscillatorPotential
 from ensembler.potentials._basicPotentials import _potential2DCls
-from ensembler.util.ensemblerTypes import system
+from ensembler.util.ensemblerTypes import systemCls
 
 """
     TIME INDEPENDENT BIASES 
@@ -23,7 +23,7 @@ class addedPotentials(_potential2DCls):
     '''
 
     name: str = "Added Potential Enhanced Sampling System for 2D"
-    nDim: int = sp.symbols("nDim")
+    nDimensions: int = sp.symbols("nDimensions")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
@@ -50,15 +50,14 @@ class addedPotentials(_potential2DCls):
 
     def _initialize_functions(self):
         # Parameters
-        nDim = self.constants[self.nDim]
-        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
+        nDimensions = self.constants[self.nDimensions]
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
 
 
 """
     TIME DEPENDENT BIASES 
 """
 
-#TODO: I don't think this does, what it should!
 class metadynamicsPotential(_potential2DCls):
     '''
     The metadynamics bias potential adds 2D Gaussian potentials on top of
@@ -71,7 +70,7 @@ class metadynamicsPotential(_potential2DCls):
 
     name: str = "Metadynamics Enhanced Sampling System using grid bias in 2D"
     position = sp.symbols("r")
-    system: system  # metadyn-coupled to system
+    system: systemCls  # metadyn-coupled to system
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
                  bias_grid_max=(10, 10), numbins=(100, 100)):
@@ -125,8 +124,8 @@ class metadynamicsPotential(_potential2DCls):
 
     def _initialize_functions(self):
         # Parameters
-        nDim = self.constants[self.nDim]
-        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDim)])
+        nDimensions = self.constants[self.nDimensions]
+        self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
 
     '''
     BIAS
@@ -179,8 +178,8 @@ class metadynamicsPotential(_potential2DCls):
         new_bias_lambda_energy = sp.lambdify(self.position, new_bias.V)
         new_bias_lambda_force = sp.lambdify(self.position, new_bias.dVdpos)
 
-        new_bias_bin_energy = new_bias_lambda_energy(*np.hsplit(self.positions_grid, self.constants[self.nDim]))
-        new_bias_bin_force = new_bias_lambda_force(*np.hsplit(self.positions_grid, self.constants[self.nDim]))
+        new_bias_bin_energy = new_bias_lambda_energy(*np.hsplit(self.positions_grid, self.constants[self.nDimensions]))
+        new_bias_bin_force = new_bias_lambda_force(*np.hsplit(self.positions_grid, self.constants[self.nDimensions]))
         # update bias grid
         self.bias_grid_energy = self.bias_grid_energy + new_bias_bin_energy.reshape(self.numbins)
 
@@ -205,7 +204,7 @@ class metadynamicsPotential(_potential2DCls):
 
         # due to transposed position matrix, x and y are changed here
         return np.squeeze(
-            self._calculate_energies(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_energy[
+            self._calculate_energies(*np.hsplit(positions, self.constants[self.nDimensions])) + self.bias_grid_energy[
                 current_bin_y, current_bin_x])
 
     def force(self, positions):
@@ -229,7 +228,7 @@ class metadynamicsPotential(_potential2DCls):
         print( self.bias_grid_force[:,current_bin_y,
                                       current_bin_x].reshape(2, 1, 1))
         return np.squeeze(
-            self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDim])) + self.bias_grid_force[:,
+            self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDimensions])) + self.bias_grid_force[:,
                                                                                        current_bin_y,
                                                                                        current_bin_x].reshape(2, 1, 1))
 
@@ -254,3 +253,4 @@ class metadynamicsPotential(_potential2DCls):
             return idx - 1
         else:
             return idx
+

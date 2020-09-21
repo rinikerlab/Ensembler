@@ -1,8 +1,13 @@
-from ensembler.util.basic_class import super_baseClass, notImplementedERR
-from ensembler.util.ensemblerTypes import system as systemType, Tuple
+"""
+Module: Sampler
+    The sampler module is provides methods exploring the potential functions.
+"""
+
+from ensembler.util.basic_class import _baseClass, notImplementedERR
+from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 
-class _samplerCls(super_baseClass):
+class _samplerCls(_baseClass):
     """
             This class is the parent class for all samplers classes.
             The constructor is a interface method. 
@@ -16,7 +21,7 @@ class _samplerCls(super_baseClass):
     """
     # general:
     verbose: bool = False
-    nDim: int = 0
+    nDimensions: int = 0
 
     def __init__(self):
         """
@@ -27,6 +32,7 @@ class _samplerCls(super_baseClass):
         NotImplementedError
             You need to implement this function in the subclass (i.e. in your samplers)
         """
+        super().__init__()
         pass
 
     def step(self, system: systemType) -> Tuple[float, float, float]:
@@ -66,9 +72,9 @@ class _samplerCls(super_baseClass):
 
         for step in range(steps):
             (newPosition, newVelocity, newForces) = self.step(system=system)
-            system.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
+            system.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
 
-    def setVerbose(self, verbose: bool = True):
+    def set_verbose(self, verbose: bool = True):
         """
         setVerbose this function sets the verbosity flag of the class.
 

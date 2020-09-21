@@ -1,44 +1,45 @@
 """
- Stochastic Integrators
+Module: Sampler
+    The sampler module is provides methods exploring the potential functions.
 
+    Optimization Methods
 """
 
 import numpy as np
 from scipy.optimize import fmin_cg
 
 from ensembler.samplers._basicSamplers import _samplerCls
-from ensembler.util.ensemblerTypes import Tuple
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 
 class optimizer(_samplerCls):
     """
-    optimizer [summary]
-
-
-    """
+     This class is the parent class for all optimizers. The pre-implemented
+     optimizers currently comprise the conjugate gradient.
+     """
     maxStepSize: float
-
-    pass
 
 
 class conjugate_gradient(optimizer):
     """
-    conjugate_gradient 
-
+    Conjugate gradient is an algorithm for the numerical solution of linear equations and for energy minimization.
+    Linear equations should have a symmetric matrix and be positive-definite.
     """
     epsilon: float
 
     def __init__(self, max_step_size: float = 1, epsilon: float = 10 ** -20):
         """
-        __init__ [summary]
+        __init__
+            This is the Constructor of the conjugate gradient optimizer
 
         Parameters
         ----------
         max_step_size : float, optional
-            [description], by default 1
+            maximal size of an optimization step in any direction, by default 1
         epsilon : float, optional
-            [description], by default 10**-20
+            Step size(s) to use when the gradient is approximated numerically. Defaults to sqrt(eps),
+            with eps the floating point machine precision. Usually sqrt(eps) is about 1.5e-8.,
+            by default 10**-20
         """
         super().__init__()
 
@@ -49,23 +50,24 @@ class conjugate_gradient(optimizer):
         """
         step 
             This function is performing an integration step for optimizing a potential.
-            NOTE: This is not the optimal way to call scipy optimization, but it works with the interfaces and is useful for theoretical thinking about it. 
+            NOTE: This is not the optimal way to call scipy optimization, but it works with the interfaces and is useful
+            for theoretical thinking about it.
             It is not optimal or even efficient here! -> it simulates the optimization process as a stepwise process
 
         Parameters
         ----------
-        system : [type]
+        system : systemType
             This is a system, that should be integrated.
 
         Returns
         -------
         Tuple[float, None, float]
-            (new Position, None, position Shift)
+        This Tuple contains the new: (new Position, none, new Force)
         """
         f = system.potential.ene
         f_prime = system.potential.force
 
-        self.oldpos = system.currentState.position
+        self.oldpos = system.current_state.position
         self.newPos = np.squeeze(
             fmin_cg(f=f, fprime=f_prime, x0=self.oldpos, epsilon=self.epsilon, maxiter=1, disp=False))
 
@@ -79,32 +81,36 @@ class conjugate_gradient(optimizer):
 
         return self.newPos, np.nan, move_vector
 
-    def optimize(self, potential, x0, maxiter=100) -> dict:
+    def optimize(self, potential, x0, maximal_iterations=100) -> dict:
         """
-        optimize [summary]
+        Performs the optimization on the basis of the scipy.optimize.fmin_cg function. Raises custim
+        errors if the optimization was not sucessfull.
 
         Parameters
         ----------
-        potential : [type]
-            [description]
-        x0 : [type]
-            [description]
-        maxiter : int, optional
-            [description], by default 100
+        potential : potentialType
+            Energy potential of the system
+        x0 : array
+            A user-supplied initial estimate of xopt, the optimal value of x. Usually the starting position
+        maximal_iterations : int, optional
+            Maximum number of iterations to perform, by default 100
 
         Returns
         -------
         dict
-            [description]
+            Dictionary that contains the optimized position ("optimal_position") with its corresponding potential
+            energy "minimal_potential_energy", the number of iterations needed to converge "used_iterations"
+            and a list of arrays, containing the results at each iteration "position_trajectory"
 
         Raises
         ------
         ValueError
-            [description]
+            Value Error is raised if the optimization did not converged or if the optimization run into an
+            internal error.
 
         """
 
-        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maxiter,
+        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maximal_iterations,
                          full_output=True, retall=True)
         opt_position, Vmin, function_iterations, gradient_iterations, warn_flag, traj_positions = cg_out
 

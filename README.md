@@ -38,7 +38,6 @@ Here, we provide insights into the package's implementation, its usage, and an a
 
    This module is used to setup a simulation. It gets a potential, integrator and other parameters.
 
-
 ### Ensembles
 
    This module contains the implementation of the ConveyorBelt and will contain in future additional Replica Exchange approaches.
@@ -82,13 +81,13 @@ Free Energy Calculations: [![Binder](https://mybinder.org/badge_logo.svg)](https
 
 ## Authors
 
-Benjamin Ries;
-Stephanie Linker;
-David Hahn
+Benjamin J. Ries;
+Stephanie M. Linker;
+David F. Hahn
 
 ## Copyright
 
-Copyright (c) 2020, Benjamin Ries, Stephanie Linker, David Hahn
+Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn
 
 
 ### Acknowledgements

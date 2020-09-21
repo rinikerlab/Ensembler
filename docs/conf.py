@@ -21,14 +21,14 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Ensembler'
-copyright = ("2020, Benjamin Schroeder, Stephanie Linker, David Hahn. Project structure based on the "
+copyright = ("2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the "
              "Computational Molecular Science Python Cookiecutter version 1.3")
-author = 'Benjamin Schröder, Stephanie Linker, David Hahn'
+author = 'Benjamin Ries, Stephanie Linker, David Hahn'
 
 # The short X.Y version
-version = ''
+version = '1.0'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = 'beta'
 
 # -- General configuration ---------------------------------------------------
 
@@ -50,9 +50,16 @@ extensions = [
 ]
 
 autosummary_generate = True
+
+#Napoleon settings
 napoleon_google_docstring = False
+napoleon_numpy_docstring = True
 napoleon_use_param = False
 napoleon_use_ivar = True
+napoleon_include_init_with_doc = True
+napoleon_include_private_with_doc = True
+napoleon_include_special_with_doc = False
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

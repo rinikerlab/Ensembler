@@ -4,25 +4,21 @@ import numpy as np
 from scipy import constants as const
 from scipy.stats import maxwell
 
-from ensembler.conditions._conditions import _conditionCls
-from ensembler.util.ensemblerTypes import system as systemType
+from ensembler.conditions._basicCondition import _conditionCls
+from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class thermostat(_conditionCls):
     """
-    ..autoclass: Thermostat
+    Thermostat
         This is the parent class of Thermostats.
         The apply function of this class is not implemented and needs to be overwritten by each subclass.
     """
 
     _currentTemperature: float
-    system: systemType  # system
-    verbose: bool = False
 
-    def __init__(self, system: systemType, tau: float, verbose:bool=False):
-        self.system = system
-        self.tau = tau
-        self.verbose = verbose
+    def __init__(self, system: systemType, tau: int, verbose:bool=False):
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
 class andersonThermostat(thermostat):
     """ -UnderConstuction-
@@ -83,7 +79,7 @@ class andersonThermostat(thermostat):
             I can be loud and noisy!
         """
         warnings.warn("__Under construction___!")
-        super.__init__(system=system, tau=tau, verbose=verbose)
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
         # Collision parameters
         self.kb = kb
@@ -132,7 +128,7 @@ class andersonThermostat(thermostat):
             if (self.verbose):
                 print("THERMOSTAT: get to temp: ", self.system._currentTemperature, "\n"
                                                                                     'THERMOSTAT: tot_kin: ',
-                      self.system.totKin(), "\n"
+                      self.system.calculate_total_kinetic_energy(), "\n"
                                             "THERMOSTAT: lambda: ", self._lambda, "\n"
                                                                                   "THERMOSTAT: current_Velocity: ",
                       self.system._currentVelocities, "\n"
@@ -162,7 +158,7 @@ class berendsenThermostate(thermostat):
         verbose : bool, optional
             More output? You want more output?
         """
-        super.__init__(system=system, tau=tau, verbose=verbose)
+        super().__init__(system=system, tau=tau, verbose=verbose)
 
         self._lambda: float = 1  # scaling factor of velocities
         self._current_temperatur = 1
@@ -178,7 +174,7 @@ class berendsenThermostate(thermostat):
 
         if (self.verbose):
             print("THERMOSTAT: get to temp: ", self.system.temperature, "\n"
-                                                                        'THERMOSTAT: tot_kin: ', self.system.totKin(),
+                                                                        'THERMOSTAT: tot_kin: ', self.system.calculate_total_kinetic_energy(),
                   "\n"
                   "THERMOSTAT: curr temp: ", self._current_temperatur, "\n"
                                                                        "THERMOSTAT: lambda: ", self._lambda, "\n"
@@ -198,7 +194,7 @@ class berendsenThermostate(thermostat):
         """
         # M = constraints
         N = self.system.nparticles * const.Avogadro
-        self._current_temperatur = (2 / (3 * N - self.M - 3)) * self.system.totKin() * N
+        self._current_temperatur = (2 / (3 * N - self.M - 3)) * self.system.calculate_total_kinetic_energy() * N
         self.system._currentTemperature = self._current_temperatur
 
     def _calculate_scaling_factor(self):

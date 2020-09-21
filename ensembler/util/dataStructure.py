@@ -3,7 +3,6 @@ Module: dataStructure
     This module contains all needed data Structures for the project.
 """
 from collections import namedtuple
-
 import __main__
 
 """
@@ -15,18 +14,18 @@ States
 """
 # states:
 basicState = namedtuple("State", ["position", "temperature",
-                                  "totEnergy", "totPotEnergy", "totKinEnergy",
+                                  "total_system_energy", "total_potential_energy", "total_kinetic_energy",
                                   "dhdpos", "velocity"])
 
 lambdaState = namedtuple("Lambda_State", ["position", "temperature",
-                                          "totEnergy", "totPotEnergy", "totKinEnergy",
+                                          "total_system_energy", "total_potential_energy", "total_kinetic_energy",
                                           "dhdpos", "velocity",
                                           "lam", "dhdlam"])
 
 envelopedPStstate = namedtuple("EDS_State", ["position", "temperature",
-                                             "totEnergy", "totPotEnergy", "totKinEnergy",
+                                             "total_system_energy", "total_potential_energy", "total_kinetic_energy",
                                              "dhdpos", "velocity",
-                                             "s", "Eoff"])
+                                             "s", "eoff"])
 
 
 # make states pickle-able

@@ -2,18 +2,18 @@
     This file provides ensembler types, that are used to annotate and enforce certain types throughout the ensembler package.
 """
 
-# Generic Types
-from typing import TypeVar, Union, List, Tuple, Iterable
+# Generic Types - provided to all other files from here
+from typing import TypeVar, Union, List, Tuple, Iterable, Dict, NoReturn
 from numbers import Number
 
 # Dummy defs:
-potential = TypeVar("potential")
-condition = TypeVar("condition")
-sampler = TypeVar("samplers")
+potentialCls = TypeVar("potential")
+conditionCls = TypeVar("condition")
+samplerCls = TypeVar("samplers")
 
-system = TypeVar("system")
+systemCls = TypeVar("system")
 
-ensemble = TypeVar("ensemble")
+ensembleCls = TypeVar("ensemble")
 
 # Ensembler specific Types:
 """

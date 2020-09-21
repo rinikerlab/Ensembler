@@ -42,7 +42,7 @@ class boxBoundaryCondition(unittest.TestCase):
         position = [-2]
         velocity = [-0.2]
 
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=velocity)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
         self.assertEqual(first=corr_pos, second=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
@@ -54,7 +54,7 @@ class boxBoundaryCondition(unittest.TestCase):
         position = [14]
         velocity = [2.2]
 
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=velocity)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
         self.assertEqual(first=corr_pos, second=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
@@ -69,7 +69,7 @@ class boxBoundaryCondition(unittest.TestCase):
         position = [-2, 1]
         velocity = [0.2, 0.5]
 
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=velocity)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
@@ -81,7 +81,7 @@ class boxBoundaryCondition(unittest.TestCase):
         position = [1, -2]
         velocity = [0.2, 0.5]
 
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=velocity)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
@@ -121,7 +121,7 @@ class periodicBoundaryCondition(unittest.TestCase):
         expected_vel = np.array([3])
         position = [-2]
         vel = [-3]
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=vel)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=vel)
 
         self.assertEqual(second=corr_pos, first=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
@@ -136,7 +136,7 @@ class periodicBoundaryCondition(unittest.TestCase):
         expected_vel = np.array([3, 3])
         position = [-2, 1]
         vel = [-3, 3]
-        corr_pos, corr_vel = cond.apply(currentPosition=position, currentVelocity=vel)
+        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=vel)
 
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
@@ -171,7 +171,7 @@ class positionRestraintCondition(unittest.TestCase):
         expected_force = [-3]
         position = [-2]
 
-        corr_pos, corr_force = cond.apply(currentPosition=position)
+        corr_pos, corr_force = cond.apply(current_position=position)
         self.assertEqual(second=corr_pos, first=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
         self.assertEqual(second=corr_force, first=expected_force,
@@ -181,7 +181,7 @@ class positionRestraintCondition(unittest.TestCase):
         expected_force = [13]
         position = [14]
 
-        corr_pos, corr_force = cond.apply(currentPosition=position)
+        corr_pos, corr_force = cond.apply(current_position=position)
         self.assertEqual(second=corr_pos, first=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
         self.assertEqual(second=corr_force, first=expected_force,
@@ -194,7 +194,7 @@ class positionRestraintCondition(unittest.TestCase):
         expected_force = [-3, 0]
         position = [-2, 1]
 
-        corr_pos, corr_force = cond.apply(currentPosition=position)
+        corr_pos, corr_force = cond.apply(current_position=position)
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
         np.testing.assert_equal(corr_force, expected_force,
@@ -204,7 +204,7 @@ class positionRestraintCondition(unittest.TestCase):
         expected_force = [0, -3]
         position = [1, -2]
 
-        corr_pos, corr_force = cond.apply(currentPosition=position)
+        corr_pos, corr_force = cond.apply(current_position=position)
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
         np.testing.assert_equal(corr_force, expected_force,

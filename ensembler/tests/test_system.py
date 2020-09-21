@@ -34,15 +34,15 @@ class test_System(unittest.TestCase):
         position = [0.1]
         mass = [1]
         expected_state = data.basicState(position=[0.1], temperature=temperature,
-                                         totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
-                                         totKinEnergy=np.nan, dhdpos=[[np.nan]],
+                                         total_system_energy=0.005000000000000001, total_potential_energy=0.005000000000000001,
+                                         total_kinetic_energy=np.nan, dhdpos=[[np.nan]],
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        curState = sys.getCurrentState()
+        curState = sys.current_state
 
         # check attributes
-        self.assertEqual(self.pot.constants[self.pot.nDim], sys.nDim,
+        self.assertEqual(self.pot.constants[self.pot.nDimensions], sys.nDimensions,
                          msg="Dimensionality was not the same for system and potential!")
         self.assertEqual([], sys.conditions, msg="Conditions were not empty!")
         # print(curState)
@@ -50,12 +50,12 @@ class test_System(unittest.TestCase):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.totEnergy, curState.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(expected_state.totPotEnergy, curState.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertEqual(np.isnan(expected_state.totKinEnergy), np.isnan(curState.totKinEnergy),
-                         msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
+                         msg="The initialised total_kinetic_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
@@ -75,27 +75,26 @@ class test_System(unittest.TestCase):
         newForces = 3
 
         expected_state = data.basicState(position=newPosition, temperature=temperature,
-                                         totEnergy=62.5, totPotEnergy=50.0, totKinEnergy=12.5,
-                                         # tot == totpot because monnte carlo!
+                                         total_system_energy=62.5, total_potential_energy=50.0, total_kinetic_energy=12.5,
                                          dhdpos=3, velocity=newVelocity)
         # potential: _perturbedPotentialCls, samplers: _samplerCls, conditions: Iterable[Condition] = [],
         # temperature: float = 298.0, position:(Iterable[Number] or float
         sys = self.system_class(potential=self.pot, sampler=self.sampler, conditions=[], temperature=temperature,
                                 start_position=position)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(curState.position, expected_state.position, msg="The initialised Position is not correct!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertAlmostEqual(curState.totKinEnergy, expected_state.totKinEnergy,
-                               msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertAlmostEqual(curState.total_kinetic_energy, expected_state.total_kinetic_energy,
+                               msg="The initialised total_kinetic_energy is not correct!")
         # self.assertEqual(curState.dhdpos, expected_state.dhdpos, msg="The initialised dhdpos is not correct!")
         self.assertEqual(curState.velocity, expected_state.velocity, msg="The initialised velocity is not correct!")
 
@@ -115,24 +114,24 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
-        expected_state = sys.getCurrentState()
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2)
-        not_expected_state = sys.getCurrentState()
-        sys.revertStep()
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
+        expected_state = sys.current_state
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2)
+        not_expected_state = sys.current_state
+        sys.revert_step()
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(curState.position, expected_state.position,
                          msg="The current Position is not equal to the one two steps before!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The current temperature is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The current totEnergy is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The current totPotEnergy is not equal to the one two steps before!")
-        self.assertEqual(np.isnan(curState.totKinEnergy), np.isnan(expected_state.totKinEnergy),
-                         msg="The current totKinEnergy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The current total_system_energy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The current total_potential_energy is not equal to the one two steps before!")
+        self.assertEqual(np.isnan(curState.total_kinetic_energy), np.isnan(expected_state.total_kinetic_energy),
+                         msg="The current total_kinetic_energy is not equal to the one two steps before!")
         self.assertEqual(curState.dhdpos, expected_state.dhdpos,
                          msg="The current dhdpos is not equal to the one two steps before!")
         self.assertEqual(curState.velocity, expected_state.velocity,
@@ -143,12 +142,12 @@ class test_System(unittest.TestCase):
                             msg="The not expected Position equals the current one!")
         self.assertEqual(curState.temperature, not_expected_state.temperature,
                          msg="The not expected temperature equals the current one")
-        self.assertNotAlmostEqual(curState.totEnergy, not_expected_state.totEnergy,
-                                  msg="The not expected totEnergy equals the current one")
-        self.assertNotAlmostEqual(curState.totPotEnergy, not_expected_state.totPotEnergy,
-                                  msg="The not expected totPotEnergy equals the current one")
-        self.assertEqual(np.isnan(curState.totKinEnergy), np.isnan(not_expected_state.totKinEnergy),
-                         msg="The not expected totKinEnergy equals the current one")
+        self.assertNotAlmostEqual(curState.total_system_energy, not_expected_state.total_system_energy,
+                                  msg="The not expected total_system_energy equals the current one")
+        self.assertNotAlmostEqual(curState.total_potential_energy, not_expected_state.total_potential_energy,
+                                  msg="The not expected total_potential_energy equals the current one")
+        self.assertEqual(np.isnan(curState.total_kinetic_energy), np.isnan(not_expected_state.total_kinetic_energy),
+                         msg="The not expected total_kinetic_energy equals the current one")
         self.assertNotEqual(curState.dhdpos, not_expected_state.dhdpos,
                             msg="The not expected dhdpos, equals the current one")
         self.assertNotEqual(curState.velocity, not_expected_state.velocity,
@@ -160,12 +159,12 @@ class test_System(unittest.TestCase):
         position = [0.1]
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
-                                         totKinEnergy=np.nan,
+                                         total_system_energy=0.005000000000000001, total_potential_energy=0.005000000000000001,
+                                         total_kinetic_energy=np.nan,
                                          dhdpos=np.nan, velocity=np.nan)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        initialState = sys.getCurrentState()
+        initialState = sys.current_state
         sys.propagate()
 
         # check that middle step is not sames
@@ -173,10 +172,10 @@ class test_System(unittest.TestCase):
                             msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertEqual(sys._currentTotPot, initialState.totPotEnergy,
-                         msg="The initialState  does not equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                         msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertEqual(sys._currentTotPot, initialState.total_potential_energy,
+                         msg="The initialState  does not equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                         msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
@@ -190,10 +189,10 @@ class test_System(unittest.TestCase):
         steps = 100
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        init_state = sys.getCurrentState()
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
-        trajectory = sys.getTrajectory()
+        init_state = sys.current_state
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
 
@@ -205,10 +204,10 @@ class test_System(unittest.TestCase):
                          msg="The initial state does not equal the frame 0 after propergating in attribute: Position!")
         self.assertEqual(init_state.temperature, old_frame.temperature,
                          msg="The initial state does not equal the frame 0 after propergating in attribute: temperature!")
-        self.assertAlmostEqual(init_state.totPotEnergy, old_frame.totPotEnergy,
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totPotEnergy!")
-        self.assertAlmostEqual(np.isnan(init_state.totKinEnergy), np.isnan(old_frame.totKinEnergy),
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(init_state.total_potential_energy, old_frame.total_potential_energy,
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_potential_energy!")
+        self.assertAlmostEqual(np.isnan(init_state.total_kinetic_energy), np.isnan(old_frame.total_kinetic_energy),
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(init_state.dhdpos), np.isnan(old_frame.dhdpos),
                          msg="The initial state does not equal the frame 0 after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(init_state.velocity), np.isnan(old_frame.velocity),
@@ -225,12 +224,12 @@ class test_System(unittest.TestCase):
             self.assertEqual(old_frame.temperature, frame.temperature,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: temperature!")  # due to samplers
-            self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy,
+            self.assertNotAlmostEqual(old_frame.total_potential_energy, frame.total_potential_energy,
                                       msg="The frame " + str(ind) + " equals the frame  " + str(
-                                          ind + 1) + " after propergating in attribute: totPotEnergy!")
-            self.assertEqual(np.isnan(old_frame.totKinEnergy), np.isnan(frame.totKinEnergy),
+                                          ind + 1) + " after propergating in attribute: total_potential_energy!")
+            self.assertEqual(np.isnan(old_frame.total_kinetic_energy), np.isnan(frame.total_kinetic_energy),
                              msg="The frame " + str(ind) + " equals not the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to samplers
+                                 ind + 1) + " after propergating in attribute: total_kinetic_energy!")  # due to samplers
             self.assertNotEqual(old_frame.dhdpos, frame.dhdpos,
                                 msg="The frame " + str(ind) + " equals the frame  " + str(
                                     ind + 1) + " after propergating in attribute: dhdpos!")
@@ -261,7 +260,7 @@ class test_System(unittest.TestCase):
         newForces = 3
 
         expected_state = data.basicState(position=newPosition, temperature=temperature,
-                                         totEnergy=62.5, totPotEnergy=50.0, totKinEnergy=12.5,
+                                         total_system_energy=62.5, total_potential_energy=50.0, total_kinetic_energy=12.5,
                                          dhdpos=3, velocity=newVelocity)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
@@ -284,23 +283,23 @@ class test_System(unittest.TestCase):
         position = [0.1]
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
-                                         totKinEnergy=np.nan, dhdpos=np.nan, velocity=np.nan)
+                                         total_system_energy=0.005000000000000001, total_potential_energy=0.005000000000000001,
+                                         total_kinetic_energy=np.nan, dhdpos=np.nan, velocity=np.nan)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        initialState = sys.getCurrentState()
+        initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
                             msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertNotAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                                  msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertAlmostEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                               msg="The initialState  does equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertNotAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                                  msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertAlmostEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                               msg="The initialState  does equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
@@ -315,12 +314,12 @@ class test_System(unittest.TestCase):
         position = [1]
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
-                                         totKinEnergy=0,
+                                         total_system_energy=0.005000000000000001, total_potential_energy=0.005000000000000001,
+                                         total_kinetic_energy=0,
                                          dhdpos=None, velocity=None)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        self.assertAlmostEqual(sys.totPot(), 0.5, msg="The initialised totPotEnergy is not correct!")
+        self.assertAlmostEqual(sys.calculate_total_potential_energy(), 0.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_totKin(self):
         """
@@ -332,17 +331,17 @@ class test_System(unittest.TestCase):
         position = [1]
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=0.005000000000000001, totPotEnergy=0.005000000000000001,
-                                         totKinEnergy=np.nan, dhdpos=np.nan, velocity=np.nan)
+                                         total_system_energy=0.005000000000000001, total_potential_energy=0.005000000000000001,
+                                         total_kinetic_energy=np.nan, dhdpos=np.nan, velocity=np.nan)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        self.assertEqual(np.isnan(sys.totKin()), np.isnan(np.nan), msg="The initialised totKinEnergy is not correct!")
+        self.assertEqual(np.isnan(sys.calculate_total_kinetic_energy()), np.isnan(np.nan), msg="The initialised total_kinetic_energy is not correct!")
 
         newPosition = 10
         newVelocity = -5
         newForces = 3
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces)
-        self.assertAlmostEqual(sys.totPot(), 50.0, msg="The initialised totPotEnergy is not correct!")
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces)
+        self.assertAlmostEqual(sys.calculate_total_potential_energy(), 50.0, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
         conditions = []
@@ -353,19 +352,19 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
-        initialState = sys.getCurrentState()
-        sys.set_Temperature(temperature2)
+        sys.update_current_state()
+        initialState = sys.current_state
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
         self.assertEqual(sys._currentPosition, initialState.position,
                          msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertNotEqual(sys._currentTemperature, initialState.temperature,
                             msg="The initialState does equal the currentState after propergating in attribute: temperature!")
-        self.assertAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                               msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        # self.assertNotAlmostEqual(sys._currentTotKin, initialState.totKinEnergy,
-        #                       msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                               msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        # self.assertNotAlmostEqual(sys._currentTotKin, initialState.total_kinetic_energy,
+        #                       msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(sys._currentForce), np.isnan(initialState.dhdpos),
                          msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(sys._currentVelocities, initialState.velocity,
@@ -377,11 +376,11 @@ class test_System(unittest.TestCase):
         position = 0.1
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=0.005, totPotEnergy=0.005, totKinEnergy=0,
+                                         total_system_energy=0.005, total_potential_energy=0.005, total_kinetic_energy=0,
                                          dhdpos=None, velocity=None)
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        self.assertEqual(0.005000000000000001, sys.getTotPot(), msg="Could not get the correct Pot Energy!")
+        self.assertEqual(0.005000000000000001, sys.total_potential_energy, msg="Could not get the correct Pot Energy!")
 
     def test_get_Trajectory(self):
         conditions = []
@@ -391,7 +390,7 @@ class test_System(unittest.TestCase):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
         sys.simulate(steps=10)
-        traj_pd = sys.getTrajectory()
+        traj_pd = sys.trajectory
 
     def test_save_obj_str(self):
         path = self.tmp_out_path
@@ -412,32 +411,30 @@ class test_perturbedSystem1D(test_System):
 
     def setUp(self) -> None:
         self.sampler = samplers.stochastic.monteCarloIntegrator()
-        self.pot = potentials.OneD.linearCoupledPotentials()
+        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
+        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
+        self.pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=1.0)
 
     def test_system_constructor(self):
         """
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=1.0)
         lam = 0
         conditions = []
         temperature = 300
         position = 0
         mass = [1]
         expected_state = data.lambdaState(position=0, temperature=temperature, lam=0.0,
-                                          totEnergy=12.5, totPotEnergy=12.5, totKinEnergy=np.nan,
+                                          total_system_energy=12.5, total_potential_energy=12.5, total_kinetic_energy=np.nan,
                                           dhdpos=np.nan, velocity=np.nan, dhdlam=np.nan)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        curState = sys.getCurrentState()
+        curState = sys.current_state
 
         # check attributes
-        self.assertEqual(pot.constants[pot.nDim], sys.nDim,
+        self.assertEqual(self.pot.constants[self.pot.nDimensions], sys.nDimensions,
                          msg="Dimensionality was not the same for system and potential!")
         self.assertEqual([], sys.conditions, msg="Conditions were not empty!")
         # print(curState)
@@ -445,12 +442,12 @@ class test_perturbedSystem1D(test_System):
         self.assertEqual(curState.position, expected_state.position, msg="The initialised Position is not correct!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertEqual(np.isnan(curState.totKinEnergy), np.isnan(expected_state.totKinEnergy),
-                         msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertEqual(np.isnan(curState.total_kinetic_energy), np.isnan(expected_state.total_kinetic_energy),
+                         msg="The initialised total_kinetic_energy is not correct!")
         # self.assertEqual(np.isnan(curState.dhdpos), np.isnan(expected_state.dhdpos), msg="The initialised dhdpos is not correct!")
         self.assertEqual(np.isnan(curState.velocity), np.isnan(expected_state.velocity),
                          msg="The initialised velocity is not correct!")
@@ -463,21 +460,20 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-
         conditions = []
         temperature = 300
         position = [0.1]
         mass = [1]
         expected_state = data.basicState(position=[0.1], temperature=temperature,
-                                         totEnergy=0.030000000000000006, totPotEnergy=0.030000000000000006,
-                                         totKinEnergy=np.nan, dhdpos=[[np.nan]],
+                                         total_system_energy=12.005, total_potential_energy=12.005,
+                                         total_kinetic_energy=np.nan, dhdpos=[[np.nan]],
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        curState = sys.getCurrentState()
+        curState = sys.current_state
 
         # check attributes
-        self.assertEqual(self.pot.constants[self.pot.nDim], sys.nDim,
+        self.assertEqual(self.pot.constants[self.pot.nDimensions], sys.nDimensions,
                          msg="Dimensionality was not the same for system and potential!")
         self.assertEqual([], sys.conditions, msg="Conditions were not empty!")
         # print(curState)
@@ -485,23 +481,18 @@ class test_perturbedSystem1D(test_System):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.totEnergy, curState.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(expected_state.totPotEnergy, curState.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertEqual(np.isnan(expected_state.totKinEnergy), np.isnan(curState.totKinEnergy),
-                         msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
+                         msg="The initialised total_kinetic_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
     def test_append_state(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
+
         lam = 0
-
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
         temperature = 300
         position = 0
 
@@ -511,25 +502,25 @@ class test_perturbedSystem1D(test_System):
         newLam = 1.0
 
         expected_state = data.lambdaState(position=newPosition, temperature=temperature, lam=newLam,
-                                          totEnergy=125.0, totPotEnergy=112.5, totKinEnergy=12.5,
+                                          total_system_energy=125.0, total_potential_energy=112.5, total_kinetic_energy=12.5,
                                           dhdpos=newForces, velocity=newVelocity, dhdlam=np.nan)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(sys._currentPosition, expected_state.position, msg="The initialised Position is not correct!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertAlmostEqual(curState.totKinEnergy, expected_state.totKinEnergy,
-                               msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertAlmostEqual(curState.total_kinetic_energy, expected_state.total_kinetic_energy,
+                               msg="The initialised total_kinetic_energy is not correct!")
         # self.assertEqual(curState.dhdpos, expected_state.dhdpos, msg="The initialised dhdpos is not correct!")
         self.assertEqual(np.isnan(curState.velocity), np.isnan(expected_state.velocity),
                          msg="The initialised velocity is not correct!")
@@ -547,37 +538,33 @@ class test_perturbedSystem1D(test_System):
         newForces2 = 8
         newLam2 = 0.5
 
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
         conditions = []
         temperature = 300
         position = [0]
         mass = [1]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        expected_state = sys.getCurrentState()
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2, newLam=newLam2)
-        not_expected_state = sys.getCurrentState()
-        sys.revertStep()
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
+        expected_state = sys.current_state
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2, new_lambda=newLam2)
+        not_expected_state = sys.current_state
+        sys.revert_step()
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(curState.position, expected_state.position,
                          msg="The current Position is not equal to the one two steps before!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The current temperature is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The current totEnergy is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The current totPotEnergy is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totKinEnergy, expected_state.totKinEnergy,
-                               msg="The current totKinEnergy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The current total_system_energy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The current total_potential_energy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_kinetic_energy, expected_state.total_kinetic_energy,
+                               msg="The current total_kinetic_energy is not equal to the one two steps before!")
         # self.assertEqual(curState.dhdpos, expected_state.dhdpos, msg="The current dhdpos is not equal to the one two steps before!")
         self.assertEqual(curState.velocity, expected_state.velocity,
                          msg="The current velocity is not equal to the one two steps before!")
@@ -591,12 +578,12 @@ class test_perturbedSystem1D(test_System):
                             msg="The not expected Position equals the current one!")
         self.assertEqual(curState.temperature, not_expected_state.temperature,
                          msg="The not expected temperature equals the current one")
-        self.assertNotAlmostEqual(curState.totEnergy, not_expected_state.totEnergy,
-                                  msg="The not expected totEnergy equals the current one")
-        self.assertNotAlmostEqual(curState.totPotEnergy, not_expected_state.totPotEnergy,
-                                  msg="The not expected totPotEnergy equals the current one")
-        self.assertNotAlmostEqual(curState.totKinEnergy, not_expected_state.totKinEnergy,
-                                  msg="The not expected totKinEnergy equals the current one")
+        self.assertNotAlmostEqual(curState.total_system_energy, not_expected_state.total_system_energy,
+                                  msg="The not expected total_system_energy equals the current one")
+        self.assertNotAlmostEqual(curState.total_potential_energy, not_expected_state.total_potential_energy,
+                                  msg="The not expected total_potential_energy equals the current one")
+        self.assertNotAlmostEqual(curState.total_kinetic_energy, not_expected_state.total_kinetic_energy,
+                                  msg="The not expected total_kinetic_energy equals the current one")
         # self.assertNotEqual(curState.dhdpos, not_expected_state.dhdpos, msg="The not expected dhdpos, equals the current one")
         self.assertNotEqual(curState.velocity, not_expected_state.velocity,
                             msg="The not expected velocity equals the current one")
@@ -605,18 +592,13 @@ class test_perturbedSystem1D(test_System):
                          msg="The initialised dHdlam is not correct!")
 
     def test_propergate(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        initialState = sys.getCurrentState()
+        initialState = sys.current_state
         sys.propagate()
 
         # check that middle step is not sames
@@ -624,36 +606,32 @@ class test_perturbedSystem1D(test_System):
                             msg="The initialState equals the currentState after propagating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                               msg="The initialState  does not equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                         msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                               msg="The initialState  does not equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                         msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
                          msg="The initialState does not equal the currentState after propergating in attribute: velocity!")
-        self.assertEqual(sys._currentLam, initialState.lam,
+        self.assertEqual(sys._currentLambda, initialState.lam,
                          msg="The initialState does not equal the currentState after propergating in attribute: lam!")
-        self.assertEqual(np.isnan(sys._currentdHdLam), np.isnan(initialState.dhdlam),
+        self.assertEqual(np.isnan(sys._currentdHdLambda), np.isnan(initialState.dhdlam),
                          msg="The initialState does not equal the currentState after propergating in attribute: dHdLam!")
 
     def test_simulate(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
         steps = 100
 
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        init_state = sys.getCurrentState()
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
-        trajectory = sys.getTrajectory()
+        init_state = sys.current_state
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
         # Check that the first frame is the initial state!
@@ -661,10 +639,10 @@ class test_perturbedSystem1D(test_System):
                              msg="The initial state does not equal the frame 0 after propergating in attribute: Position!")
         self.assertEqual(init_state.temperature, old_frame.temperature,
                          msg="The initial state does not equal the frame 0 after propergating in attribute: temperature!")
-        self.assertAlmostEqual(init_state.totPotEnergy, old_frame.totPotEnergy,
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totPotEnergy!")
-        self.assertAlmostEqual(np.isnan(init_state.totKinEnergy), np.isnan(old_frame.totKinEnergy),
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(init_state.total_potential_energy, old_frame.total_potential_energy,
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_potential_energy!")
+        self.assertAlmostEqual(np.isnan(init_state.total_kinetic_energy), np.isnan(old_frame.total_kinetic_energy),
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(init_state.dhdpos), np.isnan(old_frame.dhdpos),
                          msg="The initial state does not equal the frame 0 after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(init_state.velocity), np.isnan(old_frame.velocity),
@@ -683,12 +661,12 @@ class test_perturbedSystem1D(test_System):
             self.assertEqual(old_frame.temperature, frame.temperature,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: temperature!")  # due to samplers
-            self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy,
+            self.assertNotAlmostEqual(old_frame.total_potential_energy, frame.total_potential_energy,
                                       msg="The frame " + str(ind) + " equals the frame  " + str(
-                                          ind + 1) + " after propergating in attribute: totPotEnergy!")
-            self.assertAlmostEqual(np.isnan(old_frame.totKinEnergy), np.isnan(frame.totKinEnergy),
+                                          ind + 1) + " after propergating in attribute: total_potential_energy!")
+            self.assertAlmostEqual(np.isnan(old_frame.total_kinetic_energy), np.isnan(frame.total_kinetic_energy),
                                    msg="The frame " + str(ind) + " equals the frame  " + str(
-                                       ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to samplers
+                                       ind + 1) + " after propergating in attribute: total_kinetic_energy!")  # due to samplers
             self.assertNotEqual(old_frame.dhdpos, frame.dhdpos,
                                 msg="The frame " + str(ind) + " equals the frame  " + str(
                                     ind + 1) + " after propergating in attribute: dhdpos!")
@@ -714,16 +692,12 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
 
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
         sys._init_velocities()
 
@@ -739,30 +713,25 @@ class test_perturbedSystem1D(test_System):
         pass
 
     def test_updateEne(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        initialState = sys.getCurrentState()
+        initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
                             msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertNotAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                                  msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                         msg="The initialState  does equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertNotAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                                  msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                         msg="The initialState  does equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
@@ -773,89 +742,71 @@ class test_perturbedSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
 
+        lam=0
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        self.assertAlmostEqual(sys.totPot(), 12.5, msg="The initialised totPotEnergy is not correct!")
+        self.assertAlmostEqual(sys.calculate_total_potential_energy(), 12.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_totKin(self):
         """
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
 
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        self.assertTrue(np.isnan(sys.totKin()), msg="The initialised totPotEnergy is not correct!")
+        self.assertTrue(np.isnan(sys.calculate_total_kinetic_energy()), msg="The initialised total_potential_energy is not correct!")
 
         newPosition = 10
         newVelocity = -5
         newForces = 3
         newLam = 1
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        self.assertAlmostEqual(sys.totKin(), 12.5, msg="The initialised totPotEnergy is not correct!")
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_lambda=newLam)
+        self.assertAlmostEqual(sys.calculate_total_kinetic_energy(), 12.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
-
         temperature = 300
         temperature2 = 600
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
-        initialState = sys.getCurrentState()
-        sys.set_Temperature(temperature2)
+        sys.update_current_state()
+        initialState = sys.current_state
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
         self.assertListEqual(list(sys._currentPosition), list(initialState.position),
                              msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertNotEqual(sys._currentTemperature, initialState.temperature,
                             msg="The initialState does equal the currentState after propergating in attribute: temperature!")
-        self.assertAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                               msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertNotAlmostEqual(sys._currentTotKin, initialState.totKinEnergy,
-                                  msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                               msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertNotAlmostEqual(sys._currentTotKin, initialState.total_kinetic_energy,
+                                  msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(sys._currentForce), np.isnan(initialState.dhdpos),
                          msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(sys._currentVelocities, initialState.velocity,
                          msg="The initialState does equal the currentState after propergating in attribute: velocity!")
 
     def test_get_Pot(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
-
         temperature = 300
         position = [5]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        self.assertEqual(50.0, sys.getTotPot(), msg="Could not get the correct Pot Energy!")
+        self.assertEqual(50.0, sys.total_potential_energy, msg="Could not get the correct Pot Energy!")
 
 
 class test_edsSystem1D(test_System):
@@ -871,25 +822,21 @@ class test_edsSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=1.0)
-        lam = 0
+        s = 1
         conditions = []
         temperature = 300
         position = 0
         mass = [1]
-        expected_state = data.lambdaState(position=0, temperature=temperature, lam=0.0,
-                                          totEnergy=12.5, totPotEnergy=12.5, totKinEnergy=np.nan,
-                                          dhdpos=np.nan, velocity=np.nan, dhdlam=np.nan)
+        expected_state = data.envelopedPStstate(position=0, temperature=temperature, s=1.0, eoff=[0,0],
+                                          total_system_energy=-0.011047744848593777, total_potential_energy=-0.011047744848593777, total_kinetic_energy=np.nan,
+                                          dhdpos=np.nan, velocity=np.nan)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        curState = sys.getCurrentState()
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        curState = sys.current_state
 
         # check attributes
-        self.assertEqual(pot.constants[pot.nDim], sys.nDim,
+        self.assertEqual(self.pot.constants[self.pot.nDimensions], sys.nDimensions,
                          msg="Dimensionality was not the same for system and potential!")
         self.assertEqual([], sys.conditions, msg="Conditions were not empty!")
         # print(curState)
@@ -897,18 +844,19 @@ class test_edsSystem1D(test_System):
         self.assertEqual(curState.position, expected_state.position, msg="The initialised Position is not correct!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertEqual(np.isnan(curState.totKinEnergy), np.isnan(expected_state.totKinEnergy),
-                         msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertEqual(np.isnan(curState.total_kinetic_energy), np.isnan(expected_state.total_kinetic_energy),
+                         msg="The initialised total_kinetic_energy is not correct!")
         # self.assertEqual(np.isnan(curState.dhdpos), np.isnan(expected_state.dhdpos), msg="The initialised dhdpos is not correct!")
         self.assertEqual(np.isnan(curState.velocity), np.isnan(expected_state.velocity),
                          msg="The initialised velocity is not correct!")
-        self.assertEqual(np.isnan(curState.lam), np.isnan(expected_state.lam),
-                         msg="The initialised lam is not correct!")
-        # self.assertEqual(np.isnan(curState.dhdlam), np.isnan(expected_state.dhdlam), msg="The initialised dHdlam is not correct!")
+        self.assertEqual(curState.s, expected_state.s,
+                         msg="The initialised s is not correct!")
+        self.assertEqual(curState.eoff, expected_state.eoff,
+                         msg="The initialised Eoff is not correct!")
 
     def test_system_constructor_detail(self):
         """
@@ -921,15 +869,15 @@ class test_edsSystem1D(test_System):
         position = 0.1
         mass = [1]
         expected_state = data.basicState(position=position, temperature=temperature,
-                                         totEnergy=-0.009884254671918117, totPotEnergy=-0.009884254671918117,
-                                         totKinEnergy=np.nan, dhdpos=np.array(-0.0556779),
+                                         total_system_energy=-0.009884254671918117, total_potential_energy=-0.009884254671918117,
+                                         total_kinetic_energy=np.nan, dhdpos=np.array(-0.0556779),
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
-        curState = sys.getCurrentState()
+        curState = sys.current_state
         print(curState)
         # check attributes
-        self.assertEqual(self.pot.constants[self.pot.nDim], sys.nDim,
+        self.assertEqual(self.pot.constants[self.pot.nDimensions], sys.nDimensions,
                          msg="Dimensionality was not the same for system and potential!")
         self.assertEqual([], sys.conditions, msg="Conditions were not empty!")
         # print(curState)
@@ -937,138 +885,130 @@ class test_edsSystem1D(test_System):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.totEnergy, curState.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(expected_state.totPotEnergy, curState.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertEqual(np.isnan(expected_state.totKinEnergy), np.isnan(curState.totKinEnergy),
-                         msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
+                         msg="The initialised total_kinetic_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
     def test_append_state(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
         temperature = 300
         position = 0
+        s = 1.0
+        Eoff=[0,0]
 
         newPosition = 10
         newVelocity = -5
         newForces = 3
-        newLam = 1.0
+        newEoff = [1,1]
+        newS = [2]
 
-        expected_state = data.lambdaState(position=newPosition, temperature=temperature, lam=newLam,
-                                          totEnergy=125.0, totPotEnergy=112.5, totKinEnergy=12.5,
-                                          dhdpos=newForces, velocity=newVelocity, dhdlam=np.nan)
+        expected_state = data.envelopedPStstate(position=newPosition, temperature=temperature, s=newS, eoff=newEoff,
+                                          total_system_energy=36.99999999999157, total_potential_energy=24.499999999991577, total_kinetic_energy=12.5,
+                                          dhdpos=newForces, velocity=newVelocity)
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(sys._currentPosition, expected_state.position, msg="The initialised Position is not correct!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The initialised totEnergy is not correct!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The initialised totPotEnergy is not correct!")
-        self.assertAlmostEqual(curState.totKinEnergy, expected_state.totKinEnergy,
-                               msg="The initialised totKinEnergy is not correct!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The initialised total_potential_energy is not correct!")
+        self.assertAlmostEqual(curState.total_kinetic_energy, expected_state.total_kinetic_energy,
+                               msg="The initialised total_kinetic_energy is not correct!")
         # self.assertEqual(curState.dhdpos, expected_state.dhdpos, msg="The initialised dhdpos is not correct!")
         self.assertEqual(np.isnan(curState.velocity), np.isnan(expected_state.velocity),
                          msg="The initialised velocity is not correct!")
-        self.assertEqual(curState.lam, expected_state.lam, msg="The initialised lam is not correct!")
-        # self.assertEqual(np.isnan(curState.dhdlam), np.isnan(expected_state.dhdlam), msg="The initialised dHdlam is not correct!")
+        self.assertEqual(curState.s, expected_state.s, msg="The initialised s is not correct!")
+        self.assertEqual(curState.eoff, expected_state.eoff, msg="The initialised Eoff is not correct!")
 
     def test_revertStep(self):
         newPosition = 10
         newVelocity = -5
         newForces = 3
-        newLam = 1.0
+        newS = 1.0
+        newEoff = [1,1]
 
         newPosition2 = 13
         newVelocity2 = -4
         newForces2 = 8
-        newLam2 = 0.5
+        newS2 = 0.5
+        newEoff2 = [2,2]
 
         integ = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
+        s = 1
+        pot = potentials.OneD.exponentialCoupledPotentials(Va=ha, Vb=hb, s=1)
         conditions = []
         temperature = 300
         position = [0]
         mass = [1]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
+        sys = self.system_class(potential=pot, sampler=integ, start_position=position,
+                                                      temperature=temperature, eds_s=s)
 
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        expected_state = sys.getCurrentState()
-        sys.append_state(newPosition=newPosition2, newVelocity=newVelocity2, newForces=newForces2, newLam=newLam2)
-        not_expected_state = sys.getCurrentState()
-        sys.revertStep()
-        curState = sys.getCurrentState()
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
+        expected_state = sys.current_state
+        sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2, new_s=newS2, new_eoff=newEoff2)
+        not_expected_state = sys.current_state
+        sys.revert_step()
+        curState = sys.current_state
 
         # check current state intialisation
         self.assertEqual(curState.position, expected_state.position,
                          msg="The current Position is not equal to the one two steps before!")
         self.assertEqual(curState.temperature, expected_state.temperature,
                          msg="The current temperature is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totEnergy, expected_state.totEnergy,
-                               msg="The current totEnergy is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totPotEnergy, expected_state.totPotEnergy,
-                               msg="The current totPotEnergy is not equal to the one two steps before!")
-        self.assertAlmostEqual(curState.totKinEnergy, expected_state.totKinEnergy,
-                               msg="The current totKinEnergy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_system_energy, expected_state.total_system_energy,
+                               msg="The current total_system_energy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_potential_energy, expected_state.total_potential_energy,
+                               msg="The current total_potential_energy is not equal to the one two steps before!")
+        self.assertAlmostEqual(curState.total_kinetic_energy, expected_state.total_kinetic_energy,
+                               msg="The current total_kinetic_energy is not equal to the one two steps before!")
         # self.assertEqual(curState.dhdpos, expected_state.dhdpos, msg="The current dhdpos is not equal to the one two steps before!")
         self.assertEqual(curState.velocity, expected_state.velocity,
                          msg="The current velocity is not equal to the one two steps before!")
-        self.assertEqual(curState.lam, expected_state.lam,
-                         msg="The current lam is not equal to the one two steps before!")
-        self.assertEqual(np.isnan(curState.dhdlam), np.isnan(expected_state.dhdlam),
-                         msg="The initialised dHdlam is not correct!")
+        self.assertEqual(curState.s, expected_state.s,
+                         msg="The current s is not equal to the one two steps before!")
+        np.testing.assert_almost_equal(curState.eoff, expected_state.eoff,
+                                       err_msg="The initialised Eoff is not correct as not equal to two steps before!")
 
         # check that middle step is not sames
         self.assertNotEqual(curState.position, not_expected_state.position,
                             msg="The not expected Position equals the current one!")
         self.assertEqual(curState.temperature, not_expected_state.temperature,
                          msg="The not expected temperature equals the current one")
-        self.assertNotAlmostEqual(curState.totEnergy, not_expected_state.totEnergy,
-                                  msg="The not expected totEnergy equals the current one")
-        self.assertNotAlmostEqual(curState.totPotEnergy, not_expected_state.totPotEnergy,
-                                  msg="The not expected totPotEnergy equals the current one")
-        self.assertNotAlmostEqual(curState.totKinEnergy, not_expected_state.totKinEnergy,
-                                  msg="The not expected totKinEnergy equals the current one")
+        self.assertNotAlmostEqual(curState.total_system_energy, not_expected_state.total_system_energy,
+                                  msg="The not expected total_system_energy equals the current one")
+        self.assertNotAlmostEqual(curState.total_potential_energy, not_expected_state.total_potential_energy,
+                                  msg="The not expected total_potential_energy equals the current one")
+        self.assertNotAlmostEqual(curState.total_kinetic_energy, not_expected_state.total_kinetic_energy,
+                                  msg="The not expected total_kinetic_energy equals the current one")
         # self.assertNotEqual(curState.dhdpos, not_expected_state.dhdpos, msg="The not expected dhdpos, equals the current one")
         self.assertNotEqual(curState.velocity, not_expected_state.velocity,
                             msg="The not expected velocity equals the current one")
-        self.assertNotEqual(curState.lam, not_expected_state.lam, msg="The not expected lam equals the current one")
-        self.assertEqual(np.isnan(curState.dhdlam), np.isnan(expected_state.dhdlam),
-                         msg="The initialised dHdlam is not correct!")
+        self.assertNotEqual(curState.s, not_expected_state.s, msg="The not expected lam equals the current one")
+        self.assertNotEqual(curState.eoff, not_expected_state.eoff, msg="The initialised Eoff is not correct!")
 
     def test_propergate(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
         temperature = 300
         position = [0]
+        s=1
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        initialState = sys.getCurrentState()
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        initialState = sys.current_state
         sys.propagate()
 
         # check that middle step is not sames
@@ -1076,36 +1016,32 @@ class test_edsSystem1D(test_System):
                             msg="The initialState equals the currentState after propagating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                               msg="The initialState  does not equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                         msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                               msg="The initialState  does not equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                         msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
                          msg="The initialState does not equal the currentState after propergating in attribute: velocity!")
-        self.assertEqual(sys._currentLam, initialState.lam,
-                         msg="The initialState does not equal the currentState after propergating in attribute: lam!")
-        self.assertEqual(np.isnan(sys._currentdHdLam), np.isnan(initialState.dhdlam),
-                         msg="The initialState does not equal the currentState after propergating in attribute: dHdLam!")
+        self.assertEqual(sys._currentEdsS, initialState.s,
+                         msg="The initialState does not equal the currentState after propergating in attribute: s!")
+        np.testing.assert_almost_equal(sys._currentEdsEoffs, initialState.eoff,
+                                       err_msg="The initialState does not equal the currentState after propergating in attribute: Eoff!")
 
     def test_simulate(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
+        s =1
         steps = 100
 
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        init_state = sys.getCurrentState()
-        sys.simulate(steps=steps, initSystem=False,
-                     withdrawTraj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
-        trajectory = sys.getTrajectory()
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        init_state = sys.current_state
+        sys.simulate(steps=steps, init_system=False,
+                     withdraw_traj=True)  # withdrawTraj is needed in the context because of the interaction between different Tests
+        trajectory = sys.trajectory
 
         old_frame = trajectory.iloc[0]
         # Check that the first frame is the initial state!
@@ -1113,18 +1049,18 @@ class test_edsSystem1D(test_System):
                              msg="The initial state does not equal the frame 0 after propergating in attribute: Position!")
         self.assertEqual(init_state.temperature, old_frame.temperature,
                          msg="The initial state does not equal the frame 0 after propergating in attribute: temperature!")
-        self.assertAlmostEqual(init_state.totPotEnergy, old_frame.totPotEnergy,
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totPotEnergy!")
-        self.assertAlmostEqual(np.isnan(init_state.totKinEnergy), np.isnan(old_frame.totKinEnergy),
-                               msg="The initial state does not equal the frame 0 after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(init_state.total_potential_energy, old_frame.total_potential_energy,
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_potential_energy!")
+        self.assertAlmostEqual(np.isnan(init_state.total_kinetic_energy), np.isnan(old_frame.total_kinetic_energy),
+                               msg="The initial state does not equal the frame 0 after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(init_state.dhdpos), np.isnan(old_frame.dhdpos),
                          msg="The initial state does not equal the frame 0 after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(init_state.velocity), np.isnan(old_frame.velocity),
                          msg="The initial state does not equal the frame 0 after propergating in attribute: velocity!")
-        self.assertEqual(init_state.lam, old_frame.lam,
-                         msg="The initial state does not equal the frame 0 after propergating in attribute: lam!")
-        self.assertEqual(np.isnan(init_state.dhdlam), np.isnan(old_frame.dhdlam),
-                         msg="The initial state does not equal the frame 0 after propergating in attribute: dhdLam!")
+        self.assertEqual(init_state.s, old_frame.s,
+                         msg="The initial state does not equal the frame 0 after propergating in attribute: s!")
+        np.testing.assert_almost_equal(init_state.eoff, old_frame.eoff,
+                                       err_msg="The initial state does not equal the frame 0 after propergating in attribute: Eoff!")
 
         # check that the frames are all different from each other.
         for ind, frame in list(trajectory.iterrows())[1:]:
@@ -1135,24 +1071,24 @@ class test_edsSystem1D(test_System):
             self.assertEqual(old_frame.temperature, frame.temperature,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: temperature!")  # due to samplers
-            self.assertNotAlmostEqual(old_frame.totPotEnergy, frame.totPotEnergy,
+            self.assertNotAlmostEqual(old_frame.total_potential_energy, frame.total_potential_energy,
                                       msg="The frame " + str(ind) + " equals the frame  " + str(
-                                          ind + 1) + " after propergating in attribute: totPotEnergy!")
-            self.assertAlmostEqual(np.isnan(old_frame.totKinEnergy), np.isnan(frame.totKinEnergy),
+                                          ind + 1) + " after propergating in attribute: total_potential_energy!")
+            self.assertAlmostEqual(np.isnan(old_frame.total_kinetic_energy), np.isnan(frame.total_kinetic_energy),
                                    msg="The frame " + str(ind) + " equals the frame  " + str(
-                                       ind + 1) + " after propergating in attribute: totKinEnergy!")  # due to samplers
+                                       ind + 1) + " after propergating in attribute: total_kinetic_energy!")  # due to samplers
             self.assertNotEqual(old_frame.dhdpos, frame.dhdpos,
                                 msg="The frame " + str(ind) + " equals the frame  " + str(
                                     ind + 1) + " after propergating in attribute: dhdpos!")
             self.assertEqual(np.isnan(old_frame.velocity), np.isnan(frame.velocity),
                              msg="The frame " + str(ind) + " equals the frame  " + str(
                                  ind + 1) + " after propergating in attribute: velocity!")  # due to samplers
-            self.assertEqual(init_state.lam, old_frame.lam,
+            self.assertEqual(init_state.s, old_frame.s,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: lam!")
-            self.assertEqual(np.isnan(init_state.dhdlam), np.isnan(old_frame.dhdlam),
+                                 ind + 1) + " after propergating in attribute: s!")
+            self.assertEqual(init_state.eoff, old_frame.eoff,
                              msg="The frame " + str(ind) + " equals the frame  " + str(
-                                 ind + 1) + " after propergating in attribute: dhdLam!")
+                                 ind + 1) + " after propergating in attribute: Eoff!")
             old_frame = frame
 
     def test_applyConditions(self):
@@ -1166,22 +1102,16 @@ class test_edsSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
+        s=1
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
         sys._init_velocities()
 
         cur_velocity = sys._currentVelocities
-        # print(cur_velocity)
-        expected_vel = np.float64(-2.8014573319669176)
+        expected_vel = [0.19334311622217965, 1.2272590394440765]
         self.assertEqual(type(cur_velocity), type(expected_vel), msg="Velocity has not the correcttype!")
 
     def test_updateTemp(self):
@@ -1191,30 +1121,25 @@ class test_edsSystem1D(test_System):
         pass
 
     def test_updateEne(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
+        s=1
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        initialState = sys.getCurrentState()
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        initialState = sys.current_state
         sys.propagate()
-        sys._updateEne()
+        sys._update_energies()
 
         # check that middle step is not sames
         self.assertNotEqual(sys._currentPosition, initialState.position,
                             msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertEqual(sys._currentTemperature, initialState.temperature,
                          msg="The initialState does not equal the currentState after propergating in attribute: temperature!")
-        self.assertNotAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                                  msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.totKinEnergy),
-                         msg="The initialState  does equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertNotAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                                  msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertEqual(np.isnan(sys._currentTotKin), np.isnan(initialState.total_kinetic_energy),
+                         msg="The initialState  does equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertNotEqual(sys._currentForce, initialState.dhdpos,
                             msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(np.isnan(sys._currentVelocities), np.isnan(initialState.velocity),
@@ -1225,100 +1150,72 @@ class test_edsSystem1D(test_System):
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=lam)
-
+        s=1
         temperature = 300
-        position = [0]
+        position = [12]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        self.assertAlmostEqual(sys.totPot(), 12.5, msg="The initialised totPotEnergy is not correct!")
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        self.assertAlmostEqual(sys.calculate_total_potential_energy(), 40.49999999999998, msg="The initialised total_potential_energy is not correct!")
 
     def test_totKin(self):
         """
         uses init_state, updateEne, randomPos, self.state
         :return:
         """
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
-
+        s=1
         temperature = 300
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        self.assertTrue(np.isnan(sys.totKin()), msg="The initialised totPotEnergy is not correct!")
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        self.assertTrue(np.isnan(sys.calculate_total_kinetic_energy()), msg="The initialised total_potential_energy is not correct!")
 
         newPosition = 10
         newVelocity = -5
         newForces = 3
-        newLam = 1
-        sys.append_state(newPosition=newPosition, newVelocity=newVelocity, newForces=newForces, newLam=newLam)
-        self.assertAlmostEqual(sys.totKin(), 12.5, msg="The initialised totPotEnergy is not correct!")
+        newS = 2
+        newEoff = [0,0]
+        sys.append_state(new_position=newPosition, new_velocity=newVelocity, new_forces=newForces, new_s=newS, new_eoff=newEoff)
+        self.assertAlmostEqual(sys.calculate_total_kinetic_energy(), 12.5, msg="The initialised total_potential_energy is not correct!")
 
     def test_setTemperature(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
-
+        s=1
         temperature = 300
         temperature2 = 600
         position = [0]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
         sys._currentVelocities = 100
-        sys.updateCurrentState()
-        initialState = sys.getCurrentState()
-        sys.set_Temperature(temperature2)
+        sys.update_current_state()
+        initialState = sys.current_state
+        sys.set_temperature(temperature2)
 
         # check that middle step is not sames
-        self.assertListEqual(list(sys._currentPosition), list(initialState.position),
+        self.assertListEqual(list(sys.position), list(initialState.position),
                              msg="The initialState equals the currentState after propergating in attribute: Position!")
         self.assertNotEqual(sys._currentTemperature, initialState.temperature,
                             msg="The initialState does equal the currentState after propergating in attribute: temperature!")
-        self.assertAlmostEqual(sys._currentTotPot, initialState.totPotEnergy,
-                               msg="The initialState  does equal  the currentState after propergating in attribute: totPotEnergy!")
-        self.assertNotAlmostEqual(sys._currentTotKin, initialState.totKinEnergy,
-                                  msg="The initialState  does not equal  the currentState after propergating in attribute: totKinEnergy!")
+        self.assertAlmostEqual(sys._currentTotPot, initialState.total_potential_energy,
+                               msg="The initialState  does equal  the currentState after propergating in attribute: total_potential_energy!")
+        self.assertNotAlmostEqual(sys._currentTotKin, initialState.total_kinetic_energy,
+                                  msg="The initialState  does not equal  the currentState after propergating in attribute: total_kinetic_energy!")
         self.assertEqual(np.isnan(sys._currentForce), np.isnan(initialState.dhdpos),
                          msg="The initialState equals the currentState after propergating in attribute: dhdpos!")
         self.assertEqual(sys._currentVelocities, initialState.velocity,
                          msg="The initialState does equal the currentState after propergating in attribute: velocity!")
 
     def test_get_Pot(self):
-        integ = samplers.stochastic.monteCarloIntegrator()
-        ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
-        hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
-        lam = 0
-        pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb)
-
+        s=1
         temperature = 300
         position = [5]
 
-        sys = system.perturbed_system.perturbedSystem(potential=pot, sampler=integ, start_position=position,
-                                                      temperature=temperature, lam=lam)
-        self.assertEqual(50.0, sys.getTotPot(), msg="Could not get the correct Pot Energy!")
+        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
+                                                      temperature=temperature, eds_s=s)
+        self.assertEqual(1.9999724639297711, sys.total_potential_energy, msg="Could not get the correct Pot Energy!")
 
 
 
-"""
-class test_edsSystem(test_System):
-    system_class = system.eds_system.edsSystem
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
-
-    def setUp(self) -> None:
-        self.sampler = samplers.stochastic.monteCarloIntegrator()
-        self.pot = potentials.OneD.exponentialCoupledPotentials()
-"""
 if __name__ == '__main__':
     unittest.main()

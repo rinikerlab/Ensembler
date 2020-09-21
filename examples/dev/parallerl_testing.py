@@ -9,7 +9,7 @@ import multiprocessing
 
 
 def main():
-    TRE = replica_exchange.TemperatureReplicaExchange
+    TRE = replica_exchange.temperatureReplicaExchange
 
     integrator = stochastic.monteCarloIntegrator()
     potential = OneD.harmonicOscillatorPotential()
@@ -18,8 +18,8 @@ def main():
     replicas = 2
     nsteps = 10
     T_range = np.linspace(288, 310, num=replicas)
-    group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
-    print("TotENERGY:", group.get_total_energy())
+    group = replica_exchange.temperatureReplicaExchange(system=sys, temperature_range=T_range)
+    print("TotENERGY:", group.get_replica_total_energies())
 
     group.nSteps_between_trials = nsteps
     group._run_parallel(1)

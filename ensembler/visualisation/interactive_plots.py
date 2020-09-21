@@ -19,7 +19,7 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
         potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillatorPotential(k=1.0),
                                                 Vb=pot.harmonicOscillatorPotential(k=2.0))
         syst = system.perturbedSystem(potential=potential, sampler=integrat)
-        conveyorBelt = cvb.ConveyorBelt(0.0, 8, system=syst, build=False)
+        conveyorBelt = cvb.conveyorBelt(0.0, 8, system=syst, build=False)
         conveyorBelt.simulate(steps)
 
     (cvb_traj, systrajs) = conveyorBelt.get_trajs()
@@ -169,7 +169,7 @@ class interactive_eds():
         self.ax.set_xlim([-4, (4 * self.nstates)])
 
         # pot
-        self.Eoffs = self.eds_pot.Eoff_i
+        self.Eoffs = self.eds_pot.eoff
         if (len(self.Eoffs) < self.nstates):
             for x in range(len(self.Eoffs), self.nstates):
                 self.Eoffs.append(0)
@@ -195,10 +195,10 @@ class interactive_eds():
         self.fig.canvas.flush_events()
 
     def redraw_eoff(self, eoff_event):
-        teoff = self.eds_pot.Eoff_i
+        teoff = self.eds_pot.eoff
         teoff[int(eoff_event["owner"].description.split("_")[-1])] = eoff_event["new"]
         self.Eoffs = teoff
-        self.eds_pot.Eoff_i = teoff
+        self.eds_pot.eoff = teoff
 
         eds_enes = self.eds_pot.ene(self.positions)
         self.eds_line.set_data(self.positions, eds_enes)
