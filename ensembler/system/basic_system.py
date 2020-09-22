@@ -327,6 +327,7 @@ class system(_baseClass):
 
         ##check if system should be coupled to conditions:
 
+        self._conditions = []
         # update for metadynamics simulation - local elevation bias is like a condition/potential hybrid.
         if isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D):
             self.conditions.append(self.potential)

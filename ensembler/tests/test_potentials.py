@@ -1388,7 +1388,7 @@ class potentialCls_metadynamics(test_potentialCls):
         self.assertListEqual(list(expected_result), list(energies),
                              msg="The results of " + potential.name + " are not correct!")
 
-    def test_dVdpos(self):
+    def test_dVdpos_NPos(self):
         positions = np.array([0, 0.5, 1, 2])
         expected_result = np.array([0, 0.5, 1, 2])
 
@@ -1399,6 +1399,18 @@ class potentialCls_metadynamics(test_potentialCls):
 
         self.assertEqual(type(expected_result), type(forces),
                          msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!")
+
+    def test_dVdpos_1Pos(self):
+        positions = 0
+        expected_result = 0
+
+        potential = self.potential_class()
+
+        forces = potential.force(positions)
+        # print(energies)
+
         np.testing.assert_almost_equal(desired=expected_result, actual=forces,
                                        err_msg="The results of " + potential.name + " are not correct!")
 
@@ -1441,7 +1453,7 @@ class potentialCls_addedPotentials2D(test_potentialCls):
         np.testing.assert_almost_equal(desired=expected_result, actual=forces,
                              err_msg="The results of " + potential.name + " are not correct!")
 
-"""
+
 class potentialCls_metadynamics2D(test_potentialCls):
     potential_class = biasTwoD.metadynamicsPotential
     _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
@@ -1453,27 +1465,46 @@ class potentialCls_metadynamics2D(test_potentialCls):
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
+                                       err_msg="The results of " + potential.name + " are not correct!")
+
+    def test_energies(self):
+        positions = np.array([0, 0])
+        expected_result = np.array([0.0])
+
+        potential = self.potential_class()
+        energies = potential.ene(positions)
+
         np.testing.assert_almost_equal(desired=expected_result, actual=energies,
                                        err_msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([[0, 0], [-1, 0], [0, 1], [-1, 1], [1, 0], [0, 0]])
+        expected_result = np.squeeze(np.array([[ 0.,  0.],
+                                                 [ 1.,  0.],
+                                                 [-1.,  0.],
+                                                 [ 0.,  1.],
+                                                 [ 0., -1.],
+                                                 [-1., -1.]]))
+
+        potential = self.potential_class()
+        forces = potential.force(positions)
+        print(forces.shape, forces)
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!")
+
+    def test_dVdpos_1Pos(self):
+        positions = [0,0]
+        expected_result = [0,0]
 
         potential = self.potential_class()
 
         forces = potential.force(positions)
+        # print(energies)
 
-        print(forces)
-
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
         np.testing.assert_almost_equal(desired=expected_result, actual=forces,
                                        err_msg="The results of " + potential.name + " are not correct!")
 
-"""
 
 if __name__ == '__main__':
     unittest.main()

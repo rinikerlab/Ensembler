@@ -32,7 +32,7 @@ sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-static_sim_plots(sys=sys, title="Langevin Simulation", x_range=positions)
+static_sim_plots(system=sys, title="Langevin Simulation", limits_coordinate_space=positions)
 
 
 
@@ -57,4 +57,4 @@ sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-static_sim_plots(sys=sys, title="Local Elevation/Metadynamics Simulation", x_range=positions)
+static_sim_plots(system=sys, title="Local Elevation/Metadynamics Simulation", limits_coordinate_space=positions)
