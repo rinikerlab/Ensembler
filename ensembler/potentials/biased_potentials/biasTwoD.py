@@ -187,7 +187,6 @@ class metadynamicsPotential(_potential2DCls):
 
     # overwrite the energy and force
     def ene(self, positions):
-
         '''
         calculates energy of particle also takes bias into account
         Parameters
@@ -199,13 +198,11 @@ class metadynamicsPotential(_potential2DCls):
         -------
         current energy
         '''
-        current_bin_x = np.apply_over_axes(self._find_nearest, a= np.array(positions).T[0], axes=0) #self._find_nearest(self.bin_centers, positions)
-        current_bin_y = np.apply_over_axes(self._find_nearest, a= np.array(positions).T[1], axes=0) #self._find_nearest(self.bin_centers, positions)
-
-        # due to transposed position matrix, x and y are changed here
-        return np.squeeze(
-            self._calculate_energies(*np.hsplit(positions, self.constants[self.nDimensions])) + self.bias_grid_energy[
-                current_bin_y, current_bin_x])
+        current_bin_x = self._find_nearest(self.x_centers, np.array(np.array(positions, ndmin=1).T[0], ndmin=1))
+        current_bin_y = self._find_nearest(self.y_centers, np.array(np.array(positions, ndmin=1).T[1], ndmin=1))
+        enes = np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
+        biases = self.bias_grid_energy[current_bin_y, current_bin_x]
+        return np.squeeze(enes+biases)
 
     def force(self, positions):
         '''
@@ -220,17 +217,14 @@ class metadynamicsPotential(_potential2DCls):
         current derivative dh/dpos
         -------
         '''
-        current_bin_x = np.apply_over_axes(lambda x: self._find_nearest(self.bin_centers_x, x), a= np.array(positions).T[0], axes=0) #self._find_nearest(self.bin_centers, positions)
-        current_bin_y = np.apply_over_axes(lambda x: self._find_nearest(self.bin_centers_y, x), a= np.array(positions).T[1], axes=0) #self._find_nearest(self.bin_centers, positions)
 
-        print(current_bin_x)
-        # due to transposed position matrix, x and y are changed here
-        print( self.bias_grid_force[:,current_bin_y,
-                                      current_bin_x].reshape(2, 1, 1))
-        return np.squeeze(
-            self._calculate_dVdpos(*np.hsplit(positions, self.constants[self.nDimensions])) + self.bias_grid_force[:,
-                                                                                       current_bin_y,
-                                                                                       current_bin_x].reshape(2, 1, 1))
+        x_vals = np.array(np.array(positions, ndmin=1).T[0], ndmin=1)
+        y_vals = np.array(np.array(positions, ndmin=1).T[1], ndmin=1)
+        current_bin_x = self._find_nearest(self.y_centers, x_vals)
+        current_bin_y = self._find_nearest(self.y_centers, y_vals)
+
+        dvdpos = np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        return np.squeeze(dvdpos + self.bias_grid_force[:, current_bin_y,current_bin_x].T)
 
     def _find_nearest(self, array, value):
         '''
@@ -248,9 +242,12 @@ class metadynamicsPotential(_potential2DCls):
         -------
 
         '''
-        idx = np.searchsorted(array, value, side="left")
-        if idx > 0 and (idx == len(array) or np.abs(value - array[idx - 1]) < np.abs(value - array[idx])):
-            return idx - 1
-        else:
-            return idx
 
+        centers = []
+        for val in value:
+            idx = np.searchsorted(array, val, side="left")
+            if idx > 0 and (idx == len(array) or np.abs(val - array[idx - 1]) < np.abs(val - array[idx])):
+                centers.append(idx - 1)
+            else:
+                centers.append(idx)
+        return np.array(centers, ndmin=1)
