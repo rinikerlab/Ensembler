@@ -1,9 +1,7 @@
-name: EnsemblerDev
+name: Ensembler
 channels:
   - conda-forge
-  - omnia
   - rdkit
-  - schrodinger
   - defaults
 dependencies:
   - alabaster=0.7.12=py37_0
