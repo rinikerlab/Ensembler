@@ -188,10 +188,10 @@ def animation_EDS_trajectory(system: systemCls,
     x_min = min(x1data)
     active_dots = 20
 
-    if (x_range is None):
+    if (limits_coordinate_space is None):
         xtot_space = np.array(np.arange(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1), ndmin=1)
     else:
-        xtot_space = np.array(np.linspace(min(x_range), max(x_range) + 1, tot_pot_resolution), ndmin=1)
+        xtot_space = np.array(np.linspace(min(limits_coordinate_space), max(limits_coordinate_space) + 1, total_potential_resolution_points), ndmin=1)
 
     tmax = len(y1data) - 1 - step_size
     t0 = 0
@@ -224,8 +224,8 @@ def animation_EDS_trajectory(system: systemCls,
         end_p.set_data([], [])
         curr_p.set_data([], [])
 
-        if (x_range != None):
-            ax.set_xlim(x_range)
+        if (limits_coordinate_space != None):
+            ax.set_xlim(limits_coordinate_space)
         # return line,
 
     def data_gen(t=t0):
