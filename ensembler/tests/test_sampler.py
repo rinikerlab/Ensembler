@@ -9,12 +9,15 @@ from ensembler.samplers import stochastic, newtonian, optimizers
 """
 STOCHASTIC INTEGRATORS
 """
-tmp_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_integrators")
-
 
 class standard_IntegratorTests(unittest.TestCase):
     integrator_class = _basicSamplers._samplerCls
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
+    tmp_test_dir: str = None
+
+    def setUp(self) -> None:
+        if(__class__.tmp_test_dir is None):
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+        _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.integrator_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
     def test_constructor(self):
         integrator = self.integrator_class()
@@ -34,7 +37,6 @@ class standard_IntegratorTests(unittest.TestCase):
 
 class test_MonteCarlo_Integrator(standard_IntegratorTests):
     integrator_class = stochastic.monteCarloIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -66,7 +68,6 @@ class test_MonteCarlo_Integrator(standard_IntegratorTests):
 
 class test_MetropolisMonteCarlo_Integrator(standard_IntegratorTests):
     integrator_class = stochastic.metropolisMonteCarloIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -97,7 +98,6 @@ class test_MetropolisMonteCarlo_Integrator(standard_IntegratorTests):
 
 class test_Langevin_Integrator(standard_IntegratorTests):
     integrator_class = stochastic.langevinIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -128,7 +128,6 @@ class test_Langevin_Integrator(standard_IntegratorTests):
 
 class test_LangevinVelocity_Integrator(standard_IntegratorTests):
     integrator_class = stochastic.langevinVelocityIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -164,7 +163,6 @@ NETOWNIAN
 
 class test_verlocityVerletIntegrator_Integrator(standard_IntegratorTests):
     integrator_class = newtonian.velocityVerletIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -195,7 +193,6 @@ class test_verlocityVerletIntegrator_Integrator(standard_IntegratorTests):
 
 class test_positionVerletIntegrator_Integrator(standard_IntegratorTests):
     integrator_class = newtonian.positionVerletIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -225,7 +222,6 @@ class test_positionVerletIntegrator_Integrator(standard_IntegratorTests):
 
 class test_leapFrogIntegrator_Integrator(standard_IntegratorTests):
     integrator_class = newtonian.leapFrogIntegrator
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
@@ -261,7 +257,6 @@ Optimizer
 
 class test_cg_Integrator(standard_IntegratorTests):
     integrator_class = optimizers.conjugate_gradient
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + integrator_class.name + "_", suffix=".obj", dir=tmp_dir)
 
     def test_step(self):
         position = 1

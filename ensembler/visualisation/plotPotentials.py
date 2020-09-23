@@ -115,7 +115,7 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list,
                                  x_range=None, y_range=None, title: str = None, ax=None):
     # generate dat
     energies = potential.ene(positions=positions)
-    dVdpos = potential.dhdpos(positions=positions)
+    dVdpos = potential.force(positions=positions)
 
     # is there already a figure?
     if (ax is None):
@@ -135,8 +135,8 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list,
     ax.set_ylim(min(y_range), max(y_range)) if (y_range != None) else ax.set_ylim(min([min(energies), min(dVdpos)]),
                                                                                   max([max(energies), max(dVdpos)]))
 
-    ax.ylabel("$V/kJ$")
-    ax.xlabel("$x$")
+    ax.set_ylabel("$V/kJ$")
+    ax.set_xlabel("$x$")
     ax.legend()
     ax.set_title(title) if (title != None) else ax.set_title("Potential " + str(potential.__name__))
 

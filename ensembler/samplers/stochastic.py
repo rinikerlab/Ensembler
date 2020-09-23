@@ -304,7 +304,7 @@ class langevinIntegrator(stochasticSampler):
     """
     name = "Langevin Integrator"
 
-    def __init__(self, dt: float = 0.005, gamma: float = 50, old_Position: float = None):
+    def __init__(self, dt: float = 0.005, gamma: float = 50, old_position: float = None):
         """
           __init__
               This is the Constructor of the Langevin samplers.
@@ -316,14 +316,14 @@ class langevinIntegrator(stochasticSampler):
               time step of an integration, by default 0.005
           gamma : Number, optional
               Friktion constant of the system, by default 50
-          old_Position : Iterable[Number, Number] of size nDim, optional
+          old_position : Iterable[Number, Number] of size nDim, optional
               determines the position at step -1, if not set the system will use the velocity to determine this position
           """
         super().__init__()
 
         self.dt = dt
         self.gamma = gamma
-        self._oldPosition = old_Position
+        self._oldPosition = old_position
         self._first_step = True  # only neede for velocity Langevin
         self.R_x = None
         self.newForces = None

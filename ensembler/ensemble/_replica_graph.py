@@ -1,6 +1,6 @@
 """
-.. automodule: _replica graph
-
+Replica Graph
+    this Module contains two files
 """
 import copy
 import itertools as it
@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import scipy.constants as const
 
-from tqdm import tqdm_notebook as tqdm
+from tqdm import tqdm
 
 import multiprocessing as mult
 
@@ -30,292 +30,23 @@ class _mutliReplicaApproach(_baseClass):
     exchange_dimensions: Dict
 
     ### NODES - Replicas
-    nReplicas: int
-    replica_graph_dimensions: int
-    replicas: dict = {}
 
-    coord_set: namedtuple
-
-    ##init funcs
-    def _initialise_replica_graph(self, verbose: bool = False)->NoReturn:
-        """
-            _initialise_replica_graph
-                initialize the underlying replica graph by generating all nodes, fitting to all parameter combinations.
-
-        Parameters
-        ----------
-        verbose: bool, optional
-            Make some noise! (default: False)
-
-        """
-        coordinates = self._generate_all_node_coordinates_combinations()
-
-        if (verbose):
-            print("\nBUILD Replicas")
-            print("Coordinates\n\t", coordinates, "\n")
-
-        self._build_nodes(coordinates=coordinates)
-
-        if (verbose):
-            print("Replicas:\n\treplicaID\tcoordinates\n\t" + "\n\t".join(
-                [str(self.replicas[x].uniqueID) + "\t" + str(self.replicas[x].Nodecoordinates) for x in self.replicas]))
-
-    ### * Node Functions
-    #### Generate coordinates
-    def _generate_all_node_coordinates_combinations(self) -> List[namedtuple]:
-        """
-            _generate_all_node_coordinates_combinations
-                generate all node coordinates of the replica graph
-        Returns
-        -------
-        List[namedtuple]
-            the list of all coordinates to be used
-        """
-        self.coord_dims = list(sorted(self.exchange_dimensions))
-        self.coord_names = list(sorted(self.exchange_dimensions.keys()))
-        self.coord_set = namedtuple("coordinates", self.coord_names)
-
-        # make pickleable
-        import __main__
-        setattr(__main__, self.coord_set.__name__, self.coord_set)
-        self.coord_set.__module__ = "__main__"
-
-        # generate all parameter combinations
-        if (len(self.exchange_dimensions) > 1):
-            coord_it = list(it.product(*[list(self.exchange_dimensions[r]) for r in sorted(self.exchange_dimensions)]))
-            coordinates = [self.coord_set(**{name: x for name, x in zip(self.coord_names, x)}) for x in coord_it]
-        elif (len(self.exchange_dimensions) == 1):
-            coordinates = list(map(lambda x: self.coord_set(x), self.exchange_dimensions[self.coord_dims[0]]))
-        else:
-            raise Exception("Could not find parameters to exchange")
-
-        return coordinates
-
-    ###build nodes
-    def _build_nodes(self, coordinates: Dict[str, any])->NoReturn:
-        """
-            _build_nodes
-                use given default system and modify the exchange coordinates in order to generate all nodes
-
-        Parameters
-        ----------
-        coordinates: Dict[str, any]
-            node coordinates for the Replica graph
-
-        """
-        ## deepcopy all
-        self.nReplicas = len(list(coordinates))
-        replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]  # generate deepcopies
-
-        # build up graph - set parameters
-        replicaID = 0
-        for coords, replica in zip(coordinates, replicas):
-
-            ## finalize deepcopy:
-            # replica.trajectory = [] #fields are not deepcopied!!!
-            replica.nsteps = self.nSteps_between_trials  # set steps between trials #todo: ? Really here?
-
-            ## Node properties
-            setattr(replica, "replicaID", replicaID)
-            setattr(replica, "Nodecoordinates", coords)
-
-            ##set parameters
-            parameter_set = {}
-            for ind, parameter_Name in enumerate(self.coord_dims):
-                if (hasattr(replica, parameter_Name) or True):
-                    if (isinstance(coords, Iterable)):
-                        print(parameter_Name)
-                        setattr(replica, parameter_Name, coords[ind])
-                    else:
-                        setattr(replica, parameter_Name, coords)
-                else:
-                    raise Exception("REPLICA INIT FAILED: Replica does not have a field: " + parameter_Name + "\n")
-                parameter_set.update({parameter_Name: coords[ind]})
-
-            setattr(replica, "exchange_parameters", parameter_set)
-            replica._init_velocities()  # e.g. if temperature changes
-
-            self.replicas.update({replicaID: replica})
-            replicaID += 1
-
-
-class _replicaExchange(_mutliReplicaApproach):
-    """
-    This base class is build on multi Replica approach and provides the exchange functionality scaffold for the nodes in the replica graph.
 
     """
-    ##Exchange Variables
-    _currentTrial: int
-    _exchange_pattern: exchange_pattern.Exchange_pattern = None
-    nSteps_between_trials: int
+    Attributes
+    """
+    @property
+    def replicas(self)->Dict[int, systemCls]:
+        return self._replicas
 
-    ###Exchange params/io
-    exchange_information: pd.DataFrame = pd.DataFrame(
-        columns=["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
-                 "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
+    @property
+    def nReplicas(self)->int:
+        return self._nReplicas
 
-    ###METROPOLIS CRITERION
-    ###default Metropolis Criterion
-    _default_metropolis_criterion = lambda self, originalParams, swappedParams: (
-            np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams,
-                                                                                        swappedParams))
-    exchange_criterium = _default_metropolis_criterion
+    @property
+    def replica_graph_dimensions(self)->int:
+        return self._replica_graph_dimensions
 
-    ###random part of Metropolis Criterion:
-    _randomness_increase_factor = 0.1
-    _temperature_exchange: float = 298
-    _defaultRandomness = lambda self, originalParams, swappedParams: (
-            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
-        -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
-                originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
-
-    def __init__(self, system: systemCls, exchange_dimensions: Dict[str, Iterable], exchange_criterium=_default_metropolis_criterion,
-                 steps_between_trials: int = 10):
-        """
-            __init__
-                builds the exchange replica scaffold.
-                - Builds up the replica Grap (via _mutliReplicaApproach
-                - Builds up exchange mechanisms.
-
-        Parameters
-        ----------
-        system: systemCls
-            the default system for the Replica Exchange
-        exchange_dimensions: Dict[str, Iterable]
-            exchange dimensions
-        exchange_criterium: lambdaFunction, optional
-            criterium basis to exchange the nodes
-        steps_between_trials: int, optional
-            number of steps between exchange trials
-        """
-
-        # SET PARAMETER FIELDS
-        if (isinstance(exchange_dimensions, dict)):
-            self.exchange_dimensions = exchange_dimensions
-        self.coordinate_dimensions = len(exchange_dimensions)  # get dimensionality
-        self.parameter_names = list(self.exchange_dimensions.keys())
-
-        # SET SYSTEM
-        self.system = system
-
-        # exchange finfo:
-        self.exchange_information = pd.DataFrame(
-            columns=["nExchange", "uniqueReplicaID", "replicaI", "exchangeCoordinateI", "TotEI",
-                     "replicaJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
-
-        if (steps_between_trials is not None):
-            self.nSteps_between_trials = steps_between_trials
-
-        # initialize the replica graphs
-        self.initialise()
-
-        # exchange Criterium
-        if (exchange_criterium != None):
-            self.exchange_criterium = exchange_criterium
-
-        if (isinstance(self._exchange_pattern, type(None))):
-            self._exchange_pattern = exchange_pattern.localExchangeScheme(replica_graph=self)
-
-    # public functions
-    def initialise(self)->NoReturn:
-        """
-        initialises the replica scaffold. (exchange and replica graph structure)
-        """
-        self._currentTrial = 0
-        # BUILD replicas
-        self._initialise_replica_graph()
-        self._init_exchanges()
-
-    def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False)->Dict[str, namedtuple]:
-        """
-        simulates the replica exchange approach by executing ntrials with x steps between the trials.
-
-        Parameters
-        ----------
-        ntrials: int
-            number of exchange trials
-        steps_between_trials: int, optional
-            steps between the exchange trials (Default: None - use object attribute value)
-        reset_ensemble: bool,  optional
-            reset the ensemble to start (default: false)
-
-        Returns
-        -------
-        Dict[str, namedtuple]
-            returns the current state of all replicas
-        """
-        if (reset_ensemble):
-            self._currentTrial = 0
-            [replica.initialise(withdraw_Traj=True) for repName, replica in self.replicas.items()]
-            self.exchange_information = pd.DataFrame(
-                columns=["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
-                         "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
-            self._init_exchanges()
-
-        if (isinstance(steps_between_trials, int)):
-            self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
-
-        for _ in tqdm(range(ntrials), desc="Running trials", leave=True):
-            self.run()
-            self.exchange()
-        return self.get_replicas_current_states()
-
-    def exchange(self)->NoReturn:
-        """
-        Try to exchange the replica nodes according to the exchange pattern.
-        """
-        self._exchange_pattern.exchange(verbose=self.verbose)
-
-    def run(self, verbosity: bool = False)->NoReturn:
-        """
-            run simulation for all replicas
-
-        Parameters
-        ----------
-        verbosity: bool, optional
-            MORE Output!
-
-        """
-        for replica_coords, replica in self.replicas.items():
-            replica.simulate(steps=self.nSteps_between_trials, withdraw_traj=False, init_system=False,
-                             verbosity=verbosity)
-
-    def _run_parallel(self, verbosity: bool = False, nProcesses: int = 4)->NoReturn:
-        """
-         @TODO - NOT IMPLEMENTED
-        Parameters
-        ----------
-        verbosity
-        nProcesses
-
-        Returns
-        -------
-
-        """
-        """this is an ugly work around, but this way the code works on windows and Linux
-        __under construction!___"""
-        pool = mult.Pool(processes=nProcesses)
-        sim_params = [self.nSteps_between_trials, False, False, True]  # verbosity
-        print("Generated pool^jobs")
-        result_replica = {}
-        for replica_coords, replica in self.replicas.items():
-            print("Submit: ", replica_coords, replica)
-            replica_result = pool.apply_async(replica.simulate, sim_params)
-            result_replica.update({replica_coords: replica_result})
-        print("Done Submitting")
-
-        #Wait pool close
-        pool.close()
-        pool.join()
-
-        print("Done Simulating")
-        print(result_replica)
-        [self.replicas.update({replica_coords: result_replica[replica_coords].get()}) for replica_coords in
-         self.replicas]
-        print("GrandFinale: ", self.replicas)
-        print("Done")
-
-    #ATTRIBUTES:
     @property
     def replica_trajectories(self)->Dict[int, pd.DataFrame]:
         """
@@ -480,7 +211,6 @@ class _replicaExchange(_mutliReplicaApproach):
         """
         return self.replica_current_states
 
-
     def get_replica_total_energies(self) -> Dict[int, float]:
         """
             get all current total system energies of the replicas
@@ -494,7 +224,350 @@ class _replicaExchange(_mutliReplicaApproach):
         return {coord: replica.total_system_energy for coord, replica in self.replicas.items()}
 
 
+    def set_parameter_set(self, coordinates: List, replica_indices: List)->NoReturn:
+        """
+            set ParameterSet
+            This function is setting new coordinates to the replicas in the replica lists.
+            The coordinates will be assigned sequentially in the same order to the replicas List.
+        Parameters
+        ----------
+        coordinates:List
+            list of coordinates
+
+        replica_indices: List
+            List of replicas (in order like the coordinates)
+
+        Returns
+        -------
+
+        """
+
+        if (self.coordinate_dimensions > 1):
+            for coords, replica in zip(coordinates, replica_indices):
+                for ind, parameter_Name in enumerate(self.exchange_dimensions):
+                    parameters = list(self.exchange_dimensions[self.parameter_Name])
+
+                    # set parameter set
+                    if (hasattr(self.replicas[replica], parameter_Name)):
+                        setattr(self.replicas[replica], parameter_Name, parameters[coords[ind]])
+                    else:
+                        raise Exception("REPLICA INIT FAILDE: Replica does not have a field: " + parameter_Name + "\n")
+        else:
+            parameters = list(self.exchange_dimensions[self.parameter_names[0]])
+
+            for coords, replica in zip(coordinates, replica_indices):
+                # set parameter set
+                #print(coords, replica)
+                if (hasattr(self.replicas[replica], self.parameter_names[0])):
+                    setattr(self.replicas[replica], self.parameter_names[0], parameters[coords])
+
+                else:
+                    raise Exception(
+                        "REPLICA INIT FAILDE: Replica does not have a field: " + self.exchange_dimensions[0] + "\n")
+
+
+    #const
+    def __init__(self):
+        self._replicas: dict = {}
+        self._nReplicas: int = None
+        self._replica_graph_dimensions: int = None
+
+    ##init funcs
+    def _initialise_replica_graph(self, verbose: bool = False)->NoReturn:
+        """
+            _initialise_replica_graph
+                initialize the underlying replica graph by generating all nodes, fitting to all parameter combinations.
+
+        Parameters
+        ----------
+        verbose: bool, optional
+            Make some noise! (default: False)
+
+        """
+        coordinates = self._generate_all_node_coordinates_combinations()
+
+        if (verbose):
+            print("\nBUILD Replicas")
+            print("Coordinates\n\t", coordinates, "\n")
+
+        self._build_nodes(coordinates=coordinates)
+
+        if (verbose):
+            print("Replicas:\n\treplicaID\tcoordinates\n\t" + "\n\t".join(
+                [str(self.replicas[x].uniqueID) + "\t" + str(self.replicas[x].Nodecoordinates) for x in self.replicas]))
+
+    ### * Node Functions
+    #### Generate coordinates
+    def _generate_all_node_coordinates_combinations(self) -> List[namedtuple]:
+        """
+            _generate_all_node_coordinates_combinations
+                generate all node coordinates of the replica graph
+        Returns
+        -------
+        List[namedtuple]
+            the list of all coordinates to be used
+        """
+        self.coord_dims = list(sorted(self.exchange_dimensions))
+        self.coord_names = list(sorted(self.exchange_dimensions.keys()))
+        self.coord_set = namedtuple("coordinates", self.coord_names)
+
+        # make pickleable
+        import __main__
+        setattr(__main__, self.coord_set.__name__, self.coord_set)
+        self.coord_set.__module__ = "__main__"
+
+        # generate all parameter combinations
+        if (len(self.exchange_dimensions) > 1):
+            coord_it = list(it.product(*[list(self.exchange_dimensions[r]) for r in sorted(self.exchange_dimensions)]))
+            coordinates = [self.coord_set(**{name: x for name, x in zip(self.coord_names, x)}) for x in coord_it]
+        elif (len(self.exchange_dimensions) == 1):
+            coordinates = list(map(lambda x: self.coord_set(x), self.exchange_dimensions[self.coord_dims[0]]))
+        else:
+            raise Exception("Could not find parameters to exchange")
+
+        return coordinates
+
+    ###build nodes
+    def _build_nodes(self, coordinates: Dict[str, any])->NoReturn:
+        """
+            _build_nodes
+                use given default system and modify the exchange coordinates in order to generate all nodes
+
+        Parameters
+        ----------
+        coordinates: Dict[str, any]
+            node coordinates for the Replica graph
+
+        """
+        ## deepcopy all
+        self._nReplicas = len(list(coordinates))
+        replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]  # generate deepcopies
+
+        # build up graph - set parameters
+        replicaID = 0
+        for coords, replica in zip(coordinates, replicas):
+
+            ## finalize deepcopy:
+            # replica.trajectory = [] #fields are not deepcopied!!!
+            replica.nsteps = self.nSteps_between_trials  # set steps between trials #todo: ? Really here?
+
+            ## Node properties
+            setattr(replica, "replicaID", replicaID)
+            setattr(replica, "Nodecoordinates", coords)
+
+            ##set parameters
+            parameter_set = {}
+            for ind, parameter_Name in enumerate(self.coord_dims):
+                if (hasattr(replica, parameter_Name) or True):
+                    if (isinstance(coords, Iterable)):
+                        setattr(replica, parameter_Name, coords[ind])
+                    else:
+                        setattr(replica, parameter_Name, coords)
+                else:
+                    raise Exception("REPLICA INIT FAILED: Replica does not have a field: " + parameter_Name + "\n")
+                parameter_set.update({parameter_Name: coords[ind]})
+
+            setattr(replica, "exchange_parameters", parameter_set)
+            replica._init_velocities()  # e.g. if temperature changes
+
+            self.replicas.update({replicaID: replica})
+            replicaID += 1
+
+
+class _replicaExchange(_mutliReplicaApproach):
+    """
+    This base class is build on multi Replica approach and provides the exchange functionality scaffold for the nodes in the replica graph.
+
+    """
+    ##Exchange Variables
+    _currentTrial: int
+    _exchange_pattern: exchange_pattern.Exchange_pattern = None
+    nSteps_between_trials: int
+
+
+    ###METROPOLIS CRITERION
+    ###default Metropolis Criterion
+    _default_metropolis_criterion = lambda self, originalParams, swappedParams: (
+            np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams,
+                                                                                        swappedParams))
+    exchange_criterium = _default_metropolis_criterion
+
+    ###random part of Metropolis Criterion:
+    _randomness_factor = 0.1
+    _temperature_exchange: float = 298
+    _default_randomness = lambda self, originalParams, swappedParams: (
+            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
+        -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
+                originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
+
+    def __init__(self, system: systemCls, exchange_dimensions: Dict[str, Iterable], exchange_criterium=_default_metropolis_criterion,
+                 steps_between_trials: int = 10):
+        """
+            __init__
+                builds the exchange replica scaffold.
+                - Builds up the replica Grap (via _mutliReplicaApproach
+                - Builds up exchange mechanisms.
+
+        Parameters
+        ----------
+        system: systemCls
+            the default system for the Replica Exchange
+        exchange_dimensions: Dict[str, Iterable]
+            exchange dimensions
+        exchange_criterium: lambdaFunction, optional
+            criterium basis to exchange the nodes
+        steps_between_trials: int, optional
+            number of steps between exchange trials
+        """
+        super().__init__()
+
+        # SET PARAMETER FIELDS
+        if (isinstance(exchange_dimensions, dict)):
+            self.exchange_dimensions = exchange_dimensions
+        self.coordinate_dimensions = len(exchange_dimensions)  # get dimensionality
+        self.parameter_names = list(self.exchange_dimensions.keys())
+
+        # SET SYSTEM
+        self.system = system
+
+        # exchange finfo:
+        self._exchange_information = pd.DataFrame(
+            columns=["nExchange", "uniqueReplicaID", "replicaI", "exchangeCoordinateI", "TotEI",
+                     "replicaJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
+
+        if (steps_between_trials is not None):
+            self.nSteps_between_trials = steps_between_trials
+
+        # initialize the replica graphs
+        self.initialise()
+
+        # exchange Criterium
+        if (exchange_criterium != None):
+            self.exchange_criterium = exchange_criterium
+
+        if (isinstance(self._exchange_pattern, type(None))):
+            self._exchange_pattern = exchange_pattern.localExchangeScheme(replica_graph=self)
+
+        #Exchange params/io
+        self._exchange_information: pd.DataFrame = pd.DataFrame(
+            columns=["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
+                     "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
+
+
+    # public functions
+    def initialise(self)->NoReturn:
+        """
+        initialises the replica scaffold. (exchange and replica graph structure)
+        """
+        self._currentTrial = 0
+        # BUILD replicas
+        self._initialise_replica_graph()
+        self._init_exchanges()
+
+    def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False)->Dict[str, namedtuple]:
+        """
+        simulates the replica exchange approach by executing ntrials with x steps between the trials.
+
+        Parameters
+        ----------
+        ntrials: int
+            number of exchange trials
+        steps_between_trials: int, optional
+            steps between the exchange trials (Default: None - use object attribute value)
+        reset_ensemble: bool,  optional
+            reset the ensemble to start (default: false)
+
+        Returns
+        -------
+        Dict[str, namedtuple]
+            returns the current state of all replicas
+        """
+        if (reset_ensemble):
+            self._currentTrial = 0
+            [replica.initialise(withdraw_Traj=True) for repName, replica in self.replicas.items()]
+            self.exchange_information = pd.DataFrame(
+                columns=["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
+                         "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
+            self._init_exchanges()
+
+        if (isinstance(steps_between_trials, int)):
+            self.set_simulation_steps_between_trials(nsteps=steps_between_trials)
+
+        for _ in tqdm(range(ntrials), desc="Running trials", leave=True):
+            self.run()
+            self.exchange()
+        return self.get_replicas_current_states()
+
+    def exchange(self)->NoReturn:
+        """
+        Try to exchange the replica nodes according to the exchange pattern.
+        """
+        self._exchange_pattern.exchange(verbose=self.verbose)
+
+    def run(self, verbosity: bool = False)->NoReturn:
+        """
+            run simulation for all replicas
+
+        Parameters
+        ----------
+        verbosity: bool, optional
+            MORE Output!
+
+        """
+        for replica_coords, replica in self.replicas.items():
+            replica.simulate(steps=self.nSteps_between_trials, withdraw_traj=False, init_system=False,
+                             verbosity=verbosity)
+
+    def _run_parallel(self, verbosity: bool = False, nProcesses: int = 4)->NoReturn:
+        """
+         @TODO - NOT IMPLEMENTED
+        Parameters
+        ----------
+        verbosity
+        nProcesses
+
+        Returns
+        -------
+
+        """
+        """this is an ugly work around, but this way the code works on windows and Linux
+        __under construction!___"""
+        pool = mult.Pool(processes=nProcesses)
+        sim_params = [self.nSteps_between_trials, False, False, True]  # verbosity
+        print("Generated pool^jobs")
+        result_replica = {}
+        for replica_coords, replica in self.replicas.items():
+            print("Submit: ", replica_coords, replica)
+            replica_result = pool.apply_async(replica.simulate, sim_params)
+            result_replica.update({replica_coords: replica_result})
+        print("Done Submitting")
+
+        #Wait pool close
+        pool.close()
+        pool.join()
+
+        print("Done Simulating")
+        print(result_replica)
+        [self.replicas.update({replica_coords: result_replica[replica_coords].get()}) for replica_coords in
+         self.replicas]
+        print("GrandFinale: ", self.replicas)
+        print("Done")
+
+    #ATTRIBUTES:
     # getter/setters
+    @property
+    def exchange_information(self)-> pd.DataFrame:
+        """
+            contains the information about the replica exchanges
+        Returns
+        -------
+        pd.Dataframe
+            the dataframe contains the trial exchange informations.
+            columns: ["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
+                     "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"]
+        """
+        return self._exchange_information
+
     def set_simulation_steps_between_trials(self, nsteps: int)->NoReturn:
         """
             set new nSteps between the trials.
@@ -510,51 +583,6 @@ class _replicaExchange(_mutliReplicaApproach):
             replica.nsteps = self.nSteps_between_trials
 
 
-    def set_parameter_set(self, coordinates: List, replicas: List)->NoReturn:
-        """
-            set ParameterSet
-            This function is setting new coordinates to the replicas in the replica lists.
-            The coordinates will be assigned sequentially in the same order to the replicas List.
-        Parameters
-        ----------
-        coordinates:List
-            list of coordinates
-
-        replicas: List
-            List of replicas (in order like the coordinates)
-
-        Returns
-        -------
-
-        """
-
-        if (self.coordinate_dimensions > 1):
-            self.replicas = {}
-            for coords, replica in zip(coordinates, replicas):
-                for ind, parameter_Name in enumerate(self.exchange_dimensions):
-                    parameters = list(self.exchange_dimensions[self.parameter_Name])
-
-                    # set parameter set
-                    if (hasattr(replica, parameter_Name)):
-                        setattr(replica, parameter_Name, parameters[coords[ind]])
-                    else:
-                        raise Exception("REPLICA INIT FAILDE: Replica does not have a field: " + parameter_Name + "\n")
-                self.replicas.update({coords: replica})
-        else:
-            self.replicas = {}
-            parameters = list(self.exchange_dimensions[self.parameter_names[0]])
-
-            for coords, replica in zip(coordinates, replicas):
-                # set parameter set
-                #print(coords, replica)
-                if (hasattr(replica, self.parameter_names[0])):
-                    setattr(replica, self.parameter_names[0], parameters[coords])
-
-                else:
-                    raise Exception(
-                        "REPLICA INIT FAILDE: Replica does not have a field: " + self.exchange_dimensions[0] + "\n")
-                self.replicas.update({coords: replica})
-
     # private
     def _init_exchanges(self)->NoReturn:
         """
@@ -562,7 +590,7 @@ class _replicaExchange(_mutliReplicaApproach):
         """
         for replicaID in self.replicas:
             exchange = False
-            self.exchange_information = self.exchange_information.append(
+            self._exchange_information = self.exchange_information.append(
                 {"nExchange": self._currentTrial, "replicaID": self.replicas[replicaID].replicaID,
                  "replicaPositionI": replicaID, "exchangeCoordinateI": self.replicas[replicaID].exchange_parameters,
                  "TotEI": self.replicas[replicaID].calculate_total_potential_energy(),

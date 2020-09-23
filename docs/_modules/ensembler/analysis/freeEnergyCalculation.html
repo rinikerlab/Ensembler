@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.analysis.freeEnergyCalculation &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.analysis.freeEnergyCalculation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.analysis.freeEnergyCalculation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Free Energy Calculations:</span>
+<span class="sd">    This module contains functions for free energy calculations</span>
+<span class="sd">    author: Gerhard König, Benjamin Schroeder</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Generic Typing</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
+<span class="c1"># Calculations</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">const</span>
+
+
+<span class="k">class</span> <span class="nc">_FreeEnergyCalculator</span><span class="p">:</span>
+    <span class="n">constants</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">equation</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span>
+    <span class="n">simplified_equation</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">exp</span><span class="p">())</span>  <span class="c1"># this function deals with decimals to</span>
+    <span class="n">ln</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">ln</span><span class="p">()</span>
+    <span class="n">J_to_cal</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.239005736</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;k T, Vi, Vj&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Equation: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equation</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Constants:</span><span class="se">\n\t\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">simplified Equation: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simplified_equation</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This Function needs to be Implemented&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_update_function</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simplified_equation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">equation</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_prepare_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">arrays</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">arr</span><span class="p">))),</span> <span class="n">arrays</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_equation</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get_equation returns the symoblic Equation</span>
+
+<span class="sd">        :return: symbolic implementation of Zwanzig</span>
+<span class="sd">        :rtype: sp.function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">equation</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_equation_simplified</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_update_function</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">simplified_equation</span>
+
+    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set_parameters setter for the parameter</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This function needs to be implemented&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="zwanzigEquation"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation">[docs]</a><span class="k">class</span> <span class="nc">zwanzigEquation</span><span class="p">(</span><span class="n">_FreeEnergyCalculator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Zwanzig Equation</span>
+
+<span class="sd">        This class is a nice wrapper for the zwanzig Equation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;k T, Vi, Vj&quot;</span><span class="p">)</span>
+    <span class="n">equation</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vj</span> <span class="o">-</span> <span class="n">Vi</span><span class="p">)))</span>
+    <span class="n">constants</span><span class="p">:</span> <span class="nb">dict</span>
+
+<div class="viewcode-block" id="zwanzigEquation.__init__"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span><span class="p">,</span> <span class="n">kT</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kJ</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">kCal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">            Here you can set Class wide the parameters T and k for the Zwanzig Equation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T: float, optional</span>
+<span class="sd">            Temperature in Kelvin, defaults to 398</span>
+<span class="sd">        k: float, optional</span>
+<span class="sd">            boltzmann Constant, defaults to const.k*const.Avogadro</span>
+<span class="sd">        kT: bool, optional</span>
+<span class="sd">            overwrites T and k to set all results in units of $k_bT$</span>
+<span class="sd">        kJ: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kJ/(mol*K)</span>
+<span class="sd">        kCal: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kcal/(mol*K)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">kT</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">kJ</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">kCal</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">J_to_cal</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="zwanzigEquation.calculate"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;zwanzig</span>
+
+<span class="sd">        Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).</span>
+<span class="sd">        The initial state of the free energy difference is denoted as 0, the final state is called 1.</span>
+<span class="sd">        The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set</span>
+<span class="sd">        of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the</span>
+<span class="sd">        initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was</span>
+<span class="sd">        analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann</span>
+<span class="sd">        constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</span>
+
+<span class="sd">        See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            Potential energies of state I</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            Potential energies of state J</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_efficient</span><span class="p">(</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="zwanzigEquation._calculate_implementation_bruteForce"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_implementation_bruteForce">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_implementation_bruteForce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            _calculate_implementation_bruteForce</span>
+<span class="sd">                This is a plain implementation of the zwanzig equation. It is not very numerical robust</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi</span>
+<span class="sd">        Vj</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            Potential energies of state I</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            Potential energies of state J</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: The given arrays for Vi and Vj must have the same length. </span><span class="se">\n</span><span class="s2"> Actually they have: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Typcasting</span>
+        <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_type</span><span class="p">(</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">)</span>
+
+        <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>  <span class="c1"># calculate Beta</span>
+
+        <span class="c1"># Calculate the potential energy difference in reduced units of kT</span>
+        <span class="n">dVij</span> <span class="o">=</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vj</span> <span class="o">-</span> <span class="n">Vi</span><span class="p">)</span>
+
+        <span class="c1"># Exponentiate to obtain exp(-Delta U/kT)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">edVij</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">dVij</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># average of exponents</span>
+        <span class="n">meandVij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">edVij</span><span class="p">)</span>
+
+        <span class="c1"># Return free energy difference</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># dF = zwanzigEquation.calculate(Vi, Vr) - zwanzigEquation.calculate(Vj, Vr)</span>
+            <span class="n">dF</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">meandVij</span><span class="p">)</span><span class="o">.</span><span class="n">ln</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference &quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dF</span></div>
+
+<div class="viewcode-block" id="zwanzigEquation._calculate_meanEfficient"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_meanEfficient">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_meanEfficient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _calculate_meanEfficient</span>
+
+<span class="sd">        Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).</span>
+<span class="sd">        The initial state of the free energy difference is denoted as 0, the final state is called 1.</span>
+<span class="sd">        The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set</span>
+<span class="sd">        of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the</span>
+<span class="sd">        initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was</span>
+<span class="sd">        analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann</span>
+<span class="sd">        constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</span>
+
+<span class="sd">        This is an efficient more overflow robust implementation of the Zwanzig Equation.</span>
+
+<span class="sd">        @Author: Gerhard König</span>
+<span class="sd">        See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</span>
+
+<span class="sd">            _calculate_implementation_bruteForce</span>
+<span class="sd">                This is a plain implementation of the zwanzig equation. It is not very numerical robust</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            Potential energies of state I</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            Potential energies of state J</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: The given arrays for Vi and Vj must have the same length. </span><span class="se">\n</span><span class="s2"> Actually they have: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_type</span><span class="p">(</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+
+        <span class="c1"># Calculate the potential energy difference in reduced units of kT</span>
+        <span class="n">dVij</span> <span class="o">=</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">Vj</span><span class="p">,</span> <span class="n">Vi</span><span class="p">)</span>
+
+        <span class="c1"># Calculate offset for increased numerical stability</span>
+        <span class="n">meandVij</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dVij</span><span class="p">)</span>
+
+        <span class="c1"># Exponentiate to obtain exp(-Delta U/kT)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">edVij</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">dVij</span> <span class="o">-</span> <span class="n">meandVij</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Return free energy difference</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">dF</span> <span class="o">=</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">edVij</span><span class="p">))</span><span class="o">.</span><span class="n">ln</span><span class="p">()</span> <span class="o">+</span> <span class="n">meandVij</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">edVij</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">dF</span></div>
+
+<div class="viewcode-block" id="zwanzigEquation._calculate_efficient"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_efficient">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_efficient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _calculate_efficient</span>
+
+<span class="sd">        Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).</span>
+<span class="sd">        The initial state of the free energy difference is denoted as 0, the final state is called 1.</span>
+<span class="sd">        The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set</span>
+<span class="sd">        of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the</span>
+<span class="sd">        initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was</span>
+<span class="sd">        analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann</span>
+<span class="sd">        constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</span>
+
+<span class="sd">        This is an efficient more overflow robust implementation of the Zwanzig Equation.</span>
+
+<span class="sd">        @Author: Gerhard König</span>
+<span class="sd">        See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</span>
+
+<span class="sd">        $dF = \frac{1}{\beta} * \ln(\langlee^{-\beta * (V_j-V_i)}\rangle)$</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            Potential energies of state I</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            Potential energies of state J</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: The given arrays for Vi and Vj must have the same length. </span><span class="se">\n</span><span class="s2"> Actually they have: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_type</span><span class="p">(</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+
+        <span class="c1"># Calculate the potential energy difference in reduced units of kT</span>
+        <span class="n">dVij</span> <span class="o">=</span> <span class="o">-</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">Vj</span><span class="p">,</span> <span class="n">Vi</span><span class="p">)</span>
+
+        <span class="c1"># Return free energy difference</span>
+        <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">special</span> <span class="k">as</span> <span class="n">s</span>
+        <span class="n">dF</span> <span class="o">=</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span><span class="o">.</span><span class="n">logsumexp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dVij</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">),</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">dVij</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">dF</span></div>
+
+<div class="viewcode-block" id="zwanzigEquation.set_parameters"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.set_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            set_parameters setter for the parameters T and k</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T: float, optional</span>
+<span class="sd">            Temperature in Kelvin, defaults to 398</span>
+<span class="sd">        k: float, optional</span>
+<span class="sd">            boltzmann Constant, defaults to const.k*const.Avogadro</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">(</span><span class="n">Number</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">))):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">)})</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">Number</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">))):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">k</span><span class="p">)})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="zwanzig"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzig">[docs]</a><span class="k">class</span> <span class="nc">zwanzig</span><span class="p">(</span><span class="n">zwanzigEquation</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="threeStateZwanzigReweighting"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting">[docs]</a><span class="k">class</span> <span class="nc">threeStateZwanzigReweighting</span><span class="p">(</span><span class="n">zwanzigEquation</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            this class provides the implementation for the Free energy calculation with EDS.</span>
+<span class="sd">            It calculates the free energy via the reference state.</span>
+
+<span class="sd">            $dF = dF_{BR}-dF_{AR} = \frac{1}{\beta} * ( \ln(\langle e^{-\beta * (V_j-V_R)}\rangle) - \ln(\langle e^{-\beta * (V_i-V_R)}\rangle))$</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">,</span> <span class="n">Vr</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;k T Vi Vj Vr&quot;</span><span class="p">)</span>
+    <span class="n">equation</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vi</span> <span class="o">-</span> <span class="n">Vr</span><span class="p">)))</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vj</span> <span class="o">-</span> <span class="n">Vr</span><span class="p">))))</span>
+
+<div class="viewcode-block" id="threeStateZwanzigReweighting.__init__"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kCal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span><span class="p">,</span> <span class="n">kT</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">kJ</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">            this class provides the implementation for the Free energy calculation with EDS.</span>
+<span class="sd">            It calculates the free energy via the reference state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T: float, optional</span>
+<span class="sd">            Temperature in Kelvin, defaults to 398</span>
+<span class="sd">        k: float, optional</span>
+<span class="sd">            boltzmann Constant, defaults to const.k*const.Avogadro</span>
+<span class="sd">        kT: bool, optional</span>
+<span class="sd">            overwrites T and k to set all results in units of $k_bT$</span>
+<span class="sd">        kJ: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kJ/(mol*K)</span>
+<span class="sd">        kCal: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kcal/(mol*K)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">kCal</span><span class="o">=</span><span class="n">kCal</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="n">T</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">kT</span><span class="o">=</span><span class="n">kT</span><span class="p">,</span> <span class="n">kJ</span><span class="o">=</span><span class="n">kJ</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="threeStateZwanzigReweighting.calculate"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span>
+                  <span class="n">Vr</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            calculate</span>
+<span class="sd">                this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            the potential energy of stateI while sampling stateR</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            the potential energy of stateJ while sampling stateR</span>
+<span class="sd">        Vr : np.array</span>
+<span class="sd">            the potential energy of stateR while sampling stateR</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calculate_implementation_useZwanzig</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">Vj</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vr</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="threeStateZwanzigReweighting._calculate_implementation_useZwanzig"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting._calculate_implementation_useZwanzig">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_implementation_useZwanzig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">Number</span><span class="p">),</span>
+                                             <span class="n">Vr</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            calculate</span>
+<span class="sd">                this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.</span>
+<span class="sd">                it directly accesses the zwanzig implmentation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi : np.array</span>
+<span class="sd">            the potential energy of stateI while sampling stateR</span>
+<span class="sd">        Vj : np.array</span>
+<span class="sd">            the potential energy of stateJ while sampling stateR</span>
+<span class="sd">        Vr : np.array</span>
+<span class="sd">            the potential energy of stateR while sampling stateR</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vr</span><span class="p">))):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: The given arrays for Vi and Vj must have the same length. </span><span class="se">\n</span><span class="s2"> Actually they have: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">Vi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Type Casting</span>
+        <span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">,</span> <span class="n">Vr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_type</span><span class="p">(</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="p">,</span> <span class="n">Vr</span><span class="p">)</span>
+
+        <span class="c1"># Build Zwanzig</span>
+        <span class="n">zwanz</span> <span class="o">=</span> <span class="n">zwanzigEquation</span><span class="p">()</span>
+        <span class="n">zwanz</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span>
+
+        <span class="c1"># Calc</span>
+        <span class="c1">#   VR &lt;- V1</span>
+        <span class="n">dF1r</span> <span class="o">=</span> <span class="n">zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">Vi</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
+        <span class="c1">#   VR &lt;- V2</span>
+        <span class="n">dF2r</span> <span class="o">=</span> <span class="n">zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">Vj</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
+        <span class="c1">#   V1 &lt;- VR - VR -&gt; V2</span>
+        <span class="n">dF</span> <span class="o">=</span> <span class="n">dF1r</span> <span class="o">-</span> <span class="n">dF2r</span>
+
+        <span class="k">return</span> <span class="n">dF</span></div></div>
+
+
+<div class="viewcode-block" id="dfEDS"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.dfEDS">[docs]</a><span class="k">class</span> <span class="nc">dfEDS</span><span class="p">(</span><span class="n">threeStateZwanzigReweighting</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="bennetAcceptanceRatio"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio">[docs]</a><span class="k">class</span> <span class="nc">bennetAcceptanceRatio</span><span class="p">(</span><span class="n">_FreeEnergyCalculator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements the BAR method.</span>
+<span class="sd">    $dF = -\frac{1}{\beta} * \ln( \frac{f\langle(V_j-V_i+C)\rangle_i}{f\langle(V_i-V_j-C)\rangle_j})+C$</span>
+<span class="sd">    with :</span>
+<span class="sd">    $ f(x) = \frac{1}{1+e^(\beta x)}$ - fermi function</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">beta</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">Vi_i</span><span class="p">,</span> <span class="n">Vj_i</span><span class="p">,</span> <span class="n">Vi_j</span><span class="p">,</span> <span class="n">Vj_j</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;k T beta C  Vi_i Vj_i Vi_j Vj_j&quot;</span><span class="p">)</span>
+    <span class="n">equation</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vi_j</span> <span class="o">-</span> <span class="n">Vj_j</span> <span class="o">+</span> <span class="n">C</span><span class="p">)))</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">T</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="n">Vj_i</span> <span class="o">-</span> <span class="n">Vi_i</span> <span class="o">+</span> <span class="n">C</span><span class="p">))))</span>
+    <span class="n">constants</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">T</span><span class="p">:</span> <span class="mi">298</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="mi">0</span><span class="p">)}</span>
+
+    <span class="c1"># Numeric parameters</span>
+    <span class="n">convergence_radius</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">min_iterations</span><span class="p">:</span> <span class="nb">int</span>
+
+<div class="viewcode-block" id="bennetAcceptanceRatio.__init__"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span><span class="p">,</span>
+                 <span class="n">kT</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kJ</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kCal</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">convergence_radius</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">),</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">min_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">        Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        C: float, optional</span>
+<span class="sd">            is the initial guess of the free Energy.</span>
+<span class="sd">        T: float, optional</span>
+<span class="sd">            Temperature in Kelvin, defaults to 398</span>
+<span class="sd">        k: float, optional</span>
+<span class="sd">            boltzmann Constant, defaults to const.k*const.Avogadro</span>
+<span class="sd">        kT: bool, optional</span>
+<span class="sd">            overwrites T and k to set all results in units of $k_bT$</span>
+<span class="sd">        kJ: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kJ/(mol*K)</span>
+<span class="sd">        kCal: bool, optional</span>
+<span class="sd">            overwrites k to get the Boltzman constant with units kcal/(mol*K)</span>
+<span class="sd">        convergence_radius: float, optional</span>
+<span class="sd">            when is the result converged? if the deviation of one to another iteration is below the convergence radius.</span>
+<span class="sd">        max_iterations: int, optional</span>
+<span class="sd">            maximal number of iterations.</span>
+<span class="sd">        min_iterations: int, optional</span>
+<span class="sd">            minimal number of iterations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">kT</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">kJ</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">kCal</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">J_to_cal</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_parameters</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">),</span> <span class="n">k</span><span class="o">=</span><span class="n">Decimal</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+
+        <span class="c1"># deal with numeric params:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convergence_radius</span> <span class="o">=</span> <span class="n">convergence_radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_iterations</span> <span class="o">=</span> <span class="n">min_iterations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="n">max_iterations</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="bennetAcceptanceRatio.calculate"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.calculate">[docs]</a>    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi_i</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Vj_i</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span>
+                  <span class="n">Vi_j</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Vj_j</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            calculate</span>
+<span class="sd">                this function is calculating the free energy difference of two states with the BAR method.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi_i : np.array</span>
+<span class="sd">            potential energies of stateI while sampling stateI</span>
+<span class="sd">        Vj_i : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateI</span>
+<span class="sd">        Vi_j : np.array</span>
+<span class="sd">             potential energies of stateI while sampling stateJ</span>
+<span class="sd">        Vj_j : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateJ</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_optimize</span><span class="p">(</span><span class="n">Vi_i</span><span class="p">,</span> <span class="n">Vj_i</span><span class="p">,</span> <span class="n">Vi_j</span><span class="p">,</span> <span class="n">Vj_j</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="bennetAcceptanceRatio._calc_bar"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calc_bar">[docs]</a>    <span class="k">def</span> <span class="nf">_calc_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">Vj_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">Vi_i</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">Vi_j</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">Vj_j</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            _calc_bar</span>
+<span class="sd">                this function is calculating the free energy difference of two states for one iteration of the BAR method.</span>
+<span class="sd">                 It is implemented straight forwad, but therefore not very numerical stable.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi_i : np.array</span>
+<span class="sd">            potential energies of stateI while sampling stateI</span>
+<span class="sd">        Vj_i : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateI</span>
+<span class="sd">        Vi_j : np.array</span>
+<span class="sd">             potential energies of stateI while sampling stateJ</span>
+<span class="sd">        Vj_j : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateJ</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Calculate the potential energy difference in reduced units of kT</span>
+        <span class="n">dV_i</span> <span class="o">=</span> <span class="p">((</span><span class="n">Vj_i</span> <span class="o">-</span> <span class="n">Vi_i</span><span class="p">)</span> <span class="o">-</span> <span class="n">C</span><span class="p">)</span>
+        <span class="n">dV_j</span> <span class="o">=</span> <span class="p">((</span><span class="n">Vi_j</span> <span class="o">-</span> <span class="n">Vj_j</span><span class="p">)</span> <span class="o">+</span> <span class="n">C</span><span class="p">)</span>
+
+        <span class="c1"># Exponentiate to obtain fermi(-Delta U/kT)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ferm_dV_i</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">dV_i</span><span class="p">))</span>
+            <span class="n">ferm_dV_j</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">]</span> <span class="o">*</span> <span class="n">dV_j</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OverflowError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get average</span>
+        <span class="n">mean_edV_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ferm_dV_i</span><span class="p">)</span>
+        <span class="n">mean_edV_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ferm_dV_j</span><span class="p">)</span>
+
+        <span class="c1"># Return free energy difference</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">ddF</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ln</span><span class="p">(</span><span class="n">mean_edV_j</span> <span class="o">/</span> <span class="n">mean_edV_i</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;BAR Error: Problems taking logarithm of the average exponentiated potential energy difference &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="n">dF</span> <span class="o">=</span> <span class="n">ddF</span> <span class="o">+</span> <span class="n">C</span>
+        <span class="k">return</span> <span class="n">dF</span></div>
+
+<div class="viewcode-block" id="bennetAcceptanceRatio._calculate_optimize"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calculate_optimize">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_optimize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Vi_i</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj_i</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span>
+                            <span class="n">Vi_j</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">Vj_j</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">),</span> <span class="n">C0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _calculate_optimize</span>
+<span class="sd">            this function is calculating the free energy difference of two states with the BAR method.</span>
+<span class="sd">            it iterates over the _calc_bar method and determines the convergence and the result.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Vi_i : np.array</span>
+<span class="sd">            potential energies of stateI while sampling stateI</span>
+<span class="sd">        Vj_i : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateI</span>
+<span class="sd">        Vi_j : np.array</span>
+<span class="sd">             potential energies of stateI while sampling stateJ</span>
+<span class="sd">        Vj_j : np.array</span>
+<span class="sd">             potential energies of stateJ while sampling stateJ</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">            free energy difference</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi_i</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vi_i</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">Vi_j</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Vj_j</span><span class="p">)))):</span>  <span class="c1"># I and J simulation don&#39;t need the same length.</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Zwanzig Error: The given arrays for Vi and Vj must have the same length. </span><span class="se">\n</span><span class="s2"> Actually they have: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">Vi_i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj_i</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vi_j</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\t</span><span class="s2"> &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Vj_j</span><span class="p">)))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Type Cast</span>
+        <span class="n">Vi_i</span><span class="p">,</span> <span class="n">Vj_i</span><span class="p">,</span> <span class="n">Vi_j</span><span class="p">,</span> <span class="n">Vj_j</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_type</span><span class="p">(</span><span class="n">Vj_i</span><span class="p">,</span> <span class="n">Vi_i</span><span class="p">,</span> <span class="n">Vi_j</span><span class="p">,</span> <span class="n">Vj_j</span><span class="p">)</span>
+
+        <span class="c1"># Calc Beta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">beta</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">]))})</span>
+        <span class="c1"># given C?</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">C0</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">:</span> <span class="n">C0</span><span class="p">})</span>
+
+        <span class="c1"># optimization scheme:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iterate: </span><span class="se">\t</span><span class="s2">convergence raidus: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convergence_radius</span><span class="p">))</span>
+        <span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">convergence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convergence_radius</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">&gt;</span> <span class="n">iteration</span><span class="p">:</span>
+
+            <span class="n">dF</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc_bar</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">],</span> <span class="n">Vj_i</span><span class="o">=</span><span class="n">Vj_i</span><span class="p">,</span> <span class="n">Vi_i</span><span class="o">=</span><span class="n">Vi_i</span><span class="p">,</span> <span class="n">Vi_j</span><span class="o">=</span><span class="n">Vi_j</span><span class="p">,</span> <span class="n">Vj_j</span><span class="o">=</span><span class="n">Vj_j</span><span class="p">)</span>  <span class="c1"># calc dF</span>
+
+            <span class="n">newC</span> <span class="o">=</span> <span class="n">dF</span>
+            <span class="n">convergence</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">]</span> <span class="o">-</span> <span class="n">dF</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">dF: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dF</span><span class="p">),</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">convergence&quot;</span><span class="p">,</span> <span class="n">convergence</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">convergence</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">convergence_radius</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_iterations</span> <span class="o">&gt;</span> <span class="n">iteration</span><span class="p">):</span>
+                <span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">:</span> <span class="n">newC</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="nb">print</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iteration</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;BAR is not converged after &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; steps. stopped at: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Final Iterations: &quot;</span><span class="p">,</span> <span class="n">iteration</span><span class="p">,</span> <span class="s2">&quot; Result: &quot;</span><span class="p">,</span> <span class="n">dF</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">dF</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="bennetAcceptanceRatio.set_parameters"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.set_parameters">[docs]</a>    <span class="k">def</span> <span class="nf">set_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">T</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            set_parameters setter for the parameters T and k</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        T: float, optional</span>
+<span class="sd">            Temperature in Kelvin, defaults to 398</span>
+<span class="sd">        k: float, optional</span>
+<span class="sd">            boltzmann Constant, defaults to const.k*const.Avogadro</span>
+<span class="sd">        C: float, optional</span>
+<span class="sd">            C is the initial guess of the free energy difference.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">Number</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">T</span><span class="p">)})</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">Number</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">k</span><span class="p">)})</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">Number</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">C</span><span class="p">)})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_function</span><span class="p">()</span></div></div>
+
+
+<span class="c1"># alternative class names</span>
+<div class="viewcode-block" id="bar"><a class="viewcode-back" href="../../../_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bar">[docs]</a><span class="k">class</span> <span class="nc">bar</span><span class="p">(</span><span class="n">bennetAcceptanceRatio</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -20,6 +20,7 @@ class _potentialCls(_baseClass):
     __constants: Dict[sp.Symbol, Union[Number, Iterable]] = {} #contains all set constants and values for the symbols of the potential function, access it via constants
 
     def __init__(self, nDimensions:int=1, nStates:int=2):
+
         self.constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
         self.name = str(self.__class__.__name__)
 
@@ -92,7 +93,7 @@ class _potentialNDCls(_potentialCls):
         """
         msg = self.__name__() + "\n"
         msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
-        msg += "\tDimensions: " + str(self.nDimensions) + "\n"
+        msg += "\tDimensions: " + str(self.constants[self.nDimensions]) + "\n"
         msg += "\n\tFunctional:\n "
         msg += "\t\tV:\t" + str(self.V_functional) + "\n"
         msg += "\t\tdVdpos:\t" + str(self.dVdpos_functional) + "\n"

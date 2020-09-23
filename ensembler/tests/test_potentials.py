@@ -5,7 +5,6 @@ from numbers import Number
 
 import numpy as np
 
-tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
 
 """
 TEST for Potential Scaffold:
@@ -15,7 +14,12 @@ from ensembler.potentials._basicPotentials import _potentialCls, _potentialNDCls
 
 class test_potentialCls(unittest.TestCase):
     potential_class = _potentialCls
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
+    tmp_test_dir: str = None
+
+    def setUp(self) -> None:
+        if(__class__.tmp_test_dir is None):
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+        _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.potential_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
     def test_constructor(self):
         potential = self.potential_class()
@@ -52,7 +56,6 @@ from ensembler.potentials import OneD
 
 class potentialCls_flatwell(test_potentialCls):
     potential_class = OneD.flatwellPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         x_range = [0, 1]
@@ -88,7 +91,6 @@ class potentialCls_flatwell(test_potentialCls):
 
 class potentialCls_harmonicOsc1D(test_potentialCls):
     potential_class = OneD.harmonicOscillatorPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         fc = 1.0
@@ -125,7 +127,6 @@ class potentialCls_harmonicOsc1D(test_potentialCls):
 
 class potentialCls_wavePotential(test_potentialCls):
     potential_class = OneD.wavePotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         phase_shift = 0.0
@@ -168,7 +169,6 @@ class potentialCls_wavePotential(test_potentialCls):
 
 class potentialCls_torsionPotential(test_potentialCls):
     potential_class = OneD.torsionPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor_SinglePotential(self):
         WavePotential = OneD.wavePotential()
@@ -289,7 +289,6 @@ class potentialCls_torsionPotential(test_potentialCls):
 
 class potentialCls_coulombPotential(test_potentialCls):
     potential_class = OneD.coulombPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         q1 = 1
@@ -329,7 +328,6 @@ class potentialCls_coulombPotential(test_potentialCls):
 
 class potentialCls_lennardJonesPotential(test_potentialCls):
     potential_class = OneD.lennardJonesPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         c6: float = 1 ** (-1)
@@ -371,7 +369,6 @@ class potentialCls_lennardJonesPotential(test_potentialCls):
 
 class potentialCls_lennardJonesForceFieldPotential(test_potentialCls):
     potential_class = OneD.lennardJonesForceFieldPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         c6: float = 1 ** (-1)
@@ -415,7 +412,6 @@ class potentialCls_lennardJonesForceFieldPotential(test_potentialCls):
 
 class potentialCls_doubleWellPot1D(test_potentialCls):
     potential_class = OneD.doubleWellPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         Vmax = 100
@@ -456,7 +452,6 @@ class potentialCls_doubleWellPot1D(test_potentialCls):
 
 class potentialCls_fourWellPot1D(test_potentialCls):
     potential_class = OneD.fourWellPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         Vmax = 100
@@ -497,7 +492,6 @@ class potentialCls_fourWellPot1D(test_potentialCls):
 
 class potentialCls_gaussPotential1D(test_potentialCls):
     potential_class = OneD.gaussPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         Vmax = 100
@@ -542,7 +536,6 @@ TEST for perturbed Potentials 1D
 
 class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
     potential_class = OneD.linearCoupledPotentials
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -667,7 +660,6 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
 class potentialCls_perturbed_exponentialCoupledPotentials(test_potentialCls):
     potential_class = OneD.exponentialCoupledPotentials
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -711,7 +703,6 @@ class potentialCls_perturbed_exponentialCoupledPotentials(test_potentialCls):
 
 class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
     potential_class = OneD.envelopedPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_ene_1Pos(self):
         potential = self.potential_class(s=100)
@@ -880,7 +871,6 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
 
 class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
     potential_class = OneD.hybridCoupledPotentials
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -1007,7 +997,6 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
 class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
     potential_class = OneD.lambdaEDSPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_ene_1Pos(self):
         potential = self.potential_class(s=100)
@@ -1091,7 +1080,6 @@ from ensembler.potentials import TwoD
 
 class potentialCls_2D_harmonicOscillatorPotential(test_potentialCls):
     potential_class = TwoD.harmonicOscillatorPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies2DNPos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
@@ -1128,7 +1116,6 @@ class potentialCls_2D_harmonicOscillatorPotential(test_potentialCls):
 
 class potentialCls_2D_wavePotential(test_potentialCls):
     potential_class = TwoD.wavePotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies2D1Pos(self):
         phase_shift = (0.0, 0.0)
@@ -1212,7 +1199,6 @@ class potentialCls_2D_wavePotential(test_potentialCls):
 
 class potentialCls_2D_torsionPotential(test_potentialCls):
     potential_class = TwoD.addedWavePotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_constructor_ListPotentials(self):
         WavePotential = TwoD.wavePotential()
@@ -1302,7 +1288,6 @@ from ensembler.potentials import ND
 
 class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
     potential_class = ND.harmonicOscillatorPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_2D_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies3DNPos(self):
         positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, 1], [0, 1, 0], [0, -1, -1], [-1, -1, 1]])
@@ -1343,7 +1328,6 @@ from ensembler.potentials.biased_potentials import biasOneD
 
 class potentialCls_addedPotentials(test_potentialCls):
     potential_class = biasOneD.addedPotentials
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         positions = [0, 2, 1, 0.5]
@@ -1374,7 +1358,6 @@ class potentialCls_addedPotentials(test_potentialCls):
 
 class potentialCls_metadynamics(test_potentialCls):
     potential_class = biasOneD.metadynamicsPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         positions = [0, 2, 1, 0.5]
@@ -1419,7 +1402,6 @@ from ensembler.potentials.biased_potentials import biasTwoD
 
 class potentialCls_addedPotentials2D(test_potentialCls):
     potential_class = biasTwoD.addedPotentials
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
@@ -1456,7 +1438,6 @@ class potentialCls_addedPotentials2D(test_potentialCls):
 
 class potentialCls_metadynamics2D(test_potentialCls):
     potential_class = biasTwoD.metadynamicsPotential
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + potential_class.name, suffix=".obj", dir=tmp_potentials)
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])

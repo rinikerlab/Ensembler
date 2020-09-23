@@ -1,0 +1,838 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.analysis package &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.conditions package" href="ensembler.conditions.html" />
+    <link rel="prev" title="DOCUMENTATION" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.analysis package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.analysis.freeEnergyCalculation">ensembler.analysis.freeEnergyCalculation module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.analysis">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">DOCUMENTATION</a> &raquo;</li>
+        
+      <li>ensembler.analysis package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/ensembler.analysis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="ensembler-analysis-package">
+<h1>ensembler.analysis package<a class="headerlink" href="#ensembler-analysis-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ensembler.analysis.freeEnergyCalculation">
+<span id="ensembler-analysis-freeenergycalculation-module"></span><h2>ensembler.analysis.freeEnergyCalculation module<a class="headerlink" href="#module-ensembler.analysis.freeEnergyCalculation" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Free Energy Calculations:</dt><dd><p>This module contains functions for free energy calculations
+author: Gerhard König, Benjamin Schroeder</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.bar">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">bar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">convergence_radius</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">max_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">min_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio" title="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio</span></code></a></p>
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bar.convergence_radius">
+<code class="sig-name descname">convergence_radius</code><em class="property">: float</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bar.convergence_radius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bar.max_iterations">
+<code class="sig-name descname">max_iterations</code><em class="property">: int</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bar.max_iterations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bar.min_iterations">
+<code class="sig-name descname">min_iterations</code><em class="property">: int</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bar.min_iterations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">bennetAcceptanceRatio</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">convergence_radius</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">max_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">min_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation._FreeEnergyCalculator</span></code></p>
+<blockquote>
+<div><p>This class implements the BAR method.
+$dF = -</p>
+</div></blockquote>
+<p>rac{1}{eta} * ln(
+rac{flangle(V_j-V_i+C)
+angle_i}{flangle(V_i-V_j-C)
+angle_j})+C$</p>
+<blockquote>
+<div><p>with :
+$ f(x) =</p>
+</div></blockquote>
+<p>rac{1}{1+e^(eta x)}$ - fermi function</p>
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.C">
+<code class="sig-name descname">C</code><em class="property"> = C</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.C" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.T">
+<code class="sig-name descname">T</code><em class="property"> = T</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vi_i">
+<code class="sig-name descname">Vi_i</code><em class="property"> = Vi_i</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vi_i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vi_j">
+<code class="sig-name descname">Vi_j</code><em class="property"> = Vi_j</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vi_j" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vj_i">
+<code class="sig-name descname">Vj_i</code><em class="property"> = Vj_i</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vj_i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vj_j">
+<code class="sig-name descname">Vj_j</code><em class="property"> = Vj_j</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.Vj_j" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">convergence_radius</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-05</span></em>, <em class="sig-param"><span class="n">max_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">min_iterations</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>C</strong> (<em>float, optional</em>) – is the initial guess of the free Energy.</p></li>
+<li><p><strong>T</strong> (<em>float, optional</em>) – Temperature in Kelvin, defaults to 398</p></li>
+<li><p><strong>k</strong> (<em>float, optional</em>) – boltzmann Constant, defaults to const.k*const.Avogadro</p></li>
+<li><p><strong>kT</strong> (<em>bool, optional</em>) – overwrites T and k to set all results in units of $k_bT$</p></li>
+<li><p><strong>kJ</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kJ/(mol*K)</p></li>
+<li><p><strong>kCal</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kcal/(mol*K)</p></li>
+<li><p><strong>convergence_radius</strong> (<em>float, optional</em>) – when is the result converged? if the deviation of one to another iteration is below the convergence radius.</p></li>
+<li><p><strong>max_iterations</strong> (<em>int, optional</em>) – maximal number of iterations.</p></li>
+<li><p><strong>min_iterations</strong> (<em>int, optional</em>) – minimal number of iterations</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calc_bar">
+<code class="sig-name descname">_calc_bar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">decimal.Decimal</span></em>, <em class="sig-param"><span class="n">Vj_i</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">Vi_i</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">Vi_j</span><span class="p">:</span> <span class="n">numpy.array</span></em>, <em class="sig-param"><span class="n">Vj_j</span><span class="p">:</span> <span class="n">numpy.array</span></em><span class="sig-paren">)</span> &#x2192; decimal.Decimal<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio._calc_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calc_bar" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_calc_bar</dt><dd><dl class="simple">
+<dt>this function is calculating the free energy difference of two states for one iteration of the BAR method.</dt><dd><p>It is implemented straight forwad, but therefore not very numerical stable.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi_i</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateI</p></li>
+<li><p><strong>Vj_i</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateI</p></li>
+<li><p><strong>Vi_j</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateJ</p></li>
+<li><p><strong>Vj_j</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateJ</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calculate_optimize">
+<code class="sig-name descname">_calculate_optimize</code><span class="sig-paren">(</span><em class="sig-param">Vi_i: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vj_i: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vi_j: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vj_j: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), C0: float = 0, verbose: bool = True</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio._calculate_optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calculate_optimize" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>this function is calculating the free energy difference of two states with the BAR method.</dt><dd><p>it iterates over the _calc_bar method and determines the convergence and the result.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi_i</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateI</p></li>
+<li><p><strong>Vj_i</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateI</p></li>
+<li><p><strong>Vi_j</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateJ</p></li>
+<li><p><strong>Vj_j</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateJ</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.beta">
+<code class="sig-name descname">beta</code><em class="property"> = beta</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.beta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.calculate">
+<code class="sig-name descname">calculate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Vi_i</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Vj_i</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Vi_j</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">Vj_j</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>calculate</dt><dd><p>this function is calculating the free energy difference of two states with the BAR method.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi_i</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateI</p></li>
+<li><p><strong>Vj_i</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateI</p></li>
+<li><p><strong>Vi_j</strong> (<em>np.array</em>) – potential energies of stateI while sampling stateJ</p></li>
+<li><p><strong>Vj_j</strong> (<em>np.array</em>) – potential energies of stateJ while sampling stateJ</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.constants">
+<code class="sig-name descname">constants</code><em class="property">: dict</em><em class="property"> = {T: 298, k: 8.31446261815324, C: Decimal('0')}</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.constants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.convergence_radius">
+<code class="sig-name descname">convergence_radius</code><em class="property">: float</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.convergence_radius" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.equation">
+<code class="sig-name descname">equation</code><em class="property">: &lt;module ‘sympy.core.function’ from ‘C:\Users\benja\anaconda3\envs\EnsemblerDev\lib\site-packages\sympy\core\function.py’&gt;</em><em class="property"> = (-log(exp((C - Vi_i + Vj_i)/(T*k))) + log(exp((C + Vi_j - Vj_j)/(T*k))))/(T*k)</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.equation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.k">
+<code class="sig-name descname">k</code><em class="property"> = k</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.max_iterations">
+<code class="sig-name descname">max_iterations</code><em class="property">: int</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.max_iterations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.min_iterations">
+<code class="sig-name descname">min_iterations</code><em class="property">: int</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.min_iterations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.set_parameters">
+<code class="sig-name descname">set_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">C</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#bennetAcceptanceRatio.set_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.set_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>set_parameters setter for the parameters T and k</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float, optional</em>) – Temperature in Kelvin, defaults to 398</p></li>
+<li><p><strong>k</strong> (<em>float, optional</em>) – boltzmann Constant, defaults to const.k*const.Avogadro</p></li>
+<li><p><strong>C</strong> (<em>float, optional</em>) – C is the initial guess of the free energy difference.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.dfEDS">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">dfEDS</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#dfEDS"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.dfEDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting" title="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">threeStateZwanzigReweighting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#threeStateZwanzigReweighting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation" title="ensembler.analysis.freeEnergyCalculation.zwanzigEquation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation.zwanzigEquation</span></code></a></p>
+<blockquote>
+<div><p>this class provides the implementation for the Free energy calculation with EDS.
+It calculates the free energy via the reference state.</p>
+<p>$dF = dF_{BR}-dF_{AR} =</p>
+</div></blockquote>
+<p>rac{1}{eta} * ( ln(langle e^{-eta * (V_j-V_R)}
+angle) - ln(langle e^{-eta * (V_i-V_R)}
+angle))$</p>
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.T">
+<code class="sig-name descname">T</code><em class="property"> = T</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vi">
+<code class="sig-name descname">Vi</code><em class="property"> = Vi</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vj">
+<code class="sig-name descname">Vj</code><em class="property"> = Vj</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vr">
+<code class="sig-name descname">Vr</code><em class="property"> = Vr</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#threeStateZwanzigReweighting.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>this class provides the implementation for the Free energy calculation with EDS.</dt><dd><p>It calculates the free energy via the reference state.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float, optional</em>) – Temperature in Kelvin, defaults to 398</p></li>
+<li><p><strong>k</strong> (<em>float, optional</em>) – boltzmann Constant, defaults to const.k*const.Avogadro</p></li>
+<li><p><strong>kT</strong> (<em>bool, optional</em>) – overwrites T and k to set all results in units of $k_bT$</p></li>
+<li><p><strong>kJ</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kJ/(mol*K)</p></li>
+<li><p><strong>kCal</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kcal/(mol*K)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting._calculate_implementation_useZwanzig">
+<code class="sig-name descname">_calculate_implementation_useZwanzig</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable, &lt;class 'numbers.Number'&gt;), Vj: (typing.Iterable, &lt;class 'numbers.Number'&gt;), Vr: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#threeStateZwanzigReweighting._calculate_implementation_useZwanzig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting._calculate_implementation_useZwanzig" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>calculate</dt><dd><p>this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.
+it directly accesses the zwanzig implmentation.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi</strong> (<em>np.array</em>) – the potential energy of stateI while sampling stateR</p></li>
+<li><p><strong>Vj</strong> (<em>np.array</em>) – the potential energy of stateJ while sampling stateR</p></li>
+<li><p><strong>Vr</strong> (<em>np.array</em>) – the potential energy of stateR while sampling stateR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.calculate">
+<code class="sig-name descname">calculate</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vj: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vr: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#threeStateZwanzigReweighting.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>calculate</dt><dd><p>this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi</strong> (<em>np.array</em>) – the potential energy of stateI while sampling stateR</p></li>
+<li><p><strong>Vj</strong> (<em>np.array</em>) – the potential energy of stateJ while sampling stateR</p></li>
+<li><p><strong>Vr</strong> (<em>np.array</em>) – the potential energy of stateR while sampling stateR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.equation">
+<code class="sig-name descname">equation</code><em class="property">: &lt;module ‘sympy.core.function’ from ‘C:\Users\benja\anaconda3\envs\EnsemblerDev\lib\site-packages\sympy\core\function.py’&gt;</em><em class="property"> = -(log(exp(-(Vi - Vr)/(T*k))) - log(exp(-(Vj - Vr)/(T*k))))/(T*k)</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.equation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.k">
+<code class="sig-name descname">k</code><em class="property"> = k</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzig">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">zwanzig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation" title="ensembler.analysis.freeEnergyCalculation.zwanzigEquation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation.zwanzigEquation</span></code></a></p>
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzig.constants">
+<code class="sig-name descname">constants</code><em class="property">: dict</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzig.constants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.analysis.freeEnergyCalculation.</code><code class="sig-name descname">zwanzigEquation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.analysis.freeEnergyCalculation._FreeEnergyCalculator</span></code></p>
+<p>Zwanzig Equation</p>
+<p>This class is a nice wrapper for the zwanzig Equation.</p>
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.T">
+<code class="sig-name descname">T</code><em class="property"> = T</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vi">
+<code class="sig-name descname">Vi</code><em class="property"> = Vi</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vj">
+<code class="sig-name descname">Vj</code><em class="property"> = Vj</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vj" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">8.31446261815324</span></em>, <em class="sig-param"><span class="n">kT</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kJ</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">kCal</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Here you can set Class wide the parameters T and k for the Zwanzig Equation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float, optional</em>) – Temperature in Kelvin, defaults to 398</p></li>
+<li><p><strong>k</strong> (<em>float, optional</em>) – boltzmann Constant, defaults to const.k*const.Avogadro</p></li>
+<li><p><strong>kT</strong> (<em>bool, optional</em>) – overwrites T and k to set all results in units of $k_bT$</p></li>
+<li><p><strong>kJ</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kJ/(mol*K)</p></li>
+<li><p><strong>kCal</strong> (<em>bool, optional</em>) – overwrites k to get the Boltzman constant with units kcal/(mol*K)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_efficient">
+<code class="sig-name descname">_calculate_efficient</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em>, <em class="sig-param">Vj: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation._calculate_efficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_efficient" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>_calculate_efficient</p>
+<p>Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).
+The initial state of the free energy difference is denoted as 0, the final state is called 1.
+The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set
+of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the
+initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was
+analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann
+constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</p>
+<p>This is an efficient more overflow robust implementation of the Zwanzig Equation.</p>
+<p>&#64;Author: Gerhard König
+See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</p>
+<p>$dF =</p>
+</div></blockquote>
+<p>rac{1}{eta} * ln(langlee^{-eta * (V_j-V_i)}
+angle)$</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Vi<span class="classifier">np.array</span></dt><dd><p>Potential energies of state I</p>
+</dd>
+<dt>Vj<span class="classifier">np.array</span></dt><dd><p>Potential energies of state J</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>float</dt><dd><p>free energy difference</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_implementation_bruteForce">
+<code class="sig-name descname">_calculate_implementation_bruteForce</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em>, <em class="sig-param">Vj: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation._calculate_implementation_bruteForce"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_implementation_bruteForce" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_calculate_implementation_bruteForce</dt><dd><p>This is a plain implementation of the zwanzig equation. It is not very numerical robust</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi</strong></p></li>
+<li><p><strong>Vj</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Vi</strong> (<em>np.array</em>) – Potential energies of state I</p></li>
+<li><p><strong>Vj</strong> (<em>np.array</em>) – Potential energies of state J</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>free energy difference</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_meanEfficient">
+<code class="sig-name descname">_calculate_meanEfficient</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em>, <em class="sig-param">Vj: (typing.Iterable</em>, <em class="sig-param">&lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation._calculate_meanEfficient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_meanEfficient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).
+The initial state of the free energy difference is denoted as 0, the final state is called 1.
+The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set
+of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the
+initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was
+analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann
+constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</p>
+<p>This is an efficient more overflow robust implementation of the Zwanzig Equation.</p>
+<p>&#64;Author: Gerhard König
+See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</p>
+<blockquote>
+<div><dl class="simple">
+<dt>_calculate_implementation_bruteForce</dt><dd><p>This is a plain implementation of the zwanzig equation. It is not very numerical robust</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi</strong> (<em>np.array</em>) – Potential energies of state I</p></li>
+<li><p><strong>Vj</strong> (<em>np.array</em>) – Potential energies of state J</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.calculate">
+<code class="sig-name descname">calculate</code><span class="sig-paren">(</span><em class="sig-param">Vi: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;), Vj: (typing.Iterable[numbers.Number], &lt;class 'numbers.Number'&gt;)</em><span class="sig-paren">)</span> &#x2192; float<a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation.calculate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>zwanzig</p>
+<p>Calculate a free energy difference with the Zwanzig equation (aka exponential formula or thermodynamic perturbation).
+The initial state of the free energy difference is denoted as 0, the final state is called 1.
+The function expects two arrays of size n with potential energies. The first array, u00, contains the potential energies of a set
+of Boltzmann-weighted conformations of an MD or MC trajectory of the initial state, analyzed with the Hamiltonian of the
+initial state. The second array, u01 , contains the potential energies of a trajectory of the initial state that was
+analyzed with the potential energy function of the final state. The variable kT expects the product of the Boltzmann
+constant with the temperature that was used to generate the trajectory in the respective units of the potential energies.</p>
+<p>See Zwanzig, R. W. J. Chem. Phys. 1954, 22, 1420-1426. doi:10.1063/1.1740409</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Vi</strong> (<em>np.array</em>) – Potential energies of state I</p></li>
+<li><p><strong>Vj</strong> (<em>np.array</em>) – Potential energies of state J</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>free energy difference</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.constants">
+<code class="sig-name descname">constants</code><em class="property">: dict</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.constants" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.equation">
+<code class="sig-name descname">equation</code><em class="property">: &lt;module ‘sympy.core.function’ from ‘C:\Users\benja\anaconda3\envs\EnsemblerDev\lib\site-packages\sympy\core\function.py’&gt;</em><em class="property"> = -log(exp(-(-Vi + Vj)/(T*k)))/(T*k)</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.equation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.k">
+<code class="sig-name descname">k</code><em class="property"> = k</em><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.k" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.analysis.freeEnergyCalculation.zwanzigEquation.set_parameters">
+<code class="sig-name descname">set_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">T</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/analysis/freeEnergyCalculation.html#zwanzigEquation.set_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.set_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>set_parameters setter for the parameters T and k</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> (<em>float, optional</em>) – Temperature in Kelvin, defaults to 398</p></li>
+<li><p><strong>k</strong> (<em>float, optional</em>) – boltzmann Constant, defaults to const.k*const.Avogadro</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.analysis">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.analysis" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.conditions.html" class="btn btn-neutral float-right" title="ensembler.conditions package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="DOCUMENTATION" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

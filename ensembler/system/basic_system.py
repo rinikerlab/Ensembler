@@ -8,7 +8,7 @@ import warnings
 import numpy as np
 import pandas as pd
 import scipy.constants as const
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 pd.options.mode.use_inf_as_na = True
 

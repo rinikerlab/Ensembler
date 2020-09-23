@@ -9,16 +9,18 @@ from ensembler import potentials
 from ensembler import system
 from ensembler.util import dataStructure as data
 
-tmp_potentials = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_systems")
-
-
 class test_System(unittest.TestCase):
     system_class = system.system
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
+    tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        if(__class__.tmp_test_dir is None):
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+        _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
+
         self.sampler = samplers.stochastic.monteCarloIntegrator()
         self.pot = potentials.OneD.harmonicOscillatorPotential()
+
 
     def test_system_constructor(self):
         self.system_class(potential=self.pot, sampler=self.sampler)
@@ -407,9 +409,14 @@ class test_System(unittest.TestCase):
 
 class test_perturbedSystem1D(test_System):
     system_class = system.perturbed_system.perturbedSystem
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
+    tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        if (__class__.tmp_test_dir is None):
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+        _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
+                                                dir=__class__.tmp_test_dir)
+
         self.sampler = samplers.stochastic.monteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
@@ -811,9 +818,14 @@ class test_perturbedSystem1D(test_System):
 
 class test_edsSystem1D(test_System):
     system_class = system.eds_system.edsSystem
-    _, tmp_out_path = tempfile.mkstemp(prefix="test_" + system_class.name, suffix=".obj", dir=tmp_potentials)
+    tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        if (__class__.tmp_test_dir is None):
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+        _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
+                                                dir=__class__.tmp_test_dir)
+
         self.sampler = samplers.stochastic.monteCarloIntegrator()
         self.pot = potentials.OneD.envelopedPotential()
 

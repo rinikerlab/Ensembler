@@ -1,0 +1,699 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.potentials.biased_potentials package &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.samplers package" href="ensembler.samplers.html" />
+    <link rel="prev" title="ensembler.potentials package" href="ensembler.potentials.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.potentials.biased_potentials package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.biased_potentials.biasOneD">ensembler.potentials.biased_potentials.biasOneD module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.biased_potentials.biasTwoD">ensembler.potentials.biased_potentials.biasTwoD module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.biased_potentials">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">DOCUMENTATION</a> &raquo;</li>
+        
+          <li><a href="ensembler.potentials.html">ensembler.potentials package</a> &raquo;</li>
+        
+      <li>ensembler.potentials.biased_potentials package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/ensembler.potentials.biased_potentials.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="ensembler-potentials-biased-potentials-package">
+<h1>ensembler.potentials.biased_potentials package<a class="headerlink" href="#ensembler-potentials-biased-potentials-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ensembler.potentials.biased_potentials.biasOneD">
+<span id="ensembler-potentials-biased-potentials-biasoned-module"></span><h2>ensembler.potentials.biased_potentials.biasOneD module<a class="headerlink" href="#module-ensembler.potentials.biased_potentials.biasOneD" title="Permalink to this headline">¶</a></h2>
+<p>Module: Potential
+This module shall be used to implement biases on top of Potentials. This module contains all available 1D biases.</p>
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.addedPotentials">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasOneD.</code><code class="sig-name descname">addedPotentials</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">addPotential=&lt;ensembler.potentials.OneD.gaussPotential object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#addedPotentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.addedPotentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>Adds two different potentials on top of each other. Can be used to generate
+harmonic potential umbrella sampling or scaled potentials</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.addedPotentials.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">addPotential=&lt;ensembler.potentials.OneD.gaussPotential object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#addedPotentials.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.addedPotentials.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the addedPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>addPotential</strong> (<em>potential type</em>) – The potential added on top of the unbiased potential to
+bias the system</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.addedPotentials.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Added Potential Enhanced Sampling System'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.addedPotentials.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.addedPotentials.position">
+<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.addedPotentials.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasOneD.</code><code class="sig-name descname">metadynamicsPotential</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">amplitude=0.1</em>, <em class="sig-param">sigma=1</em>, <em class="sig-param">n_trigger=100</em>, <em class="sig-param">bias_grid_min=0</em>, <em class="sig-param">bias_grid_max=10</em>, <em class="sig-param">numbins=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>The metadynamics bias potential adds 1D Gaussian potentials on top of
+the original 1D potential. The added gaussian potential is centered on the current position.
+Thereby the valleys of the potential “flooded” and barrier crossing is easier.</p>
+<p>This implementation uses a grid to store the biasing. This is much faster than calculating
+an ever increasing potential with sympy</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">amplitude=0.1</em>, <em class="sig-param">sigma=1</em>, <em class="sig-param">n_trigger=100</em>, <em class="sig-param">bias_grid_min=0</em>, <em class="sig-param">bias_grid_max=10</em>, <em class="sig-param">numbins=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the metadynamicsPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>amplitude</strong> (<em>float</em>) – scaling of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – standard deviation of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Metadynamics potential will be added after every n_trigger’th steps</p></li>
+<li><p><strong>bias_grid_min</strong> (<em>float</em>) – min value of the bias grid</p></li>
+<li><p><strong>bias_grid_max</strong> (<em>float</em>) – max value of the bias grid</p></li>
+<li><p><strong>numbins</strong> (<em>float</em>) – size of the grid bias and forces are saved in</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential._find_nearest">
+<code class="sig-name descname">_find_nearest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential._find_nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential._find_nearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that finds position of the closest entry to a given value in an array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>np.array</em>) – 1D array containing the midpoints of the metadynamics grid</p></li>
+<li><p><strong>value</strong> (<em>int or float</em>) – search value</p></li>
+<li><p><strong>Returns</strong></p></li>
+<li><p><strong>Index of the entry closest to the given value</strong></p></li>
+<li><p><strong>——-</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds a gaussian centered on the
+current position to the potential</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curr_position</strong> (<em>float</em>) – current x position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.apply_coupled">
+<code class="sig-name descname">apply_coupled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.apply_coupled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.apply_coupled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>tuple</em>) – current x,y position</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.couple_system">
+<code class="sig-name descname">couple_system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.couple_system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.couple_system" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.ene">
+<code class="sig-name descname">ene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.ene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.ene" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates energy of particle also takes bias into account
+:Parameters: <strong>positions</strong> (<em>tuple</em>) – position on 1D potential energy surface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>current energy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.force">
+<code class="sig-name descname">force</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotential.force"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.force" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates derivative with respect to position also takes bias into account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>positions</strong> (<em>tuple</em>) – position on 1D potential energy surface</p></li>
+<li><p><strong>Returns</strong></p></li>
+<li><p><strong>current derivative dh/dpos</strong></p></li>
+<li><p><strong>——-</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System using grid bias'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.position">
+<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasOneD.</code><code class="sig-name descname">metadynamicsPotentialSympy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotentialSympy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>The metadynamics bias potential adds Gaussian potentials on top of
+the original potential. The added gaussian potential is centered on the current position.
+Thereby the valleys of the potential “flooded” and barrier crossing is easier</p>
+<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotentialSympy.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the metadynamicsPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>amplitude</strong> (<em>float</em>) – scaling of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – standard deviation of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Metadynamics potential will be added after every n_trigger’th steps</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotentialSympy._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds a gaussian centered on the
+current position to the potential</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curr_position</strong> (<em>float</em>) – current x position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#metadynamicsPotentialSympy.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System using sympy'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.position">
+<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.metadynamicsPotentialSympy.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasOneD.</code><code class="sig-name descname">timedependendBias</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#timedependendBias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>The timedependend bias potential adds a user defined potential on top of
+the original potential.</p>
+<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#timedependendBias.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the addedPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>addPotential</strong> (<em>potential type</em>) – The potential added on top of the unbiased potential to
+bias the system, usually of gaussian type</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Added potential will be added after every n_trigger’th steps</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#timedependendBias._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds the pre-defined potential on the
+current position to the potential</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasOneD.html#timedependendBias.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasOneD.timedependendBias.position">
+<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasOneD.timedependendBias.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.potentials.biased_potentials.biasTwoD">
+<span id="ensembler-potentials-biased-potentials-biastwod-module"></span><h2>ensembler.potentials.biased_potentials.biasTwoD module<a class="headerlink" href="#module-ensembler.potentials.biased_potentials.biasTwoD" title="Permalink to this headline">¶</a></h2>
+<p>Module: Potential
+This module shall be used to implement biases on top of Potentials. This module contains all available 2 Biases.</p>
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.addedPotentials">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasTwoD.</code><code class="sig-name descname">addedPotentials</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.TwoD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">addPotential=&lt;ensembler.potentials.TwoD.gaussPotential object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#addedPotentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.addedPotentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential2DCls</span></code></p>
+<p>Adds two different potentials on top of each other. Can be used to generate
+harmonic potential umbrella sampling or scaled potentials</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.TwoD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">addPotential=&lt;ensembler.potentials.TwoD.gaussPotential object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#addedPotentials.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the addedPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>2D potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>addPotential</strong> (<em>2D potential type</em>) – The potential added on top of the unbiased potential to
+bias the system</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.nDimensions">
+<code class="sig-name descname">nDimensions</code><em class="property">: int</em><em class="property"> = nDimensions</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.nDimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Added Potential Enhanced Sampling System for 2D'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.matrices.dense.MutableDenseMatrix</em><em class="property"> = Matrix([[r]])</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.addedPotentials.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.biased_potentials.biasTwoD.</code><code class="sig-name descname">metadynamicsPotential</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.TwoD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">amplitude=1.0</em>, <em class="sig-param">sigma=(1.0</em>, <em class="sig-param">1.0)</em>, <em class="sig-param">n_trigger=100</em>, <em class="sig-param">bias_grid_min=(0</em>, <em class="sig-param">0)</em>, <em class="sig-param">bias_grid_max=(10</em>, <em class="sig-param">10)</em>, <em class="sig-param">numbins=(100</em>, <em class="sig-param">100)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential2DCls</span></code></p>
+<p>The metadynamics bias potential adds 2D Gaussian potentials on top of
+the original 2D potential. The added gaussian potential is centered on the current position.
+Thereby the valleys of the potential “flooded” and barrier crossing is easier.</p>
+<p>This implementation uses a grid to store the biasing. This is much faster than calculating
+an ever increasing potential with sympy</p>
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.TwoD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">amplitude=1.0</em>, <em class="sig-param">sigma=(1.0</em>, <em class="sig-param">1.0)</em>, <em class="sig-param">n_trigger=100</em>, <em class="sig-param">bias_grid_min=(0</em>, <em class="sig-param">0)</em>, <em class="sig-param">bias_grid_max=(10</em>, <em class="sig-param">10)</em>, <em class="sig-param">numbins=(100</em>, <em class="sig-param">100)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origPotential</strong> (<em>potential 2D type</em>) – The unbiased potential</p></li>
+<li><p><strong>amplitude</strong> (<em>float</em>) – scaling of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>sigma</strong> (<em>tuple</em>) – standard deviation of the gaussian potential in x and y added in the metadynamcis step</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Metadynamics potential will be added after every n_trigger’th steps</p></li>
+<li><p><strong>bias_grid_min</strong> (<em>tuple</em>) – min value in x and y direction for the grid</p></li>
+<li><p><strong>bias_grid_max</strong> (<em>tuple</em>) – max value in x and y direction for the grid</p></li>
+<li><p><strong>numbins</strong> (<em>tuple</em>) – size of the grid bias and forces are saved in</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential._find_nearest">
+<code class="sig-name descname">_find_nearest</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">array</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential._find_nearest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential._find_nearest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that finds position of the closest entry to a given value in an array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>array</strong> (<em>np.array</em>) – 1D array containing the midpoints of the metadynamics grid</p></li>
+<li><p><strong>value</strong> (<em>int or float</em>) – search value</p></li>
+<li><p><strong>Returns</strong></p></li>
+<li><p><strong>Index of the entry closest to the given value</strong></p></li>
+<li><p><strong>——-</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds a gaussian centered on the
+current position to the potential</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curr_position</strong> (<em>tuple</em>) – current x,y position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.apply_coupled">
+<code class="sig-name descname">apply_coupled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.apply_coupled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.apply_coupled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>tuple</em>) – current x,y position</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.coupleSystem">
+<code class="sig-name descname">coupleSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.coupleSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.coupleSystem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.ene">
+<code class="sig-name descname">ene</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.ene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.ene" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates energy of particle also takes bias into account
+:Parameters: <strong>positions</strong> (<em>tuple</em>) – position on 2D potential energy surface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>current energy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.force">
+<code class="sig-name descname">force</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/biased_potentials/biasTwoD.html#metadynamicsPotential.force"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.force" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates derivative with respect to position also takes bias into account</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>positions</strong> (<em>tuple</em>) – position on 2D potential energy surface</p></li>
+<li><p><strong>Returns</strong></p></li>
+<li><p><strong>current derivative dh/dpos</strong></p></li>
+<li><p><strong>——-</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System using grid bias in 2D'</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.position">
+<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.system">
+<code class="sig-name descname">system</code><em class="property">: <a class="reference internal" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.system" title="ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.system">system</a></em><a class="headerlink" href="#ensembler.potentials.biased_potentials.biasTwoD.metadynamicsPotential.system" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.potentials.biased_potentials">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.potentials.biased_potentials" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.samplers.html" class="btn btn-neutral float-right" title="ensembler.samplers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ensembler.potentials.html" class="btn btn-neutral float-left" title="ensembler.potentials package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

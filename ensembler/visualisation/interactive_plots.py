@@ -8,18 +8,24 @@ from ensembler.visualisation.plotConveyorBelt import plotEnsembler
 
 
 def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 100, steps: int = 100):
+    """
+    This provides a nice widget for jupyter notebooks to play around with the conveyor belt.
+
+    Parameters
+    ----------
+    conveyorBelt
+    numsys
+    nbins
+    steps
+
+    Returns
+    -------
+
+    """
     # if none given build cvb
     if (isinstance(conveyorBelt, type(None))):
-        import ensembler.potentials.OneD as pot
-        import ensembler.system.perturbed_system as system
         import ensembler.ensemble.replicas_dynamic_parameters as cvb
-        import ensembler.samplers as integ
-
-        integrat = integ.stochastic.metropolisMonteCarloIntegrator()
-        potential = pot.linearCoupledPotentials(Va=pot.harmonicOscillatorPotential(k=1.0),
-                                                Vb=pot.harmonicOscillatorPotential(k=2.0))
-        syst = system.perturbedSystem(potential=potential, sampler=integrat)
-        conveyorBelt = cvb.conveyorBelt(0.0, 8, system=syst, build=False)
+        conveyorBelt = cvb.conveyorBelt(capital_lambda=0.0, n_replicas=numsys)
         conveyorBelt.simulate(steps)
 
     (cvb_traj, systrajs) = conveyorBelt.get_trajs()
@@ -31,7 +37,7 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
     dhdlbins = np.zeros(nbins)
     for i in systrajs:
         for j in range(systrajs[i].shape[0]):
-            index = int(np.floor(systrajs[i].lam[j] * nbins))
+            index = int(np.floor(systrajs[i].lam[j] / nbins))
             if index == nbins:
                 index = nbins - 1
             bins[index] += 1
@@ -72,11 +78,14 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
                                footer=None,
                                align_items="center")
 
-    display(app)
     return app
 
 
 class interactive_eds():
+    """
+    This provides a nice widget for jupyter notebooks to play around with the eds reference potetnial.
+
+    """
     s = 1.35
     Eoffs = []
     V_is = []
@@ -92,7 +101,7 @@ class interactive_eds():
             self.Eoffs = Eoff
 
         self.V_is = [pot.harmonicOscillatorPotential(x_shift=state * 4, k=10) for state in range(self.nstates)]
-        self.eds_pot = potN.envelopedPotential(V_is=self.V_is, s=self.s, Eoff_i=self.Eoffs)
+        self.eds_pot = pot.envelopedPotential(V_is=self.V_is, s=self.s, eoff=self.Eoffs)
 
         ##Parameters
         self.positions_state = np.arange(-4, 4 * self.nstates, 0.5)
@@ -147,7 +156,7 @@ class interactive_eds():
         self.eoff_sliders_box = ipywidgets.HBox(eoff_sliders)
         controls = ipywidgets.VBox([state_slider, s_box, self.eoff_sliders_box])
         self.redraw_s({"new": 100})
-        display(controls)
+        #display(controls)
         self.fig.show()
 
     def redraw_states(self, nstates_event):
