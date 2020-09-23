@@ -51,7 +51,7 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     pSize = 2.009
     goldRat = 1.618
     lineWidth = 1
-    pathEffects = [path_effects.SimpleLineShadow(), path_effects.Normal()]
+    [path_effects.SimpleLineShadow(), path_effects.Normal()]
     fig = plt.figure(figsize=(pSize * goldRat, pSize))
     ax = fig.gca()
     fig.subplots_adjust(left=0.1, right=1.0 - 0.1, bottom=0.24, top=0.99)
@@ -165,7 +165,7 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
 
-    yarrow = ax.annotate('', xy=(0, 0),
+    ax.annotate('', xy=(0, 0),
                          xytext=(0, 0.5 / goldRat), ha='center', va='bottom',
                          arrowprops=dict(arrowstyle='<|-', facecolor='k', linewidth=1.5))
     ax.text(-0.025, 0.25 / goldRat, '$G(\lambda)$', ha='right', va='center', fontsize=14)
@@ -177,7 +177,7 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     pSize = 6.027
     goldRat = 1.70
     lineWidth = 1
-    pathEffects = [path_effects.SimpleLineShadow(), path_effects.Normal()]
+    [path_effects.SimpleLineShadow(), path_effects.Normal()]
     fig = plt.figure(figsize=(pSize * goldRat, pSize))
     ax = fig.gca()
     fig.subplots_adjust(left=0.1, right=1.0 - 0.1, bottom=0.25, top=0.964)
@@ -316,7 +316,7 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     ax.spines['top'].set_color('None')
     ax.set_title("Conveyor Belt over simulated Free Energy Landscape")
 
-    yarrow = ax.annotate('', xy=(0, 0),
+    ax.annotate('', xy=(0, 0),
                          xytext=(0, 0.5 / goldRat), ha='center', va='bottom',
                          arrowprops=dict(arrowstyle='<|-', facecolor='k', linewidth=1.5))
     ax.text(-0.025, 0.25 / goldRat, '$G(\lambda)$', ha='right', va='center', fontsize=14)
@@ -328,7 +328,7 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
     pSize = 6.027
     goldRat = 1.70
     lineWidth = 1
-    pathEffects = [path_effects.SimpleLineShadow(), path_effects.Normal()]
+    [path_effects.SimpleLineShadow(), path_effects.Normal()]
 
     rx = 0.05
     ry = rx
@@ -345,8 +345,6 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
     gVals /= (2.0 * gVals.max() * goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
-    l = CapLam
-    numsys = M
     rotation = []
     y = []
     # buildBox

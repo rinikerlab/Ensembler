@@ -28,12 +28,8 @@ class _baseClass:
         remove the non trivial pickling parts
         """
         dict = self.__dict__
-
         keys = list(dict.keys())
         for key in keys:
-            value = dict[key]
-
-            # print(key, '\t', isinstance(dict[key], Callable) ,"\t", value, hasattr(value, "__getstate__"))
             if (isinstance(dict[key], Callable)):
                 del dict[key]
 

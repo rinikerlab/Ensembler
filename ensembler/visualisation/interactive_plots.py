@@ -2,6 +2,7 @@ import ipywidgets
 import numpy as np
 from matplotlib import pyplot as plt
 
+from IPython import display
 from ensembler.potentials import ND as potN
 from ensembler.potentials import OneD as pot
 from ensembler.visualisation.plotConveyorBelt import plotEnsembler
@@ -46,7 +47,7 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
     ene = np.cumsum(dhdlbins) / nbins
 
     lam = np.linspace(0, 1, nbins)
-    nReps = conveyorBelt.nReplicas
+    conveyorBelt.nReplicas
 
     def redraw(CapLam, M):
         plotEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)
@@ -156,7 +157,7 @@ class interactive_eds():
         self.eoff_sliders_box = ipywidgets.HBox(eoff_sliders)
         controls = ipywidgets.VBox([state_slider, s_box, self.eoff_sliders_box])
         self.redraw_s({"new": 100})
-        #display(controls)
+        display(controls)
         self.fig.show()
 
     def redraw_states(self, nstates_event):
