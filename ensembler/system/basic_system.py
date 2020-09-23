@@ -326,8 +326,6 @@ class system(_baseClass):
                         set_initial_position=start_position)
 
         ##check if system should be coupled to conditions:
-
-        self._conditions = []
         # update for metadynamics simulation - local elevation bias is like a condition/potential hybrid.
         if isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D):
             self.conditions.append(self.potential)
@@ -669,6 +667,7 @@ class system(_baseClass):
 
         """
         self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
+        return self._currentPosition, self._currentVelocities, self._currentForce
 
     def apply_conditions(self) -> NoReturn:
         """
@@ -680,8 +679,8 @@ class system(_baseClass):
         NoReturn
 
         """
-        for aditional in self.conditions:
-            aditional.apply_coupled()
+        for condition in self.conditions:
+            condition.apply_coupled()
 
     def append_state(self, new_position: Union[Iterable[Number], Number], new_velocity: Union[Iterable[Number], Number],
                      new_forces: Union[Iterable[Number], Number]) -> NoReturn:

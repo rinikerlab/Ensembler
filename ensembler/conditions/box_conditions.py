@@ -119,29 +119,39 @@ class periodicBoundaryCondition(_boundaryCondition):
             self.nDim = system.nDim
             self.nStates = system.nStates
 
-    def apply(self, current_position: Union[Iterable[Number], Number],
-              current_velocity: Union[Iterable[Number], Number]) -> Union[Iterable[Number], Number]:
+    def apply(self, current_position: Union[Iterable[Number], Number]) -> Union[Iterable[Number], Number]:
+        """
+        apply the periodic boundary condition
+        Parameters
+        ----------
+        current_position: Union[Iterable[Number], Number]
+            current system position
+        current_velocity: Union[Iterable[Number], Number]
+            current systems velocity
+        Returns
+        -------
+        Union[Iterable[Number], Number]
+            new position
+                a new position in the defined space
+        """
         if self.verbose: print("periodic boundary_condition: before: ", current_position)
         current_position = np.array(current_position, ndmin=1)
         for dim in range(self.nDim):
             if (current_position[dim] < self.lowerbounds[dim]):
                 if self.verbose: print("LOWER")
                 current_position[dim] = self.higherbounds[dim] - (self.lowerbounds[dim] - current_position[dim])
-                if(not isinstance(current_velocity, type(None))): current_velocity[dim] *= -1
+
             elif (current_position[dim] > self.higherbounds[dim]):
                 if self.verbose: print("UPPER")
                 current_position[dim] = self.lowerbounds[dim] + (current_position[dim] - self.higherbounds[dim])
-                if(not isinstance(current_velocity, type(None))): current_velocity[dim] *= -1
-        if self.verbose: print("periodic boundary_condition: after: ", current_position)
+            if self.verbose: print("periodic boundary_condition: after: ", current_position)
 
-        return current_position, current_velocity
+        return current_position
 
     def apply_coupled(self):
         """
         Applies the box Condition to the coupled system.
         """
         if (self.system.step % self._tau == 0):
-            newCurrentPosition, newCurrentVelocity = self.apply(current_position=self.system._currentPosition,
-                                                                current_velocity=self.system._currentVelocities)
+            newCurrentPosition = self.apply(current_position=self.system._currentPosition)
             self.system._currentPosition = np.squeeze(newCurrentPosition)
-            self.system._currentVelocity = np.squeeze(newCurrentVelocity)

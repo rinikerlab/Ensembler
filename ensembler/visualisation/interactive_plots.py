@@ -92,7 +92,7 @@ class interactive_eds():
     nstates = 2
 
     def __init__(self, nstates=2, s=100, Eoff=None):
-        self.nstates = 2
+        self.nstates = nstates
         self.s = s
 
         if (isinstance(Eoff, type(None))):
