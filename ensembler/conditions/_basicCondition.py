@@ -32,6 +32,11 @@ class _conditionCls(_baseClass):
         self._tau = tau
         self._verbose = verbose
         self._system = system
+
+        if (system != None):
+            self.nDim = system.nDim
+            self.nStates = system.nStates
+
         if system is not None:
             self.couple_system(system=system)
 

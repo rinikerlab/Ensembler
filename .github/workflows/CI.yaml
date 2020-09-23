@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "build_release_1"
+      - "master"
   pull_request:
     branches:
       - "master"

@@ -38,7 +38,7 @@ class boxBoundaryCondition(_boundaryCondition):
     name: str = "Box Boundary Condition"
 
     def __init__(self, boundary: Union[Iterable[Number], Iterable[Iterable[Number]]], every_step: int = 1,
-                 system: systemType = None):
+                 system: systemType = None, verbose: bool=False):
         """        box boundary condition
         This class can be used to define a box, which is restrictiring the phase space to its boundaries.
         Warning: This is not a very useful condition in most cases as the hard boundary leads to box effects in the simulation.
@@ -52,12 +52,10 @@ class boxBoundaryCondition(_boundaryCondition):
         system: systemType, optional
             here a system can be given, normally this argument is not needed, as the system is coupling itself, if the condition is passed on construction to the system.
         """
+
+        super().__init__(system=system, tau=every_step, verbose=verbose)
+
         self._parse_boundary(boundary=boundary)
-        self._tau = every_step
-        if (not isinstance(system, type(None))):
-            self.system = system
-            self.nDim = system.nDim
-            self.nStates = system.nStates
 
     def apply(self, current_position: Union[Iterable[Number], Number],
               current_velocity: Union[Iterable[Number], Number]) -> (
@@ -97,7 +95,7 @@ class periodicBoundaryCondition(_boundaryCondition):
     verbose: bool = False
 
     def __init__(self, boundary: Union[Iterable[Number], Iterable[Iterable[Number]]], every_step: int = 1,
-                 system: systemType = None):
+                 system: systemType = None, verbose:bool =False):
         """        periodic boundary condition
            This class allows to enable sampling in mirror images and projects the coordinates to the restricted space.
            Add this class as condition to a system.
@@ -111,13 +109,9 @@ class periodicBoundaryCondition(_boundaryCondition):
         system: systemType, optional
             here a system can be given, normally this argument is not needed, as the system is coupling itself, if the condition is passed on construction to the system.
         """
+        super().__init__(system=system, tau=every_step, verbose=verbose)
         self._parse_boundary(boundary)
-        self._tau = every_step
 
-        if (system != None):
-            self.system = system
-            self.nDim = system.nDim
-            self.nStates = system.nStates
 
     def apply(self, current_position: Union[Iterable[Number], Number]) -> Union[Iterable[Number], Number]:
         """
