@@ -10,7 +10,7 @@ import scipy.constants as const
 import sympy as sp
 
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
-from ensembler.util.ensemblerTypes import Union, Number, List, Iterable
+from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
 
 """
     SIMPLE POTENTIALS
@@ -298,7 +298,7 @@ class gaussPotential(_potential1DCls):
 
     mu, sigma, A, position = sp.symbols("mu sigma A r")
 
-    V_functional = A * sp.exp(-(position - mu)**2 / (2 * sigma**2))
+    V_functional = A * sp.exp(-(position - mu) ** 2 / (2 * sigma ** 2))
 
     def __init__(self, A=1., mu=0., sigma=1.):
         '''
@@ -319,6 +319,7 @@ class gaussPotential(_potential1DCls):
 
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
         super().__init__()
+
 
 """
     COMBINED POTENTIALS
@@ -496,7 +497,6 @@ class exponentialCoupledPotentials(_potential1DCls):
 
         """
 
-
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
         self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.eoffA: eoffA, self.eoffB: eoffB, self.s: s,
                           self.temp: temp}
@@ -518,7 +518,7 @@ class exponentialCoupledPotentials(_potential1DCls):
         self.constants.update({self.s: s})
         self._update_functions()
 
-    def set_Eoff(self, eoffA:float=0, eoffB:float=0):
+    def set_Eoff(self, eoffA: float = 0, eoffB: float = 0):
         """
             set_Eoff
                 set the energy offsets for the states in the reference state.
@@ -531,9 +531,9 @@ class exponentialCoupledPotentials(_potential1DCls):
             set a new E offset for state B in the reference state (default: None)
 
         """
-        if(eoffA is None):
+        if (eoffA is None):
             self.constants.update({self.eoffA: eoffA})
-        if(eoffB is None):
+        if (eoffB is None):
             self.constants.update({self.eoffB: eoffB})
         self._update_functions()
 
@@ -729,10 +729,10 @@ class envelopedPotential(_potential1DCls):
             self.constants.update({**sis})
         elif (len(s) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one s runs supported!")
-            #self._s = s
-            #self.constants.update({self.sis: self._s})
-            #sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
-            #self.constants.update({**sis})
+            # self._s = s
+            # self.constants.update({self.sis: self._s})
+            # sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
+            # self.constants.update({**sis})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
@@ -785,15 +785,16 @@ class envelopedPotential(_potential1DCls):
     def _logsumexp_calc(self, position):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
-        for state in range( self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
+        for state in range(self.constants[self.nStates]):
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
+                                 ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
-        #print("Prefactors", prefactors)
-        sum_prefactors = logsumexp(prefactors,axis=1)
-        #print("logexpsum: ", np.squeeze(sum_prefactors))
+        # print("Prefactors", prefactors)
+        sum_prefactors = logsumexp(prefactors, axis=1)
+        # print("logexpsum: ", np.squeeze(sum_prefactors))
 
         return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
 
@@ -845,7 +846,7 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
     name: str = "hybrid Coupled Potential"
     lam, position, s, T = sp.symbols(u'λ r s T')
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
-    beta = 1# const.gas_constant / 1000.0 * temp
+    beta = 1  # const.gas_constant / 1000.0 * temp
     coupling = -1 / (beta * s) * sp.log(lam * sp.exp(-beta * s * Vb) + (1 - lam) * sp.exp(-beta * s * Va))
 
     def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
@@ -964,17 +965,18 @@ class lambdaEDSPotential(envelopedPotential):
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
         if (isinstance(lam, Number) and self.constants[self.nStates] == 2):
-            self._lam_i = np.array([lam]+[1-lam for x in range(1,self.constants[self.nStates])], ndmin=1)
+            self._lam_i = np.array([lam] + [1 - lam for x in range(1, self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif(isinstance(lam, Number)): # a bit klunky here! TODO: think about a nice solution
-            self._lam_i = np.array([1/self.constants[self.nStates] for x in range(self.constants[self.nStates])], ndmin=1)
+        elif (isinstance(lam, Number)):  # a bit klunky here! TODO: think about a nice solution
+            self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])],
+                                   ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
         elif (len(lam) == self.constants[self.nStates]):
             raise NotImplementedError("Currently Only one lam runs supported!")
-            #self._lam_i = np.array(lam, ndmin=1)
-            #self.constants.update({self.lamis: self._lam_i})
+            # self._lam_i = np.array(lam, ndmin=1)
+            # self.constants.update({self.lamis: self._lam_i})
         else:
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 lam) + "\t states in Vi" + str(len(self.V_is)))
@@ -996,32 +998,31 @@ class lambdaEDSPotential(envelopedPotential):
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
         V_Is_dhdpos = np.array([-statePot.force(position) for statePot in self.V_is], ndmin=1).T
-        #print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
-        from scipy.special import softmax
+        # print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
         adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1).T
         # print("ADAPT: ",adapt.shape, adapt)
         # print(self.lam_i)
-        scaling = (np.array(self.lam_i,ndmin=2).T * (np.exp(V_Is_ene-adapt))).T
+        scaling = (np.array(self.lam_i, ndmin=2).T * (np.exp(V_Is_ene - adapt))).T
 
-        #print("scaling: ", scaling.shape, scaling)
-        dVdpos_state = scaling*V_Is_dhdpos
+        # print("scaling: ", scaling.shape, scaling)
+        dVdpos_state = scaling * V_Is_dhdpos
         # print("state_contributions: ",dVdpos_state.shape, dVdpos_state)
         dVdpos = np.sum(dVdpos_state, axis=1)
         # print("forces: ",dVdpos.shape, dVdpos)
 
         return np.squeeze(dVdpos)
 
-
     def _logsumexp_calc(self, position):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
-        for state in range( self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
+        for state in range(self.constants[self.nStates]):
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
+                                 ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
-        sum_prefactors = logsumexp(prefactors,axis=1, b=self.lam)
+        sum_prefactors = logsumexp(prefactors, axis=1, b=self.lam)
 
         return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
 
@@ -1120,6 +1121,8 @@ Biased potentials
 """
     TIME INDEPENDENT BIASES 
 """
+
+
 class addedPotentials(_potential1DCls):
     '''
     Adds two different potentials on top of each other. Can be used to generate
@@ -1173,7 +1176,8 @@ class metadynamicsPotential(_potential1DCls):
     position = sp.symbols("r")
     bias_potential = True
 
-    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=0.1, sigma=1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
+    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=0.1, sigma=1, n_trigger=100,
+                 bias_grid_min=0, bias_grid_max=10,
                  numbins=100):
 
         '''
@@ -1234,7 +1238,7 @@ class metadynamicsPotential(_potential1DCls):
     def apply_coupled(self):
         self.check_for_metastep(self.system._currentPosition)
 
-    def couple_system(self, system):
+    def couple_system(self, system: systemCls):
         self.system = system
 
     def check_for_metastep(self, curr_position):
@@ -1278,7 +1282,7 @@ class metadynamicsPotential(_potential1DCls):
 
         '''
         # do gaussian metadynamics
-        #print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
+        # print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
         biasPotential = self.biasPotentialType(A=self.amplitude, mu=curr_position, sigma=self.sigma)
         try:
             new_bias_bin_energy = biasPotential.ene(self.bin_centers)
@@ -1328,8 +1332,9 @@ class metadynamicsPotential(_potential1DCls):
         -------
         '''
 
-        current_bin = np.apply_over_axes(self._find_nearest, a= np.array(positions, ndmin=1), axes=0) #self._find_nearest(self.bin_centers, positions)
-        force= np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
+        current_bin = np.apply_over_axes(self._find_nearest, a=np.array(positions, ndmin=1),
+                                         axes=0)  # self._find_nearest(self.bin_centers, positions)
+        force = np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
         return force
 
     def _find_nearest(self, array, value):
@@ -1466,10 +1471,9 @@ class metadynamicsPotentialSympy(_potential1DCls):
         # count how often the potential was updated
         self.finished_steps = 0
 
-        self.constants={}
+        self.constants = {}
         self.constants.update(origPotential.constants)
         self.constants.update(self.biasPotential(A=self.amplitude, sigma=self.sigma).constants)
-
 
         self.V_orig = origPotential.V
         self.V = self.V_orig.subs(self.constants)

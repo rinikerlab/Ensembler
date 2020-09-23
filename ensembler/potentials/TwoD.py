@@ -8,6 +8,7 @@ import numpy as np
 import sympy as sp
 
 from ensembler.potentials._basicPotentials import _potential2DCls
+from ensembler.util.ensemblerTypes import systemCls
 
 
 class harmonicOscillatorPotential(_potential2DCls):
@@ -55,7 +56,7 @@ class harmonicOscillatorPotential(_potential2DCls):
             with multi-dimentionality.
         """
         # Parameters
-        nDimensions= self.constants[self.nDimensions]
+        nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
         self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(nDimensions)])
         self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(nDimensions)])
@@ -63,7 +64,7 @@ class harmonicOscillatorPotential(_potential2DCls):
         # Function
         self.V_dim = 0.5 * sp.matrix_multiply_elementwise(self.k, (
             (self.position - self.r_shift).applyfunc(lambda x: x ** 2)))  # +self.Voff
-        self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions- 1))
+        self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions - 1))
 
 
 class wavePotential(_potential2DCls):
@@ -103,7 +104,7 @@ class wavePotential(_potential2DCls):
         radians: bool, optional
             in radians or degrees, defaults to False
         """
-        nDimensions= 2
+        nDimensions = 2
         self.constants.update({"amp_" + str(j): amplitude[j] for j in range(nDimensions)})
         self.constants.update({"mult_" + str(j): multiplicity[j] for j in range(nDimensions)})
         self.constants.update({"yOff_" + str(j): y_offset[j] for j in range(nDimensions)})
@@ -124,7 +125,7 @@ class wavePotential(_potential2DCls):
             with multi-dimentionality.
         """
         # Parameters
-        nDimensions= self.constants[self.nDimensions]
+        nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
         self.multiplicity = sp.Matrix([sp.symbols("mult_" + str(i)) for i in range(nDimensions)])
         self.phase_shift = sp.Matrix([sp.symbols("phase_" + str(i)) for i in range(nDimensions)])
@@ -136,7 +137,7 @@ class wavePotential(_potential2DCls):
                                                     (sp.matrix_multiply_elementwise((self.position + self.phase_shift),
                                                                                     self.multiplicity)).applyfunc(
                                                         sp.cos)) + self.yOffset
-        self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions- 1))
+        self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions - 1))
 
     # OVERRIDE
     def _update_functions(self):
@@ -301,7 +302,7 @@ class gaussPotential(_potential2DCls):
     amplitude = sp.symbols("A_gauss")
 
     # we assume that the two dimentions are uncorrelated
-    #V_dim = amplitude * (sp.matrix_multiply_elementwise((position - mean) ** 2, (2 * sigma ** 2) ** (-1)).applyfunc(sp.exp))
+    # V_dim = amplitude * (sp.matrix_multiply_elementwise((position - mean) ** 2, (2 * sigma ** 2) ** (-1)).applyfunc(sp.exp))
     V_dim = amplitude * (sp.matrix_multiply_elementwise(-(position - mean).applyfunc(lambda x: x ** 2),
                                                         0.5 * (sigma).applyfunc(lambda x: x ** (-2))).applyfunc(sp.exp))
 
@@ -326,11 +327,10 @@ class gaussPotential(_potential2DCls):
         '''
         super().__init__()
 
-        nDimensions= 2
+        nDimensions = 2
         self.constants.update({"A_gauss": amplitude})
         self.constants.update({"mu_" + str(j): mu[j] for j in range(nDimensions)})
         self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDimensions)})
-
 
     def _initialize_functions(self):
         """
@@ -339,7 +339,7 @@ class gaussPotential(_potential2DCls):
             with multi-dimentionality.
         """
         # Parameters
-        nDimensions= self.constants[self.nDimensions]
+        nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
         self.mean = sp.Matrix([sp.symbols("mu_" + str(i)) for i in range(nDimensions)])
         self.sigma = sp.Matrix([sp.symbols("sigma_" + str(i)) for i in range(nDimensions)])
@@ -406,6 +406,7 @@ class addedPotentials(_potential2DCls):
     TIME DEPENDENT BIASES 
 """
 
+
 class metadynamicsPotential(_potential2DCls):
     '''
     The metadynamics bias potential adds 2D Gaussian potentials on top of
@@ -421,7 +422,8 @@ class metadynamicsPotential(_potential2DCls):
     system: systemCls  # metadyn-coupled to system
     bias_potential = True
 
-    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
+    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=1., sigma=(1., 1.), n_trigger=100,
+                 bias_grid_min=(0, 0),
                  bias_grid_max=(10, 10), numbins=(100, 100)):
         '''
 
@@ -480,14 +482,12 @@ class metadynamicsPotential(_potential2DCls):
     BIAS
     '''
 
-    #Beautiful integration to system as Condition.
+    # Beautiful integration to system as Condition.
     def apply(self):
         self.check_for_metastep(self.system._currentPosition)
 
-
     def apply_coupled(self):
         self.check_for_metastep(self.system._currentPosition)
-
 
     def couple_system(self, system):
         self.system = system
@@ -549,9 +549,10 @@ class metadynamicsPotential(_potential2DCls):
         '''
         current_bin_x = self._find_nearest(self.x_centers, np.array(np.array(positions, ndmin=1).T[0], ndmin=1))
         current_bin_y = self._find_nearest(self.y_centers, np.array(np.array(positions, ndmin=1).T[1], ndmin=1))
-        enes = np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
+        enes = np.squeeze(
+            self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
         biases = self.bias_grid_energy[current_bin_y, current_bin_x]
-        return np.squeeze(enes+biases)
+        return np.squeeze(enes + biases)
 
     def force(self, positions):
         '''
@@ -572,8 +573,9 @@ class metadynamicsPotential(_potential2DCls):
         current_bin_x = self._find_nearest(self.y_centers, x_vals)
         current_bin_y = self._find_nearest(self.y_centers, y_vals)
 
-        dvdpos = np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
-        return np.squeeze(dvdpos + self.bias_grid_force[:, current_bin_y,current_bin_x].T)
+        dvdpos = np.squeeze(
+            self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        return np.squeeze(dvdpos + self.bias_grid_force[:, current_bin_y, current_bin_x].T)
 
     def _find_nearest(self, array, value):
         '''
