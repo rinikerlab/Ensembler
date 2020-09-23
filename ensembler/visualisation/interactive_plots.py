@@ -2,7 +2,7 @@ import ipywidgets
 import numpy as np
 from matplotlib import pyplot as plt
 
-from IPython import display
+from IPython.display import display
 from ensembler.potentials import ND as potN
 from ensembler.potentials import OneD as pot
 from ensembler.visualisation.plotConveyorBelt import plotEnsembler
