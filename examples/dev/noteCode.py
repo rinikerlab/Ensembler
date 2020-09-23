@@ -18,7 +18,7 @@ fig, outpath = plot_1DPotential(potential=V, positions=positions, title="Four We
 from ensembler.potentials.OneD import fourWellPotential
 from ensembler.samplers.stochastic import langevinIntegrator
 from ensembler.system import system
-from ensembler.visualisation.plotSimulations import static_sim_plots
+from ensembler.visualisation.plotSimulations import oneD_simulation_analysis_plot
 
 ##Simulation Setup
 V = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
@@ -32,7 +32,7 @@ sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-static_sim_plots(system=sys, title="Langevin Simulation", limits_coordinate_space=positions)
+oneD_simulation_analysis_plot(system=sys, title="Langevin Simulation", limits_coordinate_space=positions)
 
 
 
@@ -42,7 +42,7 @@ static_sim_plots(system=sys, title="Langevin Simulation", limits_coordinate_spac
 from ensembler.potentials.OneD import fourWellPotential, metadynamicsPotential
 from ensembler.samplers.stochastic import langevinIntegrator
 from ensembler.system import system
-from ensembler.visualisation.plotSimulations import static_sim_plots
+from ensembler.visualisation.plotSimulations import oneD_simulation_analysis_plot
 
 ##Simulation Setup
 origpot = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
@@ -57,4 +57,4 @@ sys.simulate(steps=1000)
 
 ##Visualize
 positions = np.linspace(start=0, stop=10, num=1000) #phase space to be visualized
-static_sim_plots(system=sys, title="Local Elevation/Metadynamics Simulation", limits_coordinate_space=positions)
+oneD_simulation_analysis_plot(system=sys, title="Local Elevation/Metadynamics Simulation", limits_coordinate_space=positions)

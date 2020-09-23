@@ -5,16 +5,17 @@
 """
 import numpy as np
 import pandas as pd
+from scipy import constants as const
 from tqdm.notebook import tqdm
 
 from ensembler import potentials as pot
-from ensembler.ensemble._replica_graph import _replicaExchange
+from ensembler.ensemble._replica_graph import _mutliReplicaApproach
 from ensembler.samplers import stochastic
 from ensembler.system import perturbed_system
 from ensembler.util.ensemblerTypes import systemCls, Dict, Tuple, NoReturn
 
 
-class conveyorBelt(_replicaExchange):
+class conveyorBelt(_mutliReplicaApproach):
     """
             Conveyor belt ensemble class
         organizes the replicas and their coupling
@@ -30,9 +31,22 @@ class conveyorBelt(_replicaExchange):
     exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
     system_trajs: dict = {}
 
+    _default_metropolis_criterion = lambda self, originalParams, swappedParams: (
+            np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams,
+                                                                                        swappedParams))
+    exchange_criterium = _default_metropolis_criterion
+
+    ###random part of Metropolis Criterion:
+    _randomness_factor = 0.1
+    _temperature_exchange: float = 298
+    _default_randomness = lambda self, originalParams, swappedParams: (
+            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
+        -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
+                originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
+
+
     def __str__(self):
         outstr = ''
-        print(self.replicas)
         for i in self.replicas:
             outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLambda,
                                                         float(self.replicas[i].getTotEnergy()))
@@ -42,7 +56,7 @@ class conveyorBelt(_replicaExchange):
         return self.__str__()
 
     def __init__(self, capital_lambda: float, n_replicas: int,
-                 system: systemCls = perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
+                 system:systemCls = perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
                                                                       potential=pot.OneD.linearCoupledPotentials(),
                                                                       sampler=stochastic.metropolisMonteCarloIntegrator()),
                  build: bool = False):
@@ -63,8 +77,8 @@ class conveyorBelt(_replicaExchange):
 
         assert 0.0 <= capital_lambda <= 2 * np.pi, "capital_lambda not allowed"
         assert n_replicas >= 1, "At least one system is needed"
+        super().__init__()
 
-        self.nReplicas = n_replicas
         self.system = system
         self.capital_lambda = capital_lambda
         self.build = build  # build

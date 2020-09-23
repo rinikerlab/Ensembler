@@ -1,0 +1,480 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.conditions.thermostats &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.conditions.thermostats</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.conditions.thermostats</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">const</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">maxwell</span>
+
+<span class="kn">from</span> <span class="nn">ensembler.conditions._basicCondition</span> <span class="kn">import</span> <span class="n">_conditionCls</span>
+<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">systemCls</span> <span class="k">as</span> <span class="n">systemType</span>
+
+
+<div class="viewcode-block" id="thermostat"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.thermostat">[docs]</a><span class="k">class</span> <span class="nc">thermostat</span><span class="p">(</span><span class="n">_conditionCls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thermostat</span>
+<span class="sd">        This is the parent class of Thermostats.</span>
+<span class="sd">        The apply function of this class is not implemented and needs to be overwritten by each subclass.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_currentTemperature</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemType</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="andersonThermostat"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.andersonThermostat">[docs]</a><span class="k">class</span> <span class="nc">andersonThermostat</span><span class="p">(</span><span class="n">thermostat</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; -UnderConstuction-</span>
+<span class="sd">    andersenThermostat </span>
+<span class="sd">        This thermostat was developed by anderson 1980 and is also called stochastic collisions method.</span>
+<span class="sd">        This method is optimal for single particle simulations as it tries to simulate a particle that collides with virtual particles from  a temperature bath.</span>
+<span class="sd">        At each collision, the velocity and the interval of the next collision is randomly reassigned and reselected from a Maxwell-Boltzmann distribution.</span>
+<span class="sd">        This applying the thermostat leads to an at least microcanonical Simulation. Simulated energies should be gaussian distributed.</span>
+
+<span class="sd">        [Molecular Modelling Principles and Applications, A. R. Leach, second edition]</span>
+<span class="sd">        FIX MAXWWELL POSITIONING!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># collision parameters</span>
+    <span class="n">kb</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span>
+    <span class="n">a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># dimensionless constant</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># thermal konductivity</span>
+    <span class="n">N_dens</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># particle density</span>
+    <span class="n">N</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># particle</span>
+
+    <span class="c1"># temperaturebath:</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span>  <span class="c1"># desired temperature area</span>
+    <span class="n">temperature_noise_range</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">_new_temperature</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># scaling factor for velocities</span>
+
+    <span class="sd">&quot;&quot;&quot;Under COnstructurion&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="andersonThermostat.__init__"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.andersonThermostat.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span> <span class="n">temperature_noise_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">MConstraintsDims</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">system</span><span class="p">:</span> <span class="n">systemType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">kb</span><span class="o">=</span><span class="n">const</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N_dens</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">N</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __This Thermostat is underconstruction! __</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        temperature : float, optional</span>
+<span class="sd">            desired temperature</span>
+<span class="sd">        temperature_noise_range : float, optional</span>
+<span class="sd">            noise range</span>
+<span class="sd">        MConstraintsDims :</span>
+<span class="sd">        system : system, optional</span>
+<span class="sd">            a system, that shall be thermostated</span>
+<span class="sd">        tau : int, optional</span>
+<span class="sd">            every n step apply thermostat</span>
+<span class="sd">        kb : float, optional</span>
+<span class="sd">            boltzman constant</span>
+<span class="sd">        a : float, optional</span>
+<span class="sd">            collision parameter</span>
+<span class="sd">        k : float, optional</span>
+<span class="sd">            collision parameter</span>
+<span class="sd">        N_dens : float, optional</span>
+<span class="sd">            virtual particle density</span>
+<span class="sd">        N : int, optional</span>
+<span class="sd">            virtual particle number</span>
+<span class="sd">        verbose : bool, optional</span>
+<span class="sd">            I can be loud and noisy!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;__Under construction___!&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Collision parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">=</span> <span class="n">kb</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">a</span>  <span class="c1"># dimensionless constant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>  <span class="c1"># thermal konductivity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N_dens</span> <span class="o">=</span> <span class="n">N_dens</span>  <span class="c1"># particle density</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">=</span> <span class="n">N</span>  <span class="c1"># particle</span>
+
+        <span class="c1"># Temperature Scalingparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature_noise_range</span> <span class="o">=</span> <span class="n">temperature_noise_range</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">MConstraintsDims</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">system</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">temperature</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_collision</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">p_collision</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">kb</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_dens</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N</span> <span class="o">**</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+        <span class="n">collision</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="n">p_collision</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_collision</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">collision</span>
+
+    <span class="k">def</span> <span class="nf">_rescale_velocities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">orig_vels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span>
+        <span class="n">new_vels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="n">orig_vels</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="n">orig_vels</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0001</span>  <span class="c1"># do not allow 0 vel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span> <span class="o">=</span> <span class="n">new_vels</span>
+
+    <span class="k">def</span> <span class="nf">_calculate_scaling_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># pick new temperature randomly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_temperature</span> <span class="o">=</span> <span class="n">maxwell</span><span class="o">.</span><span class="n">rvs</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature_noise_range</span><span class="p">,</span>
+                                            <span class="n">scale</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temperature_noise_range</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_currentTemperature</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentTemperature</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentTemperature</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.000001</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentTemperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_temperature</span>
+        <span class="c1"># scaling factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_temperature</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTemperature</span>  <span class="c1"># (1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5</span>
+
+<div class="viewcode-block" id="andersonThermostat.apply_coupled"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.andersonThermostat.apply_coupled">[docs]</a>    <span class="k">def</span> <span class="nf">apply_coupled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_collision</span><span class="p">()):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_scaling_factor</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rescale_velocities</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;THERMOSTAT: get to temp: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentTemperature</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                                                    <span class="s1">&#39;THERMOSTAT: tot_kin: &#39;</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">calculate_total_kinetic_energy</span><span class="p">(),</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                            <span class="s2">&quot;THERMOSTAT: lambda: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                                                  <span class="s2">&quot;THERMOSTAT: current_Velocity: &quot;</span><span class="p">,</span>
+                      <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                      <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="berendsenThermostate"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.berendsenThermostate">[docs]</a><span class="k">class</span> <span class="nc">berendsenThermostate</span><span class="p">(</span><span class="n">thermostat</span><span class="p">):</span>
+
+<div class="viewcode-block" id="berendsenThermostate.__init__"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.berendsenThermostate.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tau</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">MConstraintsDims</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemType</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            __under contsruction! __</span>
+<span class="sd">            This thermostat is not tested, no guarantee for correctness!</span>
+<span class="sd">                reference: Molecular dynamics with coupling to an external bath; H.J.C. Berendsen</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tau : int, optional</span>
+<span class="sd">            apply every n steps.</span>
+<span class="sd">        dt : float, optional</span>
+<span class="sd">            time step</span>
+<span class="sd">        MConstraintsDims : int, optional</span>
+<span class="sd">            number of dimensions</span>
+<span class="sd">        system : system, optional</span>
+<span class="sd">            a target system to be thermostated</span>
+<span class="sd">        verbose : bool, optional</span>
+<span class="sd">            More output? You want more output?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># scaling factor of velocities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">=</span> <span class="n">MConstraintsDims</span></div>
+
+
+
+<div class="viewcode-block" id="berendsenThermostate.apply_coupled"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.berendsenThermostate.apply_coupled">[docs]</a>    <span class="k">def</span> <span class="nf">apply_coupled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_current_temperature</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_scaling_factor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rescale_velocities</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;THERMOSTAT: get to temp: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                                        <span class="s1">&#39;THERMOSTAT: tot_kin: &#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">calculate_total_kinetic_energy</span><span class="p">(),</span>
+                  <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                  <span class="s2">&quot;THERMOSTAT: curr temp: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                                       <span class="s2">&quot;THERMOSTAT: lambda: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                                                                             <span class="s2">&quot;THERMOSTAT: current_Velocity: &quot;</span><span class="p">,</span>
+                  <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                                  <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_rescale_velocities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">orig_vels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span>
+        <span class="n">new_vels</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span><span class="p">)</span> <span class="o">*</span> <span class="n">orig_vels</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">*</span> <span class="n">orig_vels</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0001</span>  <span class="c1"># do not allow 0 vel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span> <span class="o">=</span> <span class="n">new_vels</span>
+
+<div class="viewcode-block" id="berendsenThermostate._calculate_current_temperature"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.berendsenThermostate._calculate_current_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_current_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        autofunction: _calculate current Temperature (eq. 32,33)</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># M = constraints</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">nparticles</span> <span class="o">*</span> <span class="n">const</span><span class="o">.</span><span class="n">Avogadro</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">N</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">M</span> <span class="o">-</span> <span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">calculate_total_kinetic_energy</span><span class="p">()</span> <span class="o">*</span> <span class="n">N</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">_currentTemperature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span></div>
+
+<div class="viewcode-block" id="berendsenThermostate._calculate_scaling_factor"><a class="viewcode-back" href="../../../_source/ensembler.conditions.html#ensembler.conditions.thermostats.berendsenThermostate._calculate_scaling_factor">[docs]</a>    <span class="k">def</span> <span class="nf">_calculate_scaling_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        autofunction: _calculate_scaling_factor</span>
+<span class="sd">            (eq.34)</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">T_t</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_temperatur</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.000001</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lambda</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">temperature</span> <span class="o">/</span> <span class="n">T_t</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span></div></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">class nhIntegrator(samplers): Nosehover-leapfrog</span>
+<span class="sd">    def scaleVel(self, sys):</span>
+<span class="sd">        freetemp = 2.0 / const.gas_constant / 1000.0 * sys.mu * sys.new_velocity ** 2  # t+0.5Dt</span>
+<span class="sd">        self.oldxi = self.xi  # t-0.5Dt</span>
+<span class="sd">        self.xi += self.dt / (self.tau * self.tau) * (freetemp / sys.temp - 1.0)  # t+0.5t</span>
+<span class="sd">        scale = 1.0 - self.xi * self.dt</span>
+<span class="sd">        return scale</span>
+
+<span class="sd">    def step(self, sys):</span>
+<span class="sd">        sys.pos = sys.newpos  # t</span>
+<span class="sd">        sys.force = -sys.pot.dhdpos(sys.lam, sys.pos)  # t</span>
+<span class="sd">        sys.oldvel = sys.new_velocity  # t - 0.5 Dt</span>
+<span class="sd">        sys.new_velocity += sys.force / sys.mu * self.dt  # t+0.5t</span>
+<span class="sd">        sys.new_velocity *= self.scaleVel(sys)</span>
+<span class="sd">        sys.vel = 0.5 * (sys.oldvel + sys.new_velocity)</span>
+<span class="sd">        sys.newpos += self.dt * sys.new_velocity  # t+Dt</span>
+<span class="sd">        sys.veltemp = sys.mu / const.gas_constant/1000.0 * sys.vel ** 2  # t</span>
+<span class="sd">        sys.updateEne()</span>
+<span class="sd">        return [sys.pos, sys.vel, sys.veltemp, sys.totkin, sys.totpot, sys.totene, sys.lam, sys.dhdlam]</span>
+
+<span class="sd">    def __init__(self, xi=0.0, tau=0.1, dt=1e-1):</span>
+<span class="sd">        self.xi = xi</span>
+<span class="sd">        self.oldxi = xi</span>
+<span class="sd">        self.tau = tau</span>
+<span class="sd">        self.dt = dt</span>
+<span class="sd">        raise NotImplementedError(&quot;This &quot;+__class__+&quot; class is not implemented&quot;)</span>
+
+<span class="sd">class hmcIntegrator(samplers):</span>
+<span class="sd">    def step(self, sys):</span>
+<span class="sd">        accept = 0</span>
+<span class="sd">        oldene = sys.totene</span>
+<span class="sd">        oldpos = sys.pos  # t</span>
+<span class="sd">        oldvel = sys.vel</span>
+<span class="sd">        sys.initVel()  # t-0.5Dt</span>
+<span class="sd">        for i in range(self.steps):</span>
+<span class="sd">            sys.pos += self.dt * sys.new_velocity  # t</span>
+<span class="sd">            force = -sys.pot.dhdpos(sys.lam, sys.pos)  # t</span>
+<span class="sd">            sys.vel = (oldvel + sys.new_velocity) / 2.0</span>
+<span class="sd">            sys.veltemp = sys.mu / const.gas_constant / 1000.0 * sys.vel ** 2  # t</span>
+<span class="sd">            sys.updateEne()</span>
+<span class="sd">            oldvel = sys.new_velocity</span>
+<span class="sd">            sys.new_velocity += force / sys.mu * self.dt  # t+0.5t</span>
+<span class="sd">        accept = 0</span>
+<span class="sd">        if sys.totene &lt; oldene:</span>
+<span class="sd">            accept = 1</span>
+<span class="sd">        else:</span>
+<span class="sd">            if np.random.rand() &lt;= np.exp(-1 / (const.gas_constant / 1000.0* sys.temp) * (sys.totene - oldene)):</span>
+<span class="sd">                accept = 1</span>
+<span class="sd">        if accept == 0:</span>
+<span class="sd">            sys.pos = oldpos</span>
+<span class="sd">            sys.vel = oldvel</span>
+<span class="sd">            sys.veltemp = sys.mu / const.gas_constant * sys.vel ** 2  # t</span>
+<span class="sd">            sys.updateEne()</span>
+<span class="sd">        return [sys.pos, sys.vel, sys.veltemp, sys.totkin, sys.totpot, sys.totene, sys.lam, sys.dhdlam]</span>
+
+<span class="sd">    def __init__(self, steps=5, dt=1e-1):</span>
+<span class="sd">        self.steps = steps</span>
+<span class="sd">        self.dt = dt</span>
+<span class="sd">        raise NotImplementedError(&quot;This &quot;+__class__+&quot; class is not implemented&quot;)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,1050 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.visualisation.plotPotentials &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../visualisation.html">ensembler.visualisation</a> &raquo;</li>
+        
+      <li>ensembler.visualisation.plotPotentials</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.visualisation.plotPotentials</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">numbers</span> <span class="kn">import</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span><span class="p">,</span> <span class="n">colorbar</span>
+
+<span class="kn">import</span> <span class="nn">ensembler.potentials.TwoD</span> <span class="k">as</span> <span class="nn">pot2D</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials</span> <span class="kn">import</span> <span class="n">OneD</span> <span class="k">as</span> <span class="n">pot</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials._basicPotentials</span> <span class="kn">import</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">_potential1DClsPerturbed</span>
+<span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">plot_layout_settings</span>
+<span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">style</span>
+
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">plot_layout_settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+
+<span class="c1"># UTIL FUNCTIONS</span>
+<div class="viewcode-block" id="significant_decimals"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.significant_decimals">[docs]</a><span class="k">def</span> <span class="nf">significant_decimals</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">significant_decimal</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">%</span> <span class="mi">1</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">decimals</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">digit</span> <span class="ow">in</span> <span class="n">decimals</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">digit</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">):</span>
+                <span class="n">significant_decimal</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">significant_decimal</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> 1D Plotting Functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="plot_1DPotential_V"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_V">[docs]</a><span class="k">def</span> <span class="nf">plot_1DPotential_V</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yUnit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;kT&quot;</span><span class="p">):</span>
+    <span class="c1"># generat Data</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+
+    <span class="c1"># is there already a figure?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># plot</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">color</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">energies</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">x_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">energies</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$r$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$V</span><span class="se">\\</span><span class="s1"> [&#39;</span> <span class="o">+</span> <span class="n">yUnit</span> <span class="o">+</span> <span class="s1">&#39;]$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_1DPotential_dhdpos"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_dhdpos">[docs]</a><span class="k">def</span> <span class="nf">plot_1DPotential_dhdpos</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                            <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yUnit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;kT&quot;</span><span class="p">):</span>
+    <span class="c1"># generat Data</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">force</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+
+    <span class="c1"># is there already a figure?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># plot</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">x_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">energies</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">energies</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$r$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$\partial V / \partial r</span><span class="se">\\</span><span class="s1"> [&#39;</span> <span class="o">+</span> <span class="n">yUnit</span> <span class="o">+</span> <span class="s1">&#39;]$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<div class="viewcode-block" id="plot_1DPotential"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential">[docs]</a><span class="k">def</span> <span class="nf">plot_1DPotential</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plot_1DPotential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_range</span><span class="o">=</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="n">y_range</span><span class="p">,</span>
+                       <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">plot_1DPotential_dhdpos</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x_range</span><span class="o">=</span><span class="n">x_range</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="n">y_range</span><span class="p">,</span>
+                            <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.96</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span></div>
+
+
+<div class="viewcode-block" id="plot_1DPotential_Termoverlay"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_Termoverlay">[docs]</a><span class="k">def</span> <span class="nf">plot_1DPotential_Termoverlay</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                 <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># generate dat</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+    <span class="n">dVdpos</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">force</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+
+    <span class="c1"># is there already a figure?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">color1</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">color2</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;V&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">abs</span><span class="p">,</span> <span class="n">dVdpos</span><span class="p">)),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;absdVdpos&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">dVdpos</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;dVdpos&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">x_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_range</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">energies</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">dVdpos</span><span class="p">)]),</span>
+                                                                                  <span class="nb">max</span><span class="p">([</span><span class="nb">max</span><span class="p">(</span><span class="n">energies</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">dVdpos</span><span class="p">)]))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$V/kJ$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span> <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> 2D Plotting Functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="plot_2DPotential"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2DPotential">[docs]</a><span class="k">def</span> <span class="nf">plot_2DPotential</span><span class="p">(</span><span class="n">V</span><span class="p">:</span> <span class="n">pot2D</span><span class="o">.</span><span class="n">_potential2DCls</span><span class="p">,</span> <span class="n">positions2D</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="n">x_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">y_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                     <span class="n">point_resolution</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span>
+                     <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">):</span>
+    <span class="c1"># build positions</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">positions2D</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="n">point_resolution</span><span class="p">)</span>
+        <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># landscapes</span>
+    <span class="n">V_pots</span> <span class="o">=</span> <span class="n">V</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+    <span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">V_pots</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">V_pots</span><span class="p">)</span>
+    <span class="n">V_land</span> <span class="o">=</span> <span class="n">V_pots</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+
+    <span class="c1"># make Figure</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">V_land</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential Landscape&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="c1"># color bar:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">,</span>
+                          <span class="n">ticks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">2</span><span class="p">)))</span>
+        <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;V/[kT]&quot;</span><span class="p">)</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">show_plot</span><span class="p">):</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">surf</span></div>
+
+
+<div class="viewcode-block" id="plot_2DEnergy_landscape"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2DEnergy_landscape">[docs]</a><span class="k">def</span> <span class="nf">plot_2DEnergy_landscape</span><span class="p">(</span><span class="n">potential1</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">potential2</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions1</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                            <span class="n">positions2</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                            <span class="n">cmap</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">):</span>
+    <span class="c1"># generat Data</span>
+    <span class="n">energy_map</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">min_E</span><span class="p">,</span> <span class="n">max_E</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">positions2</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)):</span>
+        <span class="n">positions2</span> <span class="o">=</span> <span class="n">positions1</span>
+
+    <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">positions2</span><span class="p">:</span>
+        <span class="n">Va</span> <span class="o">=</span> <span class="n">potential2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">pos</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Vb</span> <span class="o">=</span> <span class="n">potential1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions1</span><span class="p">)</span>
+        <span class="n">Vtot</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">Va</span><span class="p">,</span> <span class="n">Vb</span><span class="p">))</span>
+        <span class="n">energy_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Vtot</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">Vtot</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_E</span><span class="p">):</span>
+            <span class="n">min_E</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">Vtot</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">Vtot</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_E</span><span class="p">):</span>
+            <span class="n">max_E</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">Vtot</span><span class="p">)</span>
+
+    <span class="n">energy_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">energy_map</span><span class="p">)</span>
+
+    <span class="c1"># is there already a figure?</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">colbar</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">z_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">z_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">min_E</span><span class="p">,</span> <span class="n">max_E</span><span class="p">]</span>
+
+    <span class="c1"># plot</span>
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energy_map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+                     <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">positions1</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions1</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2</span><span class="p">)],</span>
+                     <span class="n">vmax</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">z_range</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=</span><span class="nb">min</span><span class="p">(</span><span class="n">z_range</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">colbar</span> <span class="ow">and</span> <span class="n">fig</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Energy/kJ&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">x_range</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">y_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y_range</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$x1$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$x2$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">surf</span></div>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> MultiState Plotting Functions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="c1"># 1D</span>
+
+<div class="viewcode-block" id="multiState_overlays"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.multiState_overlays">[docs]</a><span class="k">def</span> <span class="nf">multiState_overlays</span><span class="p">(</span><span class="n">states</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">500</span><span class="p">),</span> <span class="n">y_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                        <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Multiple state overlay&quot;</span><span class="p">,</span> <span class="n">label_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_1DPotential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">states</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">plot_1DPotential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">state</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">plot_1DPotential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">states</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">):</span>
+        <span class="n">line</span><span class="o">.</span><span class="n">_label</span> <span class="o">=</span> <span class="n">label_prefix</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">chr</span><span class="p">(</span><span class="n">num</span> <span class="o">+</span> <span class="mi">65</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span></div>
+
+
+<div class="viewcode-block" id="plot_2perturbedEnergy_landscape"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2perturbedEnergy_landscape">[docs]</a><span class="k">def</span> <span class="nf">plot_2perturbedEnergy_landscape</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DClsPerturbed</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">lambdas</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                    <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span>
+                                    <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lam_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">colbar</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">energy_map_lin</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">lambdas</span><span class="p">:</span>
+        <span class="n">potential</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">energy_map_lin</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+    <span class="n">energy_map_lin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">energy_map_lin</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+        <span class="n">colbar</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energy_map_lin</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+                     <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">lambdas</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lambdas</span><span class="p">)],</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                     <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">colbar</span><span class="p">):</span>
+        <span class="n">colorbar</span><span class="o">.</span><span class="n">Colorbar</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">surf</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Energy&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">x_range</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x_range</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lam_range</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">lam_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">lam_range</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$\lambda$&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">surf</span></div>
+
+
+<span class="c1"># show feature landscape per s</span>
+<div class="viewcode-block" id="envPot_differentS_overlay_min0_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_differentS_overlay_min0_plot">[docs]</a><span class="k">def</span> <span class="nf">envPot_differentS_overlay_min0_plot</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">s_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                        <span class="n">y_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hide_legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># generate energy values</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 0.1</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">s_values</span><span class="p">:</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">enes</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">y_min</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">enes</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">z</span><span class="p">:</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">enes</span><span class="p">))</span>
+        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># plotting</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">s_values</span><span class="p">,</span> <span class="n">ys</span><span class="p">)))):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">))</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;s_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">significant_decimals</span><span class="p">(</span><span class="n">s</span><span class="p">)),</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+
+    <span class="c1"># styling</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Vr/[kJ]&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;different Vrs aligned at 0 with different s-values overlayed &quot;</span><span class="p">)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">hide_legend</span><span class="p">):</span> <span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<span class="c1"># show feature landscape per s</span>
+<div class="viewcode-block" id="envPot_differentS_overlay_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_differentS_overlay_plot">[docs]</a><span class="k">def</span> <span class="nf">envPot_differentS_overlay_plot</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">s_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                   <span class="n">y_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hide_legend</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># generate energy values</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">s_values</span><span class="p">:</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">enes</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">enes</span><span class="p">)</span>
+
+    <span class="c1"># plotting</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">s_values</span><span class="p">,</span> <span class="n">ys</span><span class="p">)))):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">))</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;s_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">significant_decimals</span><span class="p">(</span><span class="n">s</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="c1"># styling</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Vr/[kJ]&quot;</span><span class="p">)</span>
+    <span class="n">axes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;different $V_</span><span class="si">{r}</span><span class="s2">$s with different s-values overlayed &quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span> <span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">hide_legend</span><span class="p">):</span> <span class="n">axes</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span> <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<div class="viewcode-block" id="envPot_diffS_compare"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_diffS_compare">[docs]</a><span class="k">def</span> <span class="nf">envPot_diffS_compare</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">s_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                         <span class="n">y_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1">##row/column ratio</span>
+    <span class="n">per_row</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">//</span> <span class="n">per_row</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">%</span> <span class="n">per_row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">//</span> <span class="n">per_row</span><span class="p">)</span>
+
+    <span class="c1">##plot</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">per_row</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax_row</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">ax_row</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">s_values</span><span class="p">)):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">))</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+
+        <span class="c1"># styling</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;s_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">significant_decimals</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Vr/[kJ]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">y_range</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<div class="viewcode-block" id="plot_envelopedPotential_system"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_envelopedPotential_system">[docs]</a><span class="k">def</span> <span class="nf">plot_envelopedPotential_system</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">s_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">Eoffi</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">y_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">s_value</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s_value</span>  <span class="c1"># set new s</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Eoffi</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Eoffi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">)):</span>
+            <span class="n">eds_potential</span><span class="o">.</span><span class="n">Eoff_i</span> <span class="o">=</span> <span class="n">Eoffi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;There are &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; states and &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">Eoffi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, but the numbers have to be equal!&quot;</span><span class="p">)</span>
+
+    <span class="c1">##calc energies</span>
+    <span class="n">energy_Vr</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+    <span class="n">energy_Vis</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">]</span>
+    <span class="n">num_states</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">)</span>
+
+    <span class="c1">##plot nicely</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax_row</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">ax_row</span><span class="p">]</span>
+    <span class="n">y_values</span> <span class="o">=</span> <span class="n">energy_Vis</span> <span class="o">+</span> <span class="p">[</span><span class="n">energy_Vr</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;state_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">energy_Vis</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;refState&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">labels</span><span class="p">)):</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_range</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Vr/[kJ]&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;r_&quot;</span> <span class="o">+</span> <span class="n">label</span><span class="p">)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<div class="viewcode-block" id="plot_envelopedPotential_2State_System"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_envelopedPotential_2State_System">[docs]</a><span class="k">def</span> <span class="nf">plot_envelopedPotential_2State_System</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">s_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">Eoffi</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">V_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+                                          <span class="n">V_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot; can only be used with two states in the potential!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">s_value</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">s_value</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">Eoffi</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Eoffi</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">)):</span>
+            <span class="n">eds_potential</span><span class="o">.</span><span class="n">Eoff_i</span> <span class="o">=</span> <span class="n">Eoffi</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;There are &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; states and &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">Eoffi</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, but the numbers have to be equal!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Calculate energies</span>
+    <span class="n">energy_Vr</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+    <span class="n">energy_Vis</span> <span class="o">=</span> <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">V_is</span><span class="p">]</span>
+    <span class="n">energy_map</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">min_e</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="p">[[</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">]],</span> <span class="nb">list</span><span class="p">(</span><span class="n">positions</span><span class="p">))))</span>
+        <span class="n">row_cut</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">V_max</span> <span class="k">if</span> <span class="p">(</span><span class="n">V_max</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">V_max</span><span class="p">)</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">row</span><span class="p">))</span>
+        <span class="n">energy_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_cut</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_e</span><span class="p">):</span>
+            <span class="n">min_e</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">V_min</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">V_min</span> <span class="o">=</span> <span class="n">min_e</span>
+
+    <span class="c1">##plot nicely</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax_row</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">ax_row</span><span class="p">]</span>
+    <span class="n">y_values</span> <span class="o">=</span> <span class="n">energy_Vis</span> <span class="o">+</span> <span class="p">[</span><span class="n">energy_Vr</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;State_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">)</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">energy_Vis</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;State_R&quot;</span><span class="p">]</span>
+
+    <span class="c1"># plot the line potentials</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;steelblue&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;forestgreen&quot;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">y_values</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">V_min</span><span class="p">,</span> <span class="n">V_max</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential $&quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$V/[kJ]$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$r_{ &quot;</span> <span class="o">+</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;} $&quot;</span><span class="p">)</span>
+
+    <span class="c1"># plot phase space surface</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energy_map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+                     <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">)],</span>
+                     <span class="n">vmax</span><span class="o">=</span><span class="n">V_max</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">V_min</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$r_{&quot;</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$r_{&quot;</span> <span class="o">+</span> <span class="n">labels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;}$&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;complete phaseSpace of $state_R$&quot;</span><span class="p">)</span>
+    <span class="c1"># fig.colorbar(surf, aspect=5, label=&#39;Energy/kJ&#39;)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<div class="viewcode-block" id="envPot_diffS_2stateMap_compare"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_diffS_2stateMap_compare">[docs]</a><span class="k">def</span> <span class="nf">envPot_diffS_2stateMap_compare</span><span class="p">(</span><span class="n">eds_potential</span><span class="p">:</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">s_values</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+                                   <span class="n">V_max</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">V_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="c1">##row/column ratio</span>
+    <span class="n">per_row</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">n_rows</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">//</span> <span class="n">per_row</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">%</span> <span class="n">per_row</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s_values</span><span class="p">)</span> <span class="o">//</span> <span class="n">per_row</span><span class="p">)</span>
+
+    <span class="c1">##plot</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="n">n_rows</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="n">per_row</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span> <span class="k">for</span> <span class="n">ax_row</span> <span class="ow">in</span> <span class="n">axes</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">ax_row</span><span class="p">]</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">s_values</span><span class="p">):</span>
+        <span class="n">eds_potential</span><span class="o">.</span><span class="n">s_i</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">min_e</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">energy_map</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">positions</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">eds_potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="p">[[</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">]],</span> <span class="nb">list</span><span class="p">(</span><span class="n">positions</span><span class="p">))))</span>
+            <span class="n">row_cut</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">V_max</span> <span class="k">if</span> <span class="p">(</span><span class="n">V_max</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">V_max</span><span class="p">)</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">row</span><span class="p">))</span>
+            <span class="n">energy_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_cut</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">row</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_e</span><span class="p">):</span>
+                <span class="n">min_e</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">V_min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">first</span><span class="p">):</span>
+            <span class="n">V_min</span> <span class="o">=</span> <span class="n">min_e</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;emin: &quot;</span><span class="p">,</span> <span class="n">min_e</span><span class="p">)</span>
+
+        <span class="c1"># plot phase space surface</span>
+        <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energy_map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+                         <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions</span><span class="p">)],</span>
+                         <span class="n">vmax</span><span class="o">=</span><span class="n">V_max</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">V_min</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$r_1$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$r_2$&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;complete phaseSpace of $state_R$&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Energy/kJ&#39;</span><span class="p">)</span>
+
+    <span class="c1">##optionals</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">title</span><span class="p">):</span>    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span></div>
+
+
+<span class="c1"># 2D</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd"> Wrappers for special Cases</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="plot_2D_2states"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2states">[docs]</a><span class="k">def</span> <span class="nf">plot_2D_2states</span><span class="p">(</span><span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">,</span> <span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">point_resolution</span><span class="o">=</span><span class="mi">500</span><span class="p">):</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">surf1</span> <span class="o">=</span> <span class="n">plot_2DPotential</span><span class="p">(</span><span class="n">V1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;State 1&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;$\phi/[^{\circ}]$&quot;</span><span class="p">,</span>
+                                     <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;$\psi/[^{\circ}]$&quot;</span><span class="p">,</span> <span class="n">space_range</span><span class="o">=</span><span class="n">space_range</span><span class="p">,</span>
+                                     <span class="n">point_resolution</span><span class="o">=</span><span class="n">point_resolution</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">surf2</span> <span class="o">=</span> <span class="n">plot_2DPotential</span><span class="p">(</span><span class="n">V2</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;State 2&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;$\phi/[^{\circ}]$&quot;</span><span class="p">,</span>
+                                     <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;$\psi/[^{\circ}]$&quot;</span><span class="p">,</span> <span class="n">space_range</span><span class="o">=</span><span class="n">space_range</span><span class="p">,</span>
+                                     <span class="n">point_resolution</span><span class="o">=</span><span class="n">point_resolution</span><span class="p">)</span>
+
+    <span class="c1"># color bar:</span>
+    <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="n">ax2</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">x1</span> <span class="o">*</span> <span class="mf">1.15</span><span class="p">,</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">y0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span><span class="o">.</span><span class="n">height</span><span class="p">])</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf2</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">surf1</span><span class="o">.</span><span class="n">_A</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">surf1</span><span class="o">.</span><span class="n">_A</span><span class="p">),</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">2</span><span class="p">)),</span> <span class="p">)</span>
+    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;V/[kT]&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;The Two End States for EDS Potential&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="plot_2D_2State_EDS_potential"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential">[docs]</a><span class="k">def</span> <span class="nf">plot_2D_2State_EDS_potential</span><span class="p">(</span><span class="n">eds_pot</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">traj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">positions2D</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                 <span class="n">space_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">],</span> <span class="n">point_resolution</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;$\phi/[^{\circ}$]&quot;</span><span class="p">,</span>
+                                 <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;$\psi/[^{\circ}$]&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">trajectory_color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">trajectory_color</span>
+
+    <span class="c1"># build positions</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">positions2D</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="n">point_resolution</span><span class="p">)</span>
+        <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+        <span class="n">point_resolution</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># calc energies for total space</span>
+    <span class="c1"># subPotentials</span>
+    <span class="n">eds_pot</span><span class="o">.</span><span class="n">s_i</span> <span class="o">=</span> <span class="n">s</span>
+    <span class="n">V1</span> <span class="o">=</span> <span class="n">eds_pot</span><span class="o">.</span><span class="n">V_is</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">V2</span> <span class="o">=</span> <span class="n">eds_pot</span><span class="o">.</span><span class="n">V_is</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Energies</span>
+    <span class="n">energies1</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+    <span class="n">energies2</span> <span class="o">=</span> <span class="n">V2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+    <span class="n">energiesEds</span> <span class="o">=</span> <span class="n">eds_pot</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+
+    <span class="c1"># generate map for 2D</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;map data&quot;</span><span class="p">)</span>
+    <span class="n">energies1Map</span> <span class="o">=</span> <span class="n">energies1</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+    <span class="n">energies2Map</span> <span class="o">=</span> <span class="n">energies2</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+    <span class="n">energiesEdsMap</span> <span class="o">=</span> <span class="n">energiesEds</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+
+    <span class="c1"># plotting</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+    <span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energies1Map</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energies1Map</span><span class="p">)</span>
+    <span class="n">surf1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energies1Map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxV</span><span class="p">,</span>
+                       <span class="n">vmin</span><span class="o">=</span><span class="n">minV</span><span class="p">,</span>
+                       <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+    <span class="n">surf2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energies2Map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxV</span><span class="p">,</span>
+                       <span class="n">vmin</span><span class="o">=</span><span class="n">minV</span><span class="p">,</span>
+                       <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+
+    <span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energies1</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energies1</span><span class="p">)</span>
+    <span class="n">surf3</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energiesEdsMap</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxV</span><span class="p">,</span>
+                       <span class="n">vmin</span><span class="o">=</span><span class="n">minV</span><span class="p">,</span>
+                       <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+
+    <span class="c1"># color bar:</span>
+    <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf3</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cbaxes</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;V/[kT]&quot;</span><span class="p">)</span>
+
+    <span class="c1">##LAEBELLING FUN</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)])</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+    <span class="c1"># put TRAJ in to landscape</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">traj</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">vis_pos_x</span><span class="p">,</span> <span class="n">vis_pos_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">traj</span><span class="o">.</span><span class="n">position</span><span class="p">))))</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">,</span> <span class="n">vis_pos_y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">,</span> <span class="n">vis_pos_y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">,</span> <span class="n">vis_pos_y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+
+        <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+        <span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">vis_pos_x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vis_pos_y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;State 0&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;State 1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;$s=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">eds_pot</span><span class="o">.</span><span class="n">s_i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;EDS potential: s=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">eds_pot</span><span class="o">.</span><span class="n">s_i</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="k">return</span> <span class="n">fig</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_path</span></div>
+
+
+<div class="viewcode-block" id="plot_2D_2State_EDS_potential_sDependency"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential_sDependency">[docs]</a><span class="k">def</span> <span class="nf">plot_2D_2State_EDS_potential_sDependency</span><span class="p">(</span><span class="n">sVal_traj_Dict</span><span class="p">:</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,</span> <span class="n">List</span><span class="p">),</span> <span class="n">eds_pot</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">plot_trajs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">space_range</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">],</span> <span class="n">point_resolution</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                                             <span class="n">positions2D</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;$\phi/[^{\circ}$]&quot;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;$\psi/[^{\circ}$]&quot;</span><span class="p">,</span>
+                                             <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">traj_color</span> <span class="o">=</span> <span class="s2">&quot;orange&quot;</span>
+    <span class="c1">##positions</span>
+    <span class="c1"># build positions</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">positions2D</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">space_range</span><span class="p">),</span> <span class="n">point_resolution</span><span class="p">)</span>
+        <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">positions</span><span class="p">)</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+        <span class="n">point_resolution</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]))</span>
+        <span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">positions2D</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># V1, V2 = eds_pot.V_is</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;calc tot space&quot;</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">)</span> <span class="o">=</span> <span class="n">eds_pot</span><span class="o">.</span><span class="n">V_is</span>
+    <span class="n">energies1</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+    <span class="n">energies2</span> <span class="o">=</span> <span class="n">V2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+
+    <span class="c1"># map data</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;map data&quot;</span><span class="p">)</span>
+    <span class="n">energies1Map</span> <span class="o">=</span> <span class="n">energies1</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+    <span class="n">energies2Map</span> <span class="o">=</span> <span class="n">energies2</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+    <span class="n">energyMaps</span> <span class="o">=</span> <span class="p">[</span><span class="n">energies1Map</span><span class="p">,</span> <span class="n">energies2Map</span><span class="p">,</span> <span class="p">[]]</span>
+
+    <span class="n">relative_barrier</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energies1Map</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energies1Map</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">minV</span><span class="p">,</span> <span class="n">maxV</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">energies1</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">energies1</span><span class="p">)</span> <span class="o">+</span> <span class="n">relative_barrier</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">)</span>
+    <span class="c1"># gridspec inside gridspec</span>
+
+    <span class="n">nrows</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sVal_traj_Dict</span><span class="p">)</span>
+    <span class="n">ncols</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># 3 states in the system</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">constrained_layout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">outer_grid</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nrows</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sVal_traj_Dict</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="c1"># eds pot energies</span>
+        <span class="n">eds_pot</span><span class="o">.</span><span class="n">s_i</span> <span class="o">=</span> <span class="n">s</span>
+        <span class="n">energiesEds</span> <span class="o">=</span> <span class="n">eds_pot</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
+        <span class="n">energiesEdsMap</span> <span class="o">=</span> <span class="n">energiesEds</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">point_resolution</span><span class="p">,</span> <span class="n">point_resolution</span><span class="p">])</span>
+        <span class="n">energyMaps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">energiesEdsMap</span>
+
+        <span class="n">eminV</span><span class="p">,</span> <span class="n">emaxV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energiesEdsMap</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energiesEdsMap</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EDS - Barrier: &quot;</span><span class="p">,</span> <span class="n">emaxV</span> <span class="o">-</span> <span class="n">eminV</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">plot_trajs</span><span class="p">):</span>
+            <span class="n">tmp_visit_x</span><span class="p">,</span> <span class="n">tmp_visit_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">sVal_traj_Dict</span><span class="p">[</span><span class="n">s</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">))))</span><span class="o">.</span><span class="n">T</span>
+
+        <span class="c1"># plot landscapes</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ncols</span><span class="p">):</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">outer_grid</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="n">eminV</span><span class="p">,</span> <span class="n">emaxV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">energiesEdsMap</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">energiesEdsMap</span><span class="p">)</span> <span class="o">+</span> <span class="n">relative_barrier</span>
+                <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energyMaps</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">emaxV</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">eminV</span><span class="p">,</span>
+                                 <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>  <span class="c1"># interpolation=&quot;nearest&quot;,</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">energyMaps</span><span class="p">[</span><span class="n">col</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span>
+                                 <span class="n">vmax</span><span class="o">=</span><span class="n">maxV</span><span class="p">,</span>
+                                 <span class="n">vmin</span><span class="o">=</span><span class="n">minV</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">,</span> <span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">plot_trajs</span><span class="p">):</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">tmp_visit_x</span><span class="p">,</span> <span class="n">tmp_visit_y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">traj_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># plot trajs</span>
+
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">minY</span><span class="p">,</span> <span class="n">maxY</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+            <span class="c1"># labelling fun</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">row</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;State 1&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;State 2&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;EDS state&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">col</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">y_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">180</span><span class="p">])</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=-</span><span class="mi">450</span><span class="p">,</span> <span class="n">y</span><span class="o">=-</span><span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="s2">&quot;s=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                        <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">row</span> <span class="o">==</span> <span class="n">nrows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">x_label</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="n">minX</span><span class="p">,</span> <span class="n">maxX</span><span class="p">])</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="n">minX</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">maxX</span><span class="p">],</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+
+    <span class="c1"># colorbar</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">minV</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">maxV</span><span class="p">)</span>
+    <span class="n">cbaxes</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">ColorbarBase</span><span class="p">(</span><span class="n">cbaxes</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">qualitative_map</span><span class="p">,</span>
+                                          <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span>
+                                          <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="p">)</span>
+    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;V/[kT]&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+        <span class="k">return</span> <span class="n">fig</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out_path</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

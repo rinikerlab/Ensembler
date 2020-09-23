@@ -3,7 +3,6 @@
 """
 
 import numpy as np
-
 from ensembler.ensemble import exchange_pattern
 from ensembler.ensemble._replica_graph import _replicaExchange
 from ensembler.util.ensemblerTypes import systemCls, Iterable, List,  NoReturn

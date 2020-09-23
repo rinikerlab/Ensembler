@@ -8,13 +8,7 @@ from ensembler.samplers.stochastic import monteCarloIntegrator
 from ensembler.system import system
 
 class test_Visualization(unittest.TestCase):
-    tmp_test_dir: str = None
-
-
-    def setUp(self) -> None:
-        pass
-       #if(__class__.tmp_test_dir is None):
-       #     __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_visualization_Potentials")
+   pass
 
 """
    Potential Plots
@@ -44,12 +38,12 @@ class test_plot_Simulations(test_Visualization):
     def test_static_sim_plots(self):
         sim = system(potential=harmonicOscillatorPotential(), sampler=monteCarloIntegrator())
         sim.simulate(100)
-        plotSimulations.static_sim_plots(sim)
+        plotSimulations.oneD_simulation_analysis_plot(sim)
 
     def test_static_sim_bias_plots(self):
         sim = system(potential=addedPotentials(), sampler=monteCarloIntegrator())
         sim.simulate(100)
-        plotSimulations.static_sim_plots_bias(sim)
+        plotSimulations.oneD_biased_simulation_analysis_plot(sim)
 
 
 """

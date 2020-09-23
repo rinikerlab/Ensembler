@@ -85,7 +85,7 @@ class Exchange_pattern:
             exchange = False
             IJ = original_exchange_coordinates[0]
             replicaIJ = self.replica_graph.replicas[IJ]
-            self.replica_graph.exchange_information = self.replica_graph.exchange_information.append(
+            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaIJ.replicaID,
                  "replicaPositionI": IJ, "exchangeCoordinateI": replicaIJ.exchange_parameters,
                  "TotEI": swapped_totPots[IJ],
@@ -97,14 +97,14 @@ class Exchange_pattern:
             replicaI = self.replica_graph.replicas[I]
             replicaJ = self.replica_graph.replicas[J]
             # add exchange info line here!
-            self.replica_graph.exchange_information = self.replica_graph.exchange_information.append(
+            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaI.replicaID,
                  "replicaPositionI": I, "exchangeCoordinateI": replicaI.exchange_parameters,
                  "TotEI": original_totPots[I],
                  "replicaPositionJ": J, "exchangeCoordinateJ": replicaJ.exchange_parameters,
                  "TotEJ": original_totPots[J],
                  "doExchange": exchange}, ignore_index=True)
-            self.replica_graph.exchange_information = self.replica_graph.exchange_information.append(
+            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaJ.replicaID,
                  "replicaPositionI": J, "exchangeCoordinateI": replicaJ.exchange_parameters,
                  "TotEI": swapped_totPots[J],
@@ -116,7 +116,7 @@ class Exchange_pattern:
             exchange = False
             IJ = original_exchange_coordinates[-1]
             replicaIJ = self.replica_graph.replicas[IJ]
-            self.replica_graph.exchange_information = self.replica_graph.exchange_information.append(
+            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaIJ.replicaID,
                  "replicaPositionI": IJ, "exchangeCoordinateI": replicaIJ.exchange_parameters,
                  "TotEI": swapped_totPots[IJ],
@@ -221,7 +221,7 @@ class localExchangeScheme(Exchange_pattern):
         original_totPots = self.replica_graph.get_replica_total_energies()
         original_exCoord = list(sorted(original_totPots.keys()))
 
-        replica_values = list([self.replica_graph.replicas[key] for key in original_exCoord])
+        #replica_values = list([self.replica_graph.replicas[key] for key in original_exCoord])
 
         # SWAP exchange_coordinates params pairwise
         swapped_exCoord = self._swap_coordinates(original_exCoord)
@@ -231,7 +231,7 @@ class localExchangeScheme(Exchange_pattern):
             print("swapped Coords ", swapped_exCoord)
 
         # SWAP Params to calculate energies in swapped case
-        self.replica_graph.set_parameter_set(coordinates=swapped_exCoord, replicas=replica_values)  # swap parameters
+        self.replica_graph.set_parameter_set(coordinates=swapped_exCoord, replica_indices=original_exCoord)  # swap parameters
 
         # Exchange coordinate paramters:
         ##scaleVel
@@ -242,8 +242,8 @@ class localExchangeScheme(Exchange_pattern):
 
         ##scale Vel back
         self.replica_graph._adapt_system_to_exchange_coordinate()
-        self.replica_graph.set_parameter_set(coordinates=original_exCoord,
-                                             replicas=replica_values)  # swap back parameters
+        self.replica_graph.set_parameter_set(coordinates=swapped_exCoord,
+                                             replica_indices=original_exCoord)  # swap back parameters
 
         return original_exCoord, original_totPots, swapped_exCoord, swapped_totPots
 

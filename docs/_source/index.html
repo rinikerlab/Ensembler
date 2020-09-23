@@ -1,0 +1,350 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>DOCUMENTATION &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.analysis package" href="ensembler.analysis.html" />
+    <link rel="prev" title="Free Energy Calculations" href="../Examples/Example_FreeEnergyCalculationSimulation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DOCUMENTATION</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>DOCUMENTATION</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="documentation">
+<h1>DOCUMENTATION<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html#module-ensembler.analysis.freeEnergyCalculation">ensembler.analysis.freeEnergyCalculation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html#module-ensembler.analysis">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html#module-ensembler.conditions.box_conditions">ensembler.conditions.box_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html#module-ensembler.conditions.restrain_conditions">ensembler.conditions.restrain_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html#module-ensembler.conditions.thermostats">ensembler.conditions.thermostats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html#module-ensembler.conditions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html#module-ensembler.ensemble.exchange_pattern">ensembler.ensemble.exchange_pattern module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html#module-ensembler.ensemble.replica_exchange">ensembler.ensemble.replica_exchange module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html#module-ensembler.ensemble.replicas_dynamic_parameters">ensembler.ensemble.replicas_dynamic_parameters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html#module-ensembler.ensemble">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials.ND">ensembler.potentials.ND module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials.OneD">ensembler.potentials.OneD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials.TwoD">ensembler.potentials.TwoD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#module-ensembler.potentials.biased_potentials.biasOneD">ensembler.potentials.biased_potentials.biasOneD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#module-ensembler.potentials.biased_potentials.biasTwoD">ensembler.potentials.biased_potentials.biasTwoD module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#module-ensembler.potentials.biased_potentials">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html#module-ensembler.samplers.newtonian">ensembler.samplers.newtonian module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html#module-ensembler.samplers.optimizers">ensembler.samplers.optimizers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html#module-ensembler.samplers.stochastic">ensembler.samplers.stochastic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html#module-ensembler.samplers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html#module-ensembler.system.basic_system">ensembler.system.basic_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html#module-ensembler.system.eds_system">ensembler.system.eds_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html#module-ensembler.system.perturbed_system">ensembler.system.perturbed_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html#module-ensembler.system">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_analysis">ensembler.tests.test_analysis module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_conditions">ensembler.tests.test_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_conveyorBelt">ensembler.tests.test_conveyorBelt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_ensemble">ensembler.tests.test_ensemble module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_ensembler">ensembler.tests.test_ensembler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_potentials">ensembler.tests.test_potentials module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_sampler">ensembler.tests.test_sampler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_system">ensembler.tests.test_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html#module-ensembler.util.basic_class">ensembler.util.basic_class module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html#module-ensembler.util.dataStructure">ensembler.util.dataStructure module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html#module-ensembler.util.ensemblerTypes">ensembler.util.ensemblerTypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html#module-ensembler.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.animationSimulation">ensembler.visualisation.animationSimulation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.interactive_plots">ensembler.visualisation.interactive_plots module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.plotConveyorBelt">ensembler.visualisation.plotConveyorBelt module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.plotPotentials">ensembler.visualisation.plotPotentials module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.plotSimulations">ensembler.visualisation.plotSimulations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation.style">ensembler.visualisation.style module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html#module-ensembler.visualisation">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.analysis.html" class="btn btn-neutral float-right" title="ensembler.analysis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../Examples/Example_FreeEnergyCalculationSimulation.html" class="btn btn-neutral float-left" title="Free Energy Calculations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

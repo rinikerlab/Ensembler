@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.util package &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.visualisation package" href="ensembler.visualisation.html" />
+    <link rel="prev" title="ensembler.tests package" href="ensembler.tests.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.util package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.util.basic_class">ensembler.util.basic_class module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.util.dataStructure">ensembler.util.dataStructure module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.util.ensemblerTypes">ensembler.util.ensemblerTypes module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.util">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">DOCUMENTATION</a> &raquo;</li>
+        
+      <li>ensembler.util package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/ensembler.util.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="ensembler-util-package">
+<h1>ensembler.util package<a class="headerlink" href="#ensembler-util-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ensembler.util.basic_class">
+<span id="ensembler-util-basic-class-module"></span><h2>ensembler.util.basic_class module<a class="headerlink" href="#module-ensembler.util.basic_class" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: basic_class</dt><dd><p>This file is giving the basic scaffold for saving &amp; loading any Ensembler class with pickle.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.util.basic_class._baseClass">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.util.basic_class.</code><code class="sig-name descname">_baseClass</code><a class="reference internal" href="../_modules/ensembler/util/basic_class.html#_baseClass"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.util.basic_class._baseClass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is a scaffold, containing functionality all classes should have.</p>
+<dl class="py method">
+<dt id="ensembler.util.basic_class._baseClass.load">
+<em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>_io.FileIO<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; object<a class="reference internal" href="../_modules/ensembler/util/basic_class.html#_baseClass.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.util.basic_class._baseClass.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method stores the Class as binary obj to a given path or fileBuffer.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.util.basic_class._baseClass.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Unknown'</em><a class="headerlink" href="#ensembler.util.basic_class._baseClass.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.util.basic_class._baseClass.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>str<span class="p">, </span>_io.FileIO<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/ensembler/util/basic_class.html#_baseClass.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.util.basic_class._baseClass.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method stores the Class as binary obj to a given path or fileBuffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.util.basic_class._baseClass.verbose">
+<em class="property">property </em><code class="sig-name descname">verbose</code><a class="headerlink" href="#ensembler.util.basic_class._baseClass.verbose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="ensembler.util.basic_class.notImplementedERR">
+<code class="sig-prename descclassname">ensembler.util.basic_class.</code><code class="sig-name descname">notImplementedERR</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/util/basic_class.html#notImplementedERR"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.util.basic_class.notImplementedERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.util.dataStructure">
+<span id="ensembler-util-datastructure-module"></span><h2>ensembler.util.dataStructure module<a class="headerlink" href="#module-ensembler.util.dataStructure" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: dataStructure</dt><dd><p>This module contains all needed data Structures for the project.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="module-ensembler.util.ensemblerTypes">
+<span id="ensembler-util-ensemblertypes-module"></span><h2>ensembler.util.ensemblerTypes module<a class="headerlink" href="#module-ensembler.util.ensemblerTypes" title="Permalink to this headline">¶</a></h2>
+<p>This file provides ensembler types, that are used to annotate and enforce certain types throughout the ensembler package.</p>
+<dl class="py data">
+<dt id="ensembler.util.ensemblerTypes.ensembleCls">
+<code class="sig-prename descclassname">ensembler.util.ensemblerTypes.</code><code class="sig-name descname">ensembleCls</code><a class="headerlink" href="#ensembler.util.ensemblerTypes.ensembleCls" title="Permalink to this definition">¶</a></dt>
+<dd><p>from ensembler.potentials._baseclasses import _potentialCls
+potential = TypeVar(“potential”, bound=_potentialCls)</p>
+<p>#define here dummy type, so it is useable in sub classes
+system = TypeVar(“system”)  #dummyDef for samplers</p>
+<p>from ensembler.conditions._conditions import _conditionCls
+condition = TypeVar(“condition”, bound=_conditionCls)</p>
+<p>from ensembler.samplers._basicIntegrators import _integratorCls
+samplers = TypeVar(“samplers”, bound=_integratorCls)</p>
+<p>from ensembler.system.basic_system import system
+system = TypeVar(“system”, bound=system)</p>
+<p>alias of TypeVar(‘ensemble’)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.util">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.util" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.visualisation.html" class="btn btn-neutral float-right" title="ensembler.visualisation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ensembler.tests.html" class="btn btn-neutral float-left" title="ensembler.tests package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
