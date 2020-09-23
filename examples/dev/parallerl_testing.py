@@ -11,7 +11,7 @@ import multiprocessing
 def main():
     TRE = replica_exchange.temperatureReplicaExchange
 
-    integrator = stochastic.monteCarloIntegrator()
+    integrator = stochastic.metropolisMonteCarloIntegrator()
     potential = OneD.harmonicOscillatorPotential()
     sys = system.system(potential=potential, sampler=integrator)
 

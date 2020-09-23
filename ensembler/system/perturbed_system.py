@@ -44,7 +44,7 @@ class perturbedSystem(system):
         self.potential.set_lambda(lam=self._currentLambda)
         self._update_energies()
 
-    def set_lam(self, lam: float):
+    def set_lambda(self, lam: float):
         self.lam = lam
 
     """
@@ -78,7 +78,7 @@ class perturbedSystem(system):
 
         super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
                          start_position=start_position)
-        self.set_lam(lam)
+        self.set_lambda(lam)
 
     """
     Overwrite Functions to adapt to EDS

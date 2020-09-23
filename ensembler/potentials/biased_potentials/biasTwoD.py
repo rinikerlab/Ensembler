@@ -25,6 +25,7 @@ class addedPotentials(_potential2DCls):
     name: str = "Added Potential Enhanced Sampling System for 2D"
     nDimensions: int = sp.symbols("nDimensions")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
+    bias_potential = True
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
         '''
@@ -71,6 +72,7 @@ class metadynamicsPotential(_potential2DCls):
     name: str = "Metadynamics Enhanced Sampling System using grid bias in 2D"
     position = sp.symbols("r")
     system: systemCls  # metadyn-coupled to system
+    bias_potential = True
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=1., sigma=(1., 1.), n_trigger=100, bias_grid_min=(0, 0),
                  bias_grid_max=(10, 10), numbins=(100, 100)):
@@ -140,7 +142,7 @@ class metadynamicsPotential(_potential2DCls):
         self.check_for_metastep(self.system._currentPosition)
 
 
-    def coupleSystem(self, system):
+    def couple_system(self, system):
         self.system = system
 
     def check_for_metastep(self, curr_position):

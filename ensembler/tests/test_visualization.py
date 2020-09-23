@@ -1,10 +1,9 @@
 import numpy as np
-import os
-import tempfile
 import unittest
 
 from ensembler.potentials.OneD import harmonicOscillatorPotential
-from ensembler.samplers.stochastic import monteCarloIntegrator
+from ensembler.potentials.TwoD import harmonicOscillatorPotential as harmonicOscillatorPotential2D
+from ensembler.samplers.stochastic import metropolisMonteCarloIntegrator
 from ensembler.system import system
 
 class test_Visualization(unittest.TestCase):
@@ -36,14 +35,28 @@ from ensembler.potentials.biased_potentials.biasOneD import addedPotentials
 class test_plot_Simulations(test_Visualization):
 
     def test_static_sim_plots(self):
-        sim = system(potential=harmonicOscillatorPotential(), sampler=monteCarloIntegrator())
+        sim = system(potential=harmonicOscillatorPotential(), sampler=metropolisMonteCarloIntegrator())
         sim.simulate(100)
         plotSimulations.oneD_simulation_analysis_plot(sim)
 
+    """
     def test_static_sim_bias_plots(self):
-        sim = system(potential=addedPotentials(), sampler=monteCarloIntegrator())
+        sim = system(potential=addedPotentials(), sampler=metropolisMonteCarloIntegrator())
         sim.simulate(100)
         plotSimulations.oneD_biased_simulation_analysis_plot(sim)
+    """
+
+    def test_twoD_simulation_ana_plot(self):
+        # settings
+        sim_steps = 100
+        pot2D = harmonicOscillatorPotential2D()
+        sampler = metropolisMonteCarloIntegrator()
+        sys = system(potential=pot2D, sampler=sampler, start_position=[0, 0])
+
+        # simulate
+        cur_state = sys.simulate(sim_steps, withdraw_traj=True)
+
+        plotSimulations.twoD_simulation_analysis_plot(system=sys)
 
 
 """
@@ -65,7 +78,7 @@ from ensembler.visualisation import animationSimulation
 class test_plot_Animations(test_Visualization):
 
     def test_1D_animation(self):
-        sim = system(potential=harmonicOscillatorPotential(), sampler=monteCarloIntegrator())
+        sim = system(potential=harmonicOscillatorPotential(), sampler=metropolisMonteCarloIntegrator())
         sim.simulate(100)
         animationSimulation.animation_trajectory(simulated_system=sim)
 

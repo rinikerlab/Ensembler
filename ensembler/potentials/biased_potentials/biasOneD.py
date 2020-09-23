@@ -19,9 +19,9 @@ class addedPotentials(_potential1DCls):
     Adds two different potentials on top of each other. Can be used to generate
     harmonic potential umbrella sampling or scaled potentials
     '''
-
     name: str = "Added Potential Enhanced Sampling System"
     position = sp.symbols("r")
+    bias_potential = True
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
         '''
@@ -65,6 +65,7 @@ class metadynamicsPotential(_potential1DCls):
     '''
     name: str = "Metadynamics Enhanced Sampling System using grid bias"
     position = sp.symbols("r")
+    bias_potential = True
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=0.1, sigma=1, n_trigger=100, bias_grid_min=0, bias_grid_max=10,
                  numbins=100):

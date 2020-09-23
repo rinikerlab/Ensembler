@@ -1,13 +1,11 @@
 import numpy as np
-import matplotlib
 from matplotlib import animation, pyplot as plt
 
 from ensembler.util.ensemblerTypes import systemCls, Iterable, List, Tuple, Union, Number
 from ensembler.visualisation import style
 
-
 def animation_trajectory(simulated_system:systemCls,
-                         limits_coordinate_space: Tuple[float, float]=None, limits_potential_system_energy: Tuple[float, float]=None,
+                         limits_coordinate_space: Tuple[float, float]=None, limits_potential_system_energy: Tuple[float, float]=None, resolution_of_analytic_potential:int=1000,
                          title: str = None, out_path: str = None,
                          out_writer: str = "pillow", dpi: int = style.dpi_animation, every_n_frame:int=1) -> Tuple[animation.Animation, Union[str, None]]:
     """
@@ -49,9 +47,9 @@ def animation_trajectory(simulated_system:systemCls,
     x_min = min(x1data)
 
     if (limits_coordinate_space is None):
-        xtot_space = np.arange(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1)
+        xtot_space = np.linspace(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1, resolution_of_analytic_potential)
     else:
-        xtot_space = np.arange(min(limits_coordinate_space), max(limits_coordinate_space) + 1, 1)
+        xtot_space = np.linspace(min(limits_coordinate_space), max(limits_coordinate_space) + 1, resolution_of_analytic_potential)
     ytot_space = simulated_system.potential.ene(xtot_space)
 
     #settings
