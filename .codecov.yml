@@ -1,13 +1,13 @@
 # Codecov configuration to make it a bit less noisy
 codecov:
-  branch: build_release_1
+  branch: master
 
 coverage:
   status:
     patch: false
     project:
       branches:
-        - build_release_1
+        - master
       default:
         threshold: 50%
 
@@ -20,6 +20,6 @@ comment:
   paths: null
   
 ignore:
-  - "ensembler/visualisation"  # ignore folders and all its contents
-  - "ensembler/tests" # ignore test files
+  - "ensembler/visualisation/"  # ignore folders and all its contents
+  - "ensembler/tests/" # ignore test files
 
