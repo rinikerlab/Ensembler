@@ -36,7 +36,7 @@ class standard_IntegratorTests(unittest.TestCase):
 
 
 class test_MonteCarlo_Integrator(standard_IntegratorTests):
-    integrator_class = stochastic.monteCarloIntegrator
+    integrator_class = stochastic.metropolisMonteCarloIntegrator
 
     def test_step(self):
         potent = pot.OneD.harmonicOscillatorPotential()
