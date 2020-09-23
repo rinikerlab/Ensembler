@@ -1324,10 +1324,9 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
 """
 biased potentials
 """
-from ensembler.potentials.biased_potentials import biasOneD
 
 class potentialCls_addedPotentials(test_potentialCls):
-    potential_class = biasOneD.addedPotentials
+    potential_class = OneD.addedPotentials
 
     def test_energies(self):
         positions = [0, 2, 1, 0.5]
@@ -1357,7 +1356,7 @@ class potentialCls_addedPotentials(test_potentialCls):
 
 
 class potentialCls_metadynamics(test_potentialCls):
-    potential_class = biasOneD.metadynamicsPotential
+    potential_class = OneD.metadynamicsPotential
 
     def test_energies(self):
         positions = [0, 2, 1, 0.5]
@@ -1398,10 +1397,9 @@ class potentialCls_metadynamics(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!")
 
 
-from ensembler.potentials.biased_potentials import biasTwoD
 
 class potentialCls_addedPotentials2D(test_potentialCls):
-    potential_class = biasTwoD.addedPotentials
+    potential_class = TwoD.addedPotentials
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
@@ -1437,7 +1435,7 @@ class potentialCls_addedPotentials2D(test_potentialCls):
 
 
 class potentialCls_metadynamics2D(test_potentialCls):
-    potential_class = biasTwoD.metadynamicsPotential
+    potential_class = TwoD.metadynamicsPotential
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])

@@ -31,7 +31,6 @@ class test_plot_Potentials(test_Visualization):
    Simulation
 """
 from ensembler.visualisation import plotSimulations
-from ensembler.potentials.biased_potentials.biasOneD import addedPotentials
 class test_plot_Simulations(test_Visualization):
 
     def test_static_sim_plots(self):

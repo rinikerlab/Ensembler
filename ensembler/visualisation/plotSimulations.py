@@ -7,7 +7,7 @@ from matplotlib.colors import LogNorm
 
 from ensembler.samplers import stochastic, newtonian, optimizers
 
-from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential
+from ensembler.potentials.OneD import metadynamicsPotential
 
 from ensembler.util.ensemblerTypes import systemCls, Tuple, Union
 

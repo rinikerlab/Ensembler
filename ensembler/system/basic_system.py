@@ -22,8 +22,8 @@ from ensembler.util import dataStructure as data
 from ensembler.samplers.newtonian import newtonianSampler
 from ensembler.samplers.stochastic import langevinIntegrator
 
-from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential as metadynamicsPotential1D
-from ensembler.potentials.biased_potentials.biasTwoD import metadynamicsPotential as metadynamicsPotential2D
+from ensembler.potentials.OneD import metadynamicsPotential as metadynamicsPotential1D
+from ensembler.potentials.TwoD import metadynamicsPotential as metadynamicsPotential2D
 
 
 class system(_baseClass):
