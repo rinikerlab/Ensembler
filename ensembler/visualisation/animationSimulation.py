@@ -1,73 +1,99 @@
-import os
-import sys
-from numbers import Number
-from typing import Iterable
-
 import numpy as np
+import matplotlib
 from matplotlib import animation, pyplot as plt
 
-sys.path.append(os.path.dirname(__file__) + "/..")
-
-from ensembler.system import system
+from ensembler.util.ensemblerTypes import systemCls, Iterable, List, Tuple, Union, Number
 from ensembler.visualisation import style
 
 
-def animation_trajectory(sys: system, x_range=None, y_range=None, title: str = None, out_path: str = None,
-                         out_writer: str = "pillow", dpi: int = style.dpi_animation) -> (
-animation.Animation, (str or None)):
+def animation_trajectory(simulated_system:systemCls,
+                         limits_coordinate_space: Tuple[float, float]=None, limits_potential_system_energy: Tuple[float, float]=None,
+                         title: str = None, out_path: str = None,
+                         out_writer: str = "pillow", dpi: int = style.dpi_animation, every_n_frame:int=1) -> Tuple[animation.Animation, Union[str, None]]:
+    """
+        this function is generating a animation out of a simulation.
+    Parameters
+    ----------
+    simulated_system: systemCls
+        the system, that carried out a simulation to be visualized
+    limits_coordinate_space: Tuple[float, float], optional
+        the plot limits of the coordinate space
+    limits_potential_system_energy: Tuple[float, float], optional
+        the plot limits of the potential energies
+    title: str, optional
+        the plot title
+    out_path: str, optional
+        the out  path storing the animation.
+    out_writer: str, optional
+        the animation render.
+    dpi: int, optional
+        the resolution of the animation.
+    every_n_frame: int, optional
+        use every n-th frame
+
+    Returns
+    -------
+    Tuple[animation.Animation, Union[str, None]]
+        returns the animation object and the output path if saved.
+    """
+
     # plotting
-    x1data = sys.trajectory.position
-    y1data = sys.trajectory.totPotEnergy
-    shift = sys.trajectory.dhdpos
+    x1data = simulated_system.trajectory.position
+    y1data = simulated_system.trajectory.total_potential_energy
+    shift = simulated_system.trajectory.dhdpos
+
+    lastindx = x1data.shape[-1] - 1
+    lastindy = np.array(list(y1data)).shape[-1] - 1
 
     x_max = max(x1data)
     x_min = min(x1data)
 
-    if (x_range is None):
+    if (limits_coordinate_space is None):
         xtot_space = np.arange(x_min + 0.2 * x_min, x_max + 0.2 * x_max + 1)
     else:
-        xtot_space = np.arange(min(x_range), max(x_range) + 1, 1)
-    5
-    ytot_space = sys.potential.ene(xtot_space)
+        xtot_space = np.arange(min(limits_coordinate_space), max(limits_coordinate_space) + 1, 1)
+    ytot_space = simulated_system.potential.ene(xtot_space)
 
+    #settings
+    step_size = every_n_frame
     tmax = len(y1data) - 1
     t0 = 0
-    step_size = 1
-
     active_dots = 20
 
-    xdata, ydata = [], []
-    # figures
-    fig = plt.figure()
+    # build figure
+    fig = plt.figure(dpi=60)
     ax = fig.add_subplot(111)
-    ax.plot(xtot_space, ytot_space, label="Potential", c=style.potential_light)
-    # data structures in ani
-    line, = ax.plot([], [], c=style.potential_light, alpha=0.3, lw=2)
-    line.set_data(xtot_space, ytot_space)
 
-    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1,
-                         cmap=style.animation_traj)  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
+    ## setup static parts
+    ax.plot(xtot_space, ytot_space, label="Potential", c=style.potential_light)
+
+    ### Params
+    if (limits_coordinate_space != None):
+        ax.set_xlim(limits_coordinate_space)
+    if (limits_potential_system_energy != None):
+        ax.set_ylim(limits_potential_system_energy)
+
+    ax.set_xlabel("$r$")
+    ax.set_ylabel("$V$")
+
+    if (title != None):
+        fig.suptitle(title)
+
+    # data structures in ani
+    ##setup data structures
+    xdata, ydata = [], []
+    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap=style.animation_traj)
+
     start_p, = ax.plot([], [], "bo", c=style.traj_start, ms=10)
     end_p, = ax.plot([], [], "bo", c=style.traj_end, ms=10)
     curr_p, = ax.plot([], [], "bo", c=style.traj_current, ms=10)
 
-    # Params
-    ax.set_xlabel("$r$")
-    ax.set_ylabel("$V$")
-    if (title != None):
-        fig.suptitle(title)
-
     def init():
         del xdata[:], ydata[:]
-
+        start_p.set_data(x1data[0], y1data[0])
         end_p.set_data([], [])
         curr_p.set_data([], [])
 
-        if (x_range != None):
-            ax.set_xlim(x_range)
-        if (y_range != None):
-            ax.set_ylim(y_range)
-        # return line,
 
     def data_gen(t=t0):
         while t < tmax:
@@ -75,12 +101,9 @@ animation.Animation, (str or None)):
             yield x1data[t], y1data[t]
 
     def run(data):
-        # update the data
         x, V = data
-        lastindx = x1data.shape[-1] - 1
-        lastindy = np.array(list(y1data)).shape[-1] - 1
 
-        if (x == x1data[lastindx]):  # x.all(x1data[-1])):  # last step of traj
+        if (x == x1data[lastindx]):
             curr_p.set_data([], [])
             end_p.set_data(x1data[lastindx], y1data[lastindy])
         else:
@@ -88,34 +111,77 @@ animation.Animation, (str or None)):
             xdata.append(x)
             ydata.append(V)
 
+            #color fading effect
             if (len(xdata) > active_dots):
                 c = np.concatenate(
                     (np.array([0.6 for x in range(len(xdata) - active_dots)]), np.linspace(0.6, 0, active_dots)))
             else:
                 c = np.linspace(0.6, 0, len(xdata))
 
+            #set new data
             scatter.set_offsets(np.c_[xdata, ydata])
             scatter.set_array(c)
 
+        #if necessary adapt y axis
         if (min(ax.get_ylim()) > V):
             ax.set_ylim(V + V * 0.1, max(ax.get_ylim()))
-        return line
+
+        return scatter,
+
 
     ani = animation.FuncAnimation(fig=fig, func=run, frames=data_gen, init_func=init, blit=False,
-                                  interval=20, repeat=False, save_count=len(x1data))
+                                  interval=20, repeat=False, cache_frame_data = True)
     if (out_path != None):
         # Set up formatting for the movie files
         Writer = animation.writers[out_writer]
-        writer = Writer(fps=15, metadata=dict(artist='animationsMD1D_David_Hahn_Benjamin_Schroeder'), bitrate=1800)
+        writer = Writer(metadata=dict(artist='animationsMD1D_David_Hahn_Benjamin_Schroeder'))
         ani.save(out_path, writer=writer, dpi=dpi)
 
     return ani, out_path
 
 
-def animation_EDS_trajectory(system: system, x_range=None, title: str = None, out_path: str = None,
+def animation_EDS_trajectory(system: systemCls,
+                             limits_coordinate_space=None, limits_potential_system_energy: Tuple[float, float]=None,
+                             title: str = None, out_path: str = None,
                              hide_legend: bool = True,
-                             s_values: list = [1.0], step_size: float = 1, out_writer: str = "pillow", dpi: int = 100,
-                             tot_pot_resolution: int = 100) -> (animation.Animation, (str or None)):
+                             s_values:List[float] = [1.0], step_size: float = 1,
+                             out_writer: str = "pillow", dpi: int = 100,
+                             total_potential_resolution_points: int = 100) -> (animation.Animation, (str or None)):
+    """
+        this function is generating a animation out of an eds-simulation.
+
+    Parameters
+    ----------
+    system: systemCls
+        the system, that carried out a simulation to be visualized
+    limits_coordinate_space: Tuple[float, float], optional
+        the plot limits of the coordinate space
+    limits_potential_system_energy: Tuple[float, float], optional
+        the plot limits of the potential energies
+    title: str, optional
+        the plot title
+    out_path: str, optional
+        the out  path storing the animation.
+    hide_legend: bool, optional
+        should the plot legend be hidden?
+    s_values: List[float], optional
+        s-values for the eds-potential
+    step_size: int, optional
+        size of the steps trough the trajectory
+    out_writer: str, optional
+        the animation render.
+    dpi: int, optional
+        the resolution of the animation.
+    total_potential_resolution_points: int, optional
+        the number of points for the visualization of the analytical reference potential.
+
+    Returns
+    -------
+    Tuple[animation.Animation, Union[str, None]]
+        returns the animation object and the output path if saved.
+    """
+
+
     # plotting
     x1data = np.array(system.trajectory.position)
     y1data = system.trajectory.totPotEnergy

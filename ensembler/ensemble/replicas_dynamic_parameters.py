@@ -41,7 +41,7 @@ class conveyorBelt(_replicaExchange):
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self, capital_lambda: float, nReplicas: int,
+    def __init__(self, capital_lambda: float, n_replicas: int,
                  system: systemCls = perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
                                                                       potential=pot.OneD.linearCoupledPotentials(),
                                                                       sampler=stochastic.metropolisMonteCarloIntegrator()),
@@ -53,7 +53,7 @@ class conveyorBelt(_replicaExchange):
         ----------
         capital_lambda: float
             state of ensemble, 0 <= capital_lambda < pi
-        nReplicas: int
+        n_replicas: int
             number of replicas
         system: systemCls, optional
             a system1D instance
@@ -62,14 +62,14 @@ class conveyorBelt(_replicaExchange):
         """
 
         assert 0.0 <= capital_lambda <= 2 * np.pi, "capital_lambda not allowed"
-        assert nReplicas >= 1, "At least one system is needed"
+        assert n_replicas >= 1, "At least one system is needed"
 
-        self.nReplicas = nReplicas
+        self.nReplicas = n_replicas
         self.system = system
         self.capital_lambda = capital_lambda
         self.build = build  # build
 
-        self.dis = 2.0 * np.pi / nReplicas
+        self.dis = 2.0 * np.pi / n_replicas
         self.exchange_dimensions = {self._parameter_name: np.arange(0, 2 * np.pi, self.dis)}
 
         self._temperature_exchange = system.temperature
@@ -269,7 +269,7 @@ class conveyorBelt(_replicaExchange):
         '''
         self.capital_lambda = capital_lambda
         for i in self.replicas:
-            self.replicas[i].set_lambda(self.calculate_replica_lambda(capital_lambda, i))
+            self.replicas[i].lam = self.calculate_replica_lambda(capital_lambda, i)
         self.apply_mem()
 
         return capital_lambda
@@ -350,7 +350,7 @@ class conveyorBelt(_replicaExchange):
 
         self.system_trajs = {}
         for i in self.replicas:
-            self.system_trajs.update({i: self.replicas[i].getTrajectory()})
+            self.system_trajs.update({i: self.replicas[i].trajectory})
         return self.system_trajs
 
     def clear_all_trajs(self) -> NoReturn:

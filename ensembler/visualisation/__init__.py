@@ -18,9 +18,12 @@ plot_layout_settings = {'font.family': 'sans-serif',
                         'axes.labelsize': 12,
                         'axes.titlesize': 14,
                         'legend.fontsize': 8,
-                        'savefig.dpi': 600,
+                        'savefig.dpi': 300,
                         'figure.figsize': figsize,
+                        'figure.facecolor' : "white",
+                        'animation.html': 'jshtml',
                         }
+
 
 for key, value in plot_layout_settings.items():
     matplotlib.rcParams[key] = value

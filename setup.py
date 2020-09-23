@@ -34,19 +34,21 @@ REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # What packages are required for this module to be executed?
-REQUIRED = ['typing',
-            'pytest',
-            'pandas',
-            'numpy',
-            'sympy',
-            'scipy',
-            'matplotlib',
-            'jupyter',
-            'ipywidgets',
-            'sphinx',
-            'sphinx_rtd_theme',
-            'tqdm',
-
+REQUIRED = ['typing', #Code: used for type declarations
+            'pytest', #Code: used for testing
+            'pandas', #Code: core functionality
+            'numpy', #Code: core functionality
+            'sympy', #Code: core functionality
+            'scipy', #Code: core functionality
+            'matplotlib', #Visualization
+            'jupyter', # Tutorial/Examples: basics
+            'ipywidgets',# Tutorial/Examples: Interactive widgets
+            'tqdm',# Tutorial/Examples: nice progressbar
+            'sphinx', #Documentation: autodocu tool
+            'sphinx_rtd_theme', #Documentation: style
+            'nbspinx', #Documentation: for inclusion of jupyter notebooks
+            'm2r' #Documentation: converts markdown to rst
+            'ffmpeg' #Visualizations: for animations in general
             ]
 
 # What packages are optional?
@@ -61,8 +63,8 @@ EXTRAS = {
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-# Import the README and use it as the long-description.
-# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+# Import the README.md and use it as the long-description.
+# Note: this will only work if 'README.md.md' is present in your MANIFEST.in file!
 try:
     with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
