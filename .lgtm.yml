@@ -9,6 +9,9 @@ path_classifiers:
   exclude:
     - ensembler/test
     - examples
+    - setup.py
+    - versioneer.py
+
   library:
     - versioneer.py  # Set Versioneer.py to an external "library" (3rd party code)
     - devtools/*
