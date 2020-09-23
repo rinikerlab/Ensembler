@@ -60,6 +60,18 @@ jobs:
 
         run: |
           pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
+          
+      - name: Run example notebooks
+
+        # conda setup requires this special shell
+        shell: bash -l {0}
+
+        continue-on-error: true
+
+        run: |
+          # add --ignore=XXX here to ignore file XXX
+          PYTEST_ARGS+=" --nbval-lax "
+          pytest $PYTEST_ARGS examples/
 
       - name: CodeCov
         uses: codecov/codecov-action@v1
