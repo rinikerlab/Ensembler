@@ -6,7 +6,6 @@ extraction:
       version: 3  # Specify Version 3
 
 path_classifiers:
-  - ensembler
   exclude:
     - ensembler/test
     - examples
