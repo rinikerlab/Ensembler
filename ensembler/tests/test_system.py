@@ -18,7 +18,7 @@ class test_System(unittest.TestCase):
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
-        self.sampler = samplers.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.metropolisMonteCarloIntegrator()
         self.pot = potentials.OneD.harmonicOscillatorPotential()
 
 
@@ -417,7 +417,7 @@ class test_perturbedSystem1D(test_System):
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
                                                 dir=__class__.tmp_test_dir)
 
-        self.sampler = samplers.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.metropolisMonteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         self.pot = potentials.OneD.linearCoupledPotentials(Va=ha, Vb=hb, lam=1.0)
@@ -826,7 +826,7 @@ class test_edsSystem1D(test_System):
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
                                                 dir=__class__.tmp_test_dir)
 
-        self.sampler = samplers.stochastic.monteCarloIntegrator()
+        self.sampler = samplers.stochastic.metropolisMonteCarloIntegrator()
         self.pot = potentials.OneD.envelopedPotential()
 
     def test_system_constructor(self):
@@ -957,7 +957,7 @@ class test_edsSystem1D(test_System):
         newS2 = 0.5
         newEoff2 = [2,2]
 
-        integ = samplers.stochastic.monteCarloIntegrator()
+        integ = samplers.stochastic.metropolisMonteCarloIntegrator()
         ha = potentials.OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = potentials.OneD.harmonicOscillatorPotential(x_shift=5)
         s = 1

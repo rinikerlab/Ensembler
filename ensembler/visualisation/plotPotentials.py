@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt, colorbar
 import ensembler.potentials.TwoD as pot2D
 from ensembler.potentials import OneD as pot
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
+
 from ensembler.visualisation import plot_layout_settings
 from ensembler.visualisation import style
 

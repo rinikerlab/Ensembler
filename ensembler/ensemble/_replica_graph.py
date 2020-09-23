@@ -485,7 +485,7 @@ class _replicaExchange(_mutliReplicaApproach):
         if (reset_ensemble):
             self._currentTrial = 0
             [replica.initialise(withdraw_Traj=True) for repName, replica in self.replicas.items()]
-            self.exchange_information = pd.DataFrame(
+            self._exchange_information = pd.DataFrame(
                 columns=["nExchange", "replicaID", "replicaPositionI", "exchangeCoordinateI", "TotEI",
                          "replicaPositionJ", "exchangeCoordinateJ", "TotEJ", "doExchange"])
             self._init_exchanges()

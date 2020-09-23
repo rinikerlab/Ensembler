@@ -131,12 +131,10 @@ class periodicBoundaryCondition(unittest.TestCase):
         expected_vel = np.array([3])
         position = [-2]
         vel = [-3]
-        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=vel)
+        corr_pos = cond.apply(current_position=position)
 
         self.assertEqual(second=corr_pos, first=expected_pos,
                          msg="The position correction for the lower bound position was wrong.")
-        self.assertEqual(second=corr_vel, first=expected_vel,
-                         msg="The position correction for the lower bound velocity was wrong.")
 
     def test_apply2D(self):
         cond = self.condition_class(boundary=self.boundary2D)
@@ -146,12 +144,10 @@ class periodicBoundaryCondition(unittest.TestCase):
         expected_vel = np.array([3, 3])
         position = [-2, 1]
         vel = [-3, 3]
-        corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=vel)
+        corr_pos = cond.apply(current_position=position)
 
         np.testing.assert_equal(corr_pos, expected_pos,
                                 err_msg="The position correction for the lower bound position was wrong.")
-        np.testing.assert_equal(corr_vel, expected_vel,
-                                err_msg="The position correction for the lower bound velocity was wrong.")
 
 
 class positionRestraintCondition(unittest.TestCase):

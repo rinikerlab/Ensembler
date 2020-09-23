@@ -8,7 +8,7 @@ from ensembler.system import basic_system as system
 
 class test_ReplicaExchangeCls(unittest.TestCase):
     RE = _replica_graph._replicaExchange
-    integrator = stochastic.monteCarloIntegrator()
+    integrator = stochastic.metropolisMonteCarloIntegrator()
     potential = OneD.harmonicOscillatorPotential()
     sys = system.system(potential=potential, sampler=integrator)
 
@@ -90,7 +90,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     TRE = replica_exchange.temperatureReplicaExchange
 
     def test_init(self):
-        integrator = stochastic.monteCarloIntegrator()
+        integrator = stochastic.metropolisMonteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, sampler=integrator)
 
@@ -101,7 +101,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         group = replica_exchange.temperatureReplicaExchange(system=sys, temperature_range=T_range)
 
     def test_run(self):
-        integrator = stochastic.monteCarloIntegrator()
+        integrator = stochastic.metropolisMonteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, sampler=integrator)
 
@@ -116,7 +116,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
 
 
     def test_exchange_all(self):
-        integrator = stochastic.monteCarloIntegrator()
+        integrator = stochastic.metropolisMonteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, sampler=integrator)
 
@@ -188,7 +188,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     """
 
     def test_simulate_good_exchange(self):
-        integrator = stochastic.monteCarloIntegrator()
+        integrator = stochastic.metropolisMonteCarloIntegrator()
         potential = OneD.harmonicOscillatorPotential()
         sys = system.system(potential=potential, sampler=integrator)
 

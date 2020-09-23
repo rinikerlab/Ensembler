@@ -1,18 +1,62 @@
-import os
-import sys
 
 import numpy as np
+import matplotlib
 from matplotlib import pyplot as plt
 from matplotlib.figure import figaspect
-
+from matplotlib.colors import LogNorm
 
 from ensembler.samplers import stochastic, newtonian, optimizers
 
-from ensembler.visualisation import style
 from ensembler.potentials.biased_potentials.biasOneD import metadynamicsPotential
 
-from ensembler.util.ensemblerTypes import systemCls, Tuple
+from ensembler.util.ensemblerTypes import systemCls, Tuple, Union
 
+from ensembler.visualisation import style
+from ensembler.visualisation import plot_layout_settings
+
+for key, value in plot_layout_settings.items():
+    matplotlib.rcParams[key] = value
+
+def simulation_analysis_plot(system: systemCls, title: str = "", out_path: str = None,
+                              limits_coordinate_space: Tuple[float, float] = None,
+                              oneD_limits_potential_system_energy: Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
+                              twoD_number_of_bins:int=25,
+                              resolution_full_space=style.potential_resolution) -> Tuple[plt.figure, str]:
+    """
+    This is a wrapper function for the analysis of
+
+    Parameters
+    ----------
+    system
+    title
+    out_path
+    limits_coordinate_space
+    resolution_full_space
+
+    Returns
+    -------
+
+    """
+    if(system.nDimensions == 1):
+        if(hasattr(system, "bias_potential") and system.bias_potential):
+            fig, out_path = oneD_biased_simulation_analysis_plot(system=system, title=title, out_path=out_path,
+                                                                 limits_coordinate_space=limits_coordinate_space,
+                                                                 limits_potential_system_energy=oneD_limits_potential_system_energy,
+                                                                 limits_force=limits_force,
+                                                                 resolution_full_space=resolution_full_space)
+        else:
+            fig, out_path = oneD_simulation_analysis_plot(system=system, title=title, out_path=out_path,
+                                                        limits_coordinate_space=limits_coordinate_space,
+                                                          limits_potential_system_energy=oneD_limits_potential_system_energy,
+                                                          limits_force=limits_force,
+                                                        resolution_full_space=resolution_full_space)
+    elif(system.nDimensions == 2):
+        fig, out_path = twoD_simulation_analysis_plot(system=system, title=title, out_path=out_path,
+                                                        limits_coordinate_space=limits_coordinate_space,
+                                                        number_of_bins=twoD_number_of_bins,
+                                                        resolution_full_space=resolution_full_space)
+
+    return fig, out_path
 
 def oneD_simulation_analysis_plot(system: systemCls, title: str = "", out_path: str = None,
                                   limits_coordinate_space: Tuple[float, float] = None, limits_potential_system_energy: Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
@@ -212,8 +256,13 @@ def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None
         ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)
         print(system)
         print(system.potential.origPotential)
-        ytot_orig_space = system.potential.origPotential.ene(x_pot)
+        print(x_pot)
+
+        oP = system.potential.origPotential
+        oP._update_functions()
+        ytot_orig_space = oP.ene(x_pot)
         ytot_bias_space = system.potential.addPotential.ene(x_pot)
+
         ax1.plot(x_pot, ytot_orig_space, c='red')
         ax1.plot(x_pot, ytot_bias_space, c=style.potential_light)
 
@@ -228,7 +277,7 @@ def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None
     ax2.boxplot(x)
     ax2.scatter([1], [x[0]], c=style.traj_start, alpha=style.alpha_val)  # start_point
     ax2.scatter([1], [x[last_frame]], c=style.traj_end, alpha=style.alpha_val)  # end_point
-    print(viol)
+
     viol["bodies"][0].set_facecolor(color)
 
     color = style.potential_color(3)
@@ -266,14 +315,34 @@ def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None
 
     return out_path, fig
 
-def Two_biased_simulation_analysis_plot(system: systemCls, out_path: str = None, title: str = "",
-                                         limits_coordinate_space: Tuple[float, float] = None, limits_potential_system_energy:Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
-                                         resolution_full_space: int = style.potential_resolution) -> str:
-    '''
-    Plot giving the sampled space, position distribution and forces
+
+def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title: str = "",
+                                  limits_coordinate_space: Tuple[Tuple[float, float], Tuple[float, float]] = [
+                                        [-180, 180], [-180, 180]],
+                                  number_of_bins: int = 25, limits_force: Tuple[float, float] = None,
+                                  resolution_full_space: int = style.potential_resolution) -> Tuple[plt.Figure, Union[str, None]]:
+    """
+        Plot giving the sampled space, position histogram and forces of a 2D simulation
 
     Parameters
     ----------
+    system: sustemCls
+            The simulated 2D system
+    out_path: str, optional
+        save the plot to path
+    title:str, optional
+        title of the plot
+    limits_coordinate_space: Tuple[Tuple[float, float], Tuple[float, float]], optional
+        range of the coordinate space: ((xmin, xmax), (ymin, ymax))
+    number_of_bins:
+        number of bins for the position histogram
+    resolution_full_space: int
+        Number of points used for visualizing the potential space
+    Returns
+    -------
+
+
+   ----------
     sys: system Type
         The simulated system
     limits_potential_system_energy: tuple
@@ -286,59 +355,81 @@ def Two_biased_simulation_analysis_plot(system: systemCls, out_path: str = None,
         If specified, figure will be saved to this location
     resolution_full_space: int
         Number of points used for visualizing the potential space
-
-
     Returns
     -------
-    out_path: str
-        Location the figure is saved to
-    fig: Figure object
-    '''
+    plt.Figure
+        Figure object
+    Union[str, None]
+        out_path
+    """
 
-
-    test_timing_with_points=100
-
-    positions = np.linspace(-180, 180, test_timing_with_points)
-    x_positions, y_positions = np.meshgrid(positions,positions)
-    positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
-
-    traj_pos = np.array(list(map(lambda x: np.array(x), sys.trajectory.position))).T
+    # get system information
+    traj_pos = np.array(list(map(lambda x: np.array(x), system.trajectory.position))).T
+    force1, force2 = np.array(list(map(lambda x: np.array(x), system.trajectory.dhdpos))).T
     potential = system.potential
-
-
-    # gather data
-    traj = system.trajectory
-    last_frame = traj.shape[0] - 1
-
-    x = list(traj.position)
-    y = traj.total_potential_energy
-    shift = traj.dhdpos
 
     # dynamic plot range
     if (limits_coordinate_space is None):
-        x_pot = np.linspace(min(x) + min(x) * 0.25, max(x) + max(x) * 0.25, resolution_full_space)
-    elif (type(limits_coordinate_space) == range):
-        x_pot = limits_coordinate_space
+        limits_coordinate_space = np.array([(min(traj_pos[0]), max(traj_pos[0])), (min(traj_pos[1]), max(traj_pos[1]))])
     else:
-        x_pot = np.linspace(min(limits_coordinate_space), max(limits_coordinate_space) + 1, resolution_full_space)
+        limits_coordinate_space = np.array(limits_coordinate_space)
 
-    ytot_space = system.potential.ene(x_pot)
+    positionsX = np.linspace(limits_coordinate_space[0][0], limits_coordinate_space[0][1], resolution_full_space)
+    positionsY = np.linspace(limits_coordinate_space[1][0], limits_coordinate_space[1][1], resolution_full_space)
+    x_positions, y_positions = np.meshgrid(positionsX, positionsY)
+    positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
+
+    ytot_space = system.potential.ene(positions2D)
 
     # plot
     w, h = figaspect(0.25)
-    fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[w, h])
+    fig = plt.figure(figsize=[w, h])
+    gs = fig.add_gridspec(2, 3)
+    ax1 = fig.add_subplot(gs[:, 0])
+    ax2 = fig.add_subplot(gs[:, 1])
+    ax3 = fig.add_subplot(gs[0, 2])
+    ax4 = fig.add_subplot(gs[1, 2])
 
     # traj
     # plot energy landscape of total potential
-    ax1.imshow(potential.ene(positions2D).reshape([test_timing_with_points,test_timing_with_points]), extent=[*space_range, *space_range])
-
+    ax1.imshow(potential.ene(positions2D).reshape([resolution_full_space, resolution_full_space]),
+               extent=[*limits_coordinate_space.flat])
     ax1.scatter(*traj_pos, c=style.trajectory_color, alpha=style.alpha_traj)
-    ax1.scatter(x[0], y[0], c=style.traj_start, alpha=style.alpha_val)  # start_point
-    ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)  # end_point
+    ax1.scatter(*traj_pos[:, 0], c=style.traj_start, alpha=style.alpha_val)  # start_point
+    ax1.scatter(*traj_pos[:, -1], c=style.traj_end, alpha=style.alpha_val)  # end_point
 
-    ax1.set_ylabel("$V_pot$")
+    if(limits_coordinate_space is not None):
+        ax1.set_ylim(limits_coordinate_space[0])
+        ax1.set_ylim(limits_coordinate_space[1])
+
+    # position density:
+    x, y = traj_pos
+    hist = ax2.hist2d(*traj_pos, bins=number_of_bins, range=limits_coordinate_space, density=True, norm=LogNorm())
+    cb = plt.colorbar(hist[3], ax=ax2)
+
+    # forces:
+    ax3.plot(range(len(force1)), force1)
+    ax4.plot(range(len(force2)), force2)
+
+
+    # labels&titles
+    ax1.set_ylabel("$y$")
     ax1.set_xlabel("$x$")
     ax1.set_title("Potential Sampling")
+
+    ax2.set_xlabel("$x$")
+    ax2.set_ylabel("$y$")
+    ax2.set_title("Sampling Histogramm")
+
+    ax3.set_xlabel("$t$")
+    ax3.set_ylabel("$dhdpos$")
+    ax3.set_title("Forces/Shifts in 1. Dim")
+
+    ax4.set_xlabel("$t$")
+    ax4.set_ylabel("$dhdpos$")
+    ax4.set_title("Forces/Shifts in 2. Dim")
+
+    cb.set_label("$p$")
 
     fig.suptitle(title, y=1.08)
     fig.tight_layout()
@@ -346,42 +437,4 @@ def Two_biased_simulation_analysis_plot(system: systemCls, out_path: str = None,
     if (out_path):
         fig.savefig(out_path)
         plt.close(fig)
-    return out_path, fig
-    """
-    color = style.potential_color(2)
-    viol = ax2.violinplot(x, showmeans=False, showextrema=False)
-    ax2.boxplot(x)
-    ax2.scatter([1], [x[0]], c=style.traj_start, alpha=style.alpha_val)  # start_point
-    ax2.scatter([1], [x[last_frame]], c=style.traj_end, alpha=style.alpha_val)  # end_point
-    print(viol)
-    viol["bodies"][0].set_facecolor(color)
-
-    color = style.potential_color(3)
-    ax3.plot(range(len(x)), shift, color=color)
-
-
-    # dynamic plot range
-    if not (limits_potential_system_energy is None):
-        ax1.set_ylim(limits_potential_system_energy)
-
-    if (limits_force is not None):
-        ax3.set_ylim([min(limits_force), max(limits_force)])
-
-    # Labels
-    ax1.set_ylabel("$V_pot$")
-    ax1.set_xlabel("$x$")
-    ax1.set_title("Potential Sampling")
-
-    ax2.set_ylabel("$x$")
-    ax2.set_xlabel("$simulation$")
-    ax2.set_title("x-Distribution")
-
-    ax3.set_ylabel("$dhdpos$")
-    ax3.set_xlabel("$t$")
-    ax3.set_title("Forces/shifts")
-
-    ax2.set_xticks([])
-
-
-"""
-
+    return fig, out_path

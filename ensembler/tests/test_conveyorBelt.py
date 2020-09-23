@@ -1,7 +1,7 @@
 import unittest
 
 from ensembler.ensemble.replicas_dynamic_parameters import conveyorBelt
-from ensembler.samplers.stochastic import monteCarloIntegrator
+from ensembler.samplers.stochastic import metropolisMonteCarloIntegrator
 from ensembler.potentials import OneD
 from ensembler.system.perturbed_system import perturbedSystem
 
@@ -13,14 +13,14 @@ class testEnsemble(unittest.TestCase):
         ens = self.convBelt(0, 2)
 
     def test_run_step_lambda2(self):
-        integrator = monteCarloIntegrator()
+        integrator = metropolisMonteCarloIntegrator()
         ha = OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = OneD.harmonicOscillatorPotential(x_shift=5)
         pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lam(lam)
+        sys.set_lambda(lam)
         ens = self.convBelt(0.0, 1, system=sys)
         ens.calculate_total_ensemble_energy()
         ens.run()
@@ -28,7 +28,7 @@ class testEnsemble(unittest.TestCase):
         ens.get_replicas_positions()
 
     def test_run_step(self):
-        integrator = monteCarloIntegrator()
+        integrator = metropolisMonteCarloIntegrator()
         ha = OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = OneD.harmonicOscillatorPotential(x_shift=5)
         pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
@@ -41,14 +41,14 @@ class testEnsemble(unittest.TestCase):
         ens.get_replicas_positions()
 
     def test_run_step_lambda1(self):
-        integrator = monteCarloIntegrator()
+        integrator = metropolisMonteCarloIntegrator()
         ha = OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = OneD.harmonicOscillatorPotential(x_shift=5)
         pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 1.0
-        sys.set_lam(lam)
+        sys.set_lambda(lam)
         ens = self.convBelt(0.0, 1, system=sys)
 
         ens.calculate_total_ensemble_energy()
@@ -57,14 +57,14 @@ class testEnsemble(unittest.TestCase):
         ens.get_replicas_positions()
 
     def test_run_step_lambda2(self):
-        integrator = monteCarloIntegrator()
+        integrator = metropolisMonteCarloIntegrator()
         ha = OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = OneD.harmonicOscillatorPotential(x_shift=5)
         pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lam(lam)
+        sys.set_lambda(lam)
         ens = self.convBelt(0.0, 1, system=sys)
         ens.calculate_total_ensemble_energy()
         ens.run()
@@ -72,14 +72,14 @@ class testEnsemble(unittest.TestCase):
         ens.get_replicas_positions()
 
     def testTraj(self):
-        integrator = monteCarloIntegrator()
+        integrator = metropolisMonteCarloIntegrator()
         ha = OneD.harmonicOscillatorPotential(x_shift=-5)
         hb = OneD.harmonicOscillatorPotential(x_shift=5)
         pot = OneD.linearCoupledPotentials(Va=ha, Vb=hb)
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lam(lam)
+        sys.set_lambda(lam)
         ens = self.convBelt(0.0, 1, system=sys)
 
         # print(ens.run(())
