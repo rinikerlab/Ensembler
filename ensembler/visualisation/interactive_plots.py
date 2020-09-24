@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from IPython.display import display
-from ensembler.potentials import ND as potN
 from ensembler.potentials import OneD as pot
 from ensembler.visualisation.plotConveyorBelt import plotEnsembler
 
@@ -173,13 +172,13 @@ class interactive_eds():
         self.positions_state = np.arange(-4, 4 * self.nstates, 0.5)
         self.positions = [[x] for x in self.positions_state]
 
-        V_is = [pot.harmonicOsc(x_shift=state * 4, k=10) for state in range(self.nstates)]
+        V_is = [pot.harmonicOscillatorPotential(x_shift=state * 4, k=10) for state in range(self.nstates)]
         for state_e in [V.ene(self.positions_state) for V in V_is]:
             self.ax.plot(self.positions_state, state_e, alpha=0.8, lw=5)
         self.ax.set_xlim([-4, (4 * self.nstates)])
 
         # pot
-        self.Eoffs = self.eds_pot.eoff
+        self.Eoffs = self.eds_pot.Eoff
         if (len(self.Eoffs) < self.nstates):
             for x in range(len(self.Eoffs), self.nstates):
                 self.Eoffs.append(0)
@@ -188,7 +187,7 @@ class interactive_eds():
 
         self.eoff_sliders_box.children = self.make_eoff_sliders(self.nstates)
 
-        self.eds_pot = potN.envelopedPotential(V_is=V_is, s=np.log10(1 + (self.s ** 1.5 / 1000)), Eoff_i=self.Eoffs)
+        self.eds_pot = pot.envelopedPotential(V_is=V_is, s=np.log10(1 + (self.s ** 1.5 / 1000)), eoff=self.Eoffs)
         eds_enes = self.eds_pot.ene(self.positions)
         self.eds_line.set_data(self.positions, eds_enes)
         self.fig.canvas.draw()
@@ -205,10 +204,10 @@ class interactive_eds():
         self.fig.canvas.flush_events()
 
     def redraw_eoff(self, eoff_event):
-        teoff = self.eds_pot.eoff
+        teoff = self.eds_pot.Eoff
         teoff[int(eoff_event["owner"].description.split("_")[-1])] = eoff_event["new"]
         self.Eoffs = teoff
-        self.eds_pot.eoff = teoff
+        self.eds_pot.Eoff = teoff
 
         eds_enes = self.eds_pot.ene(self.positions)
         self.eds_line.set_data(self.positions, eds_enes)

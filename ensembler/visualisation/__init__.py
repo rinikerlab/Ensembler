@@ -1,3 +1,6 @@
+"""
+This module provides a lot of functions for simulation or potential visualization.
+"""
 import matplotlib
 from scipy import constants
 
