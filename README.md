@@ -5,7 +5,7 @@ Welcome to Ensembler
 [![codecov](https://codecov.io/gh/rinikerlab/Ensembler/branch/master/graph/badge.svg)](https://codecov.io/gh/rinikerlab/Ensembler/branch/master)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/rinikerlab/Ensembler/context:python)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/)
-![build_Documentation](https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg)
+![build_Documentation](https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buidDoc.yml/badge.svg)
 [![Documentation](https://img.shields.io/badge/Documentation-here-white.svg)](https://rinikerlab.github.io/Ensembler/index.html)
 
 ## Description
