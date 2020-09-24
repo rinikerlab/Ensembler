@@ -17,6 +17,7 @@ ensembler.potentials.OneD
 
    .. autosummary::
    
+      addedPotentials
       coulombPotential
       doubleWellPotential
       dummyPotential
@@ -32,6 +33,9 @@ ensembler.potentials.OneD
       lennardJonesForceFieldPotential
       lennardJonesPotential
       linearCoupledPotentials
+      metadynamicsPotential
+      metadynamicsPotentialSympy
+      timedependendBias
       torsionPotential
       wavePotential
    

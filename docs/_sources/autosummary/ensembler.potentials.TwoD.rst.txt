@@ -17,9 +17,11 @@ ensembler.potentials.TwoD
 
    .. autosummary::
    
+      addedPotentials
       addedWavePotential
       gaussPotential
       harmonicOscillatorPotential
+      metadynamicsPotential
       wavePotential
    
    

@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -1484,10 +1483,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">biased potentials</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">ensembler.potentials.biased_potentials</span> <span class="kn">import</span> <span class="n">biasOneD</span>
 
 <div class="viewcode-block" id="potentialCls_addedPotentials"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials">[docs]</a><span class="k">class</span> <span class="nc">potentialCls_addedPotentials</span><span class="p">(</span><span class="n">test_potentialCls</span><span class="p">):</span>
-    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">biasOneD</span><span class="o">.</span><span class="n">addedPotentials</span>
+    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">addedPotentials</span>
 
 <div class="viewcode-block" id="potentialCls_addedPotentials.test_energies"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials.test_energies">[docs]</a>    <span class="k">def</span> <span class="nf">test_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
@@ -1517,7 +1515,7 @@
 
 
 <div class="viewcode-block" id="potentialCls_metadynamics"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_metadynamics">[docs]</a><span class="k">class</span> <span class="nc">potentialCls_metadynamics</span><span class="p">(</span><span class="n">test_potentialCls</span><span class="p">):</span>
-    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">biasOneD</span><span class="o">.</span><span class="n">metadynamicsPotential</span>
+    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">metadynamicsPotential</span>
 
 <div class="viewcode-block" id="potentialCls_metadynamics.test_energies"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_metadynamics.test_energies">[docs]</a>    <span class="k">def</span> <span class="nf">test_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
@@ -1558,10 +1556,9 @@
                                        <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The results of &quot;</span> <span class="o">+</span> <span class="n">potential</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; are not correct!&quot;</span><span class="p">)</span></div></div>
 
 
-<span class="kn">from</span> <span class="nn">ensembler.potentials.biased_potentials</span> <span class="kn">import</span> <span class="n">biasTwoD</span>
 
 <div class="viewcode-block" id="potentialCls_addedPotentials2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials2D">[docs]</a><span class="k">class</span> <span class="nc">potentialCls_addedPotentials2D</span><span class="p">(</span><span class="n">test_potentialCls</span><span class="p">):</span>
-    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">biasTwoD</span><span class="o">.</span><span class="n">addedPotentials</span>
+    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">TwoD</span><span class="o">.</span><span class="n">addedPotentials</span>
 
 <div class="viewcode-block" id="potentialCls_addedPotentials2D.test_energies"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials2D.test_energies">[docs]</a>    <span class="k">def</span> <span class="nf">test_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
@@ -1597,7 +1594,7 @@
 
 
 <div class="viewcode-block" id="potentialCls_metadynamics2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_metadynamics2D">[docs]</a><span class="k">class</span> <span class="nc">potentialCls_metadynamics2D</span><span class="p">(</span><span class="n">test_potentialCls</span><span class="p">):</span>
-    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">biasTwoD</span><span class="o">.</span><span class="n">metadynamicsPotential</span>
+    <span class="n">potential_class</span> <span class="o">=</span> <span class="n">TwoD</span><span class="o">.</span><span class="n">metadynamicsPotential</span>
 
     <span class="k">def</span> <span class="nf">test_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>

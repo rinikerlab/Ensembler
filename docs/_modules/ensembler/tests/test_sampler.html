@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -196,7 +195,7 @@
 
 
 <div class="viewcode-block" id="test_MonteCarlo_Integrator"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_sampler.test_MonteCarlo_Integrator">[docs]</a><span class="k">class</span> <span class="nc">test_MonteCarlo_Integrator</span><span class="p">(</span><span class="n">standard_IntegratorTests</span><span class="p">):</span>
-    <span class="n">integrator_class</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span>
+    <span class="n">integrator_class</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span>
 
 <div class="viewcode-block" id="test_MonteCarlo_Integrator.test_step"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_sampler.test_MonteCarlo_Integrator.test_step">[docs]</a>    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">potent</span> <span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>

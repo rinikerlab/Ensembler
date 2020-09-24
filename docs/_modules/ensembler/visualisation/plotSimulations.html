@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -160,21 +159,65 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ensembler.visualisation.plotSimulations</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-
+<span></span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.figure</span> <span class="kn">import</span> <span class="n">figaspect</span>
-
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
 
 <span class="kn">from</span> <span class="nn">ensembler.samplers</span> <span class="kn">import</span> <span class="n">stochastic</span><span class="p">,</span> <span class="n">newtonian</span><span class="p">,</span> <span class="n">optimizers</span>
 
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span>
+
+<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
 <span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">style</span>
-<span class="kn">from</span> <span class="nn">ensembler.potentials.biased_potentials.biasOneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span>
+<span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">plot_layout_settings</span>
 
-<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">plot_layout_settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
+<div class="viewcode-block" id="simulation_analysis_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotSimulations.simulation_analysis_plot">[docs]</a><span class="k">def</span> <span class="nf">simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">oneD_limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="n">twoD_number_of_bins</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
+                              <span class="n">resolution_full_space</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">potential_resolution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a wrapper function for the analysis of</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    system</span>
+<span class="sd">    title</span>
+<span class="sd">    out_path</span>
+<span class="sd">    limits_coordinate_space</span>
+<span class="sd">    resolution_full_space</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="s2">&quot;bias_potential&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">system</span><span class="o">.</span><span class="n">bias_potential</span><span class="p">):</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">=</span> <span class="n">oneD_biased_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span>
+                                                                 <span class="n">limits_coordinate_space</span><span class="o">=</span><span class="n">limits_coordinate_space</span><span class="p">,</span>
+                                                                 <span class="n">limits_potential_system_energy</span><span class="o">=</span><span class="n">oneD_limits_potential_system_energy</span><span class="p">,</span>
+                                                                 <span class="n">limits_force</span><span class="o">=</span><span class="n">limits_force</span><span class="p">,</span>
+                                                                 <span class="n">resolution_full_space</span><span class="o">=</span><span class="n">resolution_full_space</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">=</span> <span class="n">oneD_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span>
+                                                        <span class="n">limits_coordinate_space</span><span class="o">=</span><span class="n">limits_coordinate_space</span><span class="p">,</span>
+                                                          <span class="n">limits_potential_system_energy</span><span class="o">=</span><span class="n">oneD_limits_potential_system_energy</span><span class="p">,</span>
+                                                          <span class="n">limits_force</span><span class="o">=</span><span class="n">limits_force</span><span class="p">,</span>
+                                                        <span class="n">resolution_full_space</span><span class="o">=</span><span class="n">resolution_full_space</span><span class="p">)</span>
+    <span class="k">elif</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span> <span class="o">=</span> <span class="n">twoD_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">system</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="n">out_path</span><span class="p">,</span>
+                                                        <span class="n">limits_coordinate_space</span><span class="o">=</span><span class="n">limits_coordinate_space</span><span class="p">,</span>
+                                                        <span class="n">number_of_bins</span><span class="o">=</span><span class="n">twoD_number_of_bins</span><span class="p">,</span>
+                                                        <span class="n">resolution_full_space</span><span class="o">=</span><span class="n">resolution_full_space</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span></div>
 
 <div class="viewcode-block" id="oneD_simulation_analysis_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotSimulations.oneD_simulation_analysis_plot">[docs]</a><span class="k">def</span> <span class="nf">oneD_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                                   <span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -374,8 +417,13 @@
         <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_traj</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">origPotential</span><span class="p">)</span>
-        <span class="n">ytot_orig_space</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">origPotential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">x_pot</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">x_pot</span><span class="p">)</span>
+
+        <span class="n">oP</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">origPotential</span>
+        <span class="n">oP</span><span class="o">.</span><span class="n">_update_functions</span><span class="p">()</span>
+        <span class="n">ytot_orig_space</span> <span class="o">=</span> <span class="n">oP</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">x_pot</span><span class="p">)</span>
         <span class="n">ytot_bias_space</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">addPotential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">x_pot</span><span class="p">)</span>
+
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_pot</span><span class="p">,</span> <span class="n">ytot_orig_space</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
         <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_pot</span><span class="p">,</span> <span class="n">ytot_bias_space</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">potential_light</span><span class="p">)</span>
 
@@ -390,7 +438,7 @@
     <span class="n">ax2</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_start</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># start_point</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="n">last_frame</span><span class="p">]],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_end</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># end_point</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">viol</span><span class="p">)</span>
+
     <span class="n">viol</span><span class="p">[</span><span class="s2">&quot;bodies&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
 
     <span class="n">color</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_color</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
@@ -428,14 +476,34 @@
 
     <span class="k">return</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">fig</span></div>
 
-<div class="viewcode-block" id="Two_biased_simulation_analysis_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotSimulations.Two_biased_simulation_analysis_plot">[docs]</a><span class="k">def</span> <span class="nf">Two_biased_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                                         <span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limits_potential_system_energy</span><span class="p">:</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                                         <span class="n">resolution_full_space</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_resolution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Plot giving the sampled space, position distribution and forces</span>
+
+<div class="viewcode-block" id="twoD_simulation_analysis_plot"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotSimulations.twoD_simulation_analysis_plot">[docs]</a><span class="k">def</span> <span class="nf">twoD_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                                  <span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+                                        <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">]],</span>
+                                  <span class="n">number_of_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span> <span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">resolution_full_space</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">potential_resolution</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Figure</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot giving the sampled space, position histogram and forces of a 2D simulation</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    system: sustemCls</span>
+<span class="sd">            The simulated 2D system</span>
+<span class="sd">    out_path: str, optional</span>
+<span class="sd">        save the plot to path</span>
+<span class="sd">    title:str, optional</span>
+<span class="sd">        title of the plot</span>
+<span class="sd">    limits_coordinate_space: Tuple[Tuple[float, float], Tuple[float, float]], optional</span>
+<span class="sd">        range of the coordinate space: ((xmin, xmax), (ymin, ymax))</span>
+<span class="sd">    number_of_bins:</span>
+<span class="sd">        number of bins for the position histogram</span>
+<span class="sd">    resolution_full_space: int</span>
+<span class="sd">        Number of points used for visualizing the potential space</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+
+<span class="sd">   ----------</span>
 <span class="sd">    sys: system Type</span>
 <span class="sd">        The simulated system</span>
 <span class="sd">    limits_potential_system_energy: tuple</span>
@@ -448,59 +516,81 @@
 <span class="sd">        If specified, figure will be saved to this location</span>
 <span class="sd">    resolution_full_space: int</span>
 <span class="sd">        Number of points used for visualizing the potential space</span>
-
-
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    out_path: str</span>
-<span class="sd">        Location the figure is saved to</span>
-<span class="sd">    fig: Figure object</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    plt.Figure</span>
+<span class="sd">        Figure object</span>
+<span class="sd">    Union[str, None]</span>
+<span class="sd">        out_path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-
-    <span class="n">test_timing_with_points</span><span class="o">=</span><span class="mi">100</span>
-
-    <span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">test_timing_with_points</span><span class="p">)</span>
-    <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span><span class="n">positions</span><span class="p">)</span>
-    <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
-
-    <span class="n">traj_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">sys</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">position</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># get system information</span>
+    <span class="n">traj_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">system</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">position</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">force1</span><span class="p">,</span> <span class="n">force2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">system</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">dhdpos</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
     <span class="n">potential</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span>
-
-
-    <span class="c1"># gather data</span>
-    <span class="n">traj</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">trajectory</span>
-    <span class="n">last_frame</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
-
-    <span class="n">x</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">traj</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
-    <span class="n">y</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">total_potential_energy</span>
-    <span class="n">shift</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">dhdpos</span>
 
     <span class="c1"># dynamic plot range</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">limits_coordinate_space</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="n">x_pot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">,</span> <span class="n">resolution_full_space</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">)</span> <span class="o">==</span> <span class="nb">range</span><span class="p">):</span>
-        <span class="n">x_pot</span> <span class="o">=</span> <span class="n">limits_coordinate_space</span>
+        <span class="n">limits_coordinate_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="nb">min</span><span class="p">(</span><span class="n">traj_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">traj_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">traj_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">max</span><span class="p">(</span><span class="n">traj_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]))])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">x_pot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">resolution_full_space</span><span class="p">)</span>
+        <span class="n">limits_coordinate_space</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">)</span>
 
-    <span class="n">ytot_space</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">x_pot</span><span class="p">)</span>
+    <span class="n">positionsX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">resolution_full_space</span><span class="p">)</span>
+    <span class="n">positionsY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">resolution_full_space</span><span class="p">)</span>
+    <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positionsX</span><span class="p">,</span> <span class="n">positionsY</span><span class="p">)</span>
+    <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="n">ytot_space</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
 
     <span class="c1"># plot</span>
     <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">figaspect</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax4</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 
     <span class="c1"># traj</span>
     <span class="c1"># plot energy landscape of total potential</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">test_timing_with_points</span><span class="p">,</span><span class="n">test_timing_with_points</span><span class="p">]),</span> <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">space_range</span><span class="p">,</span> <span class="o">*</span><span class="n">space_range</span><span class="p">])</span>
-
+    <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">resolution_full_space</span><span class="p">,</span> <span class="n">resolution_full_space</span><span class="p">]),</span>
+               <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">limits_coordinate_space</span><span class="o">.</span><span class="n">flat</span><span class="p">])</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_traj</span><span class="p">)</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_start</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># start_point</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">last_frame</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">last_frame</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_end</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># end_point</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_start</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># start_point</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_end</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># end_point</span>
 
-    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$V_pot$&quot;</span><span class="p">)</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">limits_coordinate_space</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits_coordinate_space</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># position density:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">traj_pos</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">number_of_bins</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">limits_coordinate_space</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">hist</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
+
+    <span class="c1"># forces:</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">force1</span><span class="p">)),</span> <span class="n">force1</span><span class="p">)</span>
+    <span class="n">ax4</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">force2</span><span class="p">)),</span> <span class="n">force2</span><span class="p">)</span>
+
+
+    <span class="c1"># labels&amp;titles</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Potential Sampling&quot;</span><span class="p">)</span>
+
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$x$&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$y$&quot;</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Sampling Histogramm&quot;</span><span class="p">)</span>
+
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$dhdpos$&quot;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Forces/Shifts in 1. Dim&quot;</span><span class="p">)</span>
+
+    <span class="n">ax4</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$t$&quot;</span><span class="p">)</span>
+    <span class="n">ax4</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$dhdpos$&quot;</span><span class="p">)</span>
+    <span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Forces/Shifts in 2. Dim&quot;</span><span class="p">)</span>
+
+    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;$p$&quot;</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.08</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -508,45 +598,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">out_path</span><span class="p">):</span>
         <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">fig</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    color = style.potential_color(2)</span>
-<span class="sd">    viol = ax2.violinplot(x, showmeans=False, showextrema=False)</span>
-<span class="sd">    ax2.boxplot(x)</span>
-<span class="sd">    ax2.scatter([1], [x[0]], c=style.traj_start, alpha=style.alpha_val)  # start_point</span>
-<span class="sd">    ax2.scatter([1], [x[last_frame]], c=style.traj_end, alpha=style.alpha_val)  # end_point</span>
-<span class="sd">    print(viol)</span>
-<span class="sd">    viol[&quot;bodies&quot;][0].set_facecolor(color)</span>
-
-<span class="sd">    color = style.potential_color(3)</span>
-<span class="sd">    ax3.plot(range(len(x)), shift, color=color)</span>
-
-
-<span class="sd">    # dynamic plot range</span>
-<span class="sd">    if not (limits_potential_system_energy is None):</span>
-<span class="sd">        ax1.set_ylim(limits_potential_system_energy)</span>
-
-<span class="sd">    if (limits_force is not None):</span>
-<span class="sd">        ax3.set_ylim([min(limits_force), max(limits_force)])</span>
-
-<span class="sd">    # Labels</span>
-<span class="sd">    ax1.set_ylabel(&quot;$V_pot$&quot;)</span>
-<span class="sd">    ax1.set_xlabel(&quot;$x$&quot;)</span>
-<span class="sd">    ax1.set_title(&quot;Potential Sampling&quot;)</span>
-
-<span class="sd">    ax2.set_ylabel(&quot;$x$&quot;)</span>
-<span class="sd">    ax2.set_xlabel(&quot;$simulation$&quot;)</span>
-<span class="sd">    ax2.set_title(&quot;x-Distribution&quot;)</span>
-
-<span class="sd">    ax3.set_ylabel(&quot;$dhdpos$&quot;)</span>
-<span class="sd">    ax3.set_xlabel(&quot;$t$&quot;)</span>
-<span class="sd">    ax3.set_title(&quot;Forces/shifts&quot;)</span>
-
-<span class="sd">    ax2.set_xticks([])</span>
-
-
-<span class="sd">&quot;&quot;&quot;</span></div>
-
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">out_path</span></div>
 </pre></div>
 
            </div>

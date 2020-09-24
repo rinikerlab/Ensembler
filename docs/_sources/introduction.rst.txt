@@ -8,14 +8,9 @@ Welcome to Ensembler
    :alt: GitHub Actions Build Status
 
 
-.. image:: https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1/graph/badge.svg
-   :target: https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1
+.. image:: https://codecov.io/gh/rinikerlab/Ensembler/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/rinikerlab/Ensembler/branch/master
    :alt: codecov
-
-
-.. image:: https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18
-   :target: https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/
-   :alt: Total alerts
 
 
 .. image:: https://img.shields.io/lgtm/grade/python/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18
@@ -23,7 +18,20 @@ Welcome to Ensembler
    :alt: Language grade: Python
 
 
-Code to sample ensembles of simple (toy) models with various algorithms. 
+.. image:: https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18
+   :target: https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/
+   :alt: Total alerts
+
+
+.. image:: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
+   :target: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
+   :alt: build_Documentation
+
+
+.. image:: https://img.shields.io/badge/Documentation-here-white.svg
+   :target: https://rinikerlab.github.io/Ensembler/index.html
+   :alt: Documentation
+
 
 Description
 -----------
@@ -35,6 +43,8 @@ Here, we provide insights into the package's implementation, its usage, and an a
 
 Contents
 --------
+
+The full Documentation can be found here:  https://rinikerlab.github.io/Ensembler/
 
 Potential functions
 ^^^^^^^^^^^^^^^^^^^

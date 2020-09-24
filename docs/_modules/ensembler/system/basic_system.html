@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -182,8 +181,8 @@
 <span class="kn">from</span> <span class="nn">ensembler.samplers.newtonian</span> <span class="kn">import</span> <span class="n">newtonianSampler</span>
 <span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">langevinIntegrator</span>
 
-<span class="kn">from</span> <span class="nn">ensembler.potentials.biased_potentials.biasOneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential1D</span>
-<span class="kn">from</span> <span class="nn">ensembler.potentials.biased_potentials.biasTwoD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential2D</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential1D</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.TwoD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential2D</span>
 
 
 <div class="viewcode-block" id="system"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system">[docs]</a><span class="k">class</span> <span class="nc">system</span><span class="p">(</span><span class="n">_baseClass</span><span class="p">):</span>
@@ -486,8 +485,6 @@
                         <span class="n">set_initial_position</span><span class="o">=</span><span class="n">start_position</span><span class="p">)</span>
 
         <span class="c1">##check if system should be coupled to conditions:</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_conditions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># update for metadynamics simulation - local elevation bias is like a condition/potential hybrid.</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="n">metadynamicsPotential1D</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="n">metadynamicsPotential2D</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="p">)</span>
@@ -828,7 +825,8 @@
 <span class="sd">            returns the new current position, the new current velocities and the new current forces</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentForce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentForce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampler</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentForce</span></div>
 
 <div class="viewcode-block" id="system.apply_conditions"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.apply_conditions">[docs]</a>    <span class="k">def</span> <span class="nf">apply_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -840,8 +838,8 @@
 <span class="sd">        NoReturn</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">aditional</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">:</span>
-            <span class="n">aditional</span><span class="o">.</span><span class="n">apply_coupled</span><span class="p">()</span></div>
+        <span class="k">for</span> <span class="n">condition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">:</span>
+            <span class="n">condition</span><span class="o">.</span><span class="n">apply_coupled</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="system.append_state"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.append_state">[docs]</a>    <span class="k">def</span> <span class="nf">append_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">],</span> <span class="n">new_velocity</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">],</span>
                      <span class="n">new_forces</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">],</span> <span class="n">Number</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>

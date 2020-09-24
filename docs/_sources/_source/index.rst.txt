@@ -1,4 +1,4 @@
-DOCUMENTATION
+Documentation
 ========
 
 .. toctree::

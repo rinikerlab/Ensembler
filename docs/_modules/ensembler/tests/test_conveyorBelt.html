@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -161,7 +160,7 @@
 <span></span><span class="kn">import</span> <span class="nn">unittest</span>
 
 <span class="kn">from</span> <span class="nn">ensembler.ensemble.replicas_dynamic_parameters</span> <span class="kn">import</span> <span class="n">conveyorBelt</span>
-<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">monteCarloIntegrator</span>
+<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">metropolisMonteCarloIntegrator</span>
 <span class="kn">from</span> <span class="nn">ensembler.potentials</span> <span class="kn">import</span> <span class="n">OneD</span>
 <span class="kn">from</span> <span class="nn">ensembler.system.perturbed_system</span> <span class="kn">import</span> <span class="n">perturbedSystem</span>
 
@@ -173,14 +172,14 @@
         <span class="n">ens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convBelt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">test_run_step_lambda2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">ha</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">hb</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span><span class="n">Va</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">Vb</span><span class="o">=</span><span class="n">hb</span><span class="p">)</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">perturbedSystem</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
         <span class="n">lam</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">set_lam</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
         <span class="n">ens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convBelt</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">)</span>
         <span class="n">ens</span><span class="o">.</span><span class="n">calculate_total_ensemble_energy</span><span class="p">()</span>
         <span class="n">ens</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -188,7 +187,7 @@
         <span class="n">ens</span><span class="o">.</span><span class="n">get_replicas_positions</span><span class="p">()</span>
 
 <div class="viewcode-block" id="testEnsemble.test_run_step"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conveyorBelt.testEnsemble.test_run_step">[docs]</a>    <span class="k">def</span> <span class="nf">test_run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">ha</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">hb</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span><span class="n">Va</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">Vb</span><span class="o">=</span><span class="n">hb</span><span class="p">)</span>
@@ -201,14 +200,14 @@
         <span class="n">ens</span><span class="o">.</span><span class="n">get_replicas_positions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="testEnsemble.test_run_step_lambda1"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conveyorBelt.testEnsemble.test_run_step_lambda1">[docs]</a>    <span class="k">def</span> <span class="nf">test_run_step_lambda1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">ha</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">hb</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span><span class="n">Va</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">Vb</span><span class="o">=</span><span class="n">hb</span><span class="p">)</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">perturbedSystem</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
         <span class="n">lam</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">set_lam</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
         <span class="n">ens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convBelt</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">)</span>
 
         <span class="n">ens</span><span class="o">.</span><span class="n">calculate_total_ensemble_energy</span><span class="p">()</span>
@@ -217,14 +216,14 @@
         <span class="n">ens</span><span class="o">.</span><span class="n">get_replicas_positions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="testEnsemble.test_run_step_lambda2"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conveyorBelt.testEnsemble.test_run_step_lambda2">[docs]</a>    <span class="k">def</span> <span class="nf">test_run_step_lambda2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">ha</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">hb</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span><span class="n">Va</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">Vb</span><span class="o">=</span><span class="n">hb</span><span class="p">)</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">perturbedSystem</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
         <span class="n">lam</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">set_lam</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
         <span class="n">ens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convBelt</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">)</span>
         <span class="n">ens</span><span class="o">.</span><span class="n">calculate_total_ensemble_energy</span><span class="p">()</span>
         <span class="n">ens</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
@@ -232,14 +231,14 @@
         <span class="n">ens</span><span class="o">.</span><span class="n">get_replicas_positions</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="testEnsemble.testTraj"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conveyorBelt.testEnsemble.testTraj">[docs]</a>    <span class="k">def</span> <span class="nf">testTraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">ha</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=-</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">hb</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">x_shift</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
         <span class="n">pot</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span><span class="n">Va</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span> <span class="n">Vb</span><span class="o">=</span><span class="n">hb</span><span class="p">)</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">perturbedSystem</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
         <span class="n">lam</span> <span class="o">=</span> <span class="mf">0.5</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">set_lam</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span>
         <span class="n">ens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convBelt</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">)</span></div></div>
 
         <span class="c1"># print(ens.run(())</span>

@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -645,7 +644,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">reset_ensemble</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="p">[</span><span class="n">replica</span><span class="o">.</span><span class="n">initialise</span><span class="p">(</span><span class="n">withdraw_Traj</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">repName</span><span class="p">,</span> <span class="n">replica</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
                 <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;nExchange&quot;</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">,</span> <span class="s2">&quot;replicaPositionI&quot;</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateI&quot;</span><span class="p">,</span> <span class="s2">&quot;TotEI&quot;</span><span class="p">,</span>
                          <span class="s2">&quot;replicaPositionJ&quot;</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateJ&quot;</span><span class="p">,</span> <span class="s2">&quot;TotEJ&quot;</span><span class="p">,</span> <span class="s2">&quot;doExchange&quot;</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_exchanges</span><span class="p">()</span>

@@ -2,6 +2,8 @@
 
 .. include:: introduction.rst
 
+.. include:: api.rst
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -10,9 +12,7 @@
    Tutorials/index
    Examples/index
    _source/index
-   api
 
-.. include:: api
 
 Indices and tables
 ==================

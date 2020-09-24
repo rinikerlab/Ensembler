@@ -93,8 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -187,10 +186,11 @@
 <div class="section" id="welcome-to-ensembler">
 <h1>Welcome to Ensembler<a class="headerlink" href="#welcome-to-ensembler" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://github.com/rinikerlab/ensembler/actions?query=branch%3Amaster+workflow%3ACI"><img alt="GitHub Actions Build Status" src="https://github.com/rinikerlab/ensembler/workflows/CI/badge.svg" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1"><img alt="codecov" src="https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1/graph/badge.svg" /></a>
-<a class="reference external image-reference" href="https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&amp;logoWidth=18" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/rinikerlab/Ensembler/branch/master"><img alt="codecov" src="https://codecov.io/gh/rinikerlab/Ensembler/branch/master/graph/badge.svg" /></a>
 <a class="reference external image-reference" href="https://lgtm.com/projects/g/rinikerlab/Ensembler/context:python"><img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/g/rinikerlab/Ensembler.svg?logo=lgtm&amp;logoWidth=18" /></a>
-<p>Code to sample ensembles of simple (toy) models with various algorithms.</p>
+<a class="reference external image-reference" href="https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&amp;logoWidth=18" /></a>
+<a class="reference external image-reference" href="https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg"><img alt="build_Documentation" src="https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://rinikerlab.github.io/Ensembler/index.html"><img alt="Documentation" src="https://img.shields.io/badge/Documentation-here-white.svg" /></a>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
 <p>Ensembler is a python package that allows fast and easy access to simulation of one and two-dimensional model systems.
@@ -200,6 +200,7 @@ Here, we provide insights into the package’s implementation, its usage, and an
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<p>The full Documentation can be found here:  <a class="reference external" href="https://rinikerlab.github.io/Ensembler/">https://rinikerlab.github.io/Ensembler/</a></p>
 <div class="section" id="potential-functions">
 <h3>Potential functions<a class="headerlink" href="#potential-functions" title="Permalink to this headline">¶</a></h3>
 <blockquote>
@@ -295,6 +296,41 @@ David F. Hahn</p>
 <h3>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h3>
 <p>Project based on the
 <a class="reference external" href="https://github.com/molssi/cookiecutter-cms">Computational Molecular Science Python Cookiecutter</a> version 1.3.</p>
+</div>
+</div>
+</div>
+<div class="section" id="api-documentation">
+<h1>API Documentation<a class="headerlink" href="#api-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Here a short summary of the packages</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="autosummary/ensembler.html#module-ensembler" title="ensembler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler</span></code></a></p></td>
+<td><p>Ensembler Code to sample ensembles of 1D and 2D models with various algorithms.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="autosummary/ensembler.potentials.html#module-ensembler.potentials" title="ensembler.potentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.potentials</span></code></a></p></td>
+<td><p>Definition of the potential energy functions, that can be explored by the simulations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="autosummary/ensembler.samplers.html#module-ensembler.samplers" title="ensembler.samplers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.samplers</span></code></a></p></td>
+<td><p>A variety of samplers that can be used to explore potential energy function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="autosummary/ensembler.system.html#module-ensembler.system" title="ensembler.system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.system</span></code></a></p></td>
+<td><p>Systems wrap the sampler and the potential class to allow easy orchestration of simulations.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="autosummary/ensembler.analysis.html#module-ensembler.analysis" title="ensembler.analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.analysis</span></code></a></p></td>
+<td><p>Tools to do analysis of ensembler simulations (e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="autosummary/ensembler.visualisation.html#module-ensembler.visualisation" title="ensembler.visualisation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.visualisation</span></code></a></p></td>
+<td><p>A collection of visualizations (plots, animation, interactive widgets)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="autosummary/ensembler.util.html#module-ensembler.util" title="ensembler.util"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensembler.util</span></code></a></p></td>
+<td><p>utils contains a lot of different useful things (e.g.</p></td>
+</tr>
+</tbody>
+</table>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -308,27 +344,13 @@ David F. Hahn</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_ConveyorBelt.html">Interactive Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_ConveyorBelt.html#BUILD-Conveyor-Belt">BUILD Conveyor Belt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_ConveyorBelt.html#Plot-Simulation">Plot Simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_ConveyorBelt.html#Conveyor-Belt-Animation">Conveyor Belt Animation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/Example_ConveyorBelt.html">Conveyor Belt TI - scheme</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Examples/Example_EDS.html">EDS Simulation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EDS.html#ABOUT-THE-POTENTIAL">ABOUT THE POTENTIAL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EDS.html#What-can-the-parameters-for-EDS-DO?">What can the parameters for EDS DO?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html">Enhanced Sampling Simulations with Ensembler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html#Enhanced-Sampling-Simulations-in-1D">Enhanced Sampling Simulations in 1D</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html#Enhanced-sampling">Enhanced sampling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html#Time-independent-bias">Time-independent bias</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html#Time-dependent-bias">Time-dependent bias</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html#2D-systems">2D systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Examples/Example_EnhancedSampling.html">Enhanced Sampling Simulations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html">Free Energy Calculations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html#Linear-Coupling-Method---Thermodynamic-Integration-(TI)">Linear Coupling Method - Thermodynamic Integration (TI)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html#Hybrid-Methods---$:nbsphinx-math:lambda-EDS-$">Hybrid Methods - $:nbsphinx-math:<cite>lambda</cite>-EDS $</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html#RE-EDS">RE-EDS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html#Final-Results">Final Results</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_source/index.html">DOCUMENTATION</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="_source/index.html">Documentation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="_source/ensembler.analysis.html">ensembler.analysis package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_source/ensembler.conditions.html">ensembler.conditions package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="_source/ensembler.ensemble.html">ensembler.ensemble package</a></li>
@@ -341,10 +363,7 @@ David F. Hahn</p>
 <li class="toctree-l2"><a class="reference internal" href="_source/ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
 </ul>
-</div>
-</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

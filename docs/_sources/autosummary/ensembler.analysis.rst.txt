@@ -1,4 +1,4 @@
-﻿ensembler.analysis
+ensembler.analysis
 ==================
 
 .. automodule:: ensembler.analysis

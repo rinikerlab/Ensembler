@@ -39,7 +39,6 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Documentation" href="../api.html" />
     <link rel="prev" title="ensembler.util package" href="ensembler.util.html" /> 
 </head>
 
@@ -94,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
@@ -117,7 +116,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
 </ul>
 
             
@@ -164,7 +162,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">DOCUMENTATION</a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
         
       <li>ensembler.visualisation package</li>
     
@@ -249,7 +247,7 @@
 
 <dl class="py function">
 <dt id="ensembler.visualisation.animationSimulation.animation_trajectory">
-<code class="sig-prename descclassname">ensembler.visualisation.animationSimulation.</code><code class="sig-name descname">animation_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">simulated_system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out_writer</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'pillow'</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">every_n_frame</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>matplotlib.animation.Animation<span class="p">, </span>Optional<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ensembler/visualisation/animationSimulation.html#animation_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.animationSimulation.animation_trajectory" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ensembler.visualisation.animationSimulation.</code><code class="sig-name descname">animation_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">simulated_system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution_of_analytic_potential</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">out_writer</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'pillow'</span></em>, <em class="sig-param"><span class="n">dpi</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">100</span></em>, <em class="sig-param"><span class="n">every_n_frame</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>matplotlib.animation.Animation<span class="p">, </span>Optional<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ensembler/visualisation/animationSimulation.html#animation_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.animationSimulation.animation_trajectory" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>this function is generating a animation out of a simulation.</p>
 </div></blockquote>
@@ -466,31 +464,6 @@
 <div class="section" id="module-ensembler.visualisation.plotSimulations">
 <span id="ensembler-visualisation-plotsimulations-module"></span><h2>ensembler.visualisation.plotSimulations module<a class="headerlink" href="#module-ensembler.visualisation.plotSimulations" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="ensembler.visualisation.plotSimulations.Two_biased_simulation_analysis_plot">
-<code class="sig-prename descclassname">ensembler.visualisation.plotSimulations.</code><code class="sig-name descname">Two_biased_simulation_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution_full_space</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1000</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/ensembler/visualisation/plotSimulations.html#Two_biased_simulation_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.plotSimulations.Two_biased_simulation_analysis_plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot giving the sampled space, position distribution and forces</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sys</strong> (<em>system Type</em>) – The simulated system</p></li>
-<li><p><strong>limits_potential_system_energy</strong> (<em>tuple</em>) – Defines the range of the x axis of the first plot</p></li>
-<li><p><strong>limits_potential_system_energy</strong> (<em>tuple</em>) – Defines the range of the y axis of the first plot</p></li>
-<li><p><strong>title</strong> (<em>String</em>) – Title for the plot</p></li>
-<li><p><strong>out_path</strong> (<em>str</em>) – If specified, figure will be saved to this location</p></li>
-<li><p><strong>resolution_full_space</strong> (<em>int</em>) – Number of points used for visualizing the potential space</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>out_path</strong> (<em>str</em>) – Location the figure is saved to</p></li>
-<li><p><strong>fig</strong> (<em>Figure object</em>)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="ensembler.visualisation.plotSimulations.oneD_biased_simulation_analysis_plot">
 <code class="sig-prename descclassname">ensembler.visualisation.plotSimulations.</code><code class="sig-name descname">oneD_biased_simulation_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution_full_space</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1000</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/ensembler/visualisation/plotSimulations.html#oneD_biased_simulation_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.plotSimulations.oneD_biased_simulation_analysis_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot giving the sampled space, position distribution and forces</p>
@@ -542,6 +515,69 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt id="ensembler.visualisation.plotSimulations.simulation_analysis_plot">
+<code class="sig-prename descclassname">ensembler.visualisation.plotSimulations.</code><code class="sig-name descname">simulation_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">oneD_limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">twoD_number_of_bins</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">25</span></em>, <em class="sig-param"><span class="n">resolution_full_space</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>matplotlib.pyplot.figure<span class="p">, </span>str<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/visualisation/plotSimulations.html#simulation_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.plotSimulations.simulation_analysis_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a wrapper function for the analysis of</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong></p></li>
+<li><p><strong>title</strong></p></li>
+<li><p><strong>out_path</strong></p></li>
+<li><p><strong>limits_coordinate_space</strong></p></li>
+<li><p><strong>resolution_full_space</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="ensembler.visualisation.plotSimulations.twoD_simulation_analysis_plot">
+<code class="sig-prename descclassname">ensembler.visualisation.plotSimulations.</code><code class="sig-name descname">twoD_simulation_analysis_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em>, <em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">title</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">''</span></em>, <em class="sig-param"><span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">, </span>Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[[- 180, 180], [- 180, 180]]</span></em>, <em class="sig-param"><span class="n">number_of_bins</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">25</span></em>, <em class="sig-param"><span class="n">limits_force</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resolution_full_space</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1000</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>matplotlib.figure.Figure<span class="p">, </span>Optional<span class="p">[</span>str<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ensembler/visualisation/plotSimulations.html#twoD_simulation_analysis_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.plotSimulations.twoD_simulation_analysis_plot" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><blockquote>
+<div><p>Plot giving the sampled space, position histogram and forces of a 2D simulation</p>
+</div></blockquote>
+<dl class="simple">
+<dt>system: sustemCls</dt><dd><p>The simulated 2D system</p>
+</dd>
+<dt>out_path: str, optional</dt><dd><p>save the plot to path</p>
+</dd>
+<dt>title:str, optional</dt><dd><p>title of the plot</p>
+</dd>
+<dt>limits_coordinate_space: Tuple[Tuple[float, float], Tuple[float, float]], optional</dt><dd><p>range of the coordinate space: ((xmin, xmax), (ymin, ymax))</p>
+</dd>
+<dt>number_of_bins:</dt><dd><p>number of bins for the position histogram</p>
+</dd>
+<dt>resolution_full_space: int</dt><dd><p>Number of points used for visualizing the potential space</p>
+</dd>
+</dl>
+</div></blockquote>
+<blockquote>
+<div><dl class="simple">
+<dt>sys: system Type</dt><dd><p>The simulated system</p>
+</dd>
+<dt>limits_potential_system_energy: tuple</dt><dd><p>Defines the range of the x axis of the first plot</p>
+</dd>
+<dt>limits_potential_system_energy: tuple</dt><dd><p>Defines the range of the y axis of the first plot</p>
+</dd>
+<dt>title: String</dt><dd><p>Title for the plot</p>
+</dd>
+<dt>out_path: str</dt><dd><p>If specified, figure will be saved to this location</p>
+</dd>
+<dt>resolution_full_space: int</dt><dd><p>Number of points used for visualizing the potential space</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>plt.Figure</dt><dd><p>Figure object</p>
+</dd>
+<dt>Union[str, None]</dt><dd><p>out_path</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ensembler.visualisation.style">
 <span id="ensembler-visualisation-style-module"></span><h2>ensembler.visualisation.style module<a class="headerlink" href="#module-ensembler.visualisation.style" title="Permalink to this headline">¶</a></h2>
@@ -554,6 +590,7 @@
 </div>
 <div class="section" id="module-ensembler.visualisation">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.visualisation" title="Permalink to this headline">¶</a></h2>
+<p>A collection of visualizations (plots, animation, interactive widgets)</p>
 <dl class="py function">
 <dt id="ensembler.visualisation.cm2inch">
 <code class="sig-prename descclassname">ensembler.visualisation.</code><code class="sig-name descname">cm2inch</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/visualisation.html#cm2inch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.visualisation.cm2inch" title="Permalink to this definition">¶</a></dt>
@@ -569,8 +606,6 @@
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="../api.html" class="btn btn-neutral float-right" title="API Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ensembler.util.html" class="btn btn-neutral float-left" title="ensembler.util package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

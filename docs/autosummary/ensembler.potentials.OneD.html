@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -194,50 +193,62 @@ This module shall be used to implement subclasses of Potential. This module cont
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.coulombPotential" title="ensembler.potentials.OneD.coulombPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coulombPotential</span></code></a>([q1, q2, epsilon])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.addedPotentials" title="ensembler.potentials.OneD.addedPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addedPotentials</span></code></a>([origPotential, addPotential])</p></td>
+<td><p>Adds two different potentials on top of each other.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.coulombPotential" title="ensembler.potentials.OneD.coulombPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">coulombPotential</span></code></a>([q1, q2, epsilon])</p></td>
 <td><p>Coulomb potential representing the pairwise electrostatic interaction of two charged particles</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.doubleWellPotential" title="ensembler.potentials.OneD.doubleWellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">doubleWellPotential</span></code></a>([Vmax, a, b])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.doubleWellPotential" title="ensembler.potentials.OneD.doubleWellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">doubleWellPotential</span></code></a>([Vmax, a, b])</p></td>
 <td><p>This is an implementation of a double Well potential</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.dummyPotential" title="ensembler.potentials.OneD.dummyPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dummyPotential</span></code></a>(y_shift)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.dummyPotential" title="ensembler.potentials.OneD.dummyPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dummyPotential</span></code></a>(y_shift)</p></td>
 <td><p>This Dummy potential returns a simple constant value for each position</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.envelopedPotential" title="ensembler.potentials.OneD.envelopedPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envelopedPotential</span></code></a>(V_is, s, eoff, T, kb)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.envelopedPotential" title="ensembler.potentials.OneD.envelopedPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envelopedPotential</span></code></a>(V_is, s, eoff, T, kb)</p></td>
 <td><p>This implementation of exponential Coupling for EDS is a more numeric robust and variable implementation, it allows N states.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.exponentialCoupledPotentials" title="ensembler.potentials.OneD.exponentialCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exponentialCoupledPotentials</span></code></a>(Va, Vb, eoffA, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.exponentialCoupledPotentials" title="ensembler.potentials.OneD.exponentialCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exponentialCoupledPotentials</span></code></a>(Va, Vb, eoffA, …)</p></td>
 <td><p>This implementation of exponential Coupling is the symbolic variant of the more robust eds potential implementation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.flatwellPotential" title="ensembler.potentials.OneD.flatwellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatwellPotential</span></code></a>(x_range, y_max, y_min)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.flatwellPotential" title="ensembler.potentials.OneD.flatwellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flatwellPotential</span></code></a>(x_range, y_max, y_min)</p></td>
 <td><p>A flatwell potential returns a simple constant value (y_max) for each position except positions in the range x_min-x_max.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.forceField" title="ensembler.potentials.OneD.forceField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceField</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.forceField" title="ensembler.potentials.OneD.forceField"><code class="xref py py-obj docutils literal notranslate"><span class="pre">forceField</span></code></a>()</p></td>
 <td><p>Force field potential energy that combines Coulomb, Lennard Jones and Torsion potentials</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.fourWellPotential" title="ensembler.potentials.OneD.fourWellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourWellPotential</span></code></a>([Vmax, a, b, c, d, ah, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.fourWellPotential" title="ensembler.potentials.OneD.fourWellPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fourWellPotential</span></code></a>([Vmax, a, b, c, d, ah, …])</p></td>
 <td><p>Unperturbed four well potential</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential" title="ensembler.potentials.OneD.gaussPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussPotential</span></code></a>([A, mu, sigma])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential" title="ensembler.potentials.OneD.gaussPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussPotential</span></code></a>([A, mu, sigma])</p></td>
 <td><p>Gaussian like potential, usually used for metadynamics</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.harmonicOscillatorPotential" title="ensembler.potentials.OneD.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, x_shift, y_shift)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.harmonicOscillatorPotential" title="ensembler.potentials.OneD.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, x_shift, y_shift)</p></td>
 <td><p>Implementation of an 1D  harmonic oscillator potential following hooke’s law</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.hybridCoupledPotentials" title="ensembler.potentials.OneD.hybridCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybridCoupledPotentials</span></code></a>(Va, Vb, lam, s, temp)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.hybridCoupledPotentials" title="ensembler.potentials.OneD.hybridCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hybridCoupledPotentials</span></code></a>(Va, Vb, lam, s, temp)</p></td>
 <td><p>This implementation of exponential Coupling combined with linear compling is called $lambda$-EDS this function is the purely symbolic class and therefore note very numerical stable (see lambda EDS).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lambdaEDSPotential" title="ensembler.potentials.OneD.lambdaEDSPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambdaEDSPotential</span></code></a>(V_is, lam, s, eoff, T, kb)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lambdaEDSPotential" title="ensembler.potentials.OneD.lambdaEDSPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambdaEDSPotential</span></code></a>(V_is, lam, s, eoff, T, kb)</p></td>
 <td><p>This implementation of exponential Coupling combined with linear compling is called $lambda$-EDS the implementation of function is more numerical robust to the hybrid coupling class.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesForceFieldPotential" title="ensembler.potentials.OneD.lennardJonesForceFieldPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lennardJonesForceFieldPotential</span></code></a>(c6, c12, …)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesForceFieldPotential" title="ensembler.potentials.OneD.lennardJonesForceFieldPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lennardJonesForceFieldPotential</span></code></a>(c6, c12, …)</p></td>
 <td><p>This is a forcefield like implementation of  a lennard Jones Potential</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesPotential" title="ensembler.potentials.OneD.lennardJonesPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lennardJonesPotential</span></code></a>(sigma, epsilon, x_shift)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesPotential" title="ensembler.potentials.OneD.lennardJonesPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lennardJonesPotential</span></code></a>(sigma, epsilon, x_shift)</p></td>
 <td><p>Lennard Jones potential representing the pairwise van-der-Waals interaction of two particles</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.linearCoupledPotentials" title="ensembler.potentials.OneD.linearCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linearCoupledPotentials</span></code></a>(Va, Vb, lam)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.linearCoupledPotentials" title="ensembler.potentials.OneD.linearCoupledPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linearCoupledPotentials</span></code></a>(Va, Vb, lam)</p></td>
 <td><p>Linear Coupled Potential combines two potential as linear combinations, $ V_{lambda} = lambda * V_a + (1-lambda)*V_b $</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.metadynamicsPotential" title="ensembler.potentials.OneD.metadynamicsPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadynamicsPotential</span></code></a>([origPotential, …])</p></td>
+<td><p>The metadynamics bias potential adds 1D Gaussian potentials on top of the original 1D potential.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.metadynamicsPotentialSympy" title="ensembler.potentials.OneD.metadynamicsPotentialSympy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadynamicsPotentialSympy</span></code></a>(origPotential[, …])</p></td>
+<td><p>The metadynamics bias potential adds Gaussian potentials on top of the original potential.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.timedependendBias" title="ensembler.potentials.OneD.timedependendBias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timedependendBias</span></code></a>(origPotential, …)</p></td>
+<td><p>The timedependend bias potential adds a user defined potential on top of the original potential.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential" title="ensembler.potentials.OneD.torsionPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">torsionPotential</span></code></a>([wavePotentials, radians])</p></td>
 <td><p>Torsion potential that represents the energy potential of a torsion angle</p></td>

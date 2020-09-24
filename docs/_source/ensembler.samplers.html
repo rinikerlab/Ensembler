@@ -94,7 +94,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">DOCUMENTATION</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
@@ -114,7 +114,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
 </ul>
 
             
@@ -161,7 +160,7 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">DOCUMENTATION</a> &raquo;</li>
+          <li><a href="index.html">Documentation</a> &raquo;</li>
         
       <li>ensembler.samplers package</li>
     
@@ -665,7 +664,7 @@ The purpose of this function is to perform one integration step.</p>
 
 <dl class="py class">
 <dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">metropolisMonteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">metropolisMonteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">step_size_coefficient</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1.25</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.stochasticSampler" title="ensembler.samplers.stochastic.stochasticSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.stochasticSampler</span></code></a></p>
 <p>This class is implementing a metropolis monte carlo Integrator.
 In contrast to the Monte Carlo Integrator, that has completely random steps, this sampler has
@@ -695,12 +694,11 @@ with:</p>
 </div></blockquote>
 <dl class="py method">
 <dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">step_size_coefficient</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1.25</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the Constructor of the Metropolis-MonteCarlo samplers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>maximal_step_size</strong> (<em>Number, optional</em>) – maximal size of an integrationstep in any direction, by default 1</p></li>
 <li><p><strong>minimal_step_size</strong> (<em>Number, optional</em>) – minimal size of an integration step in any direction, by default None</p></li>
 <li><p><strong>space_range</strong> (<em>Tuple[Number, Number], optional</em>) – maximal and minimal allowed position for after an integration step.
 If not fullfilled, step is rejected. By default None</p></li>
@@ -767,7 +765,7 @@ If not fullfilled, step is rejected. By default None</p></li>
 
 <dl class="py class">
 <dt id="ensembler.samplers.stochastic.monteCarloIntegrator">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">monteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">monteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">step_size_coefficient</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.stochasticSampler" title="ensembler.samplers.stochastic.stochasticSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.stochasticSampler</span></code></a></p>
 <p>This class implements the classic Monte Carlo samplers.
 It chooses its moves purely randomly. Therefore, the distributions generated by this integrator do not
@@ -775,15 +773,15 @@ resemble the (micro/grand) canonical ensemble. Additionally, no kinetic informat
 Monte Carlo samplers.</p>
 <dl class="py method">
 <dt id="ensembler.samplers.stochastic.monteCarloIntegrator.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">step_size_coefficient</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>This is the Constructor of the MonteCarlo samplers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>maximal_step_size</strong> (<em>Number, optional</em>) – maximal size of an integrationstep in any direction, by default 1</p></li>
-<li><p><strong>minimal_step_size</strong> (<em>Number, optional</em>) – minimal size of an integration step in any direction, by default None</p></li>
 <li><p><strong>space_range</strong> (<em>Tuple[Number, Number], optional</em>) – maximal and minimal allowed position for after an integration step.
 If not fullfilled, step is rejected. By default None</p></li>
+<li><p><strong>step_size_coefficient</strong> (<em>Number, optional</em>) – gives the range of the random numbers. Default is one and therefore values between 1 and -1 are chosen. (Default: 1)</p></li>
+<li><p><strong>minimal_step_size</strong> (<em>Number, optional</em>) – minimal size of an integration step in any direction, by default None</p></li>
 <li><p><strong>fixed_step_size</strong> (<em>Number, optional</em>) – this option restrains each integration step to a certain size in each dimension, by default None</p></li>
 </ul>
 </dd>
@@ -831,11 +829,6 @@ stochastic type samplers currently comprise various Monte-Carlo and Langevin Met
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="ensembler.samplers.stochastic.stochasticSampler.maxStepSize">
-<code class="sig-name descname">maxStepSize</code><em class="property">: numbers.Number</em><em class="property"> = 1</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.maxStepSize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="ensembler.samplers.stochastic.stochasticSampler.minStepSize">
 <code class="sig-name descname">minStepSize</code><em class="property">: numbers.Number</em><em class="property"> = None</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.minStepSize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -875,16 +868,17 @@ stochastic type samplers currently comprise various Monte-Carlo and Langevin Met
 <code class="sig-name descname">spaceRange</code><em class="property">: Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.spaceRange" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.step_size_coefficient">
+<code class="sig-name descname">step_size_coefficient</code><em class="property">: numbers.Number</em><em class="property"> = 1</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.step_size_coefficient" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="module-ensembler.samplers">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.samplers" title="Permalink to this headline">¶</a></h2>
-<dl class="simple">
-<dt>Module: samplers</dt><dd><p>This module shall be used to implement subclasses of samplers. The integrators are use for propagating simulatoins.
-Think about how to link conditions to samplers???</p>
-</dd>
-</dl>
+<p>A variety of samplers that can be used to explore potential energy function. (e.g. Monte Carlo, Lagevin integrator …)</p>
 </div>
 </div>
 

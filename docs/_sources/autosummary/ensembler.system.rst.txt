@@ -1,4 +1,4 @@
-﻿ensembler.system
+ensembler.system
 ================
 
 .. automodule:: ensembler.system

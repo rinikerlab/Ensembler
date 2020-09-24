@@ -1,4 +1,4 @@
-﻿ensembler.samplers
+ensembler.samplers
 ==================
 
 .. automodule:: ensembler.samplers

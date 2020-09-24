@@ -1,4 +1,4 @@
-﻿ensembler.util
+ensembler.util
 ==============
 
 .. automodule:: ensembler.util

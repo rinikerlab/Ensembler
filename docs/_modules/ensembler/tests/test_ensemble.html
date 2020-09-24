@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -168,7 +167,7 @@
 
 <div class="viewcode-block" id="test_ReplicaExchangeCls"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls">[docs]</a><span class="k">class</span> <span class="nc">test_ReplicaExchangeCls</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="n">RE</span> <span class="o">=</span> <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span>
-    <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span><span class="p">()</span>
+    <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
     <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
     <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
@@ -250,7 +249,7 @@
     <span class="n">TRE</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span>
 
 <div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_init"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_init">[docs]</a>    <span class="k">def</span> <span class="nf">test_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
@@ -261,7 +260,7 @@
         <span class="n">group</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">temperature_range</span><span class="o">=</span><span class="n">T_range</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_run"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_run">[docs]</a>    <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
@@ -276,7 +275,7 @@
 
 
 <div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_exchange_all"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_exchange_all">[docs]</a>    <span class="k">def</span> <span class="nf">test_exchange_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 
@@ -348,7 +347,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_simulate_good_exchange"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_simulate_good_exchange">[docs]</a>    <span class="k">def</span> <span class="nf">test_simulate_good_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">monteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
         <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
         <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
 

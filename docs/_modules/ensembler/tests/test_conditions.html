@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -291,12 +290,10 @@
         <span class="n">expected_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">])</span>
         <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
         <span class="n">vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">)</span>
+        <span class="n">corr_pos</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
-                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_vel</span><span class="p">,</span>
-                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span></div>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="periodicBoundaryCondition.test_apply2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_apply2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span>
@@ -306,12 +303,10 @@
         <span class="n">expected_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
         <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">)</span>
+        <span class="n">corr_pos</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
 
         <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
-                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">expected_vel</span><span class="p">,</span>
-                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span></div></div>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="positionRestraintCondition"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition">[docs]</a><span class="k">class</span> <span class="nc">positionRestraintCondition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>

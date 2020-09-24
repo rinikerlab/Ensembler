@@ -92,8 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">DOCUMENTATION</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">Documentation</a></li>
 </ul>
 
             
@@ -196,14 +195,20 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.addedWavePotential" title="ensembler.potentials.TwoD.addedWavePotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addedWavePotential</span></code></a>(wave_potentials, degrees)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.addedPotentials" title="ensembler.potentials.TwoD.addedPotentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addedPotentials</span></code></a>([origPotential, addPotential])</p></td>
+<td><p>Adds two different potentials on top of each other.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.addedWavePotential" title="ensembler.potentials.TwoD.addedWavePotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addedWavePotential</span></code></a>(wave_potentials, degrees)</p></td>
 <td><p>Adds two wave potentials</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential" title="ensembler.potentials.TwoD.gaussPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussPotential</span></code></a>([amplitude, mu, sigma])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential" title="ensembler.potentials.TwoD.gaussPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussPotential</span></code></a>([amplitude, mu, sigma])</p></td>
 <td><p>Gaussian like potential, usually used for metadynamics</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.harmonicOscillatorPotential" title="ensembler.potentials.TwoD.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, r_shift, Voff)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.harmonicOscillatorPotential" title="ensembler.potentials.TwoD.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, r_shift, Voff)</p></td>
 <td><p>Implementation of an 2D  harmonic oscillator potential following hooke’s law</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.metadynamicsPotential" title="ensembler.potentials.TwoD.metadynamicsPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadynamicsPotential</span></code></a>([origPotential, …])</p></td>
+<td><p>The metadynamics bias potential adds 2D Gaussian potentials on top of the original 2D potential.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.TwoD.wavePotential" title="ensembler.potentials.TwoD.wavePotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wavePotential</span></code></a>([amplitude, multiplicity, …])</p></td>
 <td><p>Simple 2D wave potential consisting of cosine functions with given multiplicity, that can be shifted and elongated</p></td>

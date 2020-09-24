@@ -1,4 +1,4 @@
-﻿ensembler.visualisation
+ensembler.visualisation
 =======================
 
 .. automodule:: ensembler.visualisation
