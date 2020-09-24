@@ -1,6 +1,5 @@
 """
-This module provides systems, that can be used as scaffold for simulaitons, combining and managing the sampler and potential interactions.
-
+Systems wrap the sampler and the potential class to allow easy orchestration of simulations.
 """
 from . import basic_system, eds_system, perturbed_system
 from .basic_system import system

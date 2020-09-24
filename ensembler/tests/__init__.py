@@ -1,3 +1,3 @@
 """
-This module is a test suite
+Test suite, containing automatic tests.
 """

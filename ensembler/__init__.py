@@ -1,6 +1,6 @@
 """
 Ensembler
-Code to sample ensembles of simple (toy) models with various algorithms. 
+Code to sample ensembles of 1D and 2D models with various algorithms.
 """
 
 # Handle versioneer

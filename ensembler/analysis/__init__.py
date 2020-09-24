@@ -1,3 +1,3 @@
 """
-This module contains analysis tools for the simulation approaches of ensembler.
+Tools to do analysis of ensembler simulations (e.g. free energy calculations)
 """

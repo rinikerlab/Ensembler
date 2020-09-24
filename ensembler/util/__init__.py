@@ -1,3 +1,3 @@
 """
-The utilf folder contains useful stuff or things, that might be used elswhere but don't fit any category.
+utils contains a lot of different useful things (e.g. data structures, typings).
 """

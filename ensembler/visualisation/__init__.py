@@ -1,5 +1,5 @@
 """
-This module provides a lot of functions for simulation or potential visualization.
+A collection of visualizations (plots, animation, interactive widgets)
 """
 import matplotlib
 from scipy import constants
