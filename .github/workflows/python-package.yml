@@ -61,10 +61,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-
-workflows:
-  version: 2
-  pythonPackage:
-    jobs:
-      - build_unix
-      - build_windows
