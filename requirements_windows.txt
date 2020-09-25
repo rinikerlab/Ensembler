@@ -1,7 +1,7 @@
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: win-64
-ffmpeg==4.3.1
+#ffmpeg==4.3.1
 ipykernel==5.1.4
 jupyter==1.0.0
 m2r==0.2.1
