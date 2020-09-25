@@ -18,18 +18,18 @@ jobs:
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda.exe env update --file environment_windows.yml --name Ensembler
+        $CONDA\bin\conda.exe env update --file environment_windows.yml --name Ensembler
     - name: Lint with flake8
       run: |
         $CONDA/bin/conda install flake8
         # stop the build if there are Python syntax errors or undefined names
-        $CONDA/bin/flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        $CONDA\bin\flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        $CONDA/bin/flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        $CONDA\bin\flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
         conda install pytest
-        $CONDA/bin/pytest
+        $CONDA\bin\pytest
 
   build-linux:
     runs-on: ubuntu-latest
@@ -59,10 +59,3 @@ jobs:
         $CONDA/bin/pytest
 
 
-
-workflows:
-  version: 2
-  pythonPackage:
-    jobs:
-      - build_conda_unix
-      - build_conda_windows
