@@ -59,10 +59,3 @@ jobs:
         $CONDA/bin/pytest
 
 
-
-workflows:
-  version: 2
-  pythonPackage:
-    jobs:
-      - build_conda_unix
-      - build_conda_windows
