@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
-        $CONDA/bin/conda.exe env update --file environment_windows.yml --name Ensembler
+        $CONDA\bin\conda.exe env update --file environment_windows.yml --name Ensembler
     - name: Lint with flake8
       run: |
         $CONDA/bin/conda install flake8
