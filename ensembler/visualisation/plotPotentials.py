@@ -414,7 +414,7 @@ def envPot_diffS_compare(eds_potential: pot.envelopedPotential, s_values: list, 
     axes = [ax for ax_row in axes for ax in ax_row]
 
     for ind, (ax, s) in enumerate(zip(axes, s_values)):
-        color = style.potential_color(i % len(style.potential_color))
+        color = style.potential_color(ind % len(style.potential_color))
         eds_potential.s = s
         y = eds_potential.ene(positions)
         ax.plot(positions, y, c=color)

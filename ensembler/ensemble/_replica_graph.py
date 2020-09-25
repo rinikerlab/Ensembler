@@ -3,6 +3,7 @@ Replica Graph
     this Module contains two files
 """
 import copy
+import warnings
 import itertools as it
 from collections import namedtuple
 
@@ -532,26 +533,34 @@ class _replicaExchange(_mutliReplicaApproach):
         """
         """this is an ugly work around, but this way the code works on windows and Linux
         __under construction!___"""
-        pool = mult.Pool(processes=nProcesses)
-        sim_params = [self.nSteps_between_trials, False, False, True]  # verbosity
-        print("Generated pool^jobs")
-        result_replica = {}
-        for replica_coords, replica in self.replicas.items():
-            print("Submit: ", replica_coords, replica)
-            replica_result = pool.apply_async(replica.simulate, sim_params)
-            result_replica.update({replica_coords: replica_result})
-        print("Done Submitting")
+        import platform
 
-        #Wait pool close
-        pool.close()
-        pool.join()
+        if(not "Windows" == platform.system()):
+            pool = mult.Pool(processes=nProcesses)
+            sim_params = [self.nSteps_between_trials, False, False, True]  # verbosity
+            print("Generated pool^jobs")
+            result_replica = {}
+            for replica_coords, replica in self.replicas.items():
+                print("Submit: ", replica_coords, replica)
+                replica_result = pool.apply_async(replica.simulate, sim_params)
+                result_replica.update({replica_coords: replica_result})
+            print("Done Submitting")
 
-        print("Done Simulating")
-        print(result_replica)
-        [self.replicas.update({replica_coords: result_replica[replica_coords].get()}) for replica_coords in
-         self.replicas]
-        print("GrandFinale: ", self.replicas)
-        print("Done")
+            # Wait pool close
+            pool.close()
+            pool.join()
+
+            print("Done Simulating")
+            print(result_replica)
+            [self.replicas.update({replica_coords: result_replica[replica_coords].get()}) for replica_coords in
+             self.replicas]
+            print("GrandFinale: ", self.replicas)
+            print("Done")
+        else:
+            warnings.warn("Can not go parallel on windows. Not implemented! falling pack to single core.")
+            self.run()
+
+
 
     #ATTRIBUTES:
     # getter/setters

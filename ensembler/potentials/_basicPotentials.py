@@ -61,7 +61,7 @@ class _potentialNDCls(_potentialCls):
 
     @Strategy Pattern
     '''
-    position : sp.Symbol("r")
+    position : sp.Symbol
     V_functional: sp.Function = notImplementedERR
     dVdpos_functional: sp.Function = notImplementedERR
 
