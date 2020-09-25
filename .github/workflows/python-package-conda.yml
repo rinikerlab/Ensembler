@@ -4,7 +4,7 @@ name: Python Package using Conda - Windows
 on: [push]
 
 jobs:
-  build-linux:
+  build-windows:
     runs-on: windows-latest
     strategy:
       max-parallel: 5
@@ -31,11 +31,6 @@ jobs:
         conda install pytest
         $CONDA/bin/pytest
 
-name: Python Package using Conda - Unix
-
-on: [push]
-
-jobs:
   build-linux:
     runs-on: ubuntu-latest
     strategy:
@@ -62,3 +57,12 @@ jobs:
       run: |
         conda install pytest
         $CONDA/bin/pytest
+
+
+
+workflows:
+  version: 2
+  pythonPackage:
+    jobs:
+      - build_conda_unix
+      - build_conda_windows

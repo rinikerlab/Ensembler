@@ -46,7 +46,7 @@ REQUIRED = ['typing', #Code: used for type declarations
             'tqdm',# Tutorial/Examples: nice progressbar
             'sphinx', #Documentation: autodocu tool
             'sphinx_rtd_theme', #Documentation: style
-            'nbspinx', #Documentation: for inclusion of jupyter notebooks
+            'nbsphinx', #Documentation: for inclusion of jupyter notebooks
             'm2r' #Documentation: converts markdown to rst
             'ffmpeg' #Visualizations: for animations in general
             ]
