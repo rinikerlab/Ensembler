@@ -24,7 +24,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        if [ -f requirements_unix.txt ]; then pip install -r requirements_unix.txt; fi
+        pip install -r requirements_unix.txt
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -78,7 +78,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        If (requirements_windows.txt -Match "The if Statement"){pip install -r requirements_windows.txt}
+        pip install -r requirements_windows.txt
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
