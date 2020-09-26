@@ -59,9 +59,10 @@ jobs:
         $CONDA/bin/flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        conda env update --file environment_unix.yml --name Ensembler
-        conda install pytest
-        pytest
+        $CONDA/bin/conda env update --file environment_unix.yml --name Ensembler
+        $CONDA/bin/conda install pytest
+
+        $CONDA/bin/pytest
         
   windows-build:
     runs-on: windows-latest
@@ -106,7 +107,9 @@ jobs:
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
-        conda env update --file environment_windows.yml --name Ensembler
+        dir .
+
+        $CONDA/bin/conda env update --file environment_windows.yml --name Ensembler
     - name: Lint with flake8
       run: |
         $CONDA/bin/conda install flake8
