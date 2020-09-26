@@ -96,15 +96,13 @@ jobs:
     runs-on: windows-latest
     strategy:
       max-parallel: 5
-      matrix:
-        os: ["windows-latest"]
-        python-version: ["3.7", "3.8"]
 
     steps:
-      - uses: conda-incubator/setup-miniconda@v1
-        with:
-          auto-update-conda: true
-          python-version: ${{ matrix.python-version }}
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
     - name: Install dependencies
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
