@@ -737,37 +737,37 @@ class envelopedPotential(_potential1DCls):
             raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
                 len(s)) + "\t states in Vi" + str(len(self.V_is)))
 
-    def _calculate_energies_singlePos_overwrite_multiS(self, position) -> np.array:
-        sum_prefactors, _ = self._logsumexp_calc_gromos(position)
+    def _calculate_energies_singlePos_overwrite_multiS(self, positions) -> np.array:
+        sum_prefactors, _ = self._logsumexp_calc_gromos(positions)
         beta = self.constants[self.T] * self.constants[self.kb]  # kT - *self.constants[self.T]
         Vr = (-1 / (beta)) * sum_prefactors
         return np.squeeze(Vr)
 
-    def _calculate_energies_singlePos_overwrite_oneS(self, position) -> np.array:
-        sum_prefactors, _ = self._logsumexp_calc(position)
+    def _calculate_energies_singlePos_overwrite_oneS(self, positions) -> np.array:
+        sum_prefactors, _ = self._logsumexp_calc(positions)
         beta = self.constants[self.T] * self.constants[self.kb]
         Vr = (-1 / (beta * self.s_i[0])) * sum_prefactors
         return np.squeeze(Vr)
 
-    def _calculate_dvdpos_singlePos_overwrite(self, position: (t.Iterable[float])) -> np.array:
+    def _calculate_dvdpos_singlePos_overwrite(self, positions: (t.Iterable[float])) -> np.array:
         """
             Todo: improve numerical stability.
         Parameters
         ----------
-        position
+        positions
 
         Returns
         -------
 
         """
-        position = np.array(position, ndmin=2)
+        positions = np.array(positions, ndmin=2)
         # print("Pos: ", position)
 
-        V_R_part, V_Is_ene = self._logsumexp_calc_gromos(position)
+        V_R_part, V_Is_ene = self._logsumexp_calc_gromos(positions)
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
         # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
-        V_Is_dhdpos = np.array([-statePot.force(position) for statePot in self.V_is], ndmin=1).T
+        V_Is_dhdpos = np.array([-statePot.force(positions) for statePot in self.V_is], ndmin=1).T
         # print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
 
         adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1)
@@ -990,14 +990,14 @@ class lambdaEDSPotential(envelopedPotential):
         # print("finalVR", Vr)
         return np.squeeze(Vr)
 
-    def _calculate_dvdpos_singlePos_overwrite(self, position: (t.Iterable[float])) -> np.array:
-        position = np.array(position, ndmin=2)
+    def _calculate_dvdpos_singlePos_overwrite(self, positions: (t.Iterable[float])) -> np.array:
+        positions = np.array(positions, ndmin=2)
         # print("Pos: ", position)
-        V_R_part, V_Is_ene = self._logsumexp_calc(position)
+        V_R_part, V_Is_ene = self._logsumexp_calc(positions)
         # print("V_I_ene: ",V_Is_ene.shape, V_Is_ene)
         V_R_part = np.array(V_R_part, ndmin=2).T
         # print("V_R_part: ", V_R_part.shape, V_R_part)
-        V_Is_dhdpos = np.array([-statePot.force(position) for statePot in self.V_is], ndmin=1).T
+        V_Is_dhdpos = np.array([-statePot.force(positions) for statePot in self.V_is], ndmin=1).T
         # print("V_I_force: ",V_Is_dhdpos.shape, V_Is_dhdpos)
         adapt = np.concatenate([V_R_part for s in range(self.constants[self.nStates])], axis=1).T
         # print("ADAPT: ",adapt.shape, adapt)

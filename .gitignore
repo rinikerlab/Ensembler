@@ -112,8 +112,7 @@ ENV/
 
 #large files:
 ensembler/potentials/look_up_tables
-examples/dev/img
-examples/dev/ttt.ipynb
+examples/dev/*
 
 
 #test results:
