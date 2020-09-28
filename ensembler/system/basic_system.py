@@ -96,8 +96,7 @@ class system(_baseClass):
 
     @conditions.setter
     def conditions(self, conditions: List[conditionCls]):
-        if (isinstance(conditions,
-                       List)):  # and all([issubclass(condition.__class__, _conditionCls) for condition in conditions])):
+        if (isinstance(conditions, List)):
             self._conditions = conditions
         else:
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
@@ -277,6 +276,7 @@ class system(_baseClass):
         ################################
         # Declare Attributes
         #################################
+        self._conditions = []
 
         ##Physical parameters
         self.nParticles = 1  # Todo: adapt it to be multiple particles
@@ -327,10 +327,10 @@ class system(_baseClass):
 
         ##check if system should be coupled to conditions:
         # update for metadynamics simulation - local elevation bias is like a condition/potential hybrid.
-        if isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D):
-            self.conditions.append(self.potential)
+        if (isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D)):
+            self._conditions.append(self.potential)
 
-        for condition in self.conditions:
+        for condition in self._conditions:
             if (not hasattr(condition, "system")):
                 condition.couple_system(self)
             else:

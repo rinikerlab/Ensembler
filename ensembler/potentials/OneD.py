@@ -316,7 +316,6 @@ class gaussPotential(_potential1DCls):
 
                 TODO: make numerical stable
         '''
-
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
         super().__init__()
 
@@ -1222,8 +1221,7 @@ class metadynamicsPotential(_potential1DCls):
 
         self.V_functional = origPotential.V
         self.V_orig_part = self.V_functional.subs(self.constants)
-        self.dVdpos = sp.diff(self.V_orig_part, self.position)
-        self.V = self.V_orig_part
+
 
         super().__init__()
 
@@ -1232,11 +1230,11 @@ class metadynamicsPotential(_potential1DCls):
     """
 
     # Beautiful integration to system as Condition.
-    def apply(self):
-        self.check_for_metastep(self.system._currentPosition)
+    def apply(self, currentPosition):
+        self.check_for_metastep(currentPosition)
 
     def apply_coupled(self):
-        self.check_for_metastep(self.system._currentPosition)
+        self.apply(self.system._currentPosition)
 
     def couple_system(self, system: systemCls):
         self.system = system
@@ -1257,15 +1255,6 @@ class metadynamicsPotential(_potential1DCls):
             self._update_potential(curr_position)
             self.finished_steps += 1
 
-        """
-        TODO: Remove
-        if self.current_n%self.n_trigger == 0:
-            self._update_potential(curr_position)
-            self.current_n += 1
-        else:
-            self.current_n += 1
-        """
-
     def _update_potential(self, curr_position):
         '''
         Is triggered by check_for_metastep(). Adds a gaussian centered on the
@@ -1282,14 +1271,16 @@ class metadynamicsPotential(_potential1DCls):
 
         '''
         # do gaussian metadynamics
-        # print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
+        #print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
         biasPotential = self.biasPotentialType(A=self.amplitude, mu=curr_position, sigma=self.sigma)
+        #print(biasPotential)
         try:
             new_bias_bin_energy = biasPotential.ene(self.bin_centers)
             new_bias_bin_force = biasPotential.force(self.bin_centers)
         except OverflowError:
             print("Gaussian Overflows!")
-
+        #print("newENE", new_bias_bin_energy.shape, new_bias_bin_energy)
+        #print("newForce", new_bias_bin_force.shape, new_bias_bin_force)
         # update bias grid
         self.bias_grid_energy = self.bias_grid_energy + new_bias_bin_energy
         self.bias_grid_force = self.bias_grid_force + new_bias_bin_force
@@ -1310,7 +1301,11 @@ class metadynamicsPotential(_potential1DCls):
 
         if isinstance(positions, float) or isinstance(positions, int):
             current_bin = self._find_nearest(self.bin_centers, positions)
-            return np.squeeze(self._calculate_energies(np.squeeze(positions)) + self.bias_grid_energy[current_bin])
+            #print(current_bin, len(self.bias_grid_energy))
+            bias_contribution = self.bias_grid_energy[current_bin]
+            orig_potential = self._calculate_energies(np.squeeze(positions))
+            #print(bias_contribution, orig_potential)
+            return np.squeeze(orig_potential + bias_contribution)
         else:
             bias_list = []
             for entry in positions:
@@ -1332,9 +1327,9 @@ class metadynamicsPotential(_potential1DCls):
         -------
         '''
 
-        current_bin = np.apply_over_axes(self._find_nearest, a=np.array(positions, ndmin=1),
-                                         axes=0)  # self._find_nearest(self.bin_centers, positions)
-        force = np.squeeze(self._calculate_dVdpos(np.squeeze(positions)) + self.bias_grid_force[current_bin])
+        current_bin = self._find_nearest(self.bin_centers, positions)
+        force = np.squeeze(self._calculate_dVdpos(positions) + self.bias_grid_force[current_bin])
+        #print("Force: ",current_bin, self.bias_grid_force[current_bin], force)
         return force
 
     def _find_nearest(self, array, value):
@@ -1354,7 +1349,7 @@ class metadynamicsPotential(_potential1DCls):
 
         '''
         idx = np.searchsorted(array, value, side="left")
-        if idx > 0 and (idx == len(array) or np.abs(value - array[idx - 1]) < np.abs(value - array[idx])):
+        if idx > 0 and (idx == len(array)):  #Why, looks like an earlier version?: or np.abs(value - array[idx - 1]) < np.abs(value - array[idx])
             return idx - 1
         else:
             return idx
@@ -1362,7 +1357,7 @@ class metadynamicsPotential(_potential1DCls):
 
 #### OLD FUNCTIONS ###
 
-class timedependendBias(_potential1DCls):
+class _timedependendBias(_potential1DCls):
     '''
     The timedependend bias potential adds a user defined potential on top of
     the original potential.
@@ -1433,7 +1428,7 @@ class timedependendBias(_potential1DCls):
         self.dVdpos = sp.diff(self.V, self.position)
 
 
-class metadynamicsPotentialSympy(_potential1DCls):
+class _metadynamicsPotentialSympy(_potential1DCls):
     '''
     The metadynamics bias potential adds Gaussian potentials on top of
     the original potential. The added gaussian potential is centered on the current position.

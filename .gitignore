@@ -111,7 +111,7 @@ ENV/
 **.idea
 
 #large files:
-ensembler/potentials/look_up_tables
+ensembler/data/potential_look_up_tables
 examples/images
 examples/dev
 

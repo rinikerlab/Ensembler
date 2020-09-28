@@ -298,7 +298,7 @@ def multiState_overlays(states: list, positions: list = np.linspace(-8, 8, 500),
         fig.savefig(out_path)
         plt.close()
 
-    return fig, out_path, surf
+    return fig, out_path
 
 
 def plot_2perturbedEnergy_landscape(potential: _potential1DClsPerturbed, positions: list, lambdas: list,
