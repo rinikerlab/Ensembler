@@ -59,10 +59,7 @@ jobs:
         $CONDA/bin/flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        $CONDA/bin/conda init
-        $CONDA/bin/conda env update --file environment_unix.yml --name Ensembler
-        $CONDA/bin/conda activate Ensembler
-
+        $CONDA/bin/conda env update --file environment_unix.yml
         $CONDA/bin/pytest
         
   windows-build:
