@@ -291,7 +291,7 @@ def multiState_overlays(states: list, positions: list = np.linspace(-8, 8, 500),
         fig.savefig(out_path)
         plt.close()
 
-    return fig, out_path
+    return fig, out_path, surf
 
 
 def plot_2perturbedEnergy_landscape(potential: _potential1DClsPerturbed, positions: list, lambdas: list,
@@ -591,14 +591,15 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
 
 def plot_2D_2states(V1, V2, space_range: Tuple[Number, Number] = None, point_resolution=500):
     fig, axes = plt.subplots(ncols=2, figsize=[15, 10])
-    _, ax1, surf1 = plot_2DPotential(V1, ax=axes[0], title="State 1", x_label="$\phi/[^{\circ}]$",
+    _, _ , surf1 = plot_2D_potential_V(V1, ax=axes[0], title="State 1", x_label="$\phi/[^{\circ}]$",
                                      y_label="$\psi/[^{\circ}]$", space_range=space_range,
                                      point_resolution=point_resolution)
-    _, ax2, surf2 = plot_2DPotential(V2, ax=axes[1], title="State 2", x_label="$\phi/[^{\circ}]$",
+    _, _, surf2 = plot_2D_potential_V(V2, ax=axes[1], title="State 2", x_label="$\phi/[^{\circ}]$",
                                      y_label="$\psi/[^{\circ}]$", space_range=space_range,
                                      point_resolution=point_resolution)
 
     # color bar:
+    ax2 = fig.gca()
     cbaxes = fig.add_axes([ax2.get_position().x1 * 1.15, ax2.get_position().y0, 0.03, ax2.get_position().height])
     cb = plt.colorbar(surf2, cax=cbaxes, ticks=list(np.round(np.linspace(np.min(surf1._A), np.max(surf1._A), 5), 2)), )
     cb.set_label("V/[kT]")
