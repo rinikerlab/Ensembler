@@ -32,7 +32,8 @@ jobs:
 
           cp ../../examples/Tutorial*ipynb ./Tutorials
           cp ../../examples/Example*ipynb ./Examples
-
+          
+          mkdir _build
           python conf.py
           
           echo ${PWD}
@@ -40,6 +41,6 @@ jobs:
           ls ./*
           
           ##execute making docu
-          make 
+          make html
 
           cp -r _build/hmtl/*  ../
