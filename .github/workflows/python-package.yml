@@ -60,7 +60,7 @@ jobs:
     - name: Test with pytest
       run: |
         $CONDA/bin/conda env update --file environment_unix.yml --name Ensembler
-        $CONDA/bin/conda install pytest
+        $CONDA/bin/conda activate Ensembler
 
         $CONDA/bin/pytest
         
