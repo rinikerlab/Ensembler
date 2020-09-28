@@ -27,7 +27,7 @@ jobs:
           # The command used to build your documentation.
           build-command: make html # optional, default is make html
           # Run before the build command, you can use this to install system level dependencies, for example with "apt-get update -y && apt-get install -y perl"
-          pre-build-command:  python -m pip install --upgrade pip && pip install -r ../../requirements_unix.tx && python conf.py # optional
+          pre-build-command:  python conf.py # optional
 
 
       - name: build the docs
