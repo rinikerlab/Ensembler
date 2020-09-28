@@ -38,8 +38,9 @@ jobs:
           echo ${PWD}
           ls .
           ls ./*
+          less Makefile
           
           ##execute making docu
-          make html
+          make html ${PWD}
 
           cp -r _build/hmtl/*  ../
