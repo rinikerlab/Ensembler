@@ -209,7 +209,8 @@ def plot_2D_potential_V(potential: pot2D._potential2DCls, positions2D: List[Tupl
                      out_path:str=None,
                      x_label: str = None, y_label: str = None, space_range: Tuple[Tuple[Number, Number], Tuple[Number, Number]] = (-10, 10),
                      point_resolution: int = 1000, ax=None, dpi: int = 300,
-                     cmap=style.qualitative_map):
+                     cmap=style.qualitative_map) -> (
+        plt.Figure, plt.Axes, np.array):
     # build positions
     if (isinstance(positions2D, type(None))):
         minX, maxX = min(space_range[0]), max(space_range[0])
