@@ -60,6 +60,10 @@ jobs:
     - name: Test with pytest
       run: |
         $CONDA/bin/conda env update --file environment_unix.yml
+        ls /usr/share/miniconda
+        ls /usr/share/miniconda/envs
+        ls /usr/share/miniconda/envs/ensembler
+
         $CONDA/bin/pytest
         
   windows-build:
