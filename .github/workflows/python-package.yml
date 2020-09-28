@@ -60,11 +60,9 @@ jobs:
     - name: Test with pytest
       run: |
         $CONDA/bin/conda env update --file environment_unix.yml
-        ls /usr/share/miniconda
-        ls /usr/share/miniconda/envs
-        ls /usr/share/miniconda/envs/ensembler
+        ls /usr/share/miniconda/envs/Ensembler
 
-        $CONDA/bin/pytest
+        /usr/share/miniconda/envs/Ensembler/pytest
         
   windows-build:
     runs-on: windows-latest
