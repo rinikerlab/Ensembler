@@ -34,7 +34,11 @@ jobs:
           cp ../../examples/Example*ipynb ./Examples
 
           python conf.py
-
+          
+          echo ${PWD}
+          ls .
+          ls ./*
+          
           ##execute making docu
           make html
 
