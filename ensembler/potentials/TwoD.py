@@ -110,9 +110,9 @@ class wavePotential(_potential2DCls):
         self.constants.update({"yOff_" + str(j): y_offset[j] for j in range(nDimensions)})
 
         if (radians):
-            self.constants.update({"phase_" + str(j): np.deg2rad(phase_shift[j]) for j in range(nDimensions)})
-        else:
             self.constants.update({"phase_" + str(j): phase_shift[j] for j in range(nDimensions)})
+        else:
+            self.constants.update({"phase_" + str(j): np.rad2deg(phase_shift[j]) for j in range(nDimensions)})
 
         super().__init__()
 
@@ -354,6 +354,8 @@ class gaussPotential(_potential2DCls):
         # Not too beautiful, but sp.Product raises errors
         self.V_functional = self.V_dim[0, 0] * self.V_dim[1, 0]
 
+
+from ensembler.potentials.ND import envelopedPotential
 
 """
 Biased potentials

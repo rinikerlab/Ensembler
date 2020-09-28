@@ -130,7 +130,6 @@ class monteCarloIntegrator(stochasticSampler):
         while (True):
             self.random_shift(system.nDimensions)
             self.newPos = np.add(self.oldpos, self.posShift)
-
             # only get positions in certain range or accept if no range
             if (self._critInSpaceRange(self.newPos)):
                 break
@@ -170,7 +169,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     name = "Metropolis Monte Carlo Integrator"
     # Parameters:
     maxIterationTillAccept: float = np.inf  # how often shall the samplers iterate till it accepts a step forcefully
-    convergence_limit: int = 1000  # after reaching a certain limit abort iteration
+    convergence_limit: int = 10000  # after reaching a certain limit abort iteration
 
     # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
@@ -213,8 +212,6 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         # Metropolis Criterions
         self._randomness_factor = randomness_increase_factor
         self.maxIterationTillAccept = max_iteration_tillAccept
-        self.convergence_limit = self.convergence_limit if (
-            isinstance(max_iteration_tillAccept, type(None))) else max_iteration_tillAccept + 1
 
     ##default Metropolis Criterion
     def metropolis_criterion(self, ene_new, current_state):
@@ -259,8 +256,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         nDimensions = system.nDimensions
 
         # integrate position
-        while (
-                current_iteration <= self.convergence_limit and current_iteration <= self.maxIterationTillAccept):  # while no value in spaceRange was found, terminates in first run if no spaceRange
+        while (current_iteration <= self.convergence_limit and current_iteration <= self.maxIterationTillAccept):  # while no value in spaceRange was found, terminates in first run if no spaceRange
             self.random_shift(nDimensions)
 
             # eval new Energy
@@ -268,17 +264,19 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
             system._currentForce = self.posShift
 
             new_ene = system.potential.ene(system._currentPosition)
+            #print(system._currentPosition)
 
             # MetropolisCriterion
-            if ((self._critInSpaceRange(system._currentPosition) and self.metropolis_criterion(new_ene, current_state))):
+            if (self.maxIterationTillAccept <= current_iteration or ((self._critInSpaceRange(system._currentPosition) and
+                                                                   self.metropolis_criterion(new_ene, current_state)))):
                 break
             else:  # not accepted
                 current_iteration += 1
-                continue
 
-        if (current_iteration >= self.convergence_limit):
-            raise ValueError(
-                "Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept")
+            if (current_iteration >= self.convergence_limit):
+                raise ValueError(
+                    "Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept")
+
 
         self.newPos = self.oldpos
         if (self.verbose):

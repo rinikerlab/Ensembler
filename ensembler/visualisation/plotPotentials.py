@@ -204,6 +204,7 @@ def plot_2DPotential(potential: pot2D._potential2DCls, positions: List[Tuple[Num
 
     return fig, out_path
 
+
 def plot_2D_potential_V(potential: pot2D._potential2DCls, positions2D: List[Tuple[Number, Number]] = None, title: str = None,
                      out_path:str=None,
                      x_label: str = None, y_label: str = None, space_range: Tuple[Tuple[Number, Number], Tuple[Number, Number]] = (-10, 10),
@@ -236,7 +237,7 @@ def plot_2D_potential_V(potential: pot2D._potential2DCls, positions2D: List[Tupl
         fig = None
 
     surf = ax.imshow(V_land, cmap=cmap, extent=[minX, maxX, minY, maxY])
-    print(maxX, maxY)
+    #print(maxX, maxY)
     ax.set_xlim([minX, maxX-1])
     ax.set_ylim([minY, maxY-1])
 
@@ -272,7 +273,7 @@ def plot_2D_potential_V(potential: pot2D._potential2DCls, positions2D: List[Tupl
         #else:
         #    fig.show()
 
-    return fig, out_path
+    return fig, out_path, surf
 
 
 """
@@ -618,16 +619,37 @@ def plot_2D_2states(V1, V2, space_range: Tuple[Number, Number] = None, point_res
 
 
 def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100, positions2D=None,
-                                 space_range=[-180, 180], point_resolution=500, x_label="$\phi/[^{\circ}$]",
+                                 space_range=[[-np.pi, np.pi],[-np.pi, np.pi]], point_resolution=500, x_label="$\phi/[^{\circ}$]",
                                  y_label="$\psi/[^{\circ}$]", verbose=False):
+    """
+    Used in publication
+    Parameters
+    ----------
+    eds_pot
+    out_path
+    traj
+    s
+    positions2D
+    space_range
+    point_resolution
+    x_label
+    y_label
+    verbose
+
+    Returns
+    -------
+
+    """
     trajectory_color = style.trajectory_color
 
     # build positions
     if (isinstance(positions2D, type(None))):
-        minX, maxX = min(space_range), max(space_range)
-        minY, maxY = min(space_range), max(space_range)
-        positions = np.linspace(min(space_range), max(space_range), point_resolution)
-        x_positions, y_positions = np.meshgrid(positions, positions)
+        minX, maxX = min(space_range[0]), max(space_range[0])
+        minY, maxY = min(space_range[1]), max(space_range[1])
+        positionsX = np.linspace(minX, maxX, point_resolution)
+        positionsY = np.linspace(minY, maxY, point_resolution)
+
+        x_positions, y_positions = np.meshgrid(positionsX, positionsY)
         positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
     else:
         positions2D = np.array(positions2D)
@@ -644,18 +666,20 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     energies1 = V1.ene(positions2D)
     energies2 = V2.ene(positions2D)
     energiesEds = eds_pot.ene(positions2D)
+    side = int(np.sqrt(positions2D.shape[0]))
 
     # generate map for 2D
     if (verbose): print("map data")
-    energies1Map = energies1.reshape([point_resolution, point_resolution])
-    energies2Map = energies2.reshape([point_resolution, point_resolution])
-    energiesEdsMap = energiesEds.reshape([point_resolution, point_resolution])
+    energies1Map = energies1.reshape([side, side])
+    energies2Map = energies2.reshape([side, side])
+    energiesEdsMap = energiesEds.reshape([side, side])
 
     # plotting
     if (verbose): print("plot")
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[15, 6], dpi=300)
 
     minV, maxV = np.min(energies1Map), np.max(energies1Map)
+    print(minX, maxX, minY, maxY)
     surf1 = ax1.imshow(energies1Map, cmap=style.qualitative_map, interpolation="nearest", origin='center', vmax=maxV,
                        vmin=minV,
                        extent=[minX, maxX, minY, maxY])
@@ -674,13 +698,13 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     cb.set_label("V/[kT]")
 
     ##LAEBELLING FUN
-    ax1.set_ylim([min(space_range), max(space_range)])
-    ax2.set_ylim([min(space_range), max(space_range)])
-    ax3.set_ylim([min(space_range), max(space_range)])
+    ax1.set_ylim([minY, maxY])
+    ax2.set_ylim([minY, maxY])
+    ax3.set_ylim([minY, maxY])
 
-    ax1.set_xlim([min(space_range), max(space_range)])
-    ax2.set_xlim([min(space_range), max(space_range)])
-    ax3.set_xlim([min(space_range), max(space_range)])
+    ax1.set_xlim([minX, maxX])
+    ax2.set_xlim([minX, maxX])
+    ax3.set_xlim([minX, maxX])
 
     ax1.set_ylabel(y_label, fontsize=18)
 
@@ -688,12 +712,12 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     ax2.set_xlabel(x_label, fontsize=18)
     ax3.set_xlabel(x_label, fontsize=18)
 
-    ax1.set_yticks([-180, -90, 0, 90, 180])
+    ax1.set_yticks([minY, minY/2, np.mean([minY, maxY]), maxY/2, maxY])
     ax2.set_yticks([])
     ax3.set_yticks([])
-    ax1.set_xticks([-180, -90, 0, 90, 180])
-    ax2.set_xticks([-180, -90, 0, 90, 180])
-    ax3.set_xticks([-180, -90, 0, 90, 180])
+    ax1.set_xticks([minX, minX/2, np.mean([minX, maxX]), maxX/2, maxX])
+    ax2.set_xticks([minX, minX/2, np.mean([minX, maxX]), maxX/2, maxX])
+    ax3.set_xticks([minX, minX/2, np.mean([minX, maxX]), maxX/2, maxX])
 
     ax1.tick_params(labelsize=14)
     ax2.tick_params(labelsize=14)
@@ -702,6 +726,7 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     # put TRAJ in to landscape
     if (not isinstance(traj, type(None))):
         vis_pos_x, vis_pos_y = np.squeeze(np.array(list(map(np.array, traj.position)))).T
+        print("single",vis_pos_x, vis_pos_y)
 
         ax1.scatter(vis_pos_x, vis_pos_y, c=trajectory_color, alpha=0.3)
         ax2.scatter(vis_pos_x, vis_pos_y, c=trajectory_color, alpha=0.3)
@@ -729,17 +754,19 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
 
 
 def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_pot, out_path: str = None,
-                                             plot_trajs=False, space_range=[-180, 180], point_resolution=500,
+                                             plot_trajs=False, space_range=[[-np.pi, np.pi],[-np.pi, np.pi]], point_resolution=500,
                                              positions2D=None, x_label="$\phi/[^{\circ}$]", y_label="$\psi/[^{\circ}$]",
                                              verbose=False):
     traj_color = "orange"
     ##positions
     # build positions
     if (isinstance(positions2D, type(None))):
-        minX, maxX = min(space_range), max(space_range)
-        minY, maxY = min(space_range), max(space_range)
-        positions = np.linspace(min(space_range), max(space_range), point_resolution)
-        x_positions, y_positions = np.meshgrid(positions, positions)
+        minX, maxX = min(space_range[0]), max(space_range[0])
+        minY, maxY = min(space_range[1]), max(space_range[1])
+        positionsX = np.linspace(minX, maxX, point_resolution)
+        positionsY = np.linspace(minY, maxY, point_resolution)
+
+        x_positions, y_positions = np.meshgrid(positionsX, positionsY)
         positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
     else:
         positions2D = np.array(positions2D)
@@ -779,18 +806,19 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
         energiesEdsMap = energiesEds.reshape([point_resolution, point_resolution])
         energyMaps[-1] = energiesEdsMap
 
-        eminV, emaxV = np.min(energiesEdsMap), np.max(energiesEdsMap)
+        eminV, emaxV = np.min(energies1Map), np.max(energies1Map)
         if (verbose): print("EDS - Barrier: ", emaxV - eminV)
 
         if (plot_trajs):
             tmp_visit_x, tmp_visit_y = np.squeeze(np.array(list(map(np.array, sVal_traj_Dict[s].position)))).T
+            print(tmp_visit_x, tmp_visit_y)
 
         # plot landscapes
         for col in range(ncols):
             ax = fig.add_subplot(outer_grid[row, col])
 
             if (col == 2):
-                eminV, emaxV = np.min(energiesEdsMap), np.max(energiesEdsMap) + relative_barrier
+                #eminV, emaxV = np.min(energiesEdsMap), np.max(energiesEdsMap) + relative_barrier
                 surf = ax.imshow(energyMaps[col], cmap=style.qualitative_map, origin='center', vmax=emaxV, vmin=eminV,
                                  extent=[minX, maxX, minY, maxY])  # interpolation="nearest",
             else:
@@ -798,6 +826,7 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
                                  vmax=maxV,
                                  vmin=minV, extent=[minX, maxX, minY, maxY])
             if (plot_trajs): ax.scatter(tmp_visit_x, tmp_visit_y, c=traj_color, alpha=0.3, s=2)  # plot trajs
+
 
             ax.set_ylim([minY, maxY])
             ax.set_xlim([minX, maxX])
@@ -813,19 +842,18 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
                     ax.set_title("EDS state", fontsize=20)
             if (col == 0):
                 ax.set_ylabel(y_label, fontsize=18)
-                ax.set_yticks([-180, 0, 180])
-                ax.text(x=-450, y=-0, s="s=" + str(s), rotation=90, verticalalignment="center",
-                        horizontalalignment="center", fontsize=14)
+                ax.set_yticks(np.round([minY,  np.mean([minY, maxY]), maxY]))
+                #ax.text(x=-450, y=-0, s="s=" + str(s), rotation=90, verticalalignment="center",
+                #        horizontalalignment="center", fontsize=14)
             else:
                 ax.set_yticks([])
 
             if (row == nrows - 1):
                 ax.set_xlabel(x_label, fontsize=18)
-                ax.set_xticks([minX, maxX])
-                ax.set_xticklabels([minX, 0, maxX], rotation=45)
-
+                ax.set_xticklabels(np.round([minX, np.mean([minX, maxX]), maxX]), rotation=45)
             else:
                 ax.set_xticks([])
+
 
     # colorbar
     cmap = style.qualitative_map

@@ -120,3 +120,4 @@ ensembler/tests/tmp_test_*
 
 #jupyter_nB
 **/.ipynb_checkpoints
+/.pypirc.py

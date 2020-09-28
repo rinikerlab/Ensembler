@@ -18,14 +18,9 @@ Welcome to Ensembler
    :alt: Language grade: Python
 
 
-.. image:: https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18
-   :target: https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/
-   :alt: Total alerts
-
-
-.. image:: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
-   :target: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
-   :alt: build_Documentation
+.. image:: https://github.com/rinikerlab/Ensembler/workflows/Python%20package/badge.svg
+   :target: https://github.com/rinikerlab/Ensembler/workflows/Python%20package/badge.svg
+   :alt: Build package
 
 
 .. image:: https://img.shields.io/badge/Documentation-here-white.svg
