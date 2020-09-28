@@ -375,7 +375,6 @@ class conveyorBelt(_mutliReplicaApproach):
         self.system_trajs = {}
         self.exchange_information = pd.DataFrame(columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
 
-    # Todo: should be inherited.
     def set_simulation_steps_between_trials(self, n_steps: int) -> NoReturn:
         """
                     Sets the integration steps of the replicas between a trail move.
@@ -389,11 +388,14 @@ class conveyorBelt(_mutliReplicaApproach):
         for coord, replica in self.replicas.items():
             replica.nsteps = self.nSteps_between_trials
 
-    # Todo: PUT SOMEWHERE ELSE OR NUMPY?.
+
     @staticmethod
     def spline(dg):
         """
         calculates the value of the spline function depending on the deviation dg from the grid point
+
+        # Todo: PUT SOMEWHERE ELSE OR NUMPY? : numpy.interp¶.
+
         Parameters
         ----------
         dg:float

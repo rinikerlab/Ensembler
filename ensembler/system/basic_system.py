@@ -279,7 +279,7 @@ class system(_baseClass):
         self._conditions = []
 
         ##Physical parameters
-        self.nParticles = 1  # Todo: adapt it to be multiple particles
+        self.nParticles = 1  # FUTURE: adapt it to be multiple particles
         self._mass = mass  # for one particle systems!!!!
         self._temperature = temperature
 
@@ -377,7 +377,7 @@ class system(_baseClass):
 
         # Try to init the force
         try:
-            self._currentForce = self.potential.force(self.initial_position)  # initialise forces!    #todo!
+            self._currentForce = self.potential.force(self.initial_position)  # initialise forces!
         except:
             warnings.warn("Could not initialize the force of the potential? Check if you need it!")
 

@@ -350,7 +350,7 @@ class _mutliReplicaApproach(_baseClass):
 
             ## finalize deepcopy:
             # replica.trajectory = [] #fields are not deepcopied!!!
-            replica.nsteps = self.nSteps_between_trials  # set steps between trials #todo: ? Really here?
+            replica.nsteps = self.nSteps_between_trials  # set steps between trials
 
             ## Node properties
             setattr(replica, "replicaID", replicaID)

@@ -207,7 +207,7 @@ def animation_EDS_trajectory(system: systemCls,
     _, ax = envPot_differentS_overlay_plot(eds_potential=system.potential, s_values=s_values, title=title,
                                            positions=xtot_space, axes=ax, hide_legend=hide_legend)
 
-    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap='inferno')  # , cmap=cm.viridis)#todo: FIND NICE COLORMAP
+    scatter = ax.scatter([], [], c=[], vmin=0, vmax=1, cmap='inferno')
     start_p, = ax.plot([], [], "bo", c="g", ms=10)
     end_p, = ax.plot([], [], "bo", c="r", ms=10)
     curr_p, = ax.plot([], [], "bo", c="k", ms=10)

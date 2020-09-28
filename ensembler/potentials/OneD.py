@@ -314,7 +314,7 @@ class gaussPotential(_potential1DCls):
         sigma: float, optional
             standard deviation of the gauss function, defaults to 1.
 
-                TODO: make numerical stable
+                TODO: improve numerical stablility
         '''
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
         super().__init__()
@@ -750,7 +750,6 @@ class envelopedPotential(_potential1DCls):
 
     def _calculate_dvdpos_singlePos_overwrite(self, positions: (t.Iterable[float])) -> np.array:
         """
-            Todo: improve numerical stability.
         Parameters
         ----------
         positions
@@ -967,7 +966,7 @@ class lambdaEDSPotential(envelopedPotential):
             self._lam_i = np.array([lam] + [1 - lam for x in range(1, self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif (isinstance(lam, Number)):  # a bit klunky here! TODO: think about a nice solution
+        elif (isinstance(lam, Number)):
             self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])],
                                    ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
@@ -1327,7 +1326,7 @@ class metadynamicsPotential(_potential1DCls):
         -------
         '''
 
-        current_bin = self._find_nearest(self.bin_centers, positions)
+        current_bin = np.array([self._find_nearest(self.bin_centers, pos) for pos in positions])
         force = np.squeeze(self._calculate_dVdpos(positions) + self.bias_grid_force[current_bin])
         #print("Force: ",current_bin, self.bias_grid_force[current_bin], force)
         return force
