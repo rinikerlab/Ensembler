@@ -1,4 +1,4 @@
-name: EnsemblerDev
+name: Ensembler
 channels:
   - conda-forge
   - omnia

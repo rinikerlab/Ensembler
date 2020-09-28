@@ -112,9 +112,8 @@ ENV/
 
 #large files:
 ensembler/potentials/look_up_tables
-examples/dev/img
-examples/dev/ttt.ipynb
-
+examples/images
+examples/dev
 
 #test results:
 ensembler/tests/tmp_test_*

@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt, colorbar
 
 import ensembler.potentials.TwoD as pot2D
 from ensembler.potentials import OneD as pot
-from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
+from ensembler.potentials._basicPotentials import _potentialNDCls,_potential1DCls, _potential1DClsPerturbed
 
 from ensembler.visualisation import plot_layout_settings
 from ensembler.visualisation import style
@@ -30,13 +30,40 @@ def significant_decimals(s: float) -> float:
         return s
 
 
+def plot_potential(potential: _potentialNDCls, positions: list, out_path:str=None,
+                       x_range=None, y_range=None, title: str = None, ax=None, ):
+
+    if(potential.constants[potential.nDimensions] == 1):
+        return plot_1DPotential(potential=potential, positions=positions, out_path=out_path,  x_range=x_range,
+                                y_range=y_range, title=title, ax=ax)
+    elif(potential.constants[potential.nDimensions] == 2):
+        return plot_2DPotential(potential=potential, positions=positions, title=title,
+                     out_path=out_path)
 """
  1D Plotting Functions
 """
 
+def plot_1DPotential(potential: _potential1DCls, positions: list, out_path: str = None,
+                     x_range=None, y_range=None, title: str = None, ax=None):
+    fig, axes = plt.subplots(nrows=1, ncols=2)
+    plot_1DPotential_V(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range,
+                       title="", color=style.potential_color(0))
+    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range,
+                            title="")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8)
+    fig.suptitle(title, y=0.95) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
+
+    if (out_path):
+        fig.savefig(out_path)
+        plt.close(fig)
+
+    return fig, out_path
+
 
 def plot_1DPotential_V(potential: _potential1DCls, positions: list, color=None,
-                       x_range=None, y_range=None, title: str = None, ax=None, yUnit: str = "kT"):
+                       x_range=None, y_range=None, title: str = None, ax=None, y_label: str = "$V\\ [k_B T]$"):
     # generat Data
     energies = potential.ene(positions=positions)
 
@@ -57,7 +84,7 @@ def plot_1DPotential_V(potential: _potential1DCls, positions: list, color=None,
     ax.set_ylim(min(y_range), max(y_range)) if (y_range != None) else ax.set_ylim(min(energies), max(energies))
 
     ax.set_xlabel('$r$')
-    ax.set_ylabel('$V\\ [' + yUnit + ']$')
+    ax.set_ylabel(y_label)
     ax.set_title(title) if (title != None) else ax.set_title("Potential " + str(potential.name))
 
     if (ax != None):
@@ -92,24 +119,6 @@ def plot_1DPotential_dhdpos(potential: _potential1DCls, positions: list, color=s
     else:
         return ax
 
-
-def plot_1DPotential(potential: _potential1DCls, positions: list, out_path: str = None,
-                     x_range=None, y_range=None, title: str = None, ax=None):
-    fig, axes = plt.subplots(nrows=1, ncols=2)
-    plot_1DPotential_V(potential=potential, positions=positions, ax=axes[0], x_range=x_range, y_range=y_range,
-                       title="", color=style.potential_color(0))
-    plot_1DPotential_dhdpos(potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range,
-                            title="")
-
-    fig.tight_layout()
-    fig.subplots_adjust(top=0.8)
-    fig.suptitle(title, y=0.95) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
-
-    if (out_path):
-        fig.savefig(out_path)
-        plt.close(fig)
-
-    return fig, out_path
 
 
 def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list,
@@ -152,27 +161,73 @@ def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list,
 """
 
 
-def plot_2DPotential(V: pot2D._potential2DCls, positions2D: List[Tuple[Number, Number]] = None, title: str = None,
-                     x_label: str = None, y_label: str = None, space_range: Tuple[Number, Number] = (-10, 10),
-                     point_resolution: int = 1000, ax=None, show_plot: bool = False, dpi: int = 300,
-                     cmap=style.qualitative_map) -> (
-        plt.Figure, plt.Axes, np.array):
+def plot_2DPotential(potential: pot2D._potential2DCls, positions: List[Tuple[Number, Number]] = None, title: str = None,
+                     out_path:str=None,
+                     x1_range=None, x2_range=None) -> (
+        plt.Figure, plt.Axes):
+    """
+        This function plots the potential energy landscape of a 2D - Potential Function
+    Parameters
+    ----------
+    V
+    positions2D
+    title
+    out_path
+    x_label
+    y_label
+    space_range
+    point_resolution
+    ax
+    show_plot
+    dpi
+    cmap
+
+    Returns
+    -------
+
+    """
+
+    fig, axes = plt.subplots(nrows=1, ncols=1)
+    axes = list([axes])
+    plot_2D_potential_V(potential=potential, positions2D=positions, ax=axes[0], space_range=[x1_range, x2_range],
+                       title="", x_label="$r_1$", y_label="$r_2$")
+    #plot_2D_potential_force(potential=potential, positions2D=positions, ax=axes[1], space_range=[x1_range,x2_range],
+    #                        title="")
+
+    fig.tight_layout()
+    fig.subplots_adjust(top=0.8)
+    fig.suptitle(title, y=0.95) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
+
+    if (out_path):
+        fig.savefig(out_path)
+        plt.close(fig)
+
+    return fig, out_path
+
+def plot_2D_potential_V(potential: pot2D._potential2DCls, positions2D: List[Tuple[Number, Number]] = None, title: str = None,
+                     out_path:str=None,
+                     x_label: str = None, y_label: str = None, space_range: Tuple[Tuple[Number, Number], Tuple[Number, Number]] = (-10, 10),
+                     point_resolution: int = 1000, ax=None, dpi: int = 300,
+                     cmap=style.qualitative_map):
     # build positions
     if (isinstance(positions2D, type(None))):
-        minX, maxX = min(space_range), max(space_range)
-        minY, maxY = min(space_range), max(space_range)
-        positions = np.linspace(min(space_range), max(space_range), point_resolution)
-        x_positions, y_positions = np.meshgrid(positions, positions)
+        minX, maxX = min(space_range[0]), max(space_range[0])
+        minY, maxY = min(space_range[1]), max(space_range[1])
+        positionsX = np.linspace(minX, maxX, point_resolution)
+        positionsY = np.linspace(minY, maxY, point_resolution)
+        x_positions, y_positions = np.meshgrid(positionsX, positionsY)
         positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
+
     else:
         positions2D = np.array(positions2D)
         minX, maxX = min(positions2D[:, 0]), max(positions2D[:, 0])
         minY, maxY = min(positions2D[:, 1]), max(positions2D[:, 1])
 
-        # landscapes
-    V_pots = V.ene(positions2D)
+    # landscapes
+    V_pots = potential.ene(positions2D)
     minV, maxV = np.min(V_pots), np.max(V_pots)
-    V_land = V_pots.reshape([point_resolution, point_resolution])
+    side = int(np.sqrt(positions2D.shape[0]))
+    V_land = V_pots.reshape([side,side])
 
     # make Figure
     if (isinstance(ax, type(None))):
@@ -181,7 +236,9 @@ def plot_2DPotential(V: pot2D._potential2DCls, positions2D: List[Tuple[Number, N
         fig = None
 
     surf = ax.imshow(V_land, cmap=cmap, extent=[minX, maxX, minY, maxY])
-    ax.set_xlabel("x")
+    print(maxX, maxY)
+    ax.set_xlim([minX, maxX-1])
+    ax.set_ylim([minY, maxY-1])
 
     if (isinstance(x_label, type(None))):
         ax.set_xlabel("x")
@@ -193,8 +250,8 @@ def plot_2DPotential(V: pot2D._potential2DCls, positions2D: List[Tuple[Number, N
     else:
         ax.set_ylabel(y_label)
 
-    ax.set_xticks(np.linspace(minX, maxX + 1, 5))
-    ax.set_yticks(np.linspace(minY, maxY + 1, 5))
+    ax.set_xticks(np.linspace(minX, maxX, 3))
+    ax.set_yticks(np.linspace(minY, maxY, 3))
 
     if (isinstance(title, type(None))):
         ax.set_title("Potential Landscape")
@@ -210,62 +267,12 @@ def plot_2DPotential(V: pot2D._potential2DCls, positions2D: List[Tuple[Number, N
 
         fig.tight_layout()
 
-        if (show_plot):
-            fig.show()
+        if (isinstance(out_path, str)):
+            fig.savefig(out_path)
+        #else:
+        #    fig.show()
 
-    return fig, ax, surf
-
-
-def plot_2DEnergy_landscape(potential1: _potential1DCls, potential2: _potential1DCls, positions1: list,
-                            positions2: list = None,
-                            x_range=None, y_range=None, z_range=None, title: str = None, colbar: bool = False, ax=None,
-                            cmap: str = style.qualitative_map):
-    # generat Data
-    energy_map = []
-    min_E, max_E = 0, 0
-
-    if (type(positions2) == type(None)):
-        positions2 = positions1
-
-    for pos in positions2:
-        Va = potential2.ene(pos)[0]
-        Vb = potential1.ene(positions1)
-        Vtot = list(map(lambda x: x + Va, Vb))
-        energy_map.append(Vtot)
-
-        if (min(Vtot) < min_E):
-            min_E = min(Vtot)
-        if (max(Vtot) > max_E):
-            max_E = max(Vtot)
-
-    energy_map = np.array(energy_map)
-
-    # is there already a figure?
-    if (ax is None):
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        colbar = True
-    else:
-        fig = None
-
-    if (z_range is None):
-        z_range = [min_E, max_E]
-
-    # plot
-    surf = ax.imshow(energy_map, cmap=cmap, interpolation="nearest",
-                     origin='center', extent=[min(positions1), max(positions1), min(positions2), max(positions2)],
-                     vmax=max(z_range), vmin=min(z_range), aspect="auto")
-
-    if (colbar and fig != None):
-        fig.colorbar(surf, aspect=5, label='Energy/kJ')
-
-    if (x_range): ax.set_xlim(min(x_range), max(x_range))
-    if (y_range): ax.set_ylim(min(y_range), max(y_range))
-
-    ax.set_xlabel('$x1$')
-    ax.set_ylabel('$x2$')
-    if (title): ax.set_title(title)
-    return fig, ax, surf
+    return fig, out_path
 
 
 """
@@ -358,7 +365,7 @@ def envPot_differentS_overlay_min0_plot(eds_potential: pot.envelopedPotential, s
     if (not hide_legend): axes.legend()
     if (title):    fig.suptitle(title)
     if (out_path): fig.savefig(out_path)
-    fig.show()
+    #fig.show()
 
     return fig, axes
 
@@ -380,8 +387,8 @@ def envPot_differentS_overlay_plot(eds_potential: pot.envelopedPotential, s_valu
     else:
         fig = None
 
-    for i, s, y in enumerate(reversed(list(zip(s_values, ys)))):
-        color = style.potential_color(i % len(style.potential_color))
+    for i, (s, y) in enumerate(reversed(list(zip(s_values, ys)))):
+        color = style.potential_color(i % 12)
         axes.plot(positions, y, label="s_" + str(significant_decimals(s)), color=color)
 
     # styling
@@ -398,7 +405,7 @@ def envPot_differentS_overlay_plot(eds_potential: pot.envelopedPotential, s_valu
     if (not hide_legend): axes.legend()
     if (title and not isinstance(fig, type(None))):    fig.suptitle(title)
     if (out_path and not isinstance(fig, type(None))): fig.savefig(out_path)
-    if (not isinstance(fig, type(None))): fig.show()
+    #if (not isinstance(fig, type(None))): fig.show()
 
     return fig, axes
 
@@ -429,7 +436,7 @@ def envPot_diffS_compare(eds_potential: pot.envelopedPotential, s_values: list, 
     ##optionals
     if (title):    fig.suptitle(title)
     if (out_path): fig.savefig(out_path)
-    fig.show()
+    #fig.show()
     return fig, axes
 
 
@@ -440,7 +447,7 @@ def plot_envelopedPotential_system(eds_potential: pot.envelopedPotential, positi
         eds_potential.s = s_value  # set new s
     if (Eoffi != None):
         if (len(Eoffi) == len(eds_potential.V_is)):
-            eds_potential.Eoff_i = Eoffi
+            eds_potential.set_Eoff(Eoffi)
         else:
             raise IOError("There are " + str(len(eds_potential.V_is)) + " states and " + str(
                 Eoffi) + ", but the numbers have to be equal!")
@@ -457,7 +464,7 @@ def plot_envelopedPotential_system(eds_potential: pot.envelopedPotential, positi
     labels = ["state_" + str(ind) for ind in range(1, len(energy_Vis) + 1)] + ["refState"]
 
     for i, (ax, y, label) in enumerate(zip(axes, y_values, labels)):
-        color = style.potential_color(i % len(style.potential_color))
+        color = style.potential_color(i % 12)
         ax.plot(positions, y, c=color)
         ax.set_xlim(min(positions), max(positions))
         ax.set_ylim(y_range)
@@ -468,7 +475,7 @@ def plot_envelopedPotential_system(eds_potential: pot.envelopedPotential, positi
     ##optionals
     if (title):    fig.suptitle(title)
     if (out_path): fig.savefig(out_path)
-    fig.show()
+    #fig.show()
     return fig, axes
 
 
@@ -484,7 +491,7 @@ def plot_envelopedPotential_2State_System(eds_potential: pot.envelopedPotential,
 
     if (Eoffi != None):
         if (len(Eoffi) == len(eds_potential.V_is)):
-            eds_potential.Eoff_i = Eoffi
+            eds_potential.set_Eoff(Eoffi)
         else:
             raise IOError("There are " + str(len(eds_potential.V_is)) + " states and " + str(
                 Eoffi) + ", but the numbers have to be equal!")
@@ -534,7 +541,7 @@ def plot_envelopedPotential_2State_System(eds_potential: pot.envelopedPotential,
     ##optionals
     if (title):    fig.suptitle(title)
     if (out_path): fig.savefig(out_path)
-    fig.show()
+    #fig.show()
     return fig, axes
 
 
@@ -577,7 +584,7 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
     ##optionals
     if (title):    fig.suptitle(title)
     if (out_path): fig.savefig(out_path)
-    fig.show()
+    #fig.show()
 
     return fig, axes
 
