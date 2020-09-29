@@ -109,10 +109,7 @@ class wavePotential(_potential2DCls):
         self.constants.update({"mult_" + str(j): multiplicity[j] for j in range(nDimensions)})
         self.constants.update({"yOff_" + str(j): y_offset[j] for j in range(nDimensions)})
 
-        if (radians):
-            self.constants.update({"phase_" + str(j): phase_shift[j] for j in range(nDimensions)})
-        else:
-            self.constants.update({"phase_" + str(j): np.rad2deg(phase_shift[j]) for j in range(nDimensions)})
+        self.constants.update({"phase_" + str(j): phase_shift[j] for j in range(nDimensions)})
 
         super().__init__()
 
