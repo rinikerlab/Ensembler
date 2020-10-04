@@ -43,7 +43,7 @@ class harmonicOscillatorPotential(_potential2DCls):
         Voff: array, optional
             offset of the minimum, defaults to [0.0, 0.0]
         """
-        self.constants.update({self.nDimensions: 2})
+        self.constants= {self.nDimensions: 2}
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"V_off_" + str(j): Voff[j] for j in range(self.constants[self.nDimensions])})
@@ -104,16 +104,20 @@ class wavePotential(_potential2DCls):
         radians: bool, optional
             in radians or degrees, defaults to False
         """
+        self.radians = radians
         nDimensions = 2
-        self.constants.update({"amp_" + str(j): amplitude[j] for j in range(nDimensions)})
-        self.constants.update({"mult_" + str(j): multiplicity[j] for j in range(nDimensions)})
-        self.constants.update({"yOff_" + str(j): y_offset[j] for j in range(nDimensions)})
 
-        self.constants.update({"phase_" + str(j): phase_shift[j] for j in range(nDimensions)})
+        self.constants = {"amp_" + str(j): amplitude[j] for j in range(nDimensions)}
+        self.constants.update({"yOff_" + str(j): y_offset[j] for j in range(nDimensions)})
+        self.constants.update({"mult_" + str(j): multiplicity[j] for j in range(nDimensions)})
+
+        if(radians):
+            self.constants.update({"phase_" + str(j): phase_shift[j] for j in range(nDimensions)})
+        else:
+            self.constants.update({"phase_" + str(j): np.deg2rad(phase_shift[j]) for j in range(nDimensions)})
 
         super().__init__()
 
-        self.set_radians(radians=radians)
 
     def _initialize_functions(self):
         """
@@ -147,6 +151,15 @@ class wavePotential(_potential2DCls):
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
+        self.set_radians(self.radians)
+
+
+    def set_phaseshift(self, phaseshift):
+        nDimensions = self.constants[self.nDimensions]
+
+        self.constants.update({"phase_" + str(j): phaseshift[j] for j in range(nDimensions)})
+        self._update_functions()
+
     def set_degrees(self, degrees: bool = True):
         """
         Sets output to either degrees or radians
@@ -156,7 +169,7 @@ class wavePotential(_potential2DCls):
         degrees: bool, optional,
             if True, output will be given in degrees, otherwise in radians, default: True
         """
-        self.radians = not degrees
+        self.radians = bool(not degrees)
         if (degrees):
             self._calculate_energies = lambda positions, positions2: self.tmp_Vfunc(np.deg2rad(positions),
                                                                                     np.deg2rad(positions2))
@@ -179,7 +192,7 @@ class wavePotential(_potential2DCls):
             self._calculate_energies = self.tmp_Vfunc
             self._calculate_dVdpos = self.tmp_dVdpfunc
         else:
-            self.set_degrees(degrees=not radians)
+            self.set_degrees(degrees=bool(not radians))
 
 
 class addedWavePotential(_potential2DCls):
@@ -210,7 +223,7 @@ class addedWavePotential(_potential2DCls):
         radians: bool, optional
             set potential to radians or degrees, defaults to False
         """
-        self.constants.update({self.nWavePotentials: len(wave_potentials)})
+        self.constants = {self.nWavePotentials: len(wave_potentials)}
         self.constants.update({"V_" + str(i): wave_potentials[i].V for i in range(len(wave_potentials))})
 
         super().__init__()
@@ -325,10 +338,10 @@ class gaussPotential(_potential2DCls):
         super().__init__()
 
         nDimensions = 2
-        self.constants.update({"A_gauss": amplitude})
+        self.constants= {"A_gauss": amplitude}
         self.constants.update({"mu_" + str(j): mu[j] for j in range(nDimensions)})
         self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDimensions)})
-
+        self.constants.update({self.nDimensions:nDimensions})
     def _initialize_functions(self):
         """
         _initialize_functions
@@ -369,7 +382,6 @@ class addedPotentials(_potential2DCls):
     '''
 
     name: str = "Added Potential Enhanced Sampling System for 2D"
-    nDimensions: int = sp.symbols("nDimensions")
     position: sp.Matrix = sp.Matrix([sp.symbols("r")])
     bias_potential = True
 
@@ -397,6 +409,8 @@ class addedPotentials(_potential2DCls):
 
     def _initialize_functions(self):
         # Parameters
+        print(self.nDimensions)
+
         nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
 

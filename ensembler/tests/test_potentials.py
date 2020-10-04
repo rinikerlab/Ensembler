@@ -1236,7 +1236,8 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
         y_offset = (0.0, 0, 0)
 
         positions = np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)])
-        expected_result = np.array([8.03079862e-01, 1.60230527e+00, 8.65973959e-15, -3.99612705e-01, 8.03079862e-01])
+        expected_result = np.array([ 0.00000000e+00, -7.35035672e-15,  0.00000000e+00,  3.66373598e-15,
+        0.00000000e+00])
 
         WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude,
                                            y_offset=y_offset)

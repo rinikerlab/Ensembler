@@ -613,13 +613,14 @@ class system(_baseClass):
         state
             returns the last current state
         """
-        if (withdraw_traj):
-            self._trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-            self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
         if (init_system):
             self._init_position()
             self._init_velocities()
+
+        if (withdraw_traj):
+            self._trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+            self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
         self.update_current_state()
         self.update_system_properties()

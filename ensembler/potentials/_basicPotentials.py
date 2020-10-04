@@ -14,14 +14,13 @@ class _potentialCls(_baseClass):
     """
 
     #PRIVATE ATTRIBUTES
-    __nDimensions: sp.Symbol = sp.symbols("nDimensionss")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDimensions
+    __nDimensions: sp.Symbol = sp.symbols("nDimensions")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDimensions
     __nStates: sp.Symbol = sp.symbols("nStates") # this Attribute gives the ammount of present states(interesting for free Energy calculus), please access via nStates
     # __threads: int = 1  #Not satisfyingly implemented
-    __constants: Dict[sp.Symbol, Union[Number, Iterable]] = {} #contains all set constants and values for the symbols of the potential function, access it via constants
 
     def __init__(self, nDimensions:int=1, nStates:int=2):
-
-        self.constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
+        if(not hasattr(self, "_potentialCls__constants")): self.__constants: Dict[sp.Symbol, Union[Number, Iterable]] = {}#contains all set constants and values for the symbols of the potential function, access it via constants
+        self.__constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
         self.name = str(self.__class__.__name__)
 
     """

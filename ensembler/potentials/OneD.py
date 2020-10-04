@@ -582,7 +582,7 @@ class envelopedPotential(_potential1DCls):
             the boltzman constant (default: 1 = kb)
 
         """
-        self.constants.update({self.T: T, self.kb: kb})
+        self.constants = {self.T: T, self.kb: kb}
         nStates = len(V_is)
         self._Eoff_i = [0 for x in range(nStates)]
         self._s = [0 for x in range(nStates)]
@@ -914,7 +914,7 @@ class lambdaEDSPotential(envelopedPotential):
                  s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
 
         nStates = len(V_is)
-        self.constants.update({self.nStates: nStates})
+        self.constants = {self.nStates: nStates}
         self._Eoff_i = [0 for x in range(nStates)]
         self._s = [0 for x in range(nStates)]
         self._V_is = [0 for x in range(nStates)]
@@ -1095,7 +1095,7 @@ class flatwellPotential(_potential1DCls):
         self.y_max = y_max
         self.y_min = y_min
 
-        self.constants.update({self.nStates: 1, self.nDimensions: 1})
+        self.constants = {self.nStates: 1, self.nDimensions: 1}
         self._update_functions = None
 
     def _calculate_energies(self, position: Union[Number, np.array]) -> Union[Number, np.array]:

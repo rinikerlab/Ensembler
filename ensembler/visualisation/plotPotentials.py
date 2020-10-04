@@ -572,7 +572,7 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
         if (V_min is None and first):
             V_min = min_e
             first = False
-            print("emin: ", min_e)
+            #print("emin: ", min_e)
 
         # plot phase space surface
         surf = ax.imshow(energy_map, cmap="viridis", interpolation="nearest",
@@ -680,7 +680,7 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[15, 6], dpi=300)
 
     minV, maxV = np.min(energies1Map), np.max(energies1Map)
-    print(minX, maxX, minY, maxY)
+    #print(minX, maxX, minY, maxY)
     surf1 = ax1.imshow(energies1Map, cmap=style.qualitative_map, interpolation="nearest", origin='center', vmax=maxV,
                        vmin=minV,
                        extent=[minX, maxX, minY, maxY])
@@ -727,11 +727,11 @@ def plot_2D_2State_EDS_potential(eds_pot, out_path: str = None, traj=None, s=100
     # put TRAJ in to landscape
     if (not isinstance(traj, type(None))):
         vis_pos_x, vis_pos_y = np.squeeze(np.array(list(map(np.array, traj.position)))).T
-        print("single",vis_pos_x, vis_pos_y)
+        #print("single",vis_pos_x, vis_pos_y)
 
-        ax1.scatter(vis_pos_x, vis_pos_y, c=trajectory_color, alpha=0.3)
-        ax2.scatter(vis_pos_x, vis_pos_y, c=trajectory_color, alpha=0.3)
-        ax3.scatter(vis_pos_x, vis_pos_y, c=trajectory_color, alpha=0.3)
+        ax1.scatter(vis_pos_x, vis_pos_y, c=trajectory_color,)# alpha=0.3)
+        ax2.scatter(vis_pos_x, vis_pos_y, c=trajectory_color,)# alpha=0.3)
+        ax3.scatter(vis_pos_x, vis_pos_y, c=trajectory_color,)# alpha=0.3)
 
         ax1.scatter(vis_pos_x[-1], vis_pos_y[-1], c="r")
         ax2.scatter(vis_pos_x[-1], vis_pos_y[-1], c="r")
@@ -799,8 +799,7 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
     fig = plt.figure(figsize=(7, 21), constrained_layout=False, dpi=300)
     outer_grid = fig.add_gridspec(nrows, ncols, wspace=0.1, hspace=0.1)
     for row, s in zip(range(nrows), sorted(sVal_traj_Dict, reverse=True)):
-        if (verbose): print(s)
-
+        if (verbose): print("fun")
         # eds pot energies
         eds_pot.s_i = s
         energiesEds = eds_pot.ene(positions2D)
@@ -812,7 +811,7 @@ def plot_2D_2State_EDS_potential_sDependency(sVal_traj_Dict: (dict, List), eds_p
 
         if (plot_trajs):
             tmp_visit_x, tmp_visit_y = np.squeeze(np.array(list(map(np.array, sVal_traj_Dict[s].position)))).T
-            print(tmp_visit_x, tmp_visit_y)
+            #print(tmp_visit_x, tmp_visit_y)
 
         # plot landscapes
         for col in range(ncols):

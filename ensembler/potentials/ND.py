@@ -45,10 +45,12 @@ class harmonicOscillatorPotential(_potentialNDCls):
         nDim
             dimensionality of the harmoic oscillator object. default: 3
         """
-        super().__init__(nDimensions=nDimensions)
+        self.constants = {self.nDimensions:nDimensions}
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"V_off_" + str(j): Voff[j] for j in range(self.constants[self.nDimensions])})
+
+        super().__init__(nDimensions=nDimensions)
 
     def _initialize_functions(self):
         """
@@ -110,7 +112,7 @@ class envelopedPotential(_potentialNDCls):
             the boltzman constant (default: 1 = kb)
 
         """
-        self.constants.update({self.T: T, self.kb: kb})
+        self.constants = {self.T: T, self.kb: kb}
         nStates = len(V_is)
         self._Eoff_i = [0 for x in range(nStates)]
         self._s = [0 for x in range(nStates)]
@@ -386,7 +388,7 @@ class lambdaEDSPotential(envelopedPotential):
                  s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
 
         nStates = len(V_is)
-        self.constants.update({self.nStates: nStates})
+        self.constants = {self.nStates: nStates}
         self._Eoff_i = [0 for x in range(nStates)]
         self._s = [0 for x in range(nStates)]
         self._V_is = [0 for x in range(nStates)]
