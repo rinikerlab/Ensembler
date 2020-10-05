@@ -319,6 +319,20 @@ class gaussPotential(_potential1DCls):
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
         super().__init__()
 
+    def _update_functions(self):
+        """
+        This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.
+        """
+
+        self.V = self.V_functional.subs(self.constants)
+
+        self.dVdpos_functional = sp.diff(self.V_functional, self.position)  # not always working!
+        self.dVdpos = sp.diff(self.V, self.position)
+        self.dVdpos = self.dVdpos.subs(self.constants)
+
+        self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
+        self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
+
 
 """
     COMBINED POTENTIALS

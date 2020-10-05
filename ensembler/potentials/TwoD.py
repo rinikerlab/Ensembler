@@ -403,7 +403,7 @@ class addedPotentials(_potential2DCls):
 
         self.constants = {**origPotential.constants, **addPotential.constants}
 
-        self.V_functional = origPotential.V_functional + self.addPotential.V_functional
+        self.V_functional = self.origPotential.V_functional + self.addPotential.V_functional
 
         super().__init__()
 

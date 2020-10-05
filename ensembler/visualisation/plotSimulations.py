@@ -379,8 +379,6 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
     x_positions, y_positions = np.meshgrid(positionsX, positionsY)
     positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
 
-    ytot_space = system.potential.ene(positions2D)
-
     # plot
     w, h = figaspect(0.25)
     fig = plt.figure(figsize=[w, h])
@@ -392,7 +390,8 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
 
     # traj
     # plot energy landscape of total potential
-    ax1.imshow(potential.ene(positions2D).reshape([resolution_full_space, resolution_full_space]),
+    ene_space = potential.ene(positions2D).reshape([resolution_full_space, resolution_full_space])
+    ax1.imshow(ene_space[::-1],
                extent=[*limits_coordinate_space.flat])
     ax1.scatter(*traj_pos, c=style.trajectory_color, alpha=style.alpha_traj)
     ax1.scatter(*traj_pos[:, 0], c=style.traj_start, alpha=style.alpha_val)  # start_point
