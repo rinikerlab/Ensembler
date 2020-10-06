@@ -335,13 +335,15 @@ class gaussPotential(_potential2DCls):
         sigma: tupel, optional
             standard deviation of the gauss function, defaults to (1., 1.)
         '''
-        super().__init__()
+
 
         nDimensions = 2
         self.constants= {"A_gauss": amplitude}
         self.constants.update({"mu_" + str(j): mu[j] for j in range(nDimensions)})
         self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDimensions)})
         self.constants.update({self.nDimensions:nDimensions})
+        super().__init__()
+
     def _initialize_functions(self):
         """
         _initialize_functions
@@ -363,6 +365,20 @@ class gaussPotential(_potential2DCls):
         # self.V_functional = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions- 1))
         # Not too beautiful, but sp.Product raises errors
         self.V_functional = self.V_dim[0, 0] * self.V_dim[1, 0]
+
+    def _update_functions(self):
+        """
+        This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.
+        """
+
+        self.V = self.V_functional.subs(self.constants)
+
+        self.dVdpos_functional = sp.diff(self.V_functional, self.position)  # not always working!
+        self.dVdpos = sp.diff(self.V, self.position)
+        self.dVdpos = self.dVdpos.subs(self.constants)
+
+        self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
+        self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
 
 
 from ensembler.potentials.ND import envelopedPotential
@@ -403,7 +419,10 @@ class addedPotentials(_potential2DCls):
 
         self.constants = {**origPotential.constants, **addPotential.constants}
 
-        self.V_functional = self.origPotential.V_functional + self.addPotential.V_functional
+        self.V_functional = self.origPotential.V + self.addPotential.V
+
+        self.V = self.V_functional.subs(self.constants)
+        self.dVdpos = sp.diff(self.V, self.position)
 
         super().__init__()
 
@@ -537,8 +556,8 @@ class metadynamicsPotential(_potential2DCls):
         new_bias = gaussPotential(amplitude=self.amplitude, mu=curr_position, sigma=self.sigma)
 
         # size energy and force of the new bias in bin structure
-        new_bias_lambda_energy = sp.lambdify(self.position, new_bias.V)
-        new_bias_lambda_force = sp.lambdify(self.position, new_bias.dVdpos)
+        new_bias_lambda_energy = new_bias._calculate_energies #sp.lambdify(self.position, new_bias.V)
+        new_bias_lambda_force = new_bias._calculate_dVdpos #sp.lambdify(self.position, new_bias.dVdpos)
 
         new_bias_bin_energy = new_bias_lambda_energy(*np.hsplit(self.positions_grid, self.constants[self.nDimensions]))
         new_bias_bin_force = new_bias_lambda_force(*np.hsplit(self.positions_grid, self.constants[self.nDimensions]))

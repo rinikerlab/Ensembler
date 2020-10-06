@@ -248,7 +248,10 @@ class system(_baseClass):
     def mass(self, mass: float):
         self._mass = mass
 
-    def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = [],
+
+
+
+    def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = None,
                  temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
                  verbose: bool = True) -> NoReturn:
         """
@@ -276,7 +279,6 @@ class system(_baseClass):
         ################################
         # Declare Attributes
         #################################
-        self._conditions = []
 
         ##Physical parameters
         self.nParticles = 1  # FUTURE: adapt it to be multiple particles
@@ -300,7 +302,11 @@ class system(_baseClass):
         ## Fundamental Parts:
         self._potential = potential
         self._integrator = sampler
-        self._conditions = conditions
+
+        if(conditions is None):
+            self._conditions = []
+        else:
+            self._conditions = conditions
 
         ## set dim
         if (potential.constants[potential.nDimensions] > 0):
@@ -336,12 +342,13 @@ class system(_baseClass):
             else:
                 # warnings.warn("Decoupling system and coupling it again!")
                 condition.couple_system(self)
+
             if (not hasattr(condition, "dt") and hasattr(self.sampler, "dt")):
                 condition.dt = self.sampler.dt
             else:
                 condition.dt = 1
-
         self.verbose = verbose
+
 
     """
         Initialisation
@@ -680,7 +687,8 @@ class system(_baseClass):
         NoReturn
 
         """
-        for condition in self.conditions:
+
+        for condition in self._conditions:
             condition.apply_coupled()
 
     def append_state(self, new_position: Union[Iterable[Number], Number], new_velocity: Union[Iterable[Number], Number],
