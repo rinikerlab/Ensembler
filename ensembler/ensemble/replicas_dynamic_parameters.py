@@ -48,8 +48,8 @@ class conveyorBelt(_mutliReplicaApproach):
     def __str__(self):
         outstr = ''
         for i in self.replicas:
-            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i]._currentLambda,
-                                                        float(self.replicas[i].getTotEnergy()))
+            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
+                                                        float(self.replicas[i].total_system_energy))
         return outstr
 
     def __repr__(self):
