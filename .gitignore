@@ -3,16 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-#VSCode stuff
-**.vscode
-#Pycharm kram
-**.idea
-
 # C extensions
 *.so
-**look_up_tables
+
 # Distribution / packaging
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -28,7 +24,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -46,11 +41,11 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+.pytest_cache
 nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-.pytest_cache/
 
 # Translations
 *.mo
@@ -59,7 +54,6 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
 
 # Flask stuff:
 instance/
@@ -69,7 +63,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/sphinx_project/_build/
 
 # PyBuilder
 target/
@@ -86,14 +80,13 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# dotenv
 .env
+
+# virtualenv
 .venv
-env/
 venv/
 ENV/
-env.bak/
-venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -108,5 +101,23 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# profraw files from LLVM? Unclear exactly what triggers this
+# There are reports this comes from LLVM profiling, but also Xcode 9.
+*profraw
+
+#VSCode stuff
+**.vscode
+#Pycharm kram
+**.idea
+
 #large files:
-ensembler/potentials/look_up_tables
+ensembler/data/potential_look_up_tables
+examples/images
+examples/dev
+
+#test results:
+ensembler/tests/tmp_test_*
+
+#jupyter_nB
+**/.ipynb_checkpoints
+/.pypirc.py

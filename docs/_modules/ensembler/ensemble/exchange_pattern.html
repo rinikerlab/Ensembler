@@ -1,0 +1,464 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.ensemble.exchange_pattern &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.ensemble.exchange_pattern</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.ensemble.exchange_pattern</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<div class="viewcode-block" id="Exchange_pattern"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern">[docs]</a><span class="k">class</span> <span class="nc">Exchange_pattern</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    general Scaffold for an exchange pattern</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">replica_graph</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Exchange_pattern.__init__"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replica_graph</span><span class="p">:</span><span class="nb">dict</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            build the exchange scaffold for replica_graph</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        replica_graph: dict</span>
+<span class="sd">            representation of the replica graph</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span> <span class="o">=</span> <span class="n">replica_graph</span></div>
+
+<div class="viewcode-block" id="Exchange_pattern.exchange"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern.exchange">[docs]</a>    <span class="k">def</span> <span class="nf">exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        @ interface needs to be implemented in subclass</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        verbose</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Not Implemented&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Exchange_pattern._do_exchange"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern._do_exchange">[docs]</a>    <span class="k">def</span> <span class="nf">_do_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exchanges_to_make</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="nb">bool</span><span class="p">],</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            post exchange decision step, executing the exchange</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        exchanges_to_make: Dict[Tuple[int, int], bool]</span>
+<span class="sd">            the key of the dictionary is a tuple containing the replica identifiers, which exchange parameters. The value is stating if they should exchang.</span>
+<span class="sd">        verbose: bool, optional</span>
+<span class="sd">            DADADA (default: False)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">),</span> <span class="n">exchange</span> <span class="ow">in</span> <span class="n">exchanges_to_make</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">exchange</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exchanging: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">J</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">exchange</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="n">partnerI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">I</span><span class="p">]</span>
+                <span class="n">partnerJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">J</span><span class="p">]</span>
+
+                <span class="c1"># here the real exchange happens!</span>
+                <span class="n">tmp_exchange_parameter</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">partnerI</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">partnerI</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span><span class="p">,</span>
+                        <span class="nb">getattr</span><span class="p">(</span><span class="n">partnerJ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">partnerJ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span><span class="p">,</span> <span class="n">tmp_exchange_parameter</span><span class="p">)</span>
+
+                <span class="c1"># here we follow the exchanges with the replicaID</span>
+                <span class="n">tmp_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">partnerI</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">partnerI</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">partnerJ</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">partnerJ</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">,</span> <span class="n">tmp_id</span><span class="p">)</span>
+
+                <span class="c1"># This is traj specific.... - might overwrite other params</span>
+                <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span> <span class="o">==</span> <span class="s2">&quot;trajectory&quot;</span><span class="p">):</span>
+                    <span class="n">partnerI</span><span class="o">.</span><span class="n">_update_state_from_traj</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;not Exchanging: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; / &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">J</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Exchange_pattern.update_exchange_information"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern.update_exchange_information">[docs]</a>    <span class="k">def</span> <span class="nf">update_exchange_information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_exchange_coordinates</span><span class="p">:</span><span class="n">List</span><span class="p">,</span> <span class="n">original_totPots</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">swapped_totPots</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This function keeps track of the exchanges</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        original_exchange_coordinates: List</span>
+<span class="sd">            original exchange coordinates</span>
+<span class="sd">        original_totPots: List</span>
+<span class="sd">            original total potentials</span>
+<span class="sd">        swapped_totPots: List</span>
+<span class="sd">            swapped original total potentials</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">exchange</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">IJ</span> <span class="o">=</span> <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">replicaIJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">IJ</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;nExchange&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">replicaID</span><span class="p">,</span>
+                 <span class="s2">&quot;replicaPositionI&quot;</span><span class="p">:</span> <span class="n">IJ</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateI&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEI&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">IJ</span><span class="p">],</span>
+                 <span class="s2">&quot;replicaPositionJ&quot;</span><span class="p">:</span> <span class="n">IJ</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateJ&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEJ&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">IJ</span><span class="p">],</span>
+                 <span class="s2">&quot;doExchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="n">J</span><span class="p">),</span> <span class="n">exchange</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_current_exchanges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">replicaI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">I</span><span class="p">]</span>
+            <span class="n">replicaJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">J</span><span class="p">]</span>
+            <span class="c1"># add exchange info line here!</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;nExchange&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">:</span> <span class="n">replicaI</span><span class="o">.</span><span class="n">replicaID</span><span class="p">,</span>
+                 <span class="s2">&quot;replicaPositionI&quot;</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateI&quot;</span><span class="p">:</span> <span class="n">replicaI</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEI&quot;</span><span class="p">:</span> <span class="n">original_totPots</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+                 <span class="s2">&quot;replicaPositionJ&quot;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateJ&quot;</span><span class="p">:</span> <span class="n">replicaJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEJ&quot;</span><span class="p">:</span> <span class="n">original_totPots</span><span class="p">[</span><span class="n">J</span><span class="p">],</span>
+                 <span class="s2">&quot;doExchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;nExchange&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">:</span> <span class="n">replicaJ</span><span class="o">.</span><span class="n">replicaID</span><span class="p">,</span>
+                 <span class="s2">&quot;replicaPositionI&quot;</span><span class="p">:</span> <span class="n">J</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateI&quot;</span><span class="p">:</span> <span class="n">replicaJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEI&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">J</span><span class="p">],</span>
+                 <span class="s2">&quot;replicaPositionJ&quot;</span><span class="p">:</span> <span class="n">I</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateJ&quot;</span><span class="p">:</span> <span class="n">replicaI</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEJ&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
+                 <span class="s2">&quot;doExchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">exchange</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">IJ</span> <span class="o">=</span> <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">replicaIJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">IJ</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;nExchange&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">replicaID</span><span class="p">,</span>
+                 <span class="s2">&quot;replicaPositionI&quot;</span><span class="p">:</span> <span class="n">IJ</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateI&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEI&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">IJ</span><span class="p">],</span>
+                 <span class="s2">&quot;replicaPositionJ&quot;</span><span class="p">:</span> <span class="n">IJ</span><span class="p">,</span> <span class="s2">&quot;exchangeCoordinateJ&quot;</span><span class="p">:</span> <span class="n">replicaIJ</span><span class="o">.</span><span class="n">exchange_parameters</span><span class="p">,</span>
+                 <span class="s2">&quot;TotEJ&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">IJ</span><span class="p">],</span>
+                 <span class="s2">&quot;doExchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="localExchangeScheme"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.localExchangeScheme">[docs]</a><span class="k">class</span> <span class="nc">localExchangeScheme</span><span class="p">(</span><span class="n">Exchange_pattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This scheme is exchanging a replica with its neighbour if possible</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exchange_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="localExchangeScheme.exchange"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.localExchangeScheme.exchange">[docs]</a>    <span class="k">def</span> <span class="nf">exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Exchange the Trajectory of T-replicas in pairwise fashion</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        verbose: bool, optional</span>
+<span class="sd">            Make some music (Default: False)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_currentTrial</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Get Potential Energies</span>
+        <span class="n">original_exchange_coordinates</span><span class="p">,</span> <span class="n">original_totPots</span><span class="p">,</span> <span class="n">swapped_exchange_coordinates</span><span class="p">,</span> <span class="n">swapped_totPots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_collect_replica_energies</span><span class="p">(</span>
+            <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;origTotE &quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">original_totPots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">original_exchange_coordinates</span><span class="p">)])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SWPTotE &quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">swapped_totPots</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">swapped_exchange_coordinates</span><span class="p">)])</span>
+
+        <span class="c1"># decide exchange</span>
+        <span class="n">exchanges_to_make</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">partner1</span><span class="p">,</span> <span class="n">partner2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span>
+                                      <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">originalEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
+            <span class="n">swapEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
+            <span class="n">exchanges_to_make</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="p">{(</span><span class="n">partner1</span><span class="p">,</span> <span class="n">partner2</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_criterium</span><span class="p">(</span><span class="n">originalEnergies</span><span class="p">,</span> <span class="n">swapEnergies</span><span class="p">)})</span>
+
+        <span class="c1"># Acutal Exchange of params (actually trajs here</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exchange: &quot;</span><span class="p">,</span> <span class="n">exchanges_to_make</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exchaning param: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_param</span><span class="p">)</span>
+
+        <span class="c1"># execute exchange</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_exchange</span><span class="p">(</span><span class="n">exchanges_to_make</span><span class="o">=</span><span class="n">exchanges_to_make</span><span class="p">)</span>
+
+        <span class="c1"># update exchange info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_current_exchanges</span> <span class="o">=</span> <span class="n">exchanges_to_make</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_exchange_information</span><span class="p">(</span><span class="n">original_exchange_coordinates</span><span class="o">=</span><span class="n">original_exchange_coordinates</span><span class="p">,</span>
+                                         <span class="n">original_totPots</span><span class="o">=</span><span class="n">original_totPots</span><span class="p">,</span> <span class="n">swapped_totPots</span><span class="o">=</span><span class="n">swapped_totPots</span><span class="p">)</span>
+        <span class="c1"># update the offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span></div>
+
+<div class="viewcode-block" id="localExchangeScheme._swap_coordinates"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.localExchangeScheme._swap_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">_swap_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_exCoord</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span><span class="o">-&gt;</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            swap the coordinates pairwise of the original exchange coord list</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        original_exCoord: List</span>
+<span class="sd">            Of replicas in order</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        List</span>
+<span class="sd">            return list with swapped replica IDs</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">##take care of offset situations and border replicas</span>
+        <span class="n">swapped_exCoord</span> <span class="o">=</span> <span class="p">[]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[</span><span class="n">original_exCoord</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="c1">##generate sequence with swapped params</span>
+        <span class="k">for</span> <span class="n">partner1</span><span class="p">,</span> <span class="n">partner2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">original_exCoord</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">],</span>
+                                      <span class="n">original_exCoord</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">]):</span>
+            <span class="n">swapped_exCoord</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">partner2</span><span class="p">,</span> <span class="n">partner1</span><span class="p">])</span>
+        <span class="c1">##last replica on the border?</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">swapped_exCoord</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">original_exCoord</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">swapped_exCoord</span></div>
+
+    <span class="c1">##Exchange functions</span>
+<div class="viewcode-block" id="localExchangeScheme._collect_replica_energies"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.localExchangeScheme._collect_replica_energies">[docs]</a>    <span class="k">def</span> <span class="nf">_collect_replica_energies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            _collect_replica_energies</span>
+<span class="sd">            collect all rep</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        verbose: bool, optional</span>
+<span class="sd">            More noise! More noise!</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[List[int], List[float], List[int], List[float]]</span>
+<span class="sd">            original_exCoord, original_totPots, swapped_exCoord, swapped_totPots</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">original_totPots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">get_replica_total_energies</span><span class="p">()</span>
+        <span class="n">original_exCoord</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">original_totPots</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+        <span class="c1">#replica_values = list([self.replica_graph.replicas[key] for key in original_exCoord])</span>
+
+        <span class="c1"># SWAP exchange_coordinates params pairwise</span>
+        <span class="n">swapped_exCoord</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap_coordinates</span><span class="p">(</span><span class="n">original_exCoord</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;original Coords &quot;</span><span class="p">,</span> <span class="n">original_exCoord</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;swapped Coords &quot;</span><span class="p">,</span> <span class="n">swapped_exCoord</span><span class="p">)</span>
+
+        <span class="c1"># SWAP Params to calculate energies in swapped case</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">set_parameter_set</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">swapped_exCoord</span><span class="p">,</span> <span class="n">replica_indices</span><span class="o">=</span><span class="n">original_exCoord</span><span class="p">)</span>  <span class="c1"># swap parameters</span>
+
+        <span class="c1"># Exchange coordinate paramters:</span>
+        <span class="c1">##scaleVel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_adapt_system_to_exchange_coordinate</span><span class="p">()</span>
+
+        <span class="c1">##get_swapped energies</span>
+        <span class="n">swapped_totPots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">get_replica_total_energies</span><span class="p">()</span>  <span class="c1"># calc swapped parameter Energies</span>
+
+        <span class="c1">##scale Vel back</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_adapt_system_to_exchange_coordinate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">set_parameter_set</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">swapped_exCoord</span><span class="p">,</span>
+                                             <span class="n">replica_indices</span><span class="o">=</span><span class="n">original_exCoord</span><span class="p">)</span>  <span class="c1"># swap back parameters</span>
+
+        <span class="k">return</span> <span class="n">original_exCoord</span><span class="p">,</span> <span class="n">original_totPots</span><span class="p">,</span> <span class="n">swapped_exCoord</span><span class="p">,</span> <span class="n">swapped_totPots</span></div></div>
+
+
+<div class="viewcode-block" id="globalExchangeScheme"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.globalExchangeScheme">[docs]</a><span class="k">class</span> <span class="nc">globalExchangeScheme</span><span class="p">(</span><span class="n">Exchange_pattern</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implement a grlobal exchange scheme here :)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="globalExchangeScheme.exchange"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.globalExchangeScheme.exchange">[docs]</a>    <span class="k">def</span> <span class="nf">exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

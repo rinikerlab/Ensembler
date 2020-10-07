@@ -1,0 +1,1067 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Enhanced Sampling Simulations &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Free Energy Calculations" href="Example_FreeEnergyCalculationSimulation.html" />
+    <link rel="prev" title="EDS Simulation" href="Example_EDS.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="Example_ConveyorBelt.html">Conveyor Belt TI - scheme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Example_EDS.html">EDS Simulation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Enhanced Sampling Simulations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#with-Ensembler">with Ensembler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Loading-Ensembler-and-necessary-external-packages">Loading Ensembler and necessary external packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Enhanced-Sampling-Simulations-in-1D">Enhanced Sampling Simulations in 1D</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Unbiased-System">Unbiased System</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#Enhanced-sampling">Enhanced sampling</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Time-independent-bias">Time-independent bias</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Time-dependent-bias">Time-dependent bias</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#2D-systems">2D systems</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Unbiased-system">Unbiased system</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Umbrella-Sampling">Umbrella Sampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Scaled potential</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Metadynamics / Local elevation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Example_FreeEnergyCalculationSimulation.html">Free Energy Calculations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Examples</a> &raquo;</li>
+        
+      <li>Enhanced Sampling Simulations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/Examples/Example_EnhancedSampling.ipynb.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="Enhanced-Sampling-Simulations">
+<h1>Enhanced Sampling Simulations<a class="headerlink" href="#Enhanced-Sampling-Simulations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="with-Ensembler">
+<h2>with Ensembler<a class="headerlink" href="#with-Ensembler" title="Permalink to this headline">¶</a></h2>
+<p>In this notebook, we give examples for enhanced sampling simulation with Ensembler. We show how to execute, visualize, and analyze those simulations for both 1D and 2D systems.</p>
+<p>The enhanced sampling technologies are briefly explained in order to directly use this notebook for teaching purpose.</p>
+<p>Maintainers: [&#64;SchroederB](<a class="reference external" href="https://https://github.com/SchroederB">https://https://github.com/SchroederB</a>), [&#64;linkerst](<a class="reference external" href="https://https://github.com/linkerst">https://https://github.com/linkerst</a>), [&#64;dfhahn](<a class="reference external" href="https://https://github.com/dfhahn">https://https://github.com/dfhahn</a>)</p>
+</div>
+<div class="section" id="Loading-Ensembler-and-necessary-external-packages">
+<h2>Loading Ensembler and necessary external packages<a class="headerlink" href="#Loading-Ensembler-and-necessary-external-packages" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>import os, sys
+my_path = os.getcwd()+&quot;/..&quot;
+print(my_path)
+sys.path.append(my_path)
+
+import matplotlib
+matplotlib.use(&#39;TkAgg&#39;)
+
+import numpy as np
+%matplotlib inline
+from matplotlib import pyplot as plt
+
+from ensembler.potentials.OneD import fourWellPotential, harmonicOscillatorPotential
+from ensembler.potentials.TwoD import harmonicOscillatorPotential as harmonicOscillator2D,  wavePotential as wavePotential2D, gaussPotential
+
+from ensembler.potentials.biased_potentials.OneD import addedPotentials, metadynamicsPotential
+from ensembler.potentials.biased_potentials.TwoD import addedPotentials as addedPotentials2D, metadynamicsPotential as metadynamicsPotential2D
+from ensembler.samplers.stochastic import langevinIntegrator
+from ensembler.system import system
+
+##Visualisation
+from ensembler.visualisation.plotSimulations import simulation_analysis_plot
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+C:\Users\benja\OneDrive - ETH Zürich\PhD\Code\ensembler_public\examples/..
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>                       Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">&lt;ipython-input-3-67fe823cf916&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">     14</span> <span class="ansi-green-intense-fg ansi-bold">from</span> ensembler<span class="ansi-yellow-intense-fg ansi-bold">.</span>potentials<span class="ansi-yellow-intense-fg ansi-bold">.</span>TwoD <span class="ansi-green-intense-fg ansi-bold">import</span> harmonicOscillatorPotential <span class="ansi-green-intense-fg ansi-bold">as</span> harmonicOscillator2D<span class="ansi-yellow-intense-fg ansi-bold">,</span>  wavePotential <span class="ansi-green-intense-fg ansi-bold">as</span> wavePotential2D<span class="ansi-yellow-intense-fg ansi-bold">,</span> gaussPotential
+<span class="ansi-green-fg">     15</span>
+<span class="ansi-green-intense-fg ansi-bold">---&gt; 16</span><span class="ansi-yellow-intense-fg ansi-bold"> </span><span class="ansi-green-intense-fg ansi-bold">from</span> ensembler<span class="ansi-yellow-intense-fg ansi-bold">.</span>potentials<span class="ansi-yellow-intense-fg ansi-bold">.</span>biased_potentials<span class="ansi-yellow-intense-fg ansi-bold">.</span>OneD <span class="ansi-green-intense-fg ansi-bold">import</span> addedPotentials<span class="ansi-yellow-intense-fg ansi-bold">,</span> metadynamicsPotential
+<span class="ansi-green-fg">     17</span> <span class="ansi-green-intense-fg ansi-bold">from</span> ensembler<span class="ansi-yellow-intense-fg ansi-bold">.</span>potentials<span class="ansi-yellow-intense-fg ansi-bold">.</span>biased_potentials<span class="ansi-yellow-intense-fg ansi-bold">.</span>TwoD <span class="ansi-green-intense-fg ansi-bold">import</span> addedPotentials <span class="ansi-green-intense-fg ansi-bold">as</span> addedPotentials2D<span class="ansi-yellow-intense-fg ansi-bold">,</span> metadynamicsPotential <span class="ansi-green-intense-fg ansi-bold">as</span> metadynamicsPotential2D
+<span class="ansi-green-fg">     18</span> <span class="ansi-green-intense-fg ansi-bold">from</span> ensembler<span class="ansi-yellow-intense-fg ansi-bold">.</span>samplers<span class="ansi-yellow-intense-fg ansi-bold">.</span>stochastic <span class="ansi-green-intense-fg ansi-bold">import</span> langevinIntegrator
+
+<span class="ansi-red-intense-fg ansi-bold">ModuleNotFoundError</span>: No module named &#39;ensembler.potentials.biased_potentials&#39;
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Enhanced-Sampling-Simulations-in-1D">
+<h2>Enhanced Sampling Simulations in 1D<a class="headerlink" href="#Enhanced-Sampling-Simulations-in-1D" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="Unbiased-System">
+<h3>Unbiased System<a class="headerlink" href="#Unbiased-System" title="Permalink to this headline">¶</a></h3>
+<p>We start our walkthrough with an unbiased reference simulation of a four-well-potential and give a small introduction in how to set up a simulation with Ensembler. To define the four-well-potential one has to define the x-positions (<span class="math notranslate nohighlight">\(a\)</span>-<span class="math notranslate nohighlight">\(d\)</span>) of the four wells. The y-position of the wells is defined by the parameters <span class="math notranslate nohighlight">\(ah\)</span> - <span class="math notranslate nohighlight">\(dh\)</span>. If wished, the potential can also be scaled in the y-direction using <span class="math notranslate nohighlight">\(V_{max}\)</span>. Note that the energy is given in units of <span class="math notranslate nohighlight">\(k_BT\)</span>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># Simulation Setup
+pot = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
+</pre></div>
+</div>
+</div>
+<p>For the numeric integration of our system we choose the stochastic Langevin integrator. As arguments one has to choose the step size <span class="math notranslate nohighlight">\(dt\)</span> and the friction coefficient <span class="math notranslate nohighlight">\(gamma\)</span>. Note that this integrator already includes a thermostat. The temperature of the simulation will be set during the system setup (see below).</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># Simple Langevin integration simulation
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+</pre></div>
+</div>
+</div>
+<p>The system wraps the integrator and the potential. Additionally, the initial system of the particle <span class="math notranslate nohighlight">\(position\)</span> as well as the temperature parameter <span class="math notranslate nohighlight">\(temperature\)</span> are set.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span># Put Potential and Integrator together to generate the simulation system
+system1 = system(potential=pot, sampler=integrator,  start_position=4.2,  temperature=1)
+</pre></div>
+</div>
+</div>
+<p>To start the simulation we define the number of steps and run <code class="docutils literal notranslate"><span class="pre">sys.simulate()</span></code>. The progress of the simulation is displayed by a progress bar.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#simulate
+sim_steps = 2000
+cur_state = system1.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system1.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system1.trajectory))
+</pre></div>
+</div>
+</div>
+<p>After running the simulation, the simulation data can be displayed as a table using <code class="docutils literal notranslate"><span class="pre">sys.trajectory</span></code>. Note that we used a position Langevin integrator that did not calculate the velocities explicitly. Therefore, the kinetic energy and velocity are not defined. If you want to calculate the velocities during the simulation use the <code class="docutils literal notranslate"><span class="pre">langevinVelocityIntegrator</span></code> instead.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>system1.trajectory.head()
+</pre></div>
+</div>
+</div>
+<p>The simulation results can be visualized using the build-in visualizing tool. The left panel displays the energy surface as well as all visited states. The start and end-state are colored in red and green, respectively. The middle panel shows the probability density distribution of the simulation. This plot can be used to check if the system was simulated successfully. The rightmost panel shows the development of the force over time.</p>
+<p>Note that without enhanced sampling only the minimum around x=4 is sampled. It would require a very long simulation time to overcome the energetic barrier and hence a lot of computing time. Enhanced sampling methods were developed to speed up those slow processes. We will explore some of the most commonly used enhanced sampling methods in the subsequent notebook.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#plot
+simulation_analysis_plot(system1, title=&quot;position Langevin&quot;, limits_coordinate_space=list(range(0,10)))
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="Enhanced-sampling">
+<h2>Enhanced sampling<a class="headerlink" href="#Enhanced-sampling" title="Permalink to this headline">¶</a></h2>
+<p>Enhanced sampling methods can be divided into time-independent and time-dependent methods. Time-independent biases stay the same throughout the whole simulation whereas for time-dependent enhanced sampling the bias is updated during the simulation time.</p>
+<div class="section" id="Time-independent-bias">
+<h3>Time-independent bias<a class="headerlink" href="#Time-independent-bias" title="Permalink to this headline">¶</a></h3>
+<p>Umbrella sampling is a time-independent enhanced sampling method where energy barriers are overcome by adding a bias potential. Note that umbrella sampling requires the choice of a reaction coordinate along which the bias is added. The choice of a suitable reaction coordinate is non-trivial for high dimensional systems. For our low dimensional 1D we can simply chose the x-axis.</p>
+<p>One of the most frequent umbrella sampling method uses hormonic potentials to restrain the sampling to a certain region of the potential. This is especially useful for sampling transition regions.</p>
+<div class="section" id="Umbrella-sampling">
+<h4>Umbrella sampling<a class="headerlink" href="#Umbrella-sampling" title="Permalink to this headline">¶</a></h4>
+<p>We start as in the unbiased case by defining the potential. However, we have to define two potentials; the original potential and the bias potential. The original potential is the same potential as defined above, the bias potential is a hormonic oscillator centered at <span class="math notranslate nohighlight">\(x_{shift}\)</span> and force constant <span class="math notranslate nohighlight">\(k\)</span>. In this case we want to sample the transition region around <span class="math notranslate nohighlight">\(x\)</span> = 5.5. Therefore, we set the <span class="math notranslate nohighlight">\(x_{shift}\)</span> parameter to 5.5. The force constant <span class="math notranslate nohighlight">\(k\)</span> defines how much we
+constrain the system. The higher the energy barrier, the more constrain is needed.</p>
+<p>To sample the full potential energy landscape, we can set up multiple simulations with different <span class="math notranslate nohighlight">\(x_{shift}\)</span> parameters. For subsequent analysis of umbrella sampling simulations (e.g. using the weighted histogram analysis method WHAM) it is important that the sampling space of the different simulations overlap. The higher the force constant <span class="math notranslate nohighlight">\(k\)</span>, the more simulations are needed achieve the overlap.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#Simulation Setup
+origpot = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
+biaspot = harmonicOscillatorPotential(k=10, x_shift=5.5)
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">addedPotentials</span></code> function of the biasOneD class wraps any two 1D potentials together. Therefore, it is straightforward to generate the enhanced sampling system from the original and biased potential.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#Add the bias and the original system
+totpot = addedPotentials(origpot, biaspot)
+</pre></div>
+</div>
+</div>
+<p>All subsequent steps are identical to the unbiased system. Note, that the starting position of the simulation has to match to the <span class="math notranslate nohighlight">\(x_{shift}\)</span> parameter (i.e. should be reasonable close to <span class="math notranslate nohighlight">\(x_{shift}\)</span>) in order to avoid starting the simulation at very high energy states.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>integrator = langevinIntegrator(dt=0.1, gamma=15)
+system2=system(potential=totpot, sampler=integrator,  start_position=4.2,  temperature=1)
+
+#simulate
+sim_steps = 2000
+cur_state = system2.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system2.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system2.trajectory))
+system2.trajectory.head()
+</pre></div>
+</div>
+</div>
+<p>In order to visualize the original potential, biased potential and the resulting potential we defined a new plotting function <code class="docutils literal notranslate"><span class="pre">oneD_biased_simulation_analysis_plot</span></code>. The first panel shows the energy surfaces of the system as well as its sampled fraction. The original energy surface is displayed in red, the added biased one in grey and the resulting energy surface in blue. The positions sampled are shown with orange dots. The middle panel shows a violin plot with the probability density for the
+sampled points. This plot can be used as a sanity check for the system; for converged systems this plot should show higher probability densities at energy minima and little at high energy regions (following a Boltzmann distribution). The last panel shows the force experienced by the system over time.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#plot
+simulation_analysis_plot(system2, title=&quot;position Langevin&quot;, limits_coordinate_space=list(range(0,10)), limits_potential_system_energy=[0,30])
+</pre></div>
+</div>
+</div>
+<p>With the visualization we can see that umbrella sampling enables the user to sample the high energy transition region around x=5.5. In contrast, the unbiased simulation (see above) was stuck at the minimum around x=4.</p>
+<div class="section" id="Scaled-potential">
+<h5>Scaled potential<a class="headerlink" href="#Scaled-potential" title="Permalink to this headline">¶</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">addedPotentials</span></code> can add any potential classes with a given dimensionality. In the special case of adding the same energy potential that was used to define the original system, one can scale the potential. In the example below we chose a four well potential that we will scale down in order to cross the energy barriers more easily. The procedure to define the original and bias potential are the same as described above.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 2000
+
+#Simulation Setup
+origpot=fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
+biaspot = fourWellPotential(Vmax=-3.5, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
+#Add the bias and the original system
+totpot = addedPotentials(origpot, biaspot)
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system3=system(potential=totpot, sampler=integrator,  start_position=4.2,  temperature=1)
+
+#simulate
+cur_state = system3.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system3.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system3.trajectory))
+system3.trajectory.head()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#plot
+simulation_analysis_plot(system3, title=&quot;position Langevin&quot;, limits_coordinate_space=list(range(0,10)), limits_potential_system_energy=[0,17])
+</pre></div>
+</div>
+</div>
+<p>Through the visualization we get the confirmation that we scaled the original potential (first panel, red line) down to 12.5% of its original height. Accordingly, the system has now enough thermal energy to cross all energy barriers and all four minima can be sampled.</p>
+</div>
+</div>
+</div>
+<div class="section" id="Time-dependent-bias">
+<h3>Time-dependent bias<a class="headerlink" href="#Time-dependent-bias" title="Permalink to this headline">¶</a></h3>
+<p>Time-dependent biasing methods update the bias during the simulation time. A frequently used time-dependent method is metadynamics/local elevation. There, a gaussian potential is added to the positions that were already visited during the simulation. Therefore, visiting these positions again, is energetically less favorable then in the previous visit (energetic penal).</p>
+<p>Note that in case of a gaussian bias potential, the mean of the gaussian is set to the current position of the particle and its width should be chosen small enough to avoid a big penal for neighboring states. Step by step the energetic minima are “flooded” and the particle can cross barriers more easily. In most applications the bias is only added every <span class="math notranslate nohighlight">\(n^{th}\)</span> step to iterate between free diffusion and biasing steps.</p>
+<div class="section" id="Metadynamics-/-Local-elevation">
+<h4>Metadynamics / Local elevation<a class="headerlink" href="#Metadynamics-/-Local-elevation" title="Permalink to this headline">¶</a></h4>
+<p>We first define the original four-well potential. To apply metadynamics/local elevation we use the <code class="docutils literal notranslate"><span class="pre">metadynamicsPotential</span></code> function. In the initialization we have to define the height (<span class="math notranslate nohighlight">\(amplitude\)</span>) and width (<span class="math notranslate nohighlight">\(sigma\)</span>) of the gaussian bias function added. This bias potential is added every <span class="math notranslate nohighlight">\(n\_trigger\)</span> steps to the current position.</p>
+<p>Adding more and more potentials every step leads to an energy function that demands more and more computation time every step. To avoid slowdown of the simulation the metadynamic bias is usually stored and calculated grid based. This allow a much faster simulation but comes at the cost of additional input parameter and small numerical errors in the bias force calculations. To initialize the grid, the user has to define the minimum x-position (<span class="math notranslate nohighlight">\(bias\_grid\_min\)</span>) and the maximum x-position
+(<span class="math notranslate nohighlight">\(bias\_grid\_max\)</span>) the grid should cover as well as the number of grid bins. Note, that no bias. will be added to values below <span class="math notranslate nohighlight">\(bias\_grid\_min\)</span> or above <span class="math notranslate nohighlight">\(bias\_grid\_max\)</span>.</p>
+<p>In our example system we want to sample all four energy minima. Therefore, it is sufficient to set the grid between 0 and 10, which covers all four minima.</p>
+<p>For the metadynamics/local elevation simulation we will reduce the simulation length by the factor of 10. This makes it easier to visually distinguish, and thus understand, the effect of metadynamics/local elevation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 200  # reduced simulation length
+
+#Simulation Setup
+origpot = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
+
+#Performe metadynamics
+totpot = metadynamicsPotential(origpot, amplitude=.5, sigma=0.2, n_trigger=5,
+                               bias_grid_min=0, bias_grid_max=10, numbins=1000)
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system4=system(potential=totpot, sampler=integrator,  start_position=4,  temperature=1)
+
+#simulate
+cur_state = system4.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system4.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system4.trajectory))
+system4.trajectory.head()
+
+</pre></div>
+</div>
+</div>
+<p>It is not necessary to show the bias potential for metadynamic/local elevation systems, because the bias is updated during the simulation time. Therefore, metadynamic systems are visualized with the default <code class="docutils literal notranslate"><span class="pre">oneD_simulation_analysis_plot</span></code> function. <code class="docutils literal notranslate"><span class="pre">oneD_simulation_analysis_plot</span></code> will display the resulting potential after the last simulation step.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>#plot
+simulation_analysis_plot(system4, title=&quot;position Langevin&quot;, limits_coordinate_space=list(range(0,10)))
+</pre></div>
+</div>
+</div>
+<p>In the first panel of the visualization we can see how the system’s energy minimum around x=4 was flooded and the particle can cross neighboring energy barriers more easily. The longer one simulates, the flatter the whole energy surface become. Note however, that artifacts can arise once the system leaves the grid defined by <span class="math notranslate nohighlight">\(bias\_grid\_min\)</span> and <span class="math notranslate nohighlight">\(bias\_grid\_max\)</span>. Therefore, these parameters have to be selected very carefully.</p>
+<p>The Ensembler package also contains a build-in functionality to make short movies of the simulation using <code class="docutils literal notranslate"><span class="pre">animation_trajectory</span></code>. An example code is shown below.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>%matplotlib inline
+import tempfile
+from IPython.display import HTML
+from ensembler.visualisation.animationSimulation import animation_trajectory, animation_EDS_trajectory
+#plot simulation
+ani, out_path = animation_trajectory(system4, limits_coordinate_space=list([0,8]), title=&quot;Awesome MetaDynamics&quot;,resolution_of_analytic_potential=1000)
+
+##put it into jupyter:
+
+os.chdir(tempfile.gettempdir())
+x = ani.to_jshtml()
+HTML(x)
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="2D-systems">
+<h2>2D systems<a class="headerlink" href="#2D-systems" title="Permalink to this headline">¶</a></h2>
+<p>Enhanced sampling can also be performed in 2D. In the subsequent examples we show for the same enhanced sampling methods as above, how to set up, bias and visualize 2D systems.</p>
+<p>To keep the usage of Ensembler as simple as possible, using 2D systems only requires minor changes with regard to 1D systems. Therefore, the description of the 2D systems are kept short. A more detailed description can be found at the corresponding 1D system.</p>
+<div class="section" id="Unbiased-system">
+<h3>Unbiased system<a class="headerlink" href="#Unbiased-system" title="Permalink to this headline">¶</a></h3>
+<p>We first simulate the 2D system without any bias. In order to perform a 2D simulation, one simply has to choose a 2D potential. The Ensembler package then automatically adjusts all other parameters. If one wishes to set initial coordinates or velocities for the simulation, those should be 2D array.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 2000
+
+#Simulation Setup
+origpot = wavePotential2D(amplitude=(100,100), multiplicity=[1/5.,1/5.], radians=True)
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system5=system(potential=origpot, sampler=integrator,  start_position=np.array([50,50]),  temperature=3)
+system.conditions = []
+#simulate
+cur_state = system5.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system5.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system5.trajectory))
+system5.trajectory.head()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>system5.potential
+</pre></div>
+</div>
+</div>
+<p>After the simulation we can visualize the simulation on the 2D energy surface.</p>
+<p>In the visualization, we can see that the system contains multiple energy minima and maxima. The simulation was started in a minimum. During the simulation time the simulated particle is unable to leave this start minimum.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>simulation_analysis_plot(system=system5, limits_coordinate_space=[[-180,180],[-180,180]])
+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Umbrella-Sampling">
+<h3>Umbrella Sampling<a class="headerlink" href="#Umbrella-Sampling" title="Permalink to this headline">¶</a></h3>
+<p>Umbrella sampling is performed with the <code class="docutils literal notranslate"><span class="pre">addedPotential2D</span></code> function that works analogous to the <code class="docutils literal notranslate"><span class="pre">addedPotential</span></code> function for 1D. However, it expects two 2D potentials as input. Here we make umbrella sampling with a harmonic potential centered around point [10,5]. If needed, one can define different spring constants in x and y direction.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 2000
+
+#Simulation Setup
+origpot = wavePotential2D(amplitude=(100,100), multiplicity=[1/5.,1/5.], radians=True)
+biaspot = harmonicOscillator2D(k=np.array([10,10]), r_shift=np.array([10,5]))
+
+#Add the bias and the original system
+totpot = addedPotentials2D(origpot, biaspot)
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system6=system(potential=totpot, sampler=integrator,  start_position=np.array([50,50]),  temperature=3)
+
+#simulate
+cur_state = system6.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system6.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system6.trajectory))
+system6.trajectory.head()
+</pre></div>
+</div>
+</div>
+<p>In the visualization we see that the energy minimum of the resulting (original + biased) energy surface is the chosen point [10,10]. The system quickly leaves its start region, moves toward the center point, and samples this region intensively. Therefore, using umbrella sampling, the system was able to escape its starting minimum.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>simulation_analysis_plot(system=system6)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>Scaled potential<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>Just like in the 1D case, the <code class="docutils literal notranslate"><span class="pre">addedPotential2D</span></code> function can be used to scale potentials. Here we scale our system to lower the energy barriers between the minima.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 2000
+
+#Simulation Setup
+origpot = wavePotential2D(amplitude=(100,100), multiplicity=[1/5.,1/5.], radians=True)
+biaspot = wavePotential2D(amplitude=(-99.8,-99.8), multiplicity=[1/5.,1/5.], radians=True)
+
+#Add the bias and the original system
+totpot = addedPotentials2D(origpot, biaspot)
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system7=system(potential=totpot, sampler=integrator,  start_position=np.array([50,50]),  temperature=3)
+
+#simulate
+cur_state = system7.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system7.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system7.trajectory))
+system7.trajectory.head()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>simulation_analysis_plot(system=system7, limits_coordinate_space=[[-180,180],[-180,180]])
+</pre></div>
+</div>
+</div>
+<p>In the visualization we can confirm that the energy barriers are now low enough for the system to escape its initial minimum and sample the neighboring minima.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>test_timing_with_points=100
+positions = np.linspace(0, 100, test_timing_with_points)
+x_positions, y_positions = np.meshgrid(positions,positions)
+positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
+
+traj_pos = np.array(list(map(lambda x: np.array(x), system7.trajectory.position))).T
+
+plt.imshow(totpot.ene(positions2D).reshape([test_timing_with_points,test_timing_with_points]))
+plt.scatter(*traj_pos, color=&quot;orange&quot;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>Metadynamics / Local elevation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>Metadynamics/Local elevation changes the energy surface of the simulation during the simulation time (time dependent bias). Similar to its 1D analog, <code class="docutils literal notranslate"><span class="pre">metadynamicsPotential2D</span></code> uses a grid to store the bias added to the system. The minimal and maximal values of the grid in x and y direction have to be defined by the user. The gaussians added by the metadynamic bias can have elliptical shapes. The shape is defined by the <span class="math notranslate nohighlight">\(sigma\)</span> parameter.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>sim_steps = 2000
+
+#Simulation Setup
+origpot = wavePotential2D(amplitude=(100,100), multiplicity=[1/5.,1/5.], radians=True)
+
+#Perform metadynamics
+totpot = metadynamicsPotential2D(origpot, amplitude=2, sigma=(5,5), n_trigger=10, bias_grid_min=(0,0), bias_grid_max=(100,100), numbins=(1000,1000))
+
+integrator = langevinIntegrator(dt=0.1, gamma=15)
+
+system8=system(potential=totpot, sampler=integrator,  start_position=np.array([50,50]),  temperature=3)
+
+#simulate
+cur_state = system8.simulate(sim_steps, withdraw_traj=True, init_system=False)
+
+print(&quot;Trajectory length: &quot;,len(system8.trajectory))
+print()
+print(&quot;last_state: &quot;, cur_state)
+print(len(system8.trajectory))
+system8.trajectory.head()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>simulation_analysis_plot(system=system8)
+</pre></div>
+</div>
+</div>
+<p>From the visualization it is visible that regions which were already visited by the system show a higher energy. Especially the starting minimum is flooded with energy. Using metadynamics the system can rapidly sample the energy surface.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>test_timing_with_points=100
+positions = np.linspace(0, 100, test_timing_with_points)
+x_positions, y_positions = np.meshgrid(positions,positions)
+positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
+
+traj_pos = np.array(list(map(lambda x: np.array(x), system8.trajectory.position))).T
+
+
+energies_test = np.array([totpot.ene(entry) for entry in positions2D])
+
+plt.imshow(energies_test.reshape([test_timing_with_points,test_timing_with_points]))
+plt.scatter(*traj_pos, color=&quot;orange&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Example_FreeEnergyCalculationSimulation.html" class="btn btn-neutral float-right" title="Free Energy Calculations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Example_EDS.html" class="btn btn-neutral float-left" title="EDS Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

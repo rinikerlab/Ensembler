@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.visualisation.plotPotentials &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_source/index.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>ensembler.visualisation.plotPotentials</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/autosummary/ensembler.visualisation.plotPotentials.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="module-ensembler.visualisation.plotPotentials">
+<span id="ensembler-visualisation-plotpotentials"></span><h1>ensembler.visualisation.plotPotentials<a class="headerlink" href="#module-ensembler.visualisation.plotPotentials" title="Permalink to this headline">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_diffS_2stateMap_compare" title="ensembler.visualisation.plotPotentials.envPot_diffS_2stateMap_compare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envPot_diffS_2stateMap_compare</span></code></a>(…[, V_max, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_diffS_compare" title="ensembler.visualisation.plotPotentials.envPot_diffS_compare"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envPot_diffS_compare</span></code></a>(eds_potential, …[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_differentS_overlay_min0_plot" title="ensembler.visualisation.plotPotentials.envPot_differentS_overlay_min0_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envPot_differentS_overlay_min0_plot</span></code></a>(…[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.envPot_differentS_overlay_plot" title="ensembler.visualisation.plotPotentials.envPot_differentS_overlay_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envPot_differentS_overlay_plot</span></code></a>(…[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.multiState_overlays" title="ensembler.visualisation.plotPotentials.multiState_overlays"><code class="xref py py-obj docutils literal notranslate"><span class="pre">multiState_overlays</span></code></a>(states[, positions, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential" title="ensembler.visualisation.plotPotentials.plot_1DPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1DPotential</span></code></a>(potential, positions[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_Termoverlay" title="ensembler.visualisation.plotPotentials.plot_1DPotential_Termoverlay"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1DPotential_Termoverlay</span></code></a>(potential, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_V" title="ensembler.visualisation.plotPotentials.plot_1DPotential_V"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1DPotential_V</span></code></a>(potential, positions[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential_dhdpos" title="ensembler.visualisation.plotPotentials.plot_1DPotential_dhdpos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1DPotential_dhdpos</span></code></a>(potential, positions)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2DEnergy_landscape" title="ensembler.visualisation.plotPotentials.plot_2DEnergy_landscape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2DEnergy_landscape</span></code></a>(potential1, …[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2DPotential" title="ensembler.visualisation.plotPotentials.plot_2DPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2DPotential</span></code></a>(V[, positions2D, title, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential" title="ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2D_2State_EDS_potential</span></code></a>(eds_pot[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential_sDependency" title="ensembler.visualisation.plotPotentials.plot_2D_2State_EDS_potential_sDependency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2D_2State_EDS_potential_sDependency</span></code></a>(…)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2D_2states" title="ensembler.visualisation.plotPotentials.plot_2D_2states"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2D_2states</span></code></a>(V1, V2[, space_range, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_2perturbedEnergy_landscape" title="ensembler.visualisation.plotPotentials.plot_2perturbedEnergy_landscape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_2perturbedEnergy_landscape</span></code></a>(potential, …)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_envelopedPotential_2State_System" title="ensembler.visualisation.plotPotentials.plot_envelopedPotential_2State_System"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_envelopedPotential_2State_System</span></code></a>(…[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_envelopedPotential_system" title="ensembler.visualisation.plotPotentials.plot_envelopedPotential_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_envelopedPotential_system</span></code></a>(…[, …])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.significant_decimals" title="ensembler.visualisation.plotPotentials.significant_decimals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">significant_decimals</span></code></a>(s)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

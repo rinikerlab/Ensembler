@@ -1,0 +1,25 @@
+name: test
+channels:
+dependencies:
+  # Base depends
+  - python
+  - pip
+
+  # Testing
+  - pytest
+  - pytest-cov
+  - codecov
+
+  - typing
+  - pandas
+  - numpy
+  - sympy
+  - scipy
+  - tqdm
+  - ipywidgets
+  - matplotlib
+
+  # Pip-only installs
+  #- pip:
+  #  - codecov
+
