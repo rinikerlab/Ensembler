@@ -40,6 +40,9 @@ class perturbedSystem(system):
 
     @lam.setter
     def lam(self, lam: Number):
+        if lam < 0.0 or lam > 1.0:
+            raise ValueError(f"Variable lam = {lam}."\
+                              "It cannot be lower than 0 or larger than 1.")
         self._currentLambda = lam
         self.potential.set_lambda(lam=self._currentLambda)
         self._update_energies()
