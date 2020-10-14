@@ -34,8 +34,6 @@ ensembler.potentials.OneD
       lennardJonesPotential
       linearCoupledPotentials
       metadynamicsPotential
-      metadynamicsPotentialSympy
-      timedependendBias
       torsionPotential
       wavePotential
    

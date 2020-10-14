@@ -1,4 +1,4 @@
-﻿ensembler.potentials
+ensembler.potentials
 ====================
 
 .. automodule:: ensembler.potentials

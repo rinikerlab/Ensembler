@@ -63,7 +63,7 @@ Potential functions
 
 
   .. image:: https://mybinder.org/badge_logo.svg
-     :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb
+     :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb
      :alt: Binder
 
 
@@ -119,7 +119,7 @@ Potentials:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb
    :alt: Binder
 
 
@@ -127,7 +127,7 @@ Simulations:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicSimulations.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicSimulations.ipynb
    :alt: Binder
 
 
@@ -135,7 +135,7 @@ Interactive ConveyorBelt:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FConveyorBelt.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FConveyorBelt.ipynb
    :alt: Binder
 
 
@@ -143,7 +143,7 @@ EDS-Potentials:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FEDS.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FEDS.ipynb
    :alt: Binder
 
 
@@ -151,7 +151,7 @@ Free Energy Calculations:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FFreeEnergyCalculations.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FFreeEnergyCalculations.ipynb
    :alt: Binder
 
 

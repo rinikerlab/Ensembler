@@ -162,6 +162,7 @@
 <span class="sd">    this Module contains two files</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
 
@@ -508,7 +509,7 @@
 
             <span class="c1">## finalize deepcopy:</span>
             <span class="c1"># replica.trajectory = [] #fields are not deepcopied!!!</span>
-            <span class="n">replica</span><span class="o">.</span><span class="n">nsteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nSteps_between_trials</span>  <span class="c1"># set steps between trials #todo: ? Really here?</span>
+            <span class="n">replica</span><span class="o">.</span><span class="n">nsteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nSteps_between_trials</span>  <span class="c1"># set steps between trials</span>
 
             <span class="c1">## Node properties</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="n">replica</span><span class="p">,</span> <span class="s2">&quot;replicaID&quot;</span><span class="p">,</span> <span class="n">replicaID</span><span class="p">)</span>
@@ -691,26 +692,34 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="sd">&quot;&quot;&quot;this is an ugly work around, but this way the code works on windows and Linux</span>
 <span class="sd">        __under construction!___&quot;&quot;&quot;</span>
-        <span class="n">pool</span> <span class="o">=</span> <span class="n">mult</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">nProcesses</span><span class="p">)</span>
-        <span class="n">sim_params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nSteps_between_trials</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>  <span class="c1"># verbosity</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generated pool^jobs&quot;</span><span class="p">)</span>
-        <span class="n">result_replica</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">replica_coords</span><span class="p">,</span> <span class="n">replica</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Submit: &quot;</span><span class="p">,</span> <span class="n">replica_coords</span><span class="p">,</span> <span class="n">replica</span><span class="p">)</span>
-            <span class="n">replica_result</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">replica</span><span class="o">.</span><span class="n">simulate</span><span class="p">,</span> <span class="n">sim_params</span><span class="p">)</span>
-            <span class="n">result_replica</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">replica_coords</span><span class="p">:</span> <span class="n">replica_result</span><span class="p">})</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done Submitting&quot;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">platform</span>
 
-        <span class="c1">#Wait pool close</span>
-        <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="s2">&quot;Windows&quot;</span> <span class="o">==</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()):</span>
+            <span class="n">pool</span> <span class="o">=</span> <span class="n">mult</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">nProcesses</span><span class="p">)</span>
+            <span class="n">sim_params</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nSteps_between_trials</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">]</span>  <span class="c1"># verbosity</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generated pool^jobs&quot;</span><span class="p">)</span>
+            <span class="n">result_replica</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">replica_coords</span><span class="p">,</span> <span class="n">replica</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Submit: &quot;</span><span class="p">,</span> <span class="n">replica_coords</span><span class="p">,</span> <span class="n">replica</span><span class="p">)</span>
+                <span class="n">replica_result</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">replica</span><span class="o">.</span><span class="n">simulate</span><span class="p">,</span> <span class="n">sim_params</span><span class="p">)</span>
+                <span class="n">result_replica</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">replica_coords</span><span class="p">:</span> <span class="n">replica_result</span><span class="p">})</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done Submitting&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done Simulating&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">result_replica</span><span class="p">)</span>
-        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">replica_coords</span><span class="p">:</span> <span class="n">result_replica</span><span class="p">[</span><span class="n">replica_coords</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()})</span> <span class="k">for</span> <span class="n">replica_coords</span> <span class="ow">in</span>
-         <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">]</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GrandFinale: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+            <span class="c1"># Wait pool close</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done Simulating&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">result_replica</span><span class="p">)</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">replica_coords</span><span class="p">:</span> <span class="n">result_replica</span><span class="p">[</span><span class="n">replica_coords</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()})</span> <span class="k">for</span> <span class="n">replica_coords</span> <span class="ow">in</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GrandFinale: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Can not go parallel on windows. Not implemented! falling pack to single core.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+
 
     <span class="c1">#ATTRIBUTES:</span>
     <span class="c1"># getter/setters</span>

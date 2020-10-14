@@ -17,7 +17,9 @@ ensembler.potentials.ND
 
    .. autosummary::
    
+      envelopedPotential
       harmonicOscillatorPotential
+      lambdaEDSPotential
    
    
 

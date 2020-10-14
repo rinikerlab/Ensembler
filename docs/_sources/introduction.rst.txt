@@ -18,14 +18,9 @@ Welcome to Ensembler
    :alt: Language grade: Python
 
 
-.. image:: https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&logoWidth=18
-   :target: https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/
-   :alt: Total alerts
-
-
-.. image:: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
-   :target: https://github.com/rinikerlab/Ensembler/workflows/.github/workflows/buid_sphinx_doc.yml/badge.svg
-   :alt: build_Documentation
+.. image:: https://github.com/rinikerlab/Ensembler/workflows/Python%20package/badge.svg
+   :target: https://github.com/rinikerlab/Ensembler/workflows/Python%20package/badge.svg
+   :alt: Build package
 
 
 .. image:: https://img.shields.io/badge/Documentation-here-white.svg
@@ -68,7 +63,7 @@ Potential functions
 
 
   .. image:: https://mybinder.org/badge_logo.svg
-     :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb
+     :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb
      :alt: Binder
 
 
@@ -124,7 +119,7 @@ Potentials:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb
    :alt: Binder
 
 
@@ -132,7 +127,7 @@ Simulations:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicSimulations.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicSimulations.ipynb
    :alt: Binder
 
 
@@ -140,7 +135,7 @@ Interactive ConveyorBelt:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FConveyorBelt.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FConveyorBelt.ipynb
    :alt: Binder
 
 
@@ -148,7 +143,7 @@ EDS-Potentials:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FEDS.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FEDS.ipynb
    :alt: Binder
 
 
@@ -156,7 +151,7 @@ Free Energy Calculations:
 
 
 .. image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FFreeEnergyCalculations.ipynb
+   :target: https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FFreeEnergyCalculations.ipynb
    :alt: Binder
 
 

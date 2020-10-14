@@ -733,14 +733,17 @@ initialises the replica graph and updates the systems.</p>
 <dl class="py method">
 <dt id="ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.spline">
 <em class="property">static </em><code class="sig-name descname">spline</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/ensemble/replicas_dynamic_parameters.html#conveyorBelt.spline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.spline" title="Permalink to this definition">¶</a></dt>
-<dd><p>calculates the value of the spline function depending on the deviation dg from the grid point
-:Parameters: <strong>dg</strong> (<em>float</em>) – deviation from gridpoint (absolute value)</p>
+<dd><p>calculates the value of the spline function depending on the deviation dg from the grid point</p>
+<p># Todo: PUT SOMEWHERE ELSE OR NUMPY? : numpy.interp¶.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>value of spline (float)</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dg</strong> (<em>float</em>) – deviation from gridpoint (absolute value)</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>value of spline (float)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
