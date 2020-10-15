@@ -69,7 +69,9 @@ Or you can also add the path to the Ensembler repository, if you want to use the
 ## Tutorials and Examples:
 
 ### Tutorials
-You can try the tutorials with the fast track directly in your browser.
+Here we provide short introductions into how Potential functions can be used and sampled in simulations in Ensembler .
+You can try the tutorials with Binder directly from your browser!
+
 Potentials: 
 
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Potentials.ipynb)
