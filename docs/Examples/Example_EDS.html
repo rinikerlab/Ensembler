@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Enhanced Sampling Simulations" href="Example_EnhancedSampling.html" />
-    <link rel="prev" title="Conveyor Belt TI - scheme" href="Example_ConveyorBelt.html" /> 
+    <link rel="prev" title="Examples" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,10 +91,8 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Example_ConveyorBelt.html">Conveyor Belt TI - scheme</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">EDS Simulation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#The-Problem">The Problem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#The-Reference-Potential">The Reference Potential</a><ul>
@@ -448,7 +446,7 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="EDS-Simulation">
 <h1>EDS Simulation<a class="headerlink" href="#EDS-Simulation" title="Permalink to this headline">¶</a></h1>
-<p>In this example/tutorial we want to elaborated on enveloping distribution sampling (EDS)</p>
+<p>In this example/tutorial we want to elaborated on enveloping distribution sampling (EDS) and how it can be used to calculate relative free energies.</p>
 <p>Content: * Constructing the reference state * Sampling the reference state * Calculating the free energies</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -463,7 +461,7 @@ div.rendered_html tbody tr:hover {
 
 <span class="c1">#Imports:</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pylab</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="c1">#import Ensembler</span>
 <span class="kn">from</span> <span class="nn">ensembler.potentials</span> <span class="kn">import</span> <span class="n">OneD</span> <span class="k">as</span> <span class="n">pot</span>
@@ -475,13 +473,23 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 C:\Users\benja\OneDrive - ETH Zürich\PhD\Code\ensembler_public\examples/..
 Populating the interactive namespace from numpy and matplotlib
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+C:\Users\benja\anaconda3\envs\EnsemblerDev\lib\site-packages\IPython\core\magics\pylab.py:160: UserWarning: pylab import has clobbered these variables: [&#39;plt&#39;]
+`%matplotlib` prevents importing * from pylab and numpy
+  &#34;\n`%matplotlib` prevents importing * from pylab and numpy&#34;
 </pre></div></div>
 </div>
 <div class="section" id="The-Problem">
@@ -581,7 +589,7 @@ V_R of our system:
 [0.35*r**2 - 1.4*r + 1.9]])[i, 0]), (i, 0, 1)))/s_i
 
 calculate 100 positions - time check
-Wall time: 114 ms
+Wall time: 118 ms
 
 Visualization
 </pre></div></div>
@@ -592,7 +600,7 @@ Visualization
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.legend.Legend at 0x1a7baf0bb08&gt;
+&lt;matplotlib.legend.Legend at 0x21a29590648&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1515,7 +1523,7 @@ if (IPython.notebook.kernel != null) {
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "cdd279a3ee96446daa857a3487293acb", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e2eaf45cab294730bbdc20f6ded7e7c5", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -2331,7 +2339,7 @@ Populating the interactive namespace from numpy and matplotlib
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 (&lt;Figure size 1440x720 with 1 Axes&gt;,
- &lt;matplotlib.axes._subplots.AxesSubplot at 0x1a7bb4db508&gt;)
+ &lt;matplotlib.axes._subplots.AxesSubplot at 0x21a29895248&gt;)
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2408,7 +2416,7 @@ Populating the interactive namespace from numpy and matplotlib
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&lt;00:00, 100.86it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 144.07it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -2456,42 +2464,42 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&l
     </tr>
     <tr>
       <th>1</th>
-      <td>-1.4339468416952708</td>
+      <td>-1.8892208222224074</td>
       <td>10</td>
-      <td>0.148792</td>
-      <td>0.148792</td>
+      <td>0.003077</td>
+      <td>0.003077</td>
       <td>NaN</td>
-      <td>0.5660531583047292</td>
+      <td>0.11077917777759272</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>-1.7413174837493397</td>
+      <td>-1.9379866424727308</td>
       <td>10</td>
-      <td>0.028795</td>
-      <td>0.028795</td>
+      <td>-0.000743</td>
+      <td>-0.000743</td>
       <td>NaN</td>
-      <td>-0.30737064205406883</td>
+      <td>-0.04876582025032339</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>-2.374316306695544</td>
+      <td>-2.4947722381083346</td>
       <td>10</td>
-      <td>0.069254</td>
-      <td>0.069254</td>
+      <td>0.121818</td>
+      <td>0.121818</td>
       <td>NaN</td>
-      <td>-0.632998822946204</td>
+      <td>-0.5567855956356038</td>
       <td>NaN</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>-2.242728301376821</td>
+      <td>-2.396362916405697</td>
       <td>10</td>
-      <td>0.028312</td>
-      <td>0.028312</td>
+      <td>0.077795</td>
+      <td>0.077795</td>
       <td>NaN</td>
-      <td>0.13158800531872306</td>
+      <td>0.09840932170263783</td>
       <td>NaN</td>
     </tr>
   </tbody>
@@ -2572,7 +2580,8 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&l
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:10&lt;00:00, 93.07it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:07&lt;00:00, 138.56it/s]
+Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -2588,7 +2597,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:10&l
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&lt;00:00, 100.18it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 160.02it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -2650,7 +2659,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&l
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:09&lt;00:00, 105.75it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&lt;00:00, 167.84it/s]
 Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
@@ -2667,7 +2676,8 @@ Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:10&lt;00:00, 95.59it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 156.40it/s]
+Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -2683,7 +2693,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:10&l
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&lt;00:00, 122.38it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 164.61it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -2724,6 +2734,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 <img alt="../_images/Examples_Example_EDS_29_9.png" src="../_images/Examples_Example_EDS_29_9.png" />
 </div>
 </div>
+<p>Here the second simulation is remarkable, as it is sampling both state minima significantly! This is what one would like to achieve with an EDS-Simulation.</p>
 </div>
 </div>
 <div class="section" id="Calculating-Free-Energies-With-EDS">
@@ -2734,7 +2745,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 <p>$dG_i = y_{shift_i} - <span class="math">\frac{1}{2*\beta}</span> * <span class="math">\ln`(:nbsphinx-math:</span>sqrt{frac{2*pi}{k_i*beta}}`) $</p>
 <p>This solution is here used as the reference for all further calculations.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2742,11 +2753,11 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 <span></span><span class="c1">#Excpected Analytical Solution</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">10</span> <span class="c1"># beta is in k_B T</span>
 
-<span class="n">G_A</span> <span class="o">=</span> <span class="n">V_offset_A</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_A</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
-<span class="n">G_B</span> <span class="o">=</span> <span class="n">V_offset_B</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_B</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
-<span class="n">dG_expected</span> <span class="o">=</span> <span class="n">G_B</span><span class="o">-</span><span class="n">G_A</span>
+<span class="n">F_A</span> <span class="o">=</span> <span class="n">V_offset_A</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_A</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
+<span class="n">F_B</span> <span class="o">=</span> <span class="n">V_offset_B</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k_B</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
+<span class="n">dF_expected</span> <span class="o">=</span> <span class="n">F_B</span><span class="o">-</span><span class="n">F_A</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected dG: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected dF: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -2756,20 +2767,20 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-expected dG:  0.4910831264015317
+expected dF:  -0.3916873598468307
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Numerical-solution-to-the-problem">
 <h3>Numerical solution to the problem<a class="headerlink" href="#Numerical-solution-to-the-problem" title="Permalink to this headline">¶</a></h3>
-<p>With our sampling we can now calculate the relative free energy of our two states.</p>
+<p>With our sampling we can now estimate the relative free energy of our two states.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">ensembler.analysis</span> <span class="kn">import</span> <span class="n">freeEnergyCalculation</span> <span class="k">as</span> <span class="n">FE</span>
-<span class="n">fe_estimator</span> <span class="o">=</span> <span class="n">FE</span><span class="o">.</span><span class="n">dfEDS</span><span class="p">(</span><span class="n">kT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fe_estimator</span> <span class="o">=</span> <span class="n">FE</span><span class="o">.</span><span class="n">dfEDS</span><span class="p">(</span><span class="n">kJ</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 <span class="n">positions_orig_eds</span> <span class="o">=</span> <span class="n">orgi_eds_traj</span><span class="o">.</span><span class="n">position</span>
 <span class="n">Vrr_orig_eds</span> <span class="o">=</span> <span class="n">orgi_eds_traj</span><span class="o">.</span><span class="n">total_potential_energy</span>
@@ -2778,7 +2789,7 @@ expected dG:  0.4910831264015317
 
 <span class="n">dF_original</span> <span class="o">=</span> <span class="n">fe_estimator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1r_orig_eds</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2r_orig_eds</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr_orig_eds</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dG: &quot;</span><span class="p">,</span> <span class="n">dF_original</span><span class="p">,</span><span class="s2">&quot; kb T&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_original</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">),</span><span class="s2">&quot; kb T&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF: &quot;</span><span class="p">,</span> <span class="n">dF_original</span><span class="p">,</span><span class="s2">&quot; kJ&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_original</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">),</span><span class="s2">&quot; kJ&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2787,12 +2798,13 @@ expected dG:  0.4910831264015317
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dG:  6.429778188581871  kb T
-deviation:  5.938695062180339  kb T
+dF:  -4.224445543200067  kJ
+deviation:  3.8327581833532367  kJ
 </pre></div></div>
 </div>
+<p>This free energy is actually quite off for such a simple problem. But as we have seen before, this data comes from the simulation, which sampled only one state.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2804,7 +2816,7 @@ deviation:  5.938695062180339  kb T
 
 <span class="n">dF_undersampling</span> <span class="o">=</span> <span class="n">fe_estimator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1r_undersampling_eds</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2r_undersampling_eds</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr_undersampling_eds</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dG: &quot;</span><span class="p">,</span> <span class="n">dF_undersampling</span><span class="p">,</span><span class="s2">&quot; kb T&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_undersampling</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">),</span><span class="s2">&quot; kb T&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF: &quot;</span><span class="p">,</span> <span class="n">dF_undersampling</span><span class="p">,</span><span class="s2">&quot; kJ&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_undersampling</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">),</span><span class="s2">&quot; kJ&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2813,12 +2825,13 @@ deviation:  5.938695062180339  kb T
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dG:  2.7853476638514243  kb T
-deviation:  2.2942645374498927  kb T
+dF:  -1.61453569889639  kJ
+deviation:  1.2228483390495593  kJ
 </pre></div></div>
 </div>
+<p>The undersampling data seems to produce better results. But is that really the best we can get?</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2830,7 +2843,7 @@ deviation:  2.2942645374498927  kb T
 
 <span class="n">dF_optimal</span> <span class="o">=</span> <span class="n">fe_estimator</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1r_optimal_eds</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2r_optimal_eds</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr_optimal_eds</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dG: &quot;</span><span class="p">,</span> <span class="n">dF_optimal</span><span class="p">,</span><span class="s2">&quot; kb T&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_optimal</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">),</span><span class="s2">&quot; kb T&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF: &quot;</span><span class="p">,</span> <span class="n">dF_optimal</span><span class="p">,</span><span class="s2">&quot; kJ&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">deviation: &quot;</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dF_optimal</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">),</span><span class="s2">&quot; kJ&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2839,11 +2852,11 @@ deviation:  2.2942645374498927  kb T
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dG:  -2.145988476969963  kb T
-deviation:  2.6370716033714947  kb T
+dF:  -0.4674482714216003  kJ
+deviation:  0.07576091157476961  kJ
 </pre></div></div>
 </div>
-<p>Not that only the optimal sampling gives nice relative free energies</p>
+<p>The optimal sampled trajectory gives also the best result. All minima were explored extensivley in this trajectory, which leads to the best relative free energy estimate.</p>
 </div>
 </div>
 <div class="section" id="Many-States">
@@ -2894,28 +2907,22 @@ deviation:  2.6370716033714947  kb T
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_EDS_39_0.png" src="../_images/Examples_Example_EDS_39_0.png" />
+<img alt="../_images/Examples_Example_EDS_42_0.png" src="../_images/Examples_Example_EDS_42_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_EDS_39_1.png" src="../_images/Examples_Example_EDS_39_1.png" />
+<img alt="../_images/Examples_Example_EDS_42_1.png" src="../_images/Examples_Example_EDS_42_1.png" />
 </div>
 </div>
+<p>Can you sample them all?</p>
 </div>
 <div class="section" id="Literature:">
 <h2>Literature:<a class="headerlink" href="#Literature:" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
-</pre></div>
-</div>
-</div>
+<p>About EDS: * Christ 2007 * Christ 2008</p>
+<p>Going beyond EDS: * Sidler 2016 * Sidler 2017</p>
 </div>
 </div>
 
@@ -2930,7 +2937,7 @@ deviation:  2.6370716033714947  kb T
         <a href="Example_EnhancedSampling.html" class="btn btn-neutral float-right" title="Enhanced Sampling Simulations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="Example_ConveyorBelt.html" class="btn btn-neutral float-left" title="Conveyor Belt TI - scheme" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

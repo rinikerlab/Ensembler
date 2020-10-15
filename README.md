@@ -56,23 +56,23 @@ Alternativley you can download the git and use the setup.py script of the reposi
     cd /path/to/local/Ensembler/repo
     pyton setup.py install
 
-Instead of install one could add the path to the Ensembler repository, if you want to use the code and modify it. The requirements need than also to be installed.
-   Unix:
-   
-   * PIP:
+Instead of install one could add the path to the Ensembler repository, if you want to use the code and modify it. 
+The requirements need then to be installed as well like in the following examples.
+  
+   PIP:
     
     export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
     cd /path/to/local/Ensembler/repo
     pip install -r requirements.txt
     
-   * Anaconda:
+   Anaconda:
    
     conda-develop /path/to/local/Ensembler/repo
     cd /path/to/local/Ensembler/repo
     conda create -n ensembler --file environment_unix.yml
     conda activate ensembler
 
-For windows, we also provide the correct requirments.
+For windows, we also provide the requirment files (requirements_unix.txt and environment_windows.yml).
 
 Keep in mind: IDE's have their own awesome ways of doing this.
 

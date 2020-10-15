@@ -91,7 +91,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Example_ConveyorBelt.html">Conveyor Belt TI - scheme</a></li>
@@ -106,9 +105,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#Analysis">Analysis</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#Linear-Coupling-Method---Thermodynamic-Integration-(TI)">Linear Coupling Method - Thermodynamic Integration (TI)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id7">Sampling</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id8">Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Coupling-Methods">Coupling Methods</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#\lambda---Coupling"><span class="math notranslate nohighlight">\(\lambda\)</span> - Coupling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">Sampling</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Analysis</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#FEP-with-multiple-lambda-windows:">FEP with multiple lambda windows:</a></li>
 </ul>
 </li>
@@ -456,7 +456,7 @@ div.rendered_html tbody tr:hover {
 <p>In this Notebook, we want to give a short glimpse on Free Energy Calculations with Ensembler.</p>
 <p>Free energies are an very important topic in computational chemistry. As they are fundamental to thermodynamics and can give a lot of information for different changes to a system. Generally we can destinguish three types of free energies: thermodynamic, conformational and alchemical. The thermodynamic category is a free energy difference related to a change of an thermodynamic property of the system. The conformational free energy difference can be used to describe a conformational change of a
 molecule (phase space areas) and the alchemical free energy is describing a change in the chemical space of the molecule (e.g.: methylation).</p>
-<p>To calculate a free energy can be very tricky. Challenges might be sampling convergence due to high energy barriers or entropy differences.</p>
+<p>To calculate a free energy can be very tricky. A challenge might be sampling convergence due to high energy barriers or entropy differences.</p>
 <p>To be able to estimate the influence of a chemical change, one needs to calculate the free energies of both so called states.</p>
 <p>Here we calculate the Free Energy as:</p>
 <p>$F_i = V_i - T_i S_i = -:nbsphinx-math:<a href="#id1"><span class="problematic" id="id2">`</span></a>beta <a href="#id3"><span class="problematic" id="id4">`</span></a>ln(Z_i) $</p>
@@ -466,8 +466,10 @@ molecule (phase space areas) and the alchemical free energy is describing a chan
 <p><span class="math notranslate nohighlight">\(\Delta F_{ij} = F_j - F_i = -\beta ln(\frac{Z_i}{Z_j})\)</span></p>
 <p>This allows us to estimate the influence of the change.</p>
 <p>A free energy Calculation can be described contains three parts: * The System: Normally these contian multiple states. * The Sampling Method: The way how the Free Energy landscape will be integrated. * The Free Energy Estimator: The way, the free energy will be derived from the simulation.</p>
-<p>In this notebook we will cover following methods: * Free Energy Pertubation * Zwanzig * BAR * linear coupling * TI * exponential coupling * EDS * hybrid coupling * <span class="math notranslate nohighlight">\(\lambda\)</span>-EDS * Enhanced Sampling methods: * Conveyor Belt * RE-EDS</p>
-<p>References: - a good page to learn about free energies: <a class="reference external" href="http://www.alchemistry.org">http://www.alchemistry.org</a></p>
+<p>In this notebook we will cover following methods: * Free Energy Pertubation * Zwanzig * BAR * linear coupling * FEP with 10 <span class="math notranslate nohighlight">\(\lambda\)</span>-points * TI with 10 <span class="math notranslate nohighlight">\(\lambda\)</span>-points * exponential coupling * EDS * hybrid coupling * <span class="math notranslate nohighlight">\(\lambda\)</span>-EDS * Enhanced Sampling methods: * Conveyor Belt * RE-EDS</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">a</span> <span class="n">good</span> <span class="n">page</span> <span class="n">to</span> <span class="n">learn</span> <span class="n">about</span> <span class="n">free</span> <span class="n">energies</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">alchemistry</span><span class="o">.</span><span class="n">org</span>
+</pre></div>
+</div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -512,10 +514,10 @@ molecule (phase space areas) and the alchemical free energy is describing a chan
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">simulation_steps_total_per_approach</span> <span class="o">=</span> <span class="mi">1000</span><span class="c1">#0</span>
-<span class="n">space_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
-<span class="n">temperature</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># for the metropolis criterion of</span>
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">(</span><span class="n">step_size_coefficient</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">randomness_increase_factor</span><span class="o">=</span><span class="mf">1.25</span><span class="p">)</span>
+<span></span><span class="n">simulation_steps_total_per_approach</span> <span class="o">=</span> <span class="mi">10000</span> <span class="c1">#more steps better free energies, but if you just want to try 1000 ist quite fast.</span>
+<span class="n">space_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="mi">30</span> <span class="c1"># for the metropolis criterion of MMC sampler</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">metropolisMonteCarloIntegrator</span><span class="p">(</span><span class="n">step_size_coefficient</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -573,18 +575,18 @@ molecule (phase space areas) and the alchemical free energy is describing a chan
 <p>The final free energy difference is:</p>
 <p><span class="math notranslate nohighlight">\(\Delta F_{ij} = F_j - F_i\)</span></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[112]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#Analytical Solution</span>
 <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># beta is in kT</span>
 
-<span class="n">G_1</span> <span class="o">=</span> <span class="n">yoff1</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k1</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
-<span class="n">G_2</span> <span class="o">=</span> <span class="n">yoff2</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k2</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
-<span class="n">dG_expected</span> <span class="o">=</span> <span class="n">G_2</span><span class="o">-</span><span class="n">G_1</span>
+<span class="n">F_1</span> <span class="o">=</span> <span class="n">yoff1</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k1</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
+<span class="n">F_2</span> <span class="o">=</span> <span class="n">yoff2</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">beta</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">k2</span><span class="o">*</span><span class="n">beta</span><span class="p">)))</span>
+<span class="n">dF_expected</span> <span class="o">=</span> <span class="n">F_2</span><span class="o">-</span><span class="n">F_1</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected dG: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;expected dF: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -594,7 +596,7 @@ molecule (phase space areas) and the alchemical free energy is describing a chan
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-expected dG:  1.2746530721670273
+expected dF:  1.2746530721670273
 </pre></div></div>
 </div>
 </div>
@@ -629,7 +631,7 @@ expected dG:  1.2746530721670273
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&lt;00:00, 123.94it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 6797.88it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -656,10 +658,10 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 <span class="n">zwanz</span> <span class="o">=</span> <span class="n">zwanzigEquation</span><span class="p">(</span><span class="n">kT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">dF_zwanzig</span> <span class="o">=</span> <span class="n">zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Zwanzig Result: &quot;</span><span class="p">,</span> <span class="n">dF_zwanzig</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_zwanzig</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_zwanzig</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -670,15 +672,15 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:08&l
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Expected Result:  1.2746530721670273
-Zwanzig Result:  11.529892305218478
+Zwanzig Result:  8.38721779130273
 
-Difference: 10.255239233051451
+Difference: 7.112564719135703
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Bennet-Acceptance-Ratio-(BAR)">
 <h4>Bennet Acceptance Ratio (BAR)<a class="headerlink" href="#Bennet-Acceptance-Ratio-(BAR)" title="Permalink to this headline">¶</a></h4>
-<p>Equation: $ ddF_{ij_{BAR}}(V_i, V_j) = <span class="math">\ln`(:nbsphinx-math:</span>frac{langle f(V_i-Vj+C) rangle_j}{langle f(V_j-V_i-C) rangle_i}`) + C - ln(<span class="math">\frac{n_1}{n_0}</span>)$</p>
+<p>Equation: $ dF_{ij_{BAR}}(V_i, V_j) = <span class="math">\ln`(:nbsphinx-math:</span>frac{langle f(V_i-Vj+C) rangle_j}{langle f(V_j-V_i-C) rangle_i}`) + C - ln(<span class="math">\frac{n_1}{n_0}</span>)$</p>
 <p>with f as fermi function: - $ f(x) = :nbsphinx-math:<a href="#id5"><span class="problematic" id="id6">`</span></a>frac{1}{1+e^{-beta x}}`$</p>
 <p><span class="math notranslate nohighlight">\(dF_{ij_{BAR}}\)</span> is calculated iterativley with <span class="math notranslate nohighlight">\(ddF_{ij_{BAR}}(V_i, V_j)\)</span>, till convergence</p>
 <div class="nbinput docutils container">
@@ -687,7 +689,7 @@ Difference: 10.255239233051451
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#Simulate the two states:</span>
-<span class="n">steps</span> <span class="o">=</span> <span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="mi">2</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="n">simulation_steps_total_per_approach</span>
 <span class="n">equilibration_steps</span> <span class="o">=</span> <span class="mi">100</span>
 
 <span class="c1">##Build Systems</span>
@@ -715,8 +717,8 @@ Difference: 10.255239233051451
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 500/500 [00:03&lt;00:00, 143.22it/s]
-Simulation:  Simulation: 100%|██████████| 500/500 [00:03&lt;00:00, 146.28it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5707.24it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5568.57it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -786,14 +788,14 @@ Simulation:  Simulation: 100%|██████████| 500/500 [00:03&lt;
 <span class="n">V12</span><span class="o">=</span><span class="n">h1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">state2_traj</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
 <span class="n">V22</span><span class="o">=</span><span class="n">h2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">state2_traj</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
 
-<span class="n">bar</span> <span class="o">=</span> <span class="n">bennetAcceptanceRatio</span><span class="p">(</span><span class="n">kT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">convergence_radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">bar</span> <span class="o">=</span> <span class="n">bennetAcceptanceRatio</span><span class="p">(</span><span class="n">kT</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">convergence_radius</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">dF_bar</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vj_i</span><span class="o">=</span><span class="n">V21</span><span class="p">,</span> <span class="n">Vi_i</span><span class="o">=</span><span class="n">V11</span><span class="p">,</span> <span class="n">Vi_j</span><span class="o">=</span><span class="n">V12</span><span class="p">,</span> <span class="n">Vj_j</span><span class="o">=</span><span class="n">V22</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BAR Result: &quot;</span><span class="p">,</span> <span class="n">dF_bar</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_bar</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_bar</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -804,21 +806,26 @@ Simulation:  Simulation: 100%|██████████| 500/500 [00:03&lt;
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 
-Final Iterations:  100  Result:  1.776483633842941
+Final Iterations:  9  Result:  2.8326036752713817
 
 Expected Result:  1.2746530721670273
-BAR Result:  1.776483633842941
+BAR Result:  2.8326036752713817
 
-Difference: 0.5018305616759138
+Difference: 1.5579506031043544
 </pre></div></div>
 </div>
 </div>
 </div>
 </div>
-<div class="section" id="Linear-Coupling-Method---Thermodynamic-Integration-(TI)">
-<h2>Linear Coupling Method - Thermodynamic Integration (TI)<a class="headerlink" href="#Linear-Coupling-Method---Thermodynamic-Integration-(TI)" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id7">
-<h3>Sampling<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="Coupling-Methods">
+<h2>Coupling Methods<a class="headerlink" href="#Coupling-Methods" title="Permalink to this headline">¶</a></h2>
+<p>If the phase space overlap of the two state is low, the free energy estimate might deviate a lot from the real result be very bad. This issue can be solved by coupling the phase space of the two states in a simulation. Two ways of coupling will be discussed. The first one is <span class="math notranslate nohighlight">\(\lambda\)</span>-coupling which forms a linear combination of the two states, this is used for FEP and TI. Second there is the exponential boltzmann coupling used in enveloping distribution sampling (EDS).</p>
+<div class="section" id="\lambda---Coupling">
+<h3><span class="math notranslate nohighlight">\(\lambda\)</span> - Coupling<a class="headerlink" href="#\lambda---Coupling" title="Permalink to this headline">¶</a></h3>
+<p>$H_{<span class="math">\lambda</span>} = (1-<span class="math">\lambda</span>) H_A + :nbsphinx-math:<a href="#id7"><span class="problematic" id="id8">`</span></a>lambda <a href="#id9"><span class="problematic" id="id10">`</span></a>H_B $</p>
+</div>
+<div class="section" id="id11">
+<h3>Sampling<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
@@ -858,7 +865,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_18_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_18_1.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_19_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_19_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -885,7 +892,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
+Simulation:  Simulation:   0%|          | 0/10000 [00:00&lt;?, ?it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -893,7 +900,7 @@ Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-1000
+10000
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -901,21 +908,21 @@ Simulation:  Simulation:   0%|          | 0/1000 [00:00&lt;?, ?it/s]
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 164.64it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 152.09it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 152.84it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 161.85it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 156.45it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 165.89it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&lt;00:00, 182.78it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&lt;00:00, 188.04it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&lt;00:00, 192.68it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&lt;00:00, 185.49it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 6886.22it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 6397.81it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 6434.21it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5666.95it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5054.88it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5833.40it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5784.49it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5603.83it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5336.82it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:01&lt;00:00, 5278.94it/s]
 </pre></div></div>
 </div>
 </div>
-<div class="section" id="id8">
-<h3>Analysis<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>Analysis<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <div class="section" id="Exponential-Formula">
 <h4>Exponential Formula<a class="headerlink" href="#Exponential-Formula" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
@@ -969,7 +976,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&l
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_21_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_21_0.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_22_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_22_0.png" />
 </div>
 </div>
 </div>
@@ -1008,10 +1015,10 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&l
 <span class="n">dF_FEP_10lambda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dA_i_fw</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sum of intermediates Result: &quot;</span><span class="p">,</span> <span class="n">dF_FEP_10lambda</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_FEP_10lambda</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_FEP_10lambda</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -1020,7 +1027,7 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&l
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_23_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_23_0.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_24_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_24_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1030,9 +1037,9 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:05&l
 <div class="highlight"><pre>
 
 Expected Result:  1.2746530721670273
-Sum of intermediates Result:  0.9809087379153599
+Sum of intermediates Result:  1.0004315367448022
 
-Difference: -0.29374433425166735
+Difference: -0.27422153542222505
 </pre></div></div>
 </div>
 <div class="section" id="Thermodynamic-Integration">
@@ -1074,11 +1081,11 @@ Text(0.5, 0.98, &#39;dH/d$\\lambda$ for each Lambda point&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_25_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_25_1.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_26_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_26_1.png" />
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[113]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1088,22 +1095,14 @@ Text(0.5, 0.98, &#39;dH/d$\\lambda$ for each Lambda point&#39;)
 <span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">lam_stats</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lam</span><span class="p">]</span>
 <span class="n">stds</span> <span class="o">=</span> <span class="p">[</span><span class="n">lam_stats</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="s1">&#39;std&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lam</span><span class="p">]</span>
 
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">dF_trapez</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">means</span><span class="p">)</span>
+<span class="n">dF_trapez</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">means</span><span class="p">)</span>
 <span class="n">dF_err</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lam</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">stds</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;trapez Rule Result: &quot;</span><span class="p">,</span> <span class="n">dF_trapez</span><span class="p">,</span> <span class="s2">&quot;+-&quot;</span><span class="p">,</span> <span class="n">dF_err</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_trapez</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_trapez</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -1115,9 +1114,9 @@ Text(0.5, 0.98, &#39;dH/d$\\lambda$ for each Lambda point&#39;)
 <div class="highlight"><pre>
 
 Expected Result:  1.2746530721670273
-trapez Rule Result:  1.1485302618494326 +- 1.2191652447805799
+trapez Rule Result:  1.2132688196959016 +- 1.9096456276443603
 
-Difference: -0.12612281031759465
+Difference: -0.061384252471125667
 </pre></div></div>
 </div>
 </div>
@@ -1195,7 +1194,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 149.44it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:07&lt;00:00, 1397.33it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1256,10 +1255,10 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&l
 <span class="n">V1r</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
 <span class="n">V2r</span> <span class="o">=</span> <span class="n">h2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
 
-<span class="n">dF_EDS</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V2r</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V1r</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr</span><span class="p">)</span>
+<span class="n">dF_EDS</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1r</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2r</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF &quot;</span><span class="p">,</span> <span class="n">dF_EDS</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_EDS</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_EDS</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -1269,8 +1268,8 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&l
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dF  1.0977401109526677
-deviation:  -0.17691296121435962
+dF  1.5444115059351624
+deviation:  0.26975843376813513
 </pre></div></div>
 </div>
 </div>
@@ -1301,13 +1300,14 @@ deviation:  -0.17691296121435962
 <span class="n">bar</span> <span class="o">=</span> <span class="n">bennetAcceptanceRatio</span><span class="p">(</span><span class="n">kT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="nb">setattr</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="s2">&quot;verbose&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 <span class="n">df_BAR_1R</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vj_i</span><span class="o">=</span><span class="n">V1r</span><span class="p">,</span> <span class="n">Vi_i</span><span class="o">=</span><span class="n">Vrr</span><span class="p">,</span> <span class="n">Vi_j</span><span class="o">=</span><span class="n">Vr1</span><span class="p">,</span> <span class="n">Vj_j</span><span class="o">=</span><span class="n">V11</span><span class="p">,)</span>
-<span class="n">dF_EDS</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V2r</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V1r</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr</span><span class="p">)</span>
+<span class="n">dF_EDS</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1r</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2r</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vrr</span><span class="p">)</span>
 <span class="n">df_BAR_2R</span> <span class="o">=</span> <span class="n">bar</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vj_i</span><span class="o">=</span><span class="n">V2r</span><span class="p">,</span> <span class="n">Vi_i</span><span class="o">=</span><span class="n">Vrr</span><span class="p">,</span> <span class="n">Vi_j</span><span class="o">=</span><span class="n">Vr2</span><span class="p">,</span> <span class="n">Vj_j</span><span class="o">=</span><span class="n">V22</span><span class="p">)</span>
 
 <span class="n">dF_EDS_bar</span> <span class="o">=</span> <span class="n">df_BAR_1R</span><span class="o">-</span><span class="n">dF_EDS</span><span class="o">+</span><span class="n">df_BAR_2R</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2R&quot;</span><span class="p">,</span> <span class="n">df_BAR_2R</span><span class="p">,</span> <span class="s2">&quot;rr&quot;</span><span class="p">,</span> <span class="n">dF_EDS</span><span class="p">,</span> <span class="s2">&quot;1R&quot;</span><span class="p">,</span> <span class="n">df_BAR_1R</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF_BAR:  &quot;</span><span class="p">,</span> <span class="n">dF_EDS_bar</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_EDS_bar</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_EDS_bar</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">)</span>
 
 
 
@@ -1321,12 +1321,12 @@ deviation:  -0.17691296121435962
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 
-Final Iterations:  14  Result:  0.8093891364700488
+Final Iterations:  5  Result:  0.6683140734869367
 
-Final Iterations:  15  Result:  1.811176054148937
-2R 1.811176054148937 rr 1.0977401109526677 1R 0.8093891364700488
-dF_BAR:   1.522825079666318
-deviation:  0.2481720074992908
+Final Iterations:  7  Result:  2.057860420185253
+2R 2.057860420185253 rr 1.5444115059351624 1R 0.6683140734869367
+dF_BAR:   1.1817629877370273
+deviation:  -0.09289008443000002
 </pre></div></div>
 </div>
 </div>
@@ -1461,7 +1461,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&lt;00:00, 164.61it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:07&lt;00:00, 1296.50it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1486,8 +1486,8 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:06&l
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:10&lt;00:00, 97.63it/s]
-Simulation:  Simulation: 100%|██████████| 1000/1000 [00:07&lt;00:00, 134.44it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:07&lt;00:00, 1262.62it/s]
+Simulation:  Simulation: 100%|██████████| 10000/10000 [00:05&lt;00:00, 1775.55it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1564,10 +1564,10 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:07&l
 <span class="n">V1</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
 <span class="n">V2</span> <span class="o">=</span> <span class="n">h2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
 
-<span class="n">dF_leds</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V2</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
+<span class="n">dF_leds</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF &quot;</span><span class="p">,</span> <span class="n">dF_leds</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_leds</span><span class="o">-</span><span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;deviation: &quot;</span><span class="p">,</span> <span class="n">dF_leds</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">)</span>
 
 </pre></div>
 </div>
@@ -1577,8 +1577,8 @@ Simulation:  Simulation: 100%|██████████| 1000/1000 [00:07&l
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dF  1.2756096039735525
-deviation:  0.0009565318065252182
+dF  1.600083538160825
+deviation:  0.32543046599379766
 </pre></div></div>
 </div>
 </div>
@@ -1610,7 +1610,7 @@ deviation:  0.0009565318065252182
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">conveyorBelt</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="n">numsys</span><span class="p">)</span>
+<span></span><span class="n">conveyorBelt</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">simulation_steps_total_per_approach</span><span class="p">)</span>
 <span class="n">cvb_trajs</span> <span class="o">=</span> <span class="n">conveyorBelt</span><span class="o">.</span><span class="n">get_trajectories</span><span class="p">()</span>
 
 </pre></div>
@@ -1620,7 +1620,7 @@ deviation:  0.0009565318065252182
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "498a09fefd0448f0a55587dfafa5e5b0", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "077433d0aa2445d880ece998ddbf91ac", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -1632,6 +1632,183 @@ deviation:  0.0009565318065252182
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">cvb_trajs</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+{0:                    position  temperature  total_system_energy  \
+ 0                 -0.776868         30.0            11.349429
+ 1      -0.15883811640181045         30.0             0.012615
+ 2       0.09695904504991193         30.0             0.004701
+ 3         1.066069109967636         30.0             2.038650
+ 4        1.1476747207332743         30.0             1.994201
+ ...                     ...          ...                  ...
+ 19996    1.2628670882974202         30.0             0.828345
+ 19997    0.7393252277827925         30.0             1.850221
+ 19998    1.4908554430783583         30.0             1.732300
+ 19999    1.5278681105601164         30.0             1.746570
+ 20000    1.3356428955795967         30.0             1.692986
+
+        total_potential_energy  total_kinetic_energy                dhdpos  \
+ 0                   11.349429                   NaN              -6.05374
+ 1                    0.012615                   NaN    0.6180297973512088
+ 2                    0.004701                   NaN    0.2557971614517224
+ 3                    2.038650                   NaN    0.9691100649177242
+ 4                    1.994201                   NaN   0.08160561076563833
+ ...                       ...                   ...                   ...
+ 19996                0.828345                   NaN  -0.44463968699338907
+ 19997                1.850221                   NaN   -0.5235418605146277
+ 19998                1.732300                   NaN    0.7515302152955657
+ 19999                1.746570                   NaN   0.03701266748175813
+ 20000                1.692986                   NaN   -0.1922252149805198
+
+        velocity       lam     dhdlam
+ 0           NaN  0.000000  22.095335
+ 1           NaN  0.000000  15.954773
+ 2           NaN  0.000000  13.636770
+ 3           NaN  0.243368   6.041881
+ 4           NaN  0.243368   5.488085
+ ...         ...       ...        ...
+ 19996       NaN  0.006540   4.729029
+ 19997       NaN  0.187892   8.392675
+ 19998       NaN  0.187892   3.304951
+ 19999       NaN  0.187892   3.083568
+ 20000       NaN  0.187892   4.263156
+
+ [20001 rows x 9 columns],
+ 1:                    position  temperature  total_system_energy  \
+ 0                 -0.776868         30.0            11.349429
+ 1        -0.719137046472445         30.0            11.003275
+ 2      -0.14814759267291766         30.0             7.938612
+ 3        0.7426260864284643         30.0             6.496142
+ 4        1.7082110217688524         30.0             2.978499
+ ...                     ...          ...                  ...
+ 19996    2.3000315468537966         30.0             2.184051
+ 19997    1.7639379336122851         30.0             2.097568
+ 19998    1.8541330116430728         30.0             2.109230
+ 19999     1.752479339870912         30.0             2.097033
+ 20000    1.7091939085470753         30.0             2.096934
+
+        total_potential_energy  total_kinetic_energy                 dhdpos  \
+ 0                   11.349429                   NaN               -6.05374
+ 1                   11.003275                   NaN   0.057730867280574194
+ 2                    7.938612                   NaN     0.5709894537995274
+ 3                    6.496142                   NaN     0.8907736791013819
+ 4                    2.978499                   NaN      0.965584935340388
+ ...                       ...                   ...                    ...
+ 19996                2.184051                   NaN     0.0656807355971456
+ 19997                2.097568                   NaN    -0.5360936132415116
+ 19998                2.109230                   NaN    0.09019507803078775
+ 19999                2.097033                   NaN   -0.10165367177216089
+ 20000                2.096934                   NaN  -0.043285431323836665
+
+        velocity       lam     dhdlam
+ 0           NaN  0.000000  22.095335
+ 1           NaN  0.500000  21.489392
+ 2           NaN  0.500000  15.855276
+ 3           NaN  0.743368   8.367859
+ 4           NaN  0.743368   2.044086
+ ...         ...       ...        ...
+ 19996       NaN  0.506540  -0.910139
+ 19997       NaN  0.312108   1.736036
+ 19998       NaN  0.312108   1.250612
+ 19999       NaN  0.312108   1.798870
+ 20000       NaN  0.312108   2.038599
+
+ [20001 rows x 9 columns],
+ 2:                   position  temperature  total_system_energy  \
+ 0                -0.776868         30.0            11.349429
+ 1      -0.5574842942981691         30.0            19.983542
+ 2      0.29745044115270713         30.0            11.955661
+ 3       1.2254200576804188         30.0             4.513465
+ 4       1.7033442627511137         30.0             3.017891
+ ...                    ...          ...                  ...
+ 19996    2.439421129667666         30.0             1.481210
+ 19997     2.91925025564602         30.0             1.620662
+ 19998    2.967795275818664         30.0             1.640831
+ 19999    2.958816825624788         30.0             1.636635
+ 20000    3.117196850553213         30.0             1.741707
+
+        total_potential_energy  total_kinetic_energy                 dhdpos  \
+ 0                   11.349429                   NaN               -6.05374
+ 1                   19.983542                   NaN    0.21938361945485008
+ 2                   11.955661                   NaN     0.8549347354508763
+ 3                    4.513465                   NaN     0.9279696165277116
+ 4                    3.017891                   NaN      0.477924205070695
+ ...                       ...                   ...                    ...
+ 19996                1.481210                   NaN    -0.2086567802062087
+ 19997                1.620662                   NaN     0.4798291259783538
+ 19998                1.640831                   NaN    0.04854502017264428
+ 19999                1.636635                   NaN  -0.008978450193875998
+ 20000                1.741707                   NaN    0.15838002492842485
+
+        velocity       lam     dhdlam
+ 0           NaN  0.000000  22.095335
+ 1           NaN  1.000000  19.828147
+ 2           NaN  1.000000  11.911423
+ 3           NaN  0.756632   4.972874
+ 4           NaN  0.756632   2.071283
+ ...         ...       ...        ...
+ 19996       NaN  0.993460  -1.504015
+ 19997       NaN  0.812108  -3.251230
+ 19998       NaN  0.812108  -3.402349
+ 19999       NaN  0.812108  -3.374754
+ 20000       NaN  0.812108  -3.837855
+
+ [20001 rows x 9 columns],
+ 3:                   position  temperature  total_system_energy  \
+ 0                -0.776868         30.0            11.349429
+ 1      0.17988325212006662         30.0             6.472883
+ 2       0.8725859391072962         30.0             4.084769
+ 3       0.3872889653335131         30.0             2.940141
+ 4      0.46912502912863463         30.0             2.804154
+ ...                    ...          ...                  ...
+ 19996     2.57378750060159         30.0             2.305678
+ 19997    3.229942855566071         30.0             2.370485
+ 19998   2.4705950465688753         30.0             1.929613
+ 19999   2.6111855702650577         30.0             1.907902
+ 20000   2.3128111866858454         30.0             2.009903
+
+        total_potential_energy  total_kinetic_energy               dhdpos  \
+ 0                   11.349429                   NaN             -6.05374
+ 1                    6.472883                   NaN   0.9567511658730858
+ 2                    4.084769                   NaN   0.6927026869872296
+ 3                    2.940141                   NaN  -0.4852969737737831
+ 4                    2.804154                   NaN  0.08183606379512154
+ ...                       ...                   ...                  ...
+ 19996                2.305678                   NaN  0.24254104089703432
+ 19997                2.370485                   NaN   0.6561553549644814
+ 19998                1.929613                   NaN   -0.759347808997196
+ 19999                1.907902                   NaN  0.14059052369618252
+ 20000                2.009903                   NaN  -0.2983743835792121
+
+        velocity       lam     dhdlam
+ 0           NaN  0.000000  22.095335
+ 1           NaN  0.500000  12.913409
+ 2           NaN  0.500000   7.408133
+ 3           NaN  0.256632  11.164392
+ 4           NaN  0.256632  10.497953
+ ...         ...       ...        ...
+ 19996       NaN  0.493460  -2.039705
+ 19997       NaN  0.687892  -4.136955
+ 19998       NaN  0.687892  -1.631516
+ 19999       NaN  0.687892  -2.182380
+ 20000       NaN  0.687892  -0.966205
+
+ [20001 rows x 9 columns]}
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1651,11 +1828,11 @@ deviation:  0.0009565318065252182
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_47_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_47_0.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_48_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_48_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1670,7 +1847,7 @@ deviation:  0.0009565318065252182
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1682,11 +1859,11 @@ deviation:  0.0009565318065252182
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_48_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_48_1.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_49_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_49_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1728,11 +1905,11 @@ deviation:  0.0009565318065252182
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_49_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_49_0.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_50_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_50_0.png" />
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[62]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1743,25 +1920,33 @@ deviation:  0.0009565318065252182
 <span class="n">means_cvb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lambda_stat</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">discrete_traj</span><span class="o">==</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">dhdlam</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbins</span><span class="o">+</span><span class="mi">1</span><span class="p">)])</span>
 <span class="n">std_cvb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">lambda_stat</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">discrete_traj</span><span class="o">==</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">dhdlam</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbins</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span> <span class="p">)</span>
 
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">means_cvb</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">means_cvb</span><span class="p">)</span>
+
+<span class="n">dF_cvb_trapez</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lam_bins</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">means_cvb</span><span class="p">)</span>
+<span class="n">dF_err</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">means_cvb</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">std_cvb</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;trapez Rule Result: &quot;</span><span class="p">,</span> <span class="n">dF_cvb_trapez</span><span class="p">,</span> <span class="s2">&quot;+-&quot;</span><span class="p">,</span> <span class="n">dF_err</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_cvb_trapez</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)</span>
+
+
+
+
 </pre></div>
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&lt;matplotlib.lines.Line2D at 0x1fa325a1248&gt;]
+
+Expected Result:  1.2746530721670273
+trapez Rule Result:  1.072545329251654 +- -2.287703880156635
+
+Difference: -0.20210774291537326
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1771,47 +1956,16 @@ deviation:  0.0009565318065252182
 <img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_51_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_51_1.png" />
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">dF_cvb_trapez</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">lam_bins</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">means_cvb</span><span class="p">)</span>
-<span class="n">dF_err</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">means_cvb</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">std_cvb</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;trapez Rule Result: &quot;</span><span class="p">,</span> <span class="n">dF_cvb_trapez</span><span class="p">,</span> <span class="s2">&quot;+-&quot;</span><span class="p">,</span> <span class="n">dF_err</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Difference:&quot;</span><span class="p">,</span> <span class="n">dF_cvb_trapez</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)</span>
-
-
-
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-
-Expected Result:  1.2746530721670273
-trapez Rule Result:  1.1991812445914258 +- -23.181620654126423
-
-Difference: -0.07547182757560145
-</pre></div></div>
-</div>
 </div>
 <div class="section" id="RE-EDS">
 <h3>RE-EDS<a class="headerlink" href="#RE-EDS" title="Permalink to this headline">¶</a></h3>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[105]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="c1">#potential</span>
-<span class="n">Eoff</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">Eoff</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">V_eds</span> <span class="o">=</span> <span class="n">pot</span><span class="o">.</span><span class="n">envelopedPotential</span><span class="p">(</span><span class="n">V_is</span><span class="o">=</span><span class="p">[</span><span class="n">h1</span><span class="p">,</span><span class="n">h2</span><span class="p">])</span>
 
 
@@ -1823,9 +1977,9 @@ Difference: -0.07547182757560145
 <span class="c1">##Ensemble</span>
 <span class="kn">from</span> <span class="nn">ensembler.ensemble</span> <span class="kn">import</span> <span class="n">replica_exchange</span>
 <span class="c1">##Ensemble Settings:</span>
-<span class="n">s_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">trials</span><span class="o">=</span><span class="mi">30</span>
-<span class="n">steps_between_trials</span><span class="o">=</span><span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="n">trials</span> <span class="c1">#len(s_values)*</span>
+<span class="n">s_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">trials</span><span class="o">=</span><span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="mi">100</span>
+<span class="n">steps_between_trials</span><span class="o">=</span><span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="n">trials</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DO trials: &quot;</span><span class="p">,</span> <span class="n">trials</span><span class="p">,</span> <span class="s2">&quot;steps: &quot;</span><span class="p">,</span> <span class="n">steps_between_trials</span><span class="p">)</span>
 <span class="n">ensemble</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">replicaExchangeEnvelopingDistributionSampling</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">eds_system</span><span class="p">,</span> <span class="n">exchange_criterium</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1841,10 +1995,6 @@ Difference: -0.07547182757560145
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
 
 <span class="k">for</span> <span class="n">ind</span><span class="p">,</span><span class="n">replica</span> <span class="ow">in</span> <span class="n">ensemble</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">replica</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">replica</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">s</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">replica</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">Eoff</span><span class="p">)</span>
-
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span><span class="n">replica</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;$replica &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;$&quot;</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span><span class="n">h1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;state1&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;grey&quot;</span><span class="p">)</span>
@@ -1868,42 +2018,12 @@ Difference: -0.07547182757560145
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 [0, 0]
-DO trials:  30 steps:  33
-[1.0, 0.599484250318941, 0.35938136638046275, 0.2154434690031884, 0.1291549665014884, 0.0774263682681127, 0.046415888336127795, 0.02782559402207126, 0.016681005372000592, 0.01]
-0        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA3323F5C8&gt;
-[1.0, 1.0]
-[0, 0]
-1        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA30712FC8&gt;
-[0.599484250318941, 0.599484250318941]
-[0, 0]
-2        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA32B09548&gt;
-[0.35938136638046275, 0.35938136638046275]
-[0, 0]
-3        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA32B70408&gt;
-[0.2154434690031884, 0.2154434690031884]
-[0, 0]
-4        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA32B5ECC8&gt;
-[0.1291549665014884, 0.1291549665014884]
-[0, 0]
-5        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA30758888&gt;
-[0.0774263682681127, 0.0774263682681127]
-[0, 0]
-6        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA30B27DC8&gt;
-[0.046415888336127795, 0.046415888336127795]
-[0, 0]
-7        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA32AF6C08&gt;
-[0.02782559402207126, 0.02782559402207126]
-[0, 0]
-8        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA32E91D88&gt;
-[0.016681005372000592, 0.016681005372000592]
-[0, 0]
-9        &lt;ensembler.system.eds_system.edsSystem object at 0x000001FA33239808&gt;
-[0.01, 0.01]
-[0, 0]
+DO trials:  100 steps:  100
+[1.0, 0.7742636826811271, 0.599484250318941, 0.4641588833612779, 0.35938136638046275, 0.2782559402207124, 0.2154434690031884, 0.1668100537200059, 0.1291549665014884, 0.1]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[105]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1915,11 +2035,11 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_54_2.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_54_2.png" />
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_53_2.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_53_2.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[106]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1934,20 +2054,11 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Running trials:  40%|████      | 12/30 [00:36&lt;00:55,  3.07s/it]
+Running trials: 100%|██████████| 100/100 [00:46&lt;00:00,  2.13it/s]
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">reeds_trajs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[107]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1980,8 +2091,15 @@ Running trials:  40%|████      | 12/30 [00:36&lt;00:55,  3.07s/it]
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_55_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_55_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[108]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1998,28 +2116,52 @@ Running trials:  40%|████      | 12/30 [00:36&lt;00:55,  3.07s/it]
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_56_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_56_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 
 <span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">])</span>
-<span class="n">enes</span> <span class="o">=</span> <span class="p">[</span><span class="n">reeds_trajs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">total_potential_energy</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">trajs</span><span class="p">)]</span>
+<span class="n">enes</span> <span class="o">=</span> <span class="p">[</span><span class="n">reeds_trajs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">total_potential_energy</span><span class="p">[</span><span class="mi">100</span><span class="p">:]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">trajs</span><span class="p">)]</span>
 <span class="n">min_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">enes</span><span class="p">)</span>
 <span class="n">max_e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">enes</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">ene</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">enes</span><span class="p">):</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ene</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;replica&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">([</span><span class="n">steps_between_trials</span><span class="o">*</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trials</span><span class="p">)],</span> <span class="n">ymin</span><span class="o">=</span><span class="n">min_e</span><span class="p">,</span> <span class="n">ymax</span><span class="o">=</span><span class="n">max_e</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;exchange&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1">#ax.vlines([steps_between_trials*x for x in range(trials)], ymin=min_e, ymax=max_e, label=&quot;exchange&quot;, lw=0.1)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;replica potE timeseries&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1.1</span><span class="o">*</span><span class="n">min_e</span><span class="p">,</span> <span class="mf">1.1</span><span class="o">*</span><span class="n">max_e</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[109]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x1a26849d708&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_57_1.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_57_1.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[110]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2051,8 +2193,15 @@ Running trials:  40%|████      | 12/30 [00:36&lt;00:55,  3.07s/it]
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/Examples_Example_FreeEnergyCalculationSimulation_58_0.png" src="../_images/Examples_Example_FreeEnergyCalculationSimulation_58_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[111]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2066,48 +2215,138 @@ Running trials:  40%|████      | 12/30 [00:36&lt;00:55,  3.07s/it]
 <span class="n">dFresults</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">s_vals</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">ind</span><span class="p">,</span><span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reeds_trajs</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     <span class="n">s_vals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reeds_trajs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">traj_positions</span> <span class="o">=</span> <span class="n">reeds_trajs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="n">equilibration_steps</span><span class="p">:]</span>
     <span class="n">Vr</span> <span class="o">=</span> <span class="n">reeds_trajs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">total_potential_energy</span><span class="p">[</span><span class="n">equilibration_steps</span><span class="p">:]</span>
     <span class="n">V1</span> <span class="o">=</span> <span class="n">h1</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
     <span class="n">V2</span> <span class="o">=</span> <span class="n">h2</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">traj_positions</span><span class="p">)</span>
 
-    <span class="n">dFRew_zwanz</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V2</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
+    <span class="n">dFRew_zwanz</span> <span class="o">=</span> <span class="n">rew_zwanz</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">Vi</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span> <span class="n">Vj</span><span class="o">=</span><span class="n">V2</span><span class="p">,</span> <span class="n">Vr</span><span class="o">=</span><span class="n">Vr</span><span class="p">)</span>
     <span class="n">dFresults</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dFRew_zwanz</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF_rew =  &quot;</span><span class="p">,</span> <span class="n">dFRew_zwanz</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Expected Result: &quot;</span><span class="p">,</span> <span class="n">dG_expected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Expected Result: &quot;</span><span class="p">,</span> <span class="n">dF_expected</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;s</span><span class="se">\t\t</span><span class="s2">dF</span><span class="se">\t\t</span><span class="s2">diff&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>  <span class="nb">zip</span><span class="p">(</span><span class="n">s_vals</span><span class="p">,</span> <span class="n">dFresults</span><span class="p">,</span> <span class="n">dFresults</span> <span class="o">-</span> <span class="n">dG_expected</span><span class="p">)])))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">5</span><span class="p">)))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span>  <span class="nb">zip</span><span class="p">(</span><span class="n">s_vals</span><span class="p">,</span> <span class="n">dFresults</span><span class="p">,</span> <span class="n">dFresults</span> <span class="o">-</span> <span class="n">dF_expected</span><span class="p">)])))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+        Expected Result:  1.2746530721670273
+s               dF              diff
+1.0             5.02539         3.75074
+0.77426         4.97154         3.69688
+0.59948         4.50213         3.22748
+0.46416         3.27181         1.99716
+0.35938         2.40139         1.12674
+0.27826         1.07978         -0.19487
+0.21544         0.13533         -1.13932
+0.16681         -0.22071                -1.49537
+0.12915         -0.3965         -1.67115
+0.1             -0.38358                -1.65823
+
+
+
+
+</pre></div></div>
 </div>
 </div>
 </div>
 <div class="section" id="Final-Results">
 <h2>Final Results<a class="headerlink" href="#Final-Results" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[66]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;analytical &quot;</span><span class="p">,</span><span class="n">dG_expected</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FEP &quot;</span><span class="p">,</span> <span class="n">dF_zwanzig</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BAR &quot;</span><span class="p">,</span> <span class="n">dF_bar</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FEP 10-lambda&quot;</span><span class="p">,</span><span class="n">dF_FEP_10lambda</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TI&quot;</span><span class="p">,</span> <span class="n">dF_trapez</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EDS&quot;</span><span class="p">,</span> <span class="n">dF_EDS</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;dF_EDS_BAR:  &quot;</span><span class="p">,</span> <span class="n">dF_EDS_bar</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;lEDS&quot;</span><span class="p">,</span> <span class="n">dF_leds</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;cvb&quot;</span><span class="p">,</span> <span class="n">dF_cvb_trapez</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;REEDS&quot;</span><span class="p">,</span> <span class="n">dFresults</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;EDS_BAR&quot;</span><span class="p">,</span> <span class="n">dF_EDSbar</span><span class="p">)</span>
+<span></span><span class="n">md_str</span> <span class="o">=</span> <span class="s2">&quot;| method | dF  | deviation |</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;|---|---|---|</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| analytical   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  |   | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| Zwanzig   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_zwanzig</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_zwanzig</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| BAR   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_bar</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_bar</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
 
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| FEP 10-$\lambda$ Points   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_FEP_10lambda</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_FEP_10lambda</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| TI 10-$\lambda$ Points  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_trapez</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_trapez</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| EDS   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_EDS</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_EDS</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| EDS-BAR   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_EDS_bar</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_EDS_bar</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| $\lambda$ EDS   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_leds</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_leds</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="n">md_str</span> <span class="o">+=</span> <span class="s2">&quot;| conveyor belt TI   | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_cvb_trapez</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot;  | &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">dF_cvb_trapez</span><span class="o">-</span><span class="n">dF_expected</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">+</span><span class="s2">&quot; | </span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="c1">#md_str += &quot;| RE-DS   | &quot;+str(np.round(dFresults[0],2))+&quot;  | &quot;+str(np.round(dFresults[0]-dF_expected,2))+&quot; | \n&quot;</span>
+
+
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">Latex</span>
+<span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="n">md_str</span><span class="p">))</span>
 
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 66%" />
+<col style="width: 12%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>method</p></th>
+<th class="head"><p>dF</p></th>
+<th class="head"><p>deviation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>analytical</p></td>
+<td><p>1.27</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>Zwanzig</p></td>
+<td><p>8.39</p></td>
+<td><p>7.11</p></td>
+</tr>
+<tr class="row-even"><td><p>BAR</p></td>
+<td><p>2.83</p></td>
+<td><p>1.56</p></td>
+</tr>
+<tr class="row-odd"><td><p>FEP 10-<span class="math notranslate nohighlight">\(\lambda\)</span> Points</p></td>
+<td><p>1.0</p></td>
+<td><p>-0.27</p></td>
+</tr>
+<tr class="row-even"><td><p>TI 10-<span class="math notranslate nohighlight">\(\lambda\)</span> Points</p></td>
+<td><p>1.21</p></td>
+<td><p>-0.06</p></td>
+</tr>
+<tr class="row-odd"><td><p>EDS</p></td>
+<td><p>1.54</p></td>
+<td><p>0.27</p></td>
+</tr>
+<tr class="row-even"><td><p>EDS-BAR</p></td>
+<td><p>1.18</p></td>
+<td><p>-0.09</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\lambda\)</span> EDS</p></td>
+<td><p>1.6</p></td>
+<td><p>0.33</p></td>
+</tr>
+<tr class="row-even"><td><p>conveyor belt TI</p></td>
+<td><p>1.07</p></td>
+<td><p>-0.2</p></td>
+</tr>
+<tr class="row-odd"><td><p>RE-DS</p></td>
+<td><p>5.05</p></td>
+<td><p>3.78</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>

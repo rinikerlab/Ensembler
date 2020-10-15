@@ -1,6 +1,0 @@
-﻿api\_doc
-========
-
-.. currentmodule:: ensembler
-
-.. automodule::  ensembler
