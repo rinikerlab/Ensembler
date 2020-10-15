@@ -17,16 +17,10 @@ Here, we provide insights into the package's implementation, its usage, and an a
 The full Documentation can be found here:  https://rinikerlab.github.io/Ensembler/
 ### Potential functions
 
-  Contains simple functions, that can be stocked together. 
-  Also implementation of new potentials is very easy, as there only few functions that need to be overwritten.
-  Examples: Harmonic Oscillator, Wa*ve function, etc.. 
-  Also different dimensionalities can be used.
-
-   * OneD
-
-   * TwoD
-
-   * ND
+  Implement mathematical functions of interest for modelling purposes for esxample in chemistry.
+  Implementation of new potentials is very easy, as there are only few functions that need to be overwritten.
+  Implemented Potentials: Harmonic Oscillator, Wave function, etc.. 
+  Also different dimensionalities can be used like 1D, 2D, and ND.
 
    You can try the code in your Browser here (or check out down below the Tutorial&Example section): 
    
@@ -64,6 +58,7 @@ Alternativley you can download the git and use the setup.py script of the reposi
 
 Instead of install one could add the path to the Ensembler repository, if you want to use the code and modify it. The requirements need than also to be installed.
    Unix:
+   
    * PIP:
     
     export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
@@ -72,10 +67,10 @@ Instead of install one could add the path to the Ensembler repository, if you wa
     
    * Anaconda:
    
-     conda-develop /path/to/local/Ensembler/repo
-     cd /path/to/local/Ensembler/repo
-     conda create -n ensembler --file environment_unix.yml
-     conda activate ensembler
+    conda-develop /path/to/local/Ensembler/repo
+    cd /path/to/local/Ensembler/repo
+    conda create -n ensembler --file environment_unix.yml
+    conda activate ensembler
 
 For windows, we also provide the correct requirments.
 
