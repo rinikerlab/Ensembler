@@ -71,6 +71,7 @@ Or you can also add the path to the Ensembler repository, if you want to use the
 ### Tutorials
 You can try the tutorials with the fast track directly in your browser.
 Potentials: 
+
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Potentials.ipynb)
 
 Simulations: 
