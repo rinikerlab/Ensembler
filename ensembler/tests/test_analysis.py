@@ -114,15 +114,15 @@ class test_threeStateZwanzigReweighting(test_ZwanzigEquation):
 
         # State 1 description
         state_1 = 1
-        state_1_noise = 0.1
+        state_1_noise = 0.01
 
         # State 2 description
-        state_2 = 2
-        state_2_noise = 0.1
+        state_2 = 1
+        state_2_noise = 0.01
 
         # OffSampling
         energy_off_state = 10
-        noise_off_state = 0.3
+        noise_off_state = 0.01
 
         V1 = np.concatenate([np.random.normal(state_1, state_1_noise, sample_state1),
                              np.random.normal(energy_off_state, noise_off_state, sample_state2)])

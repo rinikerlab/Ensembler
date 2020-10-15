@@ -451,12 +451,12 @@ class threeStateZwanzigReweighting(zwanzigEquation):
         zwanz.constants = self.constants
 
         # Calc
-        #   V1 <- VR
-        dF1r = zwanz.calculate(Vi=Vi, Vj=Vr)
-        #   V2 <- VR
-        dF2r = zwanz.calculate(Vi=Vj, Vj=Vr)
+        #   V1 <- VR == V1-Vr
+        dF1r = zwanz.calculate(Vi=Vr, Vj=Vi)
+        #   V2 <- VR == V2-Vr
+        dF2r = zwanz.calculate(Vi=Vr, Vj=Vj)
         #   (V1 <- VR) - (VR -> V2)
-        dF = dF1r - dF2r
+        dF = dF2r - dF1r
 
         return dF
 
