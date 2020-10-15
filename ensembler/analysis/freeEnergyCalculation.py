@@ -19,8 +19,10 @@ class _FreeEnergyCalculator:
     equation: sp.function
     simplified_equation: sp.function
 
-    exp = np.vectorize(lambda x: mp.exp())  # this function deals with decimals to
+    exp = np.vectorize(lambda x: mp.exp(x))  # this function deals with decimals to
     ln = lambda self, x: mp.ln(x)
+    fermifunc = np.vectorize(lambda x, beta: 1 / (1 + mp.exp(beta * x)))
+
     J_to_cal: float = 0.239005736
     k, T, Vi, Vj = sp.symbols("k T, Vi, Vj")
 
@@ -450,9 +452,9 @@ class threeStateZwanzigReweighting(zwanzigEquation):
 
         # Calc
         #   V1 <- VR
-        dF1r = zwanz.calculate(Vi=Vr, Vj=Vi)
+        dF1r = zwanz.calculate(Vi=Vi, Vj=Vr)
         #   V2 <- VR
-        dF2r = zwanz.calculate(Vi=Vr, Vj=Vj)
+        dF2r = zwanz.calculate(Vi=Vj, Vj=Vr)
         #   (V1 <- VR) - (VR -> V2)
         dF = dF1r - dF2r
 
@@ -483,7 +485,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
     def __init__(self, C: float = 0.0, T: float = 298, k: float = const.k * const.Avogadro,
                  kT: bool = False, kJ: bool = False, kCal: bool = False,
-                 convergence_radius: float = 10 ** (-5), max_iterations: int = 100, min_iterations: int = 1):
+                 convergence_radius: float = 10 ** (-5), max_iterations: int = 500, min_iterations: int = 1):
         """
         __init__
         Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation
@@ -633,28 +635,27 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
         dV_i = (Vj_i - Vi_i) - C
 
         # Exponentiate to obtain fermi(-Delta U/kT)
-        fermifunc = lambda x: 1 / (1 + mp.exp(-self.constants[self.beta] * (x)))
 
         try:
-            ferm_dV_i = list(map(fermifunc, dV_i))
-            ferm_dV_j = list(map(fermifunc, dV_j))
+            ferm_dV_j = self.fermifunc(dV_j,self.constants[self.beta])
+            ferm_dV_i = self.fermifunc(dV_i,self.constants[self.beta])
         except OverflowError:
             raise OverflowError(
                 "Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
 
         # get average
-        mean_edV_i = np.mean(ferm_dV_i)
         mean_edV_j = np.mean(ferm_dV_j)
+        mean_edV_i = np.mean(ferm_dV_i)
 
         # Return free energy difference
         try:
-            ddF = np.float(-(1 / self.constants[self.beta]) * mp.ln(mean_edV_j / mean_edV_i) + C)
+            ddF = (1 / self.constants[self.beta]) * mp.ln(mean_edV_j / mean_edV_i)
         except ValueError as err:
             raise ValueError(
                 "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
                     err.args))
 
-        return ddF
+        return np.float(ddF + C)
 
 
     def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),

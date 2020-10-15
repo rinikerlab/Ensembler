@@ -659,7 +659,7 @@ class system(_baseClass):
                 tmp_traj.append(self.current_state._asdict())
 
         tmp_traj.append(self.current_state._asdict())
-        self._trajectory = pd.DataFrame(tmp_traj)
+        self._trajectory = pd.concat([self._trajectory, pd.DataFrame(tmp_traj)],ignore_index=True)
         del tmp_traj
 
         return self.current_state
