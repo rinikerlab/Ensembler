@@ -407,7 +407,7 @@ class langevinIntegrator(stochasticSampler):
 
             self._oldPosition = self.currentPosition - self.currentVelocity * self.dt
 
-            if(system.nDimensions < len(self._oldPosition) ):   #this is not such a nice fix, but if multiple states are involved, multiple vels are needed as well.
+            if(system.nDimensions < len(np.array(self._oldPosition, ndmin=1))):   #this is not such a nice fix, but if multiple states are involved, multiple vels are needed as well.
                 self._oldPosition = np.squeeze(self._oldPosition[:system.nDimensions])
         else:
             self._oldPosition = np.array(self._oldPosition)
