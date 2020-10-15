@@ -1,0 +1,711 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.samplers.stochastic &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.samplers.stochastic</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.samplers.stochastic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module: Sampler</span>
+<span class="sd">    The sampler module is provides methods exploring the potential functions.</span>
+
+<span class="sd">    Stochastic Integrators</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.constants</span> <span class="k">as</span> <span class="nn">const</span>
+
+<span class="kn">from</span> <span class="nn">ensembler.samplers._basicSamplers</span> <span class="kn">import</span> <span class="n">_samplerCls</span>
+<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Number</span>
+<span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">systemCls</span> <span class="k">as</span> <span class="n">systemType</span>
+
+
+<div class="viewcode-block" id="stochasticSampler"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.stochasticSampler">[docs]</a><span class="k">class</span> <span class="nc">stochasticSampler</span><span class="p">(</span><span class="n">_samplerCls</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This class is the parent class for all stochastic samplers. The pre-implemented</span>
+<span class="sd">    stochastic type samplers currently comprise various Monte-Carlo and Langevin Methods.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># Params</span>
+    <span class="n">minStepSize</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">maxStepSize</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">spaceRange</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">resolution</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># increase the ammount of different possible values = between 0 and 10 there are 10/0.01 different positions. only used with space_range</span>
+
+    <span class="n">fixedStepSize</span><span class="p">:</span> <span class="p">(</span><span class="n">Number</span> <span class="ow">or</span> <span class="n">List</span><span class="p">[</span><span class="n">Number</span><span class="p">])</span>
+
+    <span class="c1"># calculation</span>
+    <span class="n">posShift</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Limits:</span>
+    <span class="n">_critInSpaceRange</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pos</span> <span class="o">&gt;=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span><span class="p">)</span> <span class="ow">and</span> <span class="n">pos</span> <span class="o">&lt;=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span><span class="p">))</span>
+
+<div class="viewcode-block" id="stochasticSampler.random_shift"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.stochasticSampler.random_shift">[docs]</a>    <span class="k">def</span> <span class="nf">random_shift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        randomShift</span>
+<span class="sd">            This function calculates the shift for the current position.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        nDimensions : int</span>
+<span class="sd">            gives the dimensionality of the position, defining the ammount of shifts.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Union[float, List[float]]</span>
+<span class="sd">            returns the Shifts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># which sign will the shift have?</span>
+        <span class="n">sign</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">nDimensions</span><span class="p">)])</span>
+
+        <span class="c1"># Check if there is a space restriction? - converges faster</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixedStepSize</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">nDimensions</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fixedStepSize</span><span class="p">),</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))):</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
+                                                                  <span class="n">high</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">,</span>
+                                                                  <span class="n">size</span><span class="o">=</span><span class="n">nDimensions</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolution</span><span class="p">),</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)),</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxStepSize</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+
+        <span class="c1"># Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">s</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shift</span><span class="p">])):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span>
+                                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span> <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shift</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">shift</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="monteCarloIntegrator"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.monteCarloIntegrator">[docs]</a><span class="k">class</span> <span class="nc">monteCarloIntegrator</span><span class="p">(</span><span class="n">stochasticSampler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    monteCarloIntegrator</span>
+<span class="sd">        This class implements the classic Monte Carlo samplers.</span>
+<span class="sd">        It chooses its moves purely randomly. Therefore, the distributions generated by this integrator do not</span>
+<span class="sd">        resemble the (micro/grand) canonical ensemble. Additionally, no kinetic information can be obtained from</span>
+<span class="sd">        Monte Carlo samplers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Monte Carlo Integrator&quot;</span>
+
+<div class="viewcode-block" id="monteCarloIntegrator.__init__"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.monteCarloIntegrator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Number</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">            This is the Constructor of the MonteCarlo samplers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        maximal_step_size : Number, optional</span>
+<span class="sd">            maximal size of an integrationstep in any direction, by default 1</span>
+<span class="sd">        minimal_step_size : Number, optional</span>
+<span class="sd">            minimal size of an integration step in any direction, by default None</span>
+<span class="sd">        space_range : Tuple[Number, Number], optional</span>
+<span class="sd">            maximal and minimal allowed position for after an integration step.</span>
+<span class="sd">            If not fullfilled, step is rejected. By default None</span>
+<span class="sd">        fixed_step_size : Number, optional</span>
+<span class="sd">            this option restrains each integration step to a certain size in each dimension, by default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixedStepSize</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fixed_step_size</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fixed_step_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxStepSize</span> <span class="o">=</span> <span class="n">maximal_step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="o">=</span> <span class="n">minimal_step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span> <span class="o">=</span> <span class="n">space_range</span></div>
+
+
+<div class="viewcode-block" id="monteCarloIntegrator.step"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.monteCarloIntegrator.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        step</span>
+<span class="sd">            This function is performing an integration step in MonteCarlo fashion.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : systemType</span>
+<span class="sd">           A system, that should be integrated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, None, float]</span>
+<span class="sd">            This Tuple contains the new: (new Position, None, position Shift/ force)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># integrate</span>
+        <span class="c1"># while no value in spaceRange was found, terminates in first run if no spaceRange</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">current_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span> <span class="o">=</span> <span class="n">current_state</span><span class="o">.</span><span class="n">position</span>
+
+        <span class="k">while</span> <span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">random_shift</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">newPos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span>
+
+            <span class="c1"># only get positions in certain range or accept if no range</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_critInSpaceRange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newPos</span><span class="p">)):</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: current position</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: shift</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: newPosition</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">newPos</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newPos</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="metropolisMonteCarloIntegrator"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator">[docs]</a><span class="k">class</span> <span class="nc">metropolisMonteCarloIntegrator</span><span class="p">(</span><span class="n">stochasticSampler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    metropolisMonteCarloIntegrator</span>
+<span class="sd">        This class is implementing a metropolis monte carlo Integrator.</span>
+<span class="sd">        In contrast to the Monte Carlo Integrator, that has completely random steps, this sampler has</span>
+<span class="sd">        limitations to the randomness. This limitation is expressed in the Metropolis Criterion and ensures</span>
+<span class="sd">        that the microcanonical ensemble is sampled.</span>
+
+<span class="sd">        There is a standard Metropolis Criterion implemented, but it can also be exchanged with a different one.</span>
+
+<span class="sd">        Default Metropolis Criterion:</span>
+<span class="sd">            $ decision =  (E_{t} &lt; E_{t-1}) ||  ( rand &lt;= e^{(-1/(R/T*1000))*(E_t-E_{t-1})}$</span>
+<span class="sd">            with:</span>
+<span class="sd">                - $R$ as universal gas constant</span>
+
+<span class="sd">        The original Metropolis Criterion (Nicholas Metropolis et al.; J. Chem. Phys.; 1953 ;doi: https://doi.org/10.1063/1.1699114):</span>
+
+<span class="sd">            $ p_A(E_{t}, E_{t-1}, T) = min(1, e^{-1/(k_b*T) * (E_{t} - E_{t-1})})</span>
+<span class="sd">            $ decision:  True if( 0.5 &lt; p_A(E_{t}, E_{t-1}, T)) else False</span>
+<span class="sd">            with:</span>
+<span class="sd">                - $k_b$ as Boltzmann Constant</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Metropolis Monte Carlo Integrator&quot;</span>
+    <span class="c1"># Parameters:</span>
+    <span class="n">_randomness_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># tune randomness of your results</span>
+    <span class="n">maxIterationTillAccept</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>  <span class="c1"># how often shall the samplers iterate till it accepts a step forcefully</span>
+    <span class="n">convergence_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># after reaching a certain limit abort iteration</span>
+
+    <span class="c1"># METROPOLIS CRITERION</span>
+    <span class="c1">##random part of Metropolis Criterion:</span>
+    <span class="n">_default_randomness</span> <span class="o">=</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">ene_new</span><span class="p">,</span> <span class="n">current_state</span><span class="p">:</span> <span class="p">(</span>
+            <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_randomness_factor</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+            <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">gas_constant</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="o">*</span> <span class="n">current_state</span><span class="o">.</span><span class="n">temperature</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ene_new</span> <span class="o">-</span> <span class="n">current_state</span><span class="o">.</span><span class="n">total_potential_energy</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="metropolisMonteCarloIntegrator.__init__"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minimal_step_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">maximal_step_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">space_range</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fixed_step_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">randomness_increase_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">            This is the Constructor of the Metropolis-MonteCarlo samplers.</span>
+
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        maximal_step_size : Number, optional</span>
+<span class="sd">            maximal size of an integrationstep in any direction, by default 1</span>
+<span class="sd">        minimal_step_size : Number, optional</span>
+<span class="sd">            minimal size of an integration step in any direction, by default None</span>
+<span class="sd">        space_range : Tuple[Number, Number], optional</span>
+<span class="sd">            maximal and minimal allowed position for after an integration step.</span>
+<span class="sd">            If not fullfilled, step is rejected. By default None</span>
+<span class="sd">        fixed_step_size : Number, optional</span>
+<span class="sd">            this option restrains each integration step to a certain size in each dimension, by default None</span>
+<span class="sd">        randomness_increase_factor : int, optional</span>
+<span class="sd">            arbitrary factor, controlling the amount of randomness(the bigger the more random steps), by default 1</span>
+<span class="sd">        max_iteration_tillAccept : int, optional</span>
+<span class="sd">            number, after which a step is accepted, regardless its likelihood (turned off if np.inf). By default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Integration Step Constrains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fixedStepSize</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fixed_step_size</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">fixed_step_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxStepSize</span> <span class="o">=</span> <span class="n">maximal_step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="o">=</span> <span class="n">minimal_step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spaceRange</span> <span class="o">=</span> <span class="n">space_range</span>
+
+        <span class="c1"># Metropolis Criterions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_randomness_factor</span> <span class="o">=</span> <span class="n">randomness_increase_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxIterationTillAccept</span> <span class="o">=</span> <span class="n">max_iteration_tillAccept</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convergence_limit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convergence_limit</span> <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">max_iteration_tillAccept</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span> <span class="k">else</span> <span class="n">max_iteration_tillAccept</span> <span class="o">+</span> <span class="mi">1</span></div>
+
+    <span class="c1">##default Metropolis Criterion</span>
+<div class="viewcode-block" id="metropolisMonteCarloIntegrator.metropolis_criterion"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.metropolis_criterion">[docs]</a>    <span class="k">def</span> <span class="nf">metropolis_criterion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ene_new</span><span class="p">,</span> <span class="n">current_state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        metropolisCriterion</span>
+<span class="sd">            The metropolis criterion decides if a step is accepted.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        ene_new: float</span>
+<span class="sd">            new energy in case the step is accepted</span>
+<span class="sd">        current_state: stateType</span>
+<span class="sd">            state of the current step</span>
+
+<span class="sd">        Returns boolean</span>
+<span class="sd">            defines if step is accepted or not</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">ene_new</span> <span class="o">&lt;</span> <span class="n">current_state</span><span class="o">.</span><span class="n">total_system_energy</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_randomness</span><span class="p">(</span><span class="n">ene_new</span><span class="p">,</span> <span class="n">current_state</span><span class="p">))</span></div>
+<div class="viewcode-block" id="metropolisMonteCarloIntegrator.step"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        step</span>
+<span class="sd">            This function is performing an Metropolis Monte Carlo integration step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : systemType</span>
+<span class="sd">            A system, that should be integrated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, None, float]</span>
+<span class="sd">            This Tuple contains the new: (new Position, None, position Shift/ force)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">current_iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">current_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span> <span class="o">=</span> <span class="n">current_state</span><span class="o">.</span><span class="n">position</span>
+        <span class="n">nDimensions</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span>
+
+        <span class="c1"># integrate position</span>
+        <span class="k">while</span> <span class="p">(</span>
+                <span class="n">current_iteration</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convergence_limit</span> <span class="ow">and</span> <span class="n">current_iteration</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxIterationTillAccept</span><span class="p">):</span>  <span class="c1"># while no value in spaceRange was found, terminates in first run if no spaceRange</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">random_shift</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)</span>
+            <span class="c1"># eval new Energy</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">_currentPosition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span>
+            <span class="n">system</span><span class="o">.</span><span class="n">_currentForce</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span>
+            <span class="n">ene</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">total_potential_energy</span>
+
+            <span class="c1"># MetropolisCriterion</span>
+            <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_critInSpaceRange</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">metropolis_criterion</span><span class="p">(</span><span class="n">ene</span><span class="p">,</span> <span class="n">current_state</span><span class="p">))):</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># not accepted</span>
+                <span class="n">current_iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">current_iteration</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convergence_limit</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">newPos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: current position</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldpos</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: shift</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: newPosition</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">newPos</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">current_iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convergence_limit</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posShift</span><span class="p">)</span></div></div>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Langevin stochastic integration</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<div class="viewcode-block" id="langevinIntegrator"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinIntegrator">[docs]</a><span class="k">class</span> <span class="nc">langevinIntegrator</span><span class="p">(</span><span class="n">stochasticSampler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements the Position Langevin sampler. In Contrast to the Monte Carlo Methods,</span>
+<span class="sd">    Langevin integrators provide information on the kinetics of the system.  The Position Langevin</span>
+<span class="sd">    Integrator does not calculate velocities. Therefore, the kinetic energy is undefined.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Langevin Integrator&quot;</span>
+
+<div class="viewcode-block" id="langevinIntegrator.__init__"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinIntegrator.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">old_Position</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">          __init__</span>
+<span class="sd">              This is the Constructor of the Langevin samplers.</span>
+
+
+<span class="sd">          Parameters</span>
+<span class="sd">          ----------</span>
+<span class="sd">          dt : Number, optional</span>
+<span class="sd">              time step of an integration, by default 0.005</span>
+<span class="sd">          gamma : Number, optional</span>
+<span class="sd">              Friktion constant of the system, by default 50</span>
+<span class="sd">          old_Position : Iterable[Number, Number] of size nDim, optional</span>
+<span class="sd">              determines the position at step -1, if not set the system will use the velocity to determine this position</span>
+<span class="sd">          &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span> <span class="o">=</span> <span class="n">old_Position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># only neede for velocity Langevin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentVelocity</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="langevinIntegrator.update_positon"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinIntegrator.update_positon">[docs]</a>    <span class="k">def</span> <span class="nf">update_positon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate step according to Position Langevin BBK samplers</span>
+<span class="sd">        Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html</span>
+
+<span class="sd">        update position</span>
+<span class="sd">            This interface function needs to be implemented for a subclass.</span>
+<span class="sd">            The purpose of this function is to perform one integration step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : systemType</span>
+<span class="sd">           A system, that should be integrated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, None]</span>
+<span class="sd">            This Tuple contains the new: (new Position, new velocity=None)</span>
+<span class="sd">            for velocity return use langevinVelocityIntegrator</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nDimensions</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span>
+        <span class="c1"># get random number, normal distributed for nDimensions dimentions</span>
+        <span class="n">curr_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">))</span>
+        <span class="c1"># scale random number according to fluctuation-dissipation theorem</span>
+        <span class="c1"># energy is expected to be in units of k_B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">temperature</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">curr_random</span>
+        <span class="c1"># calculation of forces:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">=</span> <span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">force</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span><span class="p">)</span>
+
+        <span class="c1"># Brünger-Brooks-Karplus samplers for positions</span>
+        <span class="n">new_position</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span>
+                                                               <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+                                                                           <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                                                                           <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">new_position</span><span class="p">,</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="langevinIntegrator.step"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinIntegrator.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        step</span>
+<span class="sd">            This interface function needs to be implemented for a subclass.</span>
+<span class="sd">            The purpose of this function is to perform one integration step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : systemType</span>
+<span class="sd">           A system, that should be integrated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, float, float]</span>
+<span class="sd">            This Tuple contains the new: (new Position, new velocity, position Shift/ force)</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get current positiona and velocity form system class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentVelocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">_currentVelocities</span><span class="p">)</span>
+
+        <span class="c1"># hirachy: first check if old position is given, if not it takes the velocity from the system class</span>
+        <span class="c1"># is there no initial velocity a Maxwell-Boltzmann distributed velocity is generated</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># get old position from velocity, only during initialization</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;initializing Langevin old Positions</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentVelocity</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span><span class="p">)</span>
+
+        <span class="c1"># integration step</span>
+        <span class="n">new_position</span><span class="p">,</span> <span class="n">new_velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_positon</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="c1"># update position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: current forces</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: old Position</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_oldPosition</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: current_position</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: current_velocity</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentVelocity</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: newPosition</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="n">new_position</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;: newVelocity</span><span class="se">\t</span><span class="s2"> &quot;</span><span class="p">,</span> <span class="n">new_velocity</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_position</span><span class="p">,</span> <span class="n">new_velocity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span>  <span class="c1"># add random number</span></div></div>
+
+
+<div class="viewcode-block" id="langevinVelocityIntegrator"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinVelocityIntegrator">[docs]</a><span class="k">class</span> <span class="nc">langevinVelocityIntegrator</span><span class="p">(</span><span class="n">langevinIntegrator</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements the Velocity Langevin sampler. It can provide information on the kinetics of the system.</span>
+<span class="sd">    In Contrast to the Position Langevin Integrator, the Velocity Langevin sampler does calculate velocities.</span>
+<span class="sd">    Therefore, the kinetic energy is definded. It inherits the function step from the Position Langevin Integrator</span>
+<span class="sd">    and overwrites update_position.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Velocity Langevin Integrator&quot;</span>
+
+<div class="viewcode-block" id="langevinVelocityIntegrator.update_positon"><a class="viewcode-back" href="../../../_source/ensembler.samplers.html#ensembler.samplers.stochastic.langevinVelocityIntegrator.update_positon">[docs]</a>    <span class="k">def</span> <span class="nf">update_positon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Integrate step according to Velocity Langevin BKK samplers</span>
+<span class="sd">        Designed after: http://localscf.com/localscf.com/LangevinDynamics.aspx.html</span>
+
+<span class="sd">        update position</span>
+<span class="sd">            This interface function needs to be implemented for a subclass.</span>
+<span class="sd">            The purpose of this function is to perform one integration step.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        system : systemType</span>
+<span class="sd">           A system, that should be integrated.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[float, None]</span>
+<span class="sd">            This Tuple contains the new: (new Position, new velocity)</span>
+
+<span class="sd">            returns both velocities and positions at full steps</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="c1"># for the first step we have to calculate new random numbers and forces</span>
+        <span class="c1"># then we can take the one from  the previous  step</span>
+        <span class="n">nDimensions</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">nDimensions</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span><span class="p">:</span>
+            <span class="c1"># get random number, normal distributed for nDimensions dimentions</span>
+            <span class="n">curr_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">))</span>
+            <span class="c1"># scale random number according to fluctuation-dissipation theorem</span>
+            <span class="c1"># energy is expected to be in units of k_B</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">temperature</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">curr_random</span>
+            <span class="c1"># calculate of forces:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">=</span> <span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">force</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_first_step</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Brünger-Brooks-Karplus samplers for velocities</span>
+
+        <span class="n">half_step_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentVelocity</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span><span class="p">)</span>
+
+        <span class="n">full_step_position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPosition</span> <span class="o">+</span> <span class="n">half_step_velocity</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+
+        <span class="c1"># calculate forces and random number for new position</span>
+        <span class="c1"># get random number, normal distributed for nDimensions dimentions</span>
+        <span class="n">curr_random</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">))</span>  <span class="c1"># for n dimentions</span>
+        <span class="c1"># scale random number according to fluctuation-dissipation theorem</span>
+        <span class="c1"># energy is expected to be in units of k_B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">temperature</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span> <span class="o">*</span> <span class="n">curr_random</span>
+
+        <span class="c1"># calculate of forces:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">=</span> <span class="o">-</span><span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">force</span><span class="p">(</span><span class="n">full_step_position</span><span class="p">)</span>
+
+        <span class="c1"># last half step</span>
+        <span class="n">full_step_velocity</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
+                    <span class="n">half_step_velocity</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newForces</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">R_x</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">full_step_position</span><span class="p">,</span> <span class="n">full_step_velocity</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

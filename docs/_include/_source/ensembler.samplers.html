@@ -1,0 +1,914 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.samplers package &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>ensembler.samplers package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/ensembler.samplers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="ensembler-samplers-package">
+<h1>ensembler.samplers package<a class="headerlink" href="#ensembler-samplers-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ensembler.samplers.newtonian">
+<span id="ensembler-samplers-newtonian-module"></span><h2>ensembler.samplers.newtonian module<a class="headerlink" href="#module-ensembler.samplers.newtonian" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>Module: Sampler</dt><dd><p>The sampler module is provides methods exploring the potential functions.</p>
+<p>Newtonian Integrators</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.newtonian.</code><code class="sig-name descname">leapFrogIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">0.002</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#leapFrogIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.newtonian.newtonianSampler" title="ensembler.samplers.newtonian.newtonianSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.newtonian.newtonianSampler</span></code></a></p>
+<p>The leapFrogIntegrator is similar to the velocity Verlet method. Leapfrog integration is equivalent to
+updating positions and velocities at interleaved time points, staggered in such a way that they “leapfrog”
+over each other.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.current_forces">
+<code class="sig-name descname">current_forces</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.current_forces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.current_position">
+<code class="sig-name descname">current_position</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.current_position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.current_velocity">
+<code class="sig-name descname">current_velocity</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.current_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.dt">
+<code class="sig-name descname">dt</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Leap Frog Integrator'</em><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.newtonian.leapFrogIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; numbers.Number<a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#leapFrogIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.leapFrogIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is performing an integration step in leapFrog fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, new Velocity, new Force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[Number, Number, Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.newtonian.newtonianSampler">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.newtonian.</code><code class="sig-name descname">newtonianSampler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">0.002</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#newtonianSampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers._basicSamplers._samplerCls</span></code></p>
+<p>This class is the parent class for all newtonian samplers. The pre-implemented
+newtonian type samplers currently comprise the Velocity Verlet, Position Verlet and
+Leapfrog integrator.</p>
+<dl class="py method">
+<dt id="ensembler.samplers.newtonian.newtonianSampler.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">0.002</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#newtonianSampler.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the newtonian samplers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>Number, optional</em>) – time step of an integration, by default 0.002</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.newtonianSampler.current_forces">
+<code class="sig-name descname">current_forces</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler.current_forces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.newtonianSampler.current_position">
+<code class="sig-name descname">current_position</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler.current_position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.newtonianSampler.current_velocity">
+<code class="sig-name descname">current_velocity</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler.current_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.newtonianSampler.dt">
+<code class="sig-name descname">dt</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.newtonian.newtonianSampler.dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.newtonian.</code><code class="sig-name descname">positionVerletIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">0.002</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#positionVerletIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.newtonian.newtonianSampler" title="ensembler.samplers.newtonian.newtonianSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.newtonian.newtonianSampler</span></code></a></p>
+<p>The position Verlet Integrator has similar properties as the verlocity Verlet Integrator.</p>
+<p>Verlet, Loup (1967). “Computer “Experiments” on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules”. Physical Review. 159 (1): 98–103.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.current_forces">
+<code class="sig-name descname">current_forces</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.current_forces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.current_position">
+<code class="sig-name descname">current_position</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.current_position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.current_velocity">
+<code class="sig-name descname">current_velocity</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.current_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.dt">
+<code class="sig-name descname">dt</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Position Verlet Integrator'</em><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.newtonian.positionVerletIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; numbers.Number<a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#positionVerletIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.positionVerletIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is performing an integration step in Position Verlet fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, new Velocity, new Force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[Number, Number, Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.newtonian.</code><code class="sig-name descname">velocityVerletIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="o">=</span><span class="default_value">0.002</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#velocityVerletIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.newtonian.newtonianSampler" title="ensembler.samplers.newtonian.newtonianSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.newtonian.newtonianSampler</span></code></a></p>
+<p>The velocity Verlet Integrator is one of the simplest integrators that provides good numerical stability as well
+as time-reversibility and symplectic properties.
+It’s local error in position is of order dt^4 and the local error in verlocity is of order dt^2.</p>
+<p>Verlet, Loup (1967). “Computer “Experiments” on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules”. Physical Review. 159 (1): 98–103.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.current_forces">
+<code class="sig-name descname">current_forces</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.current_forces" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.current_position">
+<code class="sig-name descname">current_position</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.current_position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.current_velocity">
+<code class="sig-name descname">current_velocity</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.current_velocity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.dt">
+<code class="sig-name descname">dt</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.dt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Verlocity Verlet Integrator'</em><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.newtonian.velocityVerletIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; numbers.Number<a class="reference internal" href="../_modules/ensembler/samplers/newtonian.html#velocityVerletIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.newtonian.velocityVerletIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is performing an integration step in Verlocity Verlet fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, new Velocity, new Force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[Number, Number, Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.samplers.optimizers">
+<span id="ensembler-samplers-optimizers-module"></span><h2>ensembler.samplers.optimizers module<a class="headerlink" href="#module-ensembler.samplers.optimizers" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>Module: Sampler</dt><dd><p>The sampler module is provides methods exploring the potential functions.</p>
+<p>Optimization Methods</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.samplers.optimizers.cg">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.optimizers.</code><code class="sig-name descname">cg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-20</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#cg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.cg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.optimizers.conjugate_gradient" title="ensembler.samplers.optimizers.conjugate_gradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.optimizers.conjugate_gradient</span></code></a></p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.optimizers.cg.epsilon">
+<code class="sig-name descname">epsilon</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.optimizers.cg.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.optimizers.conjugate_gradient">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.optimizers.</code><code class="sig-name descname">conjugate_gradient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-20</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#conjugate_gradient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.conjugate_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.optimizers.optimizer" title="ensembler.samplers.optimizers.optimizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.optimizers.optimizer</span></code></a></p>
+<p>Conjugate gradient is an algorithm for the numerical solution of linear equations and for energy minimization.
+Linear equations should have a symmetric matrix and be positive-definite.</p>
+<dl class="py method">
+<dt id="ensembler.samplers.optimizers.conjugate_gradient.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1e-20</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#conjugate_gradient.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.conjugate_gradient.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the conjugate gradient optimizer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_step_size</strong> (<em>float, optional</em>) – maximal size of an optimization step in any direction, by default 1</p></li>
+<li><p><strong>epsilon</strong> (<em>float, optional</em>) – Step size(s) to use when the gradient is approximated numerically. Defaults to sqrt(eps),
+with eps the floating point machine precision. Usually sqrt(eps) is about 1.5e-8.,
+by default 10**-20</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.optimizers.conjugate_gradient.epsilon">
+<code class="sig-name descname">epsilon</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.optimizers.conjugate_gradient.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.optimizers.conjugate_gradient.optimize">
+<code class="sig-name descname">optimize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span></em>, <em class="sig-param"><span class="n">x0</span></em>, <em class="sig-param"><span class="n">maximal_iterations</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#conjugate_gradient.optimize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.conjugate_gradient.optimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the optimization on the basis of the scipy.optimize.fmin_cg function. Raises custim
+errors if the optimization was not sucessfull.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>potential</strong> (<em>potentialType</em>) – Energy potential of the system</p></li>
+<li><p><strong>x0</strong> (<em>array</em>) – A user-supplied initial estimate of xopt, the optimal value of x. Usually the starting position</p></li>
+<li><p><strong>maximal_iterations</strong> (<em>int, optional</em>) – Maximum number of iterations to perform, by default 100</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary that contains the optimized position (“optimal_position”) with its corresponding potential
+energy “minimal_potential_energy”, the number of iterations needed to converge “used_iterations”
+and a list of arrays, containing the results at each iteration “position_trajectory”</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Value Error is raised if the optimization did not converged or if the optimization run into an
+    internal error.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.optimizers.conjugate_gradient.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>None<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#conjugate_gradient.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.conjugate_gradient.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This function is performing an integration step for optimizing a potential.</dt><dd><p>NOTE: This is not the optimal way to call scipy optimization, but it works with the interfaces and is useful
+for theoretical thinking about it.
+It is not optimal or even efficient here! -&gt; it simulates the optimization process as a stepwise process</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – This is a system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Tuple[float, None, float]</em></p></li>
+<li><p><strong>This Tuple contains the new</strong> (<em>(new Position, none, new Force)</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.optimizers.optimizer">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.optimizers.</code><code class="sig-name descname">optimizer</code><a class="reference internal" href="../_modules/ensembler/samplers/optimizers.html#optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.optimizers.optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers._basicSamplers._samplerCls</span></code></p>
+<p>This class is the parent class for all optimizers. The pre-implemented
+optimizers currently comprise the conjugate gradient.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.optimizers.optimizer.maxStepSize">
+<code class="sig-name descname">maxStepSize</code><em class="property">: float</em><a class="headerlink" href="#ensembler.samplers.optimizers.optimizer.maxStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.samplers.stochastic">
+<span id="ensembler-samplers-stochastic-module"></span><h2>ensembler.samplers.stochastic module<a class="headerlink" href="#module-ensembler.samplers.stochastic" title="Permalink to this headline">¶</a></h2>
+<dl>
+<dt>Module: Sampler</dt><dd><p>The sampler module is provides methods exploring the potential functions.</p>
+<p>Stochastic Integrators</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">langevinIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.005</span></em>, <em class="sig-param"><span class="n">gamma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">50</span></em>, <em class="sig-param"><span class="n">old_Position</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.stochasticSampler" title="ensembler.samplers.stochastic.stochasticSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.stochasticSampler</span></code></a></p>
+<p>This class implements the Position Langevin sampler. In Contrast to the Monte Carlo Methods,
+Langevin integrators provide information on the kinetics of the system.  The Position Langevin
+Integrator does not calculate velocities. Therefore, the kinetic energy is undefined.</p>
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.005</span></em>, <em class="sig-param"><span class="n">gamma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">50</span></em>, <em class="sig-param"><span class="n">old_Position</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the Langevin samplers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>Number, optional</em>) – time step of an integration, by default 0.005</p></li>
+<li><p><strong>gamma</strong> (<em>Number, optional</em>) – Friktion constant of the system, by default 50</p></li>
+<li><p><strong>old_Position</strong> (<em>Iterable[Number, Number] of size nDim, optional</em>) – determines the position at step -1, if not set the system will use the velocity to determine this position</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator.fixedStepSize">
+<code class="sig-name descname">fixedStepSize</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator.fixedStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Langevin Integrator'</em><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>This interface function needs to be implemented for a subclass.</dt><dd><p>The purpose of this function is to perform one integration step.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, new velocity, position Shift/ force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, float, float]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.langevinIntegrator.update_positon">
+<code class="sig-name descname">update_positon</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinIntegrator.update_positon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinIntegrator.update_positon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate step according to Position Langevin BBK samplers
+Designed after: <a class="reference external" href="http://localscf.com/localscf.com/LangevinDynamics.aspx.html">http://localscf.com/localscf.com/LangevinDynamics.aspx.html</a></p>
+<dl class="simple">
+<dt>update position</dt><dd><p>This interface function needs to be implemented for a subclass.
+The purpose of this function is to perform one integration step.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, new velocity=None)
+for velocity return use langevinVelocityIntegrator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, None]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.stochastic.langevinVelocityIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">langevinVelocityIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dt</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.005</span></em>, <em class="sig-param"><span class="n">gamma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">50</span></em>, <em class="sig-param"><span class="n">old_Position</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinVelocityIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinVelocityIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.langevinIntegrator" title="ensembler.samplers.stochastic.langevinIntegrator"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.langevinIntegrator</span></code></a></p>
+<p>This class implements the Velocity Langevin sampler. It can provide information on the kinetics of the system.
+In Contrast to the Position Langevin Integrator, the Velocity Langevin sampler does calculate velocities.
+Therefore, the kinetic energy is definded. It inherits the function step from the Position Langevin Integrator
+and overwrites update_position.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.langevinVelocityIntegrator.fixedStepSize">
+<code class="sig-name descname">fixedStepSize</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.stochastic.langevinVelocityIntegrator.fixedStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.langevinVelocityIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Velocity Langevin Integrator'</em><a class="headerlink" href="#ensembler.samplers.stochastic.langevinVelocityIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.langevinVelocityIntegrator.update_positon">
+<code class="sig-name descname">update_positon</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#langevinVelocityIntegrator.update_positon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.langevinVelocityIntegrator.update_positon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integrate step according to Velocity Langevin BKK samplers
+Designed after: <a class="reference external" href="http://localscf.com/localscf.com/LangevinDynamics.aspx.html">http://localscf.com/localscf.com/LangevinDynamics.aspx.html</a></p>
+<dl class="simple">
+<dt>update position</dt><dd><p>This interface function needs to be implemented for a subclass.
+The purpose of this function is to perform one integration step.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>This Tuple contains the new: (new Position, new velocity)</p>
+<p>returns both velocities and positions at full steps</p>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, None]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">metropolisMonteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.stochasticSampler" title="ensembler.samplers.stochastic.stochasticSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.stochasticSampler</span></code></a></p>
+<p>This class is implementing a metropolis monte carlo Integrator.
+In contrast to the Monte Carlo Integrator, that has completely random steps, this sampler has
+limitations to the randomness. This limitation is expressed in the Metropolis Criterion and ensures
+that the microcanonical ensemble is sampled.</p>
+<p>There is a standard Metropolis Criterion implemented, but it can also be exchanged with a different one.</p>
+<dl>
+<dt>Default Metropolis Criterion:</dt><dd><p>$ decision =  (E_{t} &lt; E_{t-1}) ||  ( rand &lt;= e^{(-1/(R/T*1000))*(E_t-E_{t-1})}$
+with:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>$R$ as universal gas constant</p></li>
+</ul>
+</div></blockquote>
+</dd>
+</dl>
+<p>The original Metropolis Criterion (Nicholas Metropolis et al.; J. Chem. Phys.; 1953 ;doi: <a class="reference external" href="https://doi.org/10.1063/1.1699114">https://doi.org/10.1063/1.1699114</a>):</p>
+<blockquote>
+<div><p>$ p_A(E_{t}, E_{t-1}, T) = min(1, e^{-1/(k_b*T) * (E_{t} - E_{t-1})})
+$ decision:  True if( 0.5 &lt; p_A(E_{t}, E_{t-1}, T)) else False
+with:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>$k_b$ as Boltzmann Constant</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">tuple</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">randomness_increase_factor</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">max_iteration_tillAccept</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">inf</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the Metropolis-MonteCarlo samplers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maximal_step_size</strong> (<em>Number, optional</em>) – maximal size of an integrationstep in any direction, by default 1</p></li>
+<li><p><strong>minimal_step_size</strong> (<em>Number, optional</em>) – minimal size of an integration step in any direction, by default None</p></li>
+<li><p><strong>space_range</strong> (<em>Tuple[Number, Number], optional</em>) – maximal and minimal allowed position for after an integration step.
+If not fullfilled, step is rejected. By default None</p></li>
+<li><p><strong>fixed_step_size</strong> (<em>Number, optional</em>) – this option restrains each integration step to a certain size in each dimension, by default None</p></li>
+<li><p><strong>randomness_increase_factor</strong> (<em>int, optional</em>) – arbitrary factor, controlling the amount of randomness(the bigger the more random steps), by default 1</p></li>
+<li><p><strong>max_iteration_tillAccept</strong> (<em>int, optional</em>) – number, after which a step is accepted, regardless its likelihood (turned off if np.inf). By default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.convergence_limit">
+<code class="sig-name descname">convergence_limit</code><em class="property">: int</em><em class="property"> = 1000</em><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.convergence_limit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.maxIterationTillAccept">
+<code class="sig-name descname">maxIterationTillAccept</code><em class="property">: float</em><em class="property"> = inf</em><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.maxIterationTillAccept" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.metropolis_criterion">
+<code class="sig-name descname">metropolis_criterion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ene_new</span></em>, <em class="sig-param"><span class="n">current_state</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator.metropolis_criterion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.metropolis_criterion" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>metropolisCriterion</dt><dd><p>The metropolis criterion decides if a step is accepted.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ene_new</strong> (<em>float</em>) – new energy in case the step is accepted</p></li>
+<li><p><strong>current_state</strong> (<em>stateType</em>) – state of the current step</p></li>
+<li><p><strong>Returns boolean</strong> – defines if step is accepted or not</p></li>
+<li><p><strong>——-</strong></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metropolis Monte Carlo Integrator'</em><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>None<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#metropolisMonteCarloIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.metropolisMonteCarloIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is performing an Metropolis Monte Carlo integration step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, None, position Shift/ force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, None, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.stochastic.monteCarloIntegrator">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">monteCarloIntegrator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.samplers.stochastic.stochasticSampler" title="ensembler.samplers.stochastic.stochasticSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers.stochastic.stochasticSampler</span></code></a></p>
+<p>This class implements the classic Monte Carlo samplers.
+It chooses its moves purely randomly. Therefore, the distributions generated by this integrator do not
+resemble the (micro/grand) canonical ensemble. Additionally, no kinetic information can be obtained from
+Monte Carlo samplers.</p>
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.monteCarloIntegrator.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">maximal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">minimal_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">space_range</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fixed_step_size</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the MonteCarlo samplers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>maximal_step_size</strong> (<em>Number, optional</em>) – maximal size of an integrationstep in any direction, by default 1</p></li>
+<li><p><strong>minimal_step_size</strong> (<em>Number, optional</em>) – minimal size of an integration step in any direction, by default None</p></li>
+<li><p><strong>space_range</strong> (<em>Tuple[Number, Number], optional</em>) – maximal and minimal allowed position for after an integration step.
+If not fullfilled, step is rejected. By default None</p></li>
+<li><p><strong>fixed_step_size</strong> (<em>Number, optional</em>) – this option restrains each integration step to a certain size in each dimension, by default None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.monteCarloIntegrator.fixedStepSize">
+<code class="sig-name descname">fixedStepSize</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.fixedStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.monteCarloIntegrator.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Monte Carlo Integrator'</em><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.monteCarloIntegrator.step">
+<code class="sig-name descname">step</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">system</span><span class="p">:</span> <span class="n">system</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>float<span class="p">, </span>None<span class="p">, </span>float<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#monteCarloIntegrator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.monteCarloIntegrator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is performing an integration step in MonteCarlo fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>system</strong> (<em>systemType</em>) – A system, that should be integrated.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>This Tuple contains the new: (new Position, None, position Shift/ force)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[float, None, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.samplers.stochastic.stochasticSampler">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.samplers.stochastic.</code><code class="sig-name descname">stochasticSampler</code><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#stochasticSampler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.samplers._basicSamplers._samplerCls</span></code></p>
+<p>This class is the parent class for all stochastic samplers. The pre-implemented
+stochastic type samplers currently comprise various Monte-Carlo and Langevin Methods.</p>
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.fixedStepSize">
+<code class="sig-name descname">fixedStepSize</code><em class="property">: numbers.Number</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.fixedStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.maxStepSize">
+<code class="sig-name descname">maxStepSize</code><em class="property">: numbers.Number</em><em class="property"> = 1</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.maxStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.minStepSize">
+<code class="sig-name descname">minStepSize</code><em class="property">: numbers.Number</em><em class="property"> = None</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.minStepSize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.posShift">
+<code class="sig-name descname">posShift</code><em class="property">: float</em><em class="property"> = 0</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.posShift" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.random_shift">
+<code class="sig-name descname">random_shift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nDimensions</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>float<span class="p">, </span>numpy.array<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/samplers/stochastic.html#stochasticSampler.random_shift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.random_shift" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>randomShift</dt><dd><p>This function calculates the shift for the current position.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nDimensions</strong> (<em>int</em>) – gives the dimensionality of the position, defining the ammount of shifts.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the Shifts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[float, List[float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.resolution">
+<code class="sig-name descname">resolution</code><em class="property">: float</em><em class="property"> = 0.01</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.resolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.samplers.stochastic.stochasticSampler.spaceRange">
+<code class="sig-name descname">spaceRange</code><em class="property">: Tuple<span class="p">[</span>numbers.Number<span class="p">, </span>numbers.Number<span class="p">]</span></em><em class="property"> = None</em><a class="headerlink" href="#ensembler.samplers.stochastic.stochasticSampler.spaceRange" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.samplers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.samplers" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: samplers</dt><dd><p>This module shall be used to implement subclasses of samplers. The integrators are use for propagating simulatoins.
+Think about how to link conditions to samplers???</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

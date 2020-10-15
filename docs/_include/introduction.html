@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to Ensembler &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Welcome to Ensembler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/introduction.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="welcome-to-ensembler">
+<h1>Welcome to Ensembler<a class="headerlink" href="#welcome-to-ensembler" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/rinikerlab/ensembler/actions?query=branch%3Amaster+workflow%3ACI"><img alt="GitHub Actions Build Status" src="https://github.com/rinikerlab/ensembler/workflows/CI/badge.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1"><img alt="codecov" src="https://codecov.io/gh/rinikerlab/Ensembler/branch/build_release_1/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://lgtm.com/projects/g/rinikerlab/Ensembler/alerts/"><img alt="Total alerts" src="https://img.shields.io/lgtm/alerts/g/rinikerlab/Ensembler.svg?logo=lgtm&amp;logoWidth=18" /></a>
+<a class="reference external image-reference" href="https://lgtm.com/projects/g/rinikerlab/Ensembler/context:python"><img alt="Language grade: Python" src="https://img.shields.io/lgtm/grade/python/g/rinikerlab/Ensembler.svg?logo=lgtm&amp;logoWidth=18" /></a>
+<p>Code to sample ensembles of simple (toy) models with various algorithms.</p>
+<div class="section" id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<p>Ensembler is a python package that allows fast and easy access to simulation of one and two-dimensional model systems.
+It enables method development using small test systems and to deepen the understanding of a broad spectrum of molecular dynamics (MD) methods, starting from basic techniques to enhanced sampling and free energy calculations.
+The ease of installing and using the package increases shareability, comparability, and reproducibility of scientific code developments.
+Here, we provide insights into the package’s implementation, its usage, and an application example for free energy calculation.</p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="potential-functions">
+<h3>Potential functions<a class="headerlink" href="#potential-functions" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>Contains simple functions, that can be stocked together.
+Also implementation of new potentials is very easy, as there only few functions that need to be overwritten.
+Examples: Harmonic Oscillator, Wa*ve function, etc..
+Also different dimensionalities can be used.</p>
+</div></blockquote>
+<ul>
+<li><p>OneD</p></li>
+<li><p>TwoD</p></li>
+<li><p>ND</p>
+<p>You can try the code in your Browser here:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+</li>
+</ul>
+</div>
+<div class="section" id="samplers">
+<h3>Samplers<a class="headerlink" href="#samplers" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This module provides integrators for integrating potential functions. E.g. Monte Carlo, Velocity Verlet,…</p>
+</div></blockquote>
+</div>
+<div class="section" id="systems">
+<h3>Systems<a class="headerlink" href="#systems" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This module is used to setup a simulation. It gets a potential, integrator and other parameters.</p>
+</div></blockquote>
+</div>
+<div class="section" id="ensembles">
+<h3>Ensembles<a class="headerlink" href="#ensembles" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This module contains the implementation of the ConveyorBelt and will contain in future additional Replica Exchange approaches.</p>
+</div></blockquote>
+</div>
+<div class="section" id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This module contains predefined visualization a and animation functions.</p>
+</div></blockquote>
+</div>
+<div class="section" id="analysis">
+<h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><p>This module contains at the moment only Free Energy Calculations.</p>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="how-to-install">
+<h2>How To Install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
+<p>If you want to use the package you can either install the package with pip:</p>
+<blockquote>
+<div><p>‘ pip install ensembler ‘</p>
+</div></blockquote>
+<dl>
+<dt>Or you can also add the path to the Ensembler repository, if you want to use the code and modify it.</dt><dd><p>UNIX:
+‘export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo’</p>
+<dl class="simple">
+<dt>if you are using Anaconda:</dt><dd><p>‘conda-develop /path/to/local/Ensembler/repo’</p>
+</dd>
+</dl>
+<p>Keep in mind: IDE’s have their own awesome ways of doing this.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="examples">
+<h2>Examples:<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="tutorials">
+<h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h3>
+<p>You can try the tutorials with the fast track directly in your browser.
+Potentials:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicPotentials.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<p>Simulations:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FBasicSimulations.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<p>Interactive ConveyorBelt:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FConveyorBelt.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<p>EDS-Potentials:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FEDS.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+<p>Free Energy Calculations:</p>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/build_release_1?filepath=examples%2FFreeEnergyCalculations.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
+</div>
+</div>
+<div class="section" id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<p>Benjamin J. Ries;
+Stephanie M. Linker;
+David F. Hahn</p>
+</div>
+<div class="section" id="copyright">
+<h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
+<p>Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn</p>
+<div class="section" id="acknowledgements">
+<h3>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h3>
+<p>Project based on the
+<a class="reference external" href="https://github.com/molssi/cookiecutter-cms">Computational Molecular Science Python Cookiecutter</a> version 1.3.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

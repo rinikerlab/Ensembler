@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympy.concrete.products &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sympy.concrete.products</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sympy.concrete.products</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">from</span> <span class="nn">sympy.core.compatibility</span> <span class="kn">import</span> <span class="nb">range</span>
+<span class="kn">from</span> <span class="nn">sympy.core.mul</span> <span class="kn">import</span> <span class="n">Mul</span>
+<span class="kn">from</span> <span class="nn">sympy.core.singleton</span> <span class="kn">import</span> <span class="n">S</span>
+<span class="kn">from</span> <span class="nn">sympy.concrete.expr_with_intlimits</span> <span class="kn">import</span> <span class="n">ExprWithIntLimits</span>
+<span class="kn">from</span> <span class="nn">sympy.core.exprtools</span> <span class="kn">import</span> <span class="n">factor_terms</span>
+<span class="kn">from</span> <span class="nn">sympy.functions.elementary.exponential</span> <span class="kn">import</span> <span class="n">exp</span><span class="p">,</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">sympy.polys</span> <span class="kn">import</span> <span class="n">quo</span><span class="p">,</span> <span class="n">roots</span>
+<span class="kn">from</span> <span class="nn">sympy.simplify</span> <span class="kn">import</span> <span class="n">powsimp</span>
+
+
+<span class="k">class</span> <span class="nc">Product</span><span class="p">(</span><span class="n">ExprWithIntLimits</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Represents unevaluated products.</span>
+
+<span class="sd">    ``Product`` represents a finite or infinite product, with the first</span>
+<span class="sd">    argument being the general form of terms in the series, and the second</span>
+<span class="sd">    argument being ``(dummy_variable, start, end)``, with ``dummy_variable``</span>
+<span class="sd">    taking all integer values from ``start`` through ``end``. In accordance</span>
+<span class="sd">    with long-standing mathematical convention, the end term is included in</span>
+<span class="sd">    the product.</span>
+
+<span class="sd">    Finite products</span>
+<span class="sd">    ===============</span>
+
+<span class="sd">    For finite products (and products with symbolic limits assumed to be finite)</span>
+<span class="sd">    we follow the analogue of the summation convention described by Karr [1],</span>
+<span class="sd">    especially definition 3 of section 1.4. The product:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \prod_{m \leq i &lt; n} f(i)</span>
+
+<span class="sd">    has *the obvious meaning* for `m &lt; n`, namely:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \prod_{m \leq i &lt; n} f(i) = f(m) f(m+1) \cdot \ldots \cdot f(n-2) f(n-1)</span>
+
+<span class="sd">    with the upper limit value `f(n)` excluded. The product over an empty set is</span>
+<span class="sd">    one if and only if `m = n`:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \prod_{m \leq i &lt; n} f(i) = 1  \quad \mathrm{for} \quad  m = n</span>
+
+<span class="sd">    Finally, for all other products over empty sets we assume the following</span>
+<span class="sd">    definition:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \prod_{m \leq i &lt; n} f(i) = \frac{1}{\prod_{n \leq i &lt; m} f(i)}  \quad \mathrm{for} \quad  m &gt; n</span>
+
+<span class="sd">    It is important to note that above we define all products with the upper</span>
+<span class="sd">    limit being exclusive. This is in contrast to the usual mathematical notation,</span>
+<span class="sd">    but does not affect the product convention. Indeed we have:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \prod_{m \leq i &lt; n} f(i) = \prod_{i = m}^{n - 1} f(i)</span>
+
+<span class="sd">    where the difference in notation is intentional to emphasize the meaning,</span>
+<span class="sd">    with limits typeset on the top being inclusive.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ========</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy.abc import a, b, i, k, m, n, x</span>
+<span class="sd">    &gt;&gt;&gt; from sympy import Product, factorial, oo</span>
+<span class="sd">    &gt;&gt;&gt; Product(k, (k, 1, m))</span>
+<span class="sd">    Product(k, (k, 1, m))</span>
+<span class="sd">    &gt;&gt;&gt; Product(k, (k, 1, m)).doit()</span>
+<span class="sd">    factorial(m)</span>
+<span class="sd">    &gt;&gt;&gt; Product(k**2,(k, 1, m))</span>
+<span class="sd">    Product(k**2, (k, 1, m))</span>
+<span class="sd">    &gt;&gt;&gt; Product(k**2,(k, 1, m)).doit()</span>
+<span class="sd">    factorial(m)**2</span>
+
+<span class="sd">    Wallis&#39; product for pi:</span>
+
+<span class="sd">    &gt;&gt;&gt; W = Product(2*i/(2*i-1) * 2*i/(2*i+1), (i, 1, oo))</span>
+<span class="sd">    &gt;&gt;&gt; W</span>
+<span class="sd">    Product(4*i**2/((2*i - 1)*(2*i + 1)), (i, 1, oo))</span>
+
+<span class="sd">    Direct computation currently fails:</span>
+
+<span class="sd">    &gt;&gt;&gt; W.doit()</span>
+<span class="sd">    Product(4*i**2/((2*i - 1)*(2*i + 1)), (i, 1, oo))</span>
+
+<span class="sd">    But we can approach the infinite product by a limit of finite products:</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy import limit</span>
+<span class="sd">    &gt;&gt;&gt; W2 = Product(2*i/(2*i-1)*2*i/(2*i+1), (i, 1, n))</span>
+<span class="sd">    &gt;&gt;&gt; W2</span>
+<span class="sd">    Product(4*i**2/((2*i - 1)*(2*i + 1)), (i, 1, n))</span>
+<span class="sd">    &gt;&gt;&gt; W2e = W2.doit()</span>
+<span class="sd">    &gt;&gt;&gt; W2e</span>
+<span class="sd">    2**(-2*n)*4**n*factorial(n)**2/(RisingFactorial(1/2, n)*RisingFactorial(3/2, n))</span>
+<span class="sd">    &gt;&gt;&gt; limit(W2e, n, oo)</span>
+<span class="sd">    pi/2</span>
+
+<span class="sd">    By the same formula we can compute sin(pi/2):</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy import pi, gamma, simplify</span>
+<span class="sd">    &gt;&gt;&gt; P = pi * x * Product(1 - x**2/k**2, (k, 1, n))</span>
+<span class="sd">    &gt;&gt;&gt; P = P.subs(x, pi/2)</span>
+<span class="sd">    &gt;&gt;&gt; P</span>
+<span class="sd">    pi**2*Product(1 - pi**2/(4*k**2), (k, 1, n))/2</span>
+<span class="sd">    &gt;&gt;&gt; Pe = P.doit()</span>
+<span class="sd">    &gt;&gt;&gt; Pe</span>
+<span class="sd">    pi**2*RisingFactorial(1 - pi/2, n)*RisingFactorial(1 + pi/2, n)/(2*factorial(n)**2)</span>
+<span class="sd">    &gt;&gt;&gt; Pe = Pe.rewrite(gamma)</span>
+<span class="sd">    &gt;&gt;&gt; Pe</span>
+<span class="sd">    pi**2*gamma(n + 1 + pi/2)*gamma(n - pi/2 + 1)/(2*gamma(1 - pi/2)*gamma(1 + pi/2)*gamma(n + 1)**2)</span>
+<span class="sd">    &gt;&gt;&gt; Pe = simplify(Pe)</span>
+<span class="sd">    &gt;&gt;&gt; Pe</span>
+<span class="sd">    sin(pi**2/2)*gamma(n + 1 + pi/2)*gamma(n - pi/2 + 1)/gamma(n + 1)**2</span>
+<span class="sd">    &gt;&gt;&gt; limit(Pe, n, oo)</span>
+<span class="sd">    sin(pi**2/2)</span>
+
+<span class="sd">    Products with the lower limit being larger than the upper one:</span>
+
+<span class="sd">    &gt;&gt;&gt; Product(1/i, (i, 6, 1)).doit()</span>
+<span class="sd">    120</span>
+<span class="sd">    &gt;&gt;&gt; Product(i, (i, 2, 5)).doit()</span>
+<span class="sd">    120</span>
+
+<span class="sd">    The empty product:</span>
+
+<span class="sd">    &gt;&gt;&gt; Product(i, (i, n, n-1)).doit()</span>
+<span class="sd">    1</span>
+
+<span class="sd">    An example showing that the symbolic result of a product is still</span>
+<span class="sd">    valid for seemingly nonsensical values of the limits. Then the Karr</span>
+<span class="sd">    convention allows us to give a perfectly valid interpretation to</span>
+<span class="sd">    those products by interchanging the limits according to the above rules:</span>
+
+<span class="sd">    &gt;&gt;&gt; P = Product(2, (i, 10, n)).doit()</span>
+<span class="sd">    &gt;&gt;&gt; P</span>
+<span class="sd">    2**(n - 9)</span>
+<span class="sd">    &gt;&gt;&gt; P.subs(n, 5)</span>
+<span class="sd">    1/16</span>
+<span class="sd">    &gt;&gt;&gt; Product(2, (i, 10, 5)).doit()</span>
+<span class="sd">    1/16</span>
+<span class="sd">    &gt;&gt;&gt; 1/Product(2, (i, 6, 9)).doit()</span>
+<span class="sd">    1/16</span>
+
+<span class="sd">    An explicit example of the Karr summation convention applied to products:</span>
+
+<span class="sd">    &gt;&gt;&gt; P1 = Product(x, (i, a, b)).doit()</span>
+<span class="sd">    &gt;&gt;&gt; P1</span>
+<span class="sd">    x**(-a + b + 1)</span>
+<span class="sd">    &gt;&gt;&gt; P2 = Product(x, (i, b+1, a-1)).doit()</span>
+<span class="sd">    &gt;&gt;&gt; P2</span>
+<span class="sd">    x**(a - b - 1)</span>
+<span class="sd">    &gt;&gt;&gt; simplify(P1 * P2)</span>
+<span class="sd">    1</span>
+
+<span class="sd">    And another one:</span>
+
+<span class="sd">    &gt;&gt;&gt; P1 = Product(i, (i, b, a)).doit()</span>
+<span class="sd">    &gt;&gt;&gt; P1</span>
+<span class="sd">    RisingFactorial(b, a - b + 1)</span>
+<span class="sd">    &gt;&gt;&gt; P2 = Product(i, (i, a+1, b-1)).doit()</span>
+<span class="sd">    &gt;&gt;&gt; P2</span>
+<span class="sd">    RisingFactorial(a + 1, -a + b - 1)</span>
+<span class="sd">    &gt;&gt;&gt; P1 * P2</span>
+<span class="sd">    RisingFactorial(b, a - b + 1)*RisingFactorial(a + 1, -a + b - 1)</span>
+<span class="sd">    &gt;&gt;&gt; simplify(P1 * P2)</span>
+<span class="sd">    1</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    ========</span>
+
+<span class="sd">    Sum, summation</span>
+<span class="sd">    product</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ==========</span>
+
+<span class="sd">    .. [1] Michael Karr, &quot;Summation in Finite Terms&quot;, Journal of the ACM,</span>
+<span class="sd">           Volume 28 Issue 2, April 1981, Pages 305-350</span>
+<span class="sd">           http://dl.acm.org/citation.cfm?doid=322248.322255</span>
+<span class="sd">    .. [2] https://en.wikipedia.org/wiki/Multiplication#Capital_Pi_notation</span>
+<span class="sd">    .. [3] https://en.wikipedia.org/wiki/Empty_product</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;is_commutative&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">symbols</span><span class="p">,</span> <span class="o">**</span><span class="n">assumptions</span><span class="p">):</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">ExprWithIntLimits</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="o">*</span><span class="n">symbols</span><span class="p">,</span> <span class="o">**</span><span class="n">assumptions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">_eval_rewrite_as_Sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.concrete.summations</span> <span class="kn">import</span> <span class="n">Sum</span>
+        <span class="k">return</span> <span class="n">exp</span><span class="p">(</span><span class="n">Sum</span><span class="p">(</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">term</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="n">term</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">term</span><span class="o">.</span><span class="n">is_zero</span>
+        <span class="k">if</span> <span class="n">z</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_finite_limits</span><span class="p">:</span>
+            <span class="c1"># A Product is zero only if its term is zero assuming finite limits.</span>
+            <span class="k">return</span> <span class="n">z</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_extended_real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">is_extended_real</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_positive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">is_positive</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_finite_limits</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_nonnegative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">is_nonnegative</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_finite_limits</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_extended_nonnegative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">is_extended_nonnegative</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_extended_nonpositive</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_empty_sequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_eval_is_finite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_finite_limits</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">is_finite</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">doit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">hints</span><span class="p">):</span>
+        <span class="c1"># first make sure any definite limits have product</span>
+        <span class="c1"># variables with matching assumptions</span>
+        <span class="n">reps</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">xab</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">:</span>
+            <span class="c1"># Must be imported here to avoid circular imports</span>
+            <span class="kn">from</span> <span class="nn">.summations</span> <span class="kn">import</span> <span class="n">_dummy_with_inherited_properties_concrete</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">_dummy_with_inherited_properties_concrete</span><span class="p">(</span><span class="n">xab</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">d</span><span class="p">:</span>
+                <span class="n">reps</span><span class="p">[</span><span class="n">xab</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="k">if</span> <span class="n">reps</span><span class="p">:</span>
+            <span class="n">undo</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">([(</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">reps</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+            <span class="n">did</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">xreplace</span><span class="p">(</span><span class="n">reps</span><span class="p">)</span><span class="o">.</span><span class="n">doit</span><span class="p">(</span><span class="o">**</span><span class="n">hints</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">did</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span><span class="p">:</span>  <span class="c1"># when separate=True</span>
+                <span class="n">did</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">xreplace</span><span class="p">(</span><span class="n">undo</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">did</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">did</span> <span class="o">=</span> <span class="n">did</span><span class="o">.</span><span class="n">xreplace</span><span class="p">(</span><span class="n">undo</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">did</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">limit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">):</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">limit</span>
+            <span class="n">dif</span> <span class="o">=</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span>
+            <span class="k">if</span> <span class="n">dif</span><span class="o">.</span><span class="n">is_integer</span> <span class="ow">and</span> <span class="n">dif</span><span class="o">.</span><span class="n">is_negative</span><span class="p">:</span>
+                <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">f</span>
+
+            <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">g</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">S</span><span class="o">.</span><span class="n">NaN</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">powsimp</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">[</span><span class="n">index</span><span class="p">:])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">g</span>
+
+        <span class="k">if</span> <span class="n">hints</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deep&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">doit</span><span class="p">(</span><span class="o">**</span><span class="n">hints</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">powsimp</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_eval_adjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_commutative</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">adjoint</span><span class="p">(),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_eval_conjugate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_eval_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.concrete.delta</span> <span class="kn">import</span> <span class="n">deltaproduct</span><span class="p">,</span> <span class="n">_has_simple_delta</span>
+        <span class="kn">from</span> <span class="nn">sympy.concrete.summations</span> <span class="kn">import</span> <span class="n">summation</span>
+        <span class="kn">from</span> <span class="nn">sympy.functions</span> <span class="kn">import</span> <span class="n">KroneckerDelta</span><span class="p">,</span> <span class="n">RisingFactorial</span>
+
+        <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">limits</span>
+
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">term</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">term</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">is_zero</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">S</span><span class="o">.</span><span class="n">One</span>
+            <span class="k">return</span> <span class="n">term</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">term</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">term</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">KroneckerDelta</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_has_simple_delta</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="n">deltaproduct</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+
+        <span class="n">dif</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">a</span>
+        <span class="n">definite</span> <span class="o">=</span> <span class="n">dif</span><span class="o">.</span><span class="n">is_Integer</span>
+        <span class="k">if</span> <span class="n">definite</span> <span class="ow">and</span> <span class="p">(</span><span class="n">dif</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product_direct</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">is_polynomial</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+            <span class="n">poly</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">as_poly</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="n">A</span> <span class="o">=</span> <span class="n">B</span> <span class="o">=</span> <span class="n">Q</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">One</span>
+
+            <span class="n">all_roots</span> <span class="o">=</span> <span class="n">roots</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+
+            <span class="n">M</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">all_roots</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">M</span> <span class="o">+=</span> <span class="n">m</span>
+                <span class="n">A</span> <span class="o">*=</span> <span class="n">RisingFactorial</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">r</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="n">m</span>
+                <span class="n">Q</span> <span class="o">*=</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span><span class="o">**</span><span class="n">m</span>
+
+            <span class="k">if</span> <span class="n">M</span> <span class="o">&lt;</span> <span class="n">poly</span><span class="o">.</span><span class="n">degree</span><span class="p">():</span>
+                <span class="n">arg</span> <span class="o">=</span> <span class="n">quo</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">Q</span><span class="o">.</span><span class="n">as_poly</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">doit</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">poly</span><span class="o">.</span><span class="n">LC</span><span class="p">()</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+
+        <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">is_Add</span><span class="p">:</span>
+            <span class="n">factored</span> <span class="o">=</span> <span class="n">factor_terms</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">factored</span><span class="o">.</span><span class="n">is_Mul</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">factored</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">is_Mul</span><span class="p">:</span>
+            <span class="c1"># Factor in part without the summation variable and part with</span>
+            <span class="n">without_k</span><span class="p">,</span> <span class="n">with_k</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">as_coeff_mul</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">with_k</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="c1"># More than one term including k, so still a multiplication</span>
+                <span class="n">exclude</span><span class="p">,</span> <span class="n">include</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">with_k</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">exclude</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">include</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">exclude</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">arg</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">_new_rawargs</span><span class="p">(</span><span class="o">*</span><span class="n">include</span><span class="p">)</span>
+                    <span class="n">A</span> <span class="o">=</span> <span class="n">Mul</span><span class="p">(</span><span class="o">*</span><span class="n">exclude</span><span class="p">)</span>
+                    <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">doit</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="n">without_k</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Just a single term</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">with_k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">with_k</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span><span class="o">.</span><span class="n">doit</span><span class="p">()</span>
+                <span class="k">return</span> <span class="n">without_k</span><span class="o">**</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">p</span>
+
+
+        <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">is_Pow</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">term</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">summation</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+                <span class="k">return</span> <span class="n">term</span><span class="o">.</span><span class="n">base</span><span class="o">**</span><span class="n">s</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">term</span><span class="o">.</span><span class="n">exp</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">term</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">p</span><span class="o">**</span><span class="n">term</span><span class="o">.</span><span class="n">exp</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">Product</span><span class="p">):</span>
+            <span class="n">evaluated</span> <span class="o">=</span> <span class="n">term</span><span class="o">.</span><span class="n">doit</span><span class="p">()</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product</span><span class="p">(</span><span class="n">evaluated</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="n">evaluated</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">f</span>
+
+        <span class="k">if</span> <span class="n">definite</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eval_product_direct</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_eval_simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.simplify.simplify</span> <span class="kn">import</span> <span class="n">product_simplify</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">product_simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">rv</span><span class="o">.</span><span class="n">doit</span><span class="p">()</span> <span class="k">if</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;doit&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="n">rv</span>
+
+    <span class="k">def</span> <span class="nf">_eval_transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_commutative</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_eval_product_direct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">limits</span><span class="p">):</span>
+        <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">limits</span>
+        <span class="k">return</span> <span class="n">Mul</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">term</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)])</span>
+
+    <span class="k">def</span> <span class="nf">is_convergent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See docs of :obj:`.Sum.is_convergent()` for explanation of convergence</span>
+<span class="sd">        in SymPy.</span>
+
+<span class="sd">        The infinite product:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \prod_{1 \leq i &lt; \infty} f(i)</span>
+
+<span class="sd">        is defined by the sequence of partial products:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \prod_{i=1}^{n} f(i) = f(1) f(2) \cdots f(n)</span>
+
+<span class="sd">        as n increases without bound. The product converges to a non-zero</span>
+<span class="sd">        value if and only if the sum:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            \sum_{1 \leq i &lt; \infty} \log{f(n)}</span>
+
+<span class="sd">        converges.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Interval, S, Product, Symbol, cos, pi, exp, oo</span>
+<span class="sd">        &gt;&gt;&gt; n = Symbol(&#39;n&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; Product(n/(n + 1), (n, 1, oo)).is_convergent()</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Product(1/n**2, (n, 1, oo)).is_convergent()</span>
+<span class="sd">        False</span>
+<span class="sd">        &gt;&gt;&gt; Product(cos(pi/n), (n, 1, oo)).is_convergent()</span>
+<span class="sd">        True</span>
+<span class="sd">        &gt;&gt;&gt; Product(exp(-n**2), (n, 1, oo)).is_convergent()</span>
+<span class="sd">        False</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ==========</span>
+
+<span class="sd">        .. [1] https://en.wikipedia.org/wiki/Infinite_product</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">sympy.concrete.summations</span> <span class="kn">import</span> <span class="n">Sum</span>
+
+        <span class="n">sequence_term</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span>
+        <span class="n">log_sum</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">sequence_term</span><span class="p">)</span>
+        <span class="n">lim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">is_conv</span> <span class="o">=</span> <span class="n">Sum</span><span class="p">(</span><span class="n">log_sum</span><span class="p">,</span> <span class="o">*</span><span class="n">lim</span><span class="p">)</span><span class="o">.</span><span class="n">is_convergent</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Sum</span><span class="p">(</span><span class="n">sequence_term</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">lim</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolutely_convergent</span><span class="p">()</span> <span class="ow">is</span> <span class="n">S</span><span class="o">.</span><span class="n">true</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">S</span><span class="o">.</span><span class="n">true</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The algorithm to find the product convergence of </span><span class="si">%s</span><span class="s2"> &quot;</span>
+                                        <span class="s2">&quot;is not yet implemented&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sequence_term</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">is_conv</span>
+
+    <span class="k">def</span> <span class="nf">reverse_order</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="o">*</span><span class="n">indices</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reverse the order of a limit in a Product.</span>
+
+<span class="sd">        Usage</span>
+<span class="sd">        =====</span>
+
+<span class="sd">        ``reverse_order(expr, *indices)`` reverses some limits in the expression</span>
+<span class="sd">        ``expr`` which can be either a ``Sum`` or a ``Product``. The selectors in</span>
+<span class="sd">        the argument ``indices`` specify some indices whose limits get reversed.</span>
+<span class="sd">        These selectors are either variable names or numerical indices counted</span>
+<span class="sd">        starting from the inner-most limit tuple.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Product, simplify, RisingFactorial, gamma, Sum</span>
+<span class="sd">        &gt;&gt;&gt; from sympy.abc import x, y, a, b, c, d</span>
+<span class="sd">        &gt;&gt;&gt; P = Product(x, (x, a, b))</span>
+<span class="sd">        &gt;&gt;&gt; Pr = P.reverse_order(x)</span>
+<span class="sd">        &gt;&gt;&gt; Pr</span>
+<span class="sd">        Product(1/x, (x, b + 1, a - 1))</span>
+<span class="sd">        &gt;&gt;&gt; Pr = Pr.doit()</span>
+<span class="sd">        &gt;&gt;&gt; Pr</span>
+<span class="sd">        1/RisingFactorial(b + 1, a - b - 1)</span>
+<span class="sd">        &gt;&gt;&gt; simplify(Pr)</span>
+<span class="sd">        gamma(b + 1)/gamma(a)</span>
+<span class="sd">        &gt;&gt;&gt; P = P.doit()</span>
+<span class="sd">        &gt;&gt;&gt; P</span>
+<span class="sd">        RisingFactorial(a, -a + b + 1)</span>
+<span class="sd">        &gt;&gt;&gt; simplify(P)</span>
+<span class="sd">        gamma(b + 1)/gamma(a)</span>
+
+<span class="sd">        While one should prefer variable names when specifying which limits</span>
+<span class="sd">        to reverse, the index counting notation comes in handy in case there</span>
+<span class="sd">        are several symbols with the same name.</span>
+
+<span class="sd">        &gt;&gt;&gt; S = Sum(x*y, (x, a, b), (y, c, d))</span>
+<span class="sd">        &gt;&gt;&gt; S</span>
+<span class="sd">        Sum(x*y, (x, a, b), (y, c, d))</span>
+<span class="sd">        &gt;&gt;&gt; S0 = S.reverse_order(0)</span>
+<span class="sd">        &gt;&gt;&gt; S0</span>
+<span class="sd">        Sum(-x*y, (x, b + 1, a - 1), (y, c, d))</span>
+<span class="sd">        &gt;&gt;&gt; S1 = S0.reverse_order(1)</span>
+<span class="sd">        &gt;&gt;&gt; S1</span>
+<span class="sd">        Sum(x*y, (x, b + 1, a - 1), (y, d + 1, c - 1))</span>
+
+<span class="sd">        Of course we can mix both notations:</span>
+
+<span class="sd">        &gt;&gt;&gt; Sum(x*y, (x, a, b), (y, 2, 5)).reverse_order(x, 1)</span>
+<span class="sd">        Sum(x*y, (x, b + 1, a - 1), (y, 6, 1))</span>
+<span class="sd">        &gt;&gt;&gt; Sum(x*y, (x, a, b), (y, 2, 5)).reverse_order(y, x)</span>
+<span class="sd">        Sum(x*y, (x, b + 1, a - 1), (y, 6, 1))</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        sympy.concrete.expr_with_intlimits.ExprWithIntLimits.index,</span>
+<span class="sd">        reorder_limit,</span>
+<span class="sd">        sympy.concrete.expr_with_intlimits.ExprWithIntLimits.reorder</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ==========</span>
+
+<span class="sd">        .. [1] Michael Karr, &quot;Summation in Finite Terms&quot;, Journal of the ACM,</span>
+<span class="sd">               Volume 28 Issue 2, April 1981, Pages 305-350</span>
+<span class="sd">               http://dl.acm.org/citation.cfm?doid=322248.322255</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">l_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">indx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">l_indices</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">indx</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">l_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">expr</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">indx</span><span class="p">)</span>
+
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">limit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">limits</span><span class="p">):</span>
+            <span class="n">l</span> <span class="o">=</span> <span class="n">limit</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l_indices</span><span class="p">:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="o">-</span><span class="n">e</span>
+                <span class="n">l</span> <span class="o">=</span> <span class="p">(</span><span class="n">limit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">limit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">limit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">limits</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Product</span><span class="p">(</span><span class="n">expr</span><span class="o">.</span><span class="n">function</span> <span class="o">**</span> <span class="n">e</span><span class="p">,</span> <span class="o">*</span><span class="n">limits</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">product</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the product.</span>
+
+<span class="sd">    The notation for symbols is similar to the notation used in Sum or</span>
+<span class="sd">    Integral. product(f, (i, a, b)) computes the product of f with</span>
+<span class="sd">    respect to i from a to b, i.e.,</span>
+
+<span class="sd">    ::</span>
+
+<span class="sd">                                     b</span>
+<span class="sd">                                   _____</span>
+<span class="sd">        product(f(n), (i, a, b)) = |   | f(n)</span>
+<span class="sd">                                   |   |</span>
+<span class="sd">                                   i = a</span>
+
+<span class="sd">    If it cannot compute the product, it returns an unevaluated Product object.</span>
+<span class="sd">    Repeated products can be computed by introducing additional symbols tuples::</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy import product, symbols</span>
+<span class="sd">    &gt;&gt;&gt; i, n, m, k = symbols(&#39;i n m k&#39;, integer=True)</span>
+
+<span class="sd">    &gt;&gt;&gt; product(i, (i, 1, k))</span>
+<span class="sd">    factorial(k)</span>
+<span class="sd">    &gt;&gt;&gt; product(m, (i, 1, k))</span>
+<span class="sd">    m**k</span>
+<span class="sd">    &gt;&gt;&gt; product(i, (i, 1, k), (k, 1, n))</span>
+<span class="sd">    Product(factorial(k), (k, 1, n))</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">prod</span> <span class="o">=</span> <span class="n">Product</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">prod</span><span class="p">,</span> <span class="n">Product</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">prod</span><span class="o">.</span><span class="n">doit</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prod</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
