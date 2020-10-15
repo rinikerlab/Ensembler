@@ -157,6 +157,7 @@ class localExchangeScheme(Exchange_pattern):
                                       original_exchange_coordinates[1 + self.exchange_offset::2]):
             originalEnergies = np.add(original_totPots.get(partner1), original_totPots.get(partner2))
             swapEnergies = np.add(swapped_totPots.get(partner1), swapped_totPots.get(partner2))
+
             exchanges_to_make.update(
                 {(partner1, partner2): self.replica_graph.exchange_criterium(originalEnergies, swapEnergies)})
 
@@ -229,22 +230,18 @@ class localExchangeScheme(Exchange_pattern):
         if (verbose):
             print("original Coords ", original_exCoord)
             print("swapped Coords ", swapped_exCoord)
-
         # SWAP Params to calculate energies in swapped case
         self.replica_graph.set_parameter_set(coordinates=swapped_exCoord, replica_indices=original_exCoord)  # swap parameters
-
-        # Exchange coordinate paramters:
-        ##scaleVel
+        ##scaleVel - adapt to new parameter set
         self.replica_graph._adapt_system_to_exchange_coordinate()
-
         ##get_swapped energies
         swapped_totPots = self.replica_graph.get_replica_total_energies()  # calc swapped parameter Energies
 
-        ##scale Vel back
-        self.replica_graph._adapt_system_to_exchange_coordinate()
-        self.replica_graph.set_parameter_set(coordinates=swapped_exCoord,
+        #Swap back
+        self.replica_graph.set_parameter_set(coordinates=original_exCoord,
                                              replica_indices=original_exCoord)  # swap back parameters
-
+        ##scaleVel - adapt to old parameter set
+        self.replica_graph._adapt_system_to_exchange_coordinate()
         return original_exCoord, original_totPots, swapped_exCoord, swapped_totPots
 
 

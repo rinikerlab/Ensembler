@@ -89,10 +89,12 @@ class conveyorBelt(_mutliReplicaApproach):
         self._temperature_exchange = system.temperature
 
         self.initialise()
+        self.update_all_lambda(self.capital_lambda)
 
         self.exchange_information: pd.DataFrame = pd.DataFrame(
             columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
         self.system_trajs: dict = {}
+
 
     # public functions
     def initialise(self) -> NoReturn:
@@ -150,9 +152,12 @@ class conveyorBelt(_mutliReplicaApproach):
         if (isinstance(steps_between_trials, int)):
             self.set_simulation_steps_between_trials(n_steps=steps_between_trials)
 
+        self.__tmp_exchange_traj = []
         for _ in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
             self.run()
             self.accept_move()
+
+        self.exchange_information = pd.concat([self.exchange_information, pd.DataFrame(self.__tmp_exchange_traj)],ignore_index=True)
 
         # self.exchange_information = self.exchange_information
 
@@ -187,10 +192,8 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.exchange_information = self.exchange_information.append(
-                {"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
-                 "biasE": float(newEne), "doAccept": True}, ignore_index=True)
-
+            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
+                 "biasE": float(newEne), "doAccept": True})
         else:
             self.reject += 1
             self.update_all_lambda(oldBlam)
@@ -198,12 +201,12 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.exchange_information = self.exchange_information.append(
-                {"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),
-                 "biasE": float(oldBiasene), "doAccept": False}, ignore_index=True)
+            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),
+                 "biasE": float(oldBiasene), "doAccept": False})
 
         if self.build:
             self.build_mem()
+
 
     def revert(self) -> NoReturn:
         """

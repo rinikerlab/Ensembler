@@ -280,6 +280,7 @@ class _potential1DClsPerturbed(_potential1DCls):
         """
         This function converts the information of the perturbed potential class into a string.
         """
+
         msg = self.__name__() + "\n"
         msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
         msg += "\tDimensions: " + str(self.nDimensions) + "\n"
