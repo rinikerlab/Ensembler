@@ -640,6 +640,7 @@ class system(_baseClass):
             iteration_queue = range(steps)
 
         # Simulation loop
+        tmp_traj = []
         for self.step in iteration_queue:
 
             # Do one simulation Step.
@@ -655,9 +656,11 @@ class system(_baseClass):
             self.update_current_state()
 
             if (self.step % save_every_state == 0 and self.step != steps - 1):
-                self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+                tmp_traj.append(self.current_state._asdict())
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        tmp_traj.append(self.current_state._asdict())
+        self._trajectory = pd.DataFrame(tmp_traj)
+        del tmp_traj
 
         return self.current_state
 
