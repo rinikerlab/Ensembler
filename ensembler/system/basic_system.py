@@ -274,6 +274,8 @@ class system(_baseClass):
             mass of the single particle
         verbose : bool, optional
             I can tell you a long iterative story...
+        reweighting: bool, optional
+            Defines if random number and original system potential are written out (only needed for reweighting)
         """
 
         ################################
@@ -281,19 +283,20 @@ class system(_baseClass):
         #################################
 
         self._custom_update_current_state = self.__update_current_state_basic_state
+        self.reweighting = reweighting
 
         ###Check if user wants to use reweighting
-        if reweighting:
+        if self.reweighting:
             ###Check if Langevin integrator is used
             if (issubclass(sampler.__class__, (langevinIntegrator))):
                 #for reweighting the random number and the original potential is needed. They are included in the reweightedState
                 self.state = data.reweightedState
                 self._custom_update_current_state = self.__update_current_state_reweighting
+                # set intial random Number
+                self._previous_random = 0
             else:
                 raise ValueError("Reweighting is only supported for the stochastic Langevin sampler. Please change the"
                                  "sampler to langevinIntegrator or set reweighting=False. ")
-
-
 
         ##Physical parameters
         self.nParticles = 1  # FUTURE: adapt it to be multiple particles
@@ -414,6 +417,7 @@ class system(_baseClass):
         self.update_system_properties()
         self.update_current_state()
         self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+
 
     def _init_position(self, initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
         """
@@ -569,7 +573,7 @@ class system(_baseClass):
         """
         return self.state(self._currentPosition, self._currentTemperature,
                           self._currentTotE, self._currentTotPot, self._currentTotKin,
-                          self._currentForce, self._currentVelocities, 0, 0)
+                          self._currentForce, self._currentVelocities, self._previous_random, 0)
 
     def _update_temperature(self) -> NoReturn:
         """
@@ -718,7 +722,11 @@ class system(_baseClass):
             returns the new current position, the new current velocities and the new current forces
 
         """
-        self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
+        if self.reweighting:
+            self._currentPosition, self._currentVelocities, self._currentForce, self._previous_random = self.sampler.step(self)
+        else:
+            self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
+
         return self._currentPosition, self._currentVelocities, self._currentForce
 
     def apply_conditions(self) -> NoReturn:

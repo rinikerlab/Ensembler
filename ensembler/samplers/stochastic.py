@@ -370,7 +370,7 @@ class langevinIntegrator(stochasticSampler):
                                                                        self.dt ** 2 / system.mass) * (
                                                                        self.R_x + self.newForces))
 
-        return new_position, None
+        return new_position, None, curr_random
 
     def step(self, system):
         """
@@ -413,7 +413,7 @@ class langevinIntegrator(stochasticSampler):
             self._oldPosition = np.array(self._oldPosition)
 
         # integration step
-        new_position, new_velocity = self.update_positon(system)
+        new_position, new_velocity, curr_random = self.update_positon(system)
         # update position
         self._oldPosition = self.currentPosition
 
@@ -424,8 +424,14 @@ class langevinIntegrator(stochasticSampler):
             print(str(self.__name__) + ": current_velocity\t ", self.currentVelocity)
             print(str(self.__name__) + ": newPosition\t ", new_position)
             print(str(self.__name__) + ": newVelocity\t ", new_velocity)
+            if system.reweigting:
+                print(str(self.__name__) + ": oldRandomNumber\t ", curr_random)
             print("\n")
-        return new_position, new_velocity, self.newForces  # add random number
+
+        if system.reweighting:
+            return new_position, new_velocity, self.newForces, curr_random
+        else:
+            return new_position, new_velocity, self.newForces
 
 
 class langevinVelocityIntegrator(langevinIntegrator):
