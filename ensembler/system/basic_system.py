@@ -253,7 +253,7 @@ class system(_baseClass):
 
     def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = None,
                  temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
-                 verbose: bool = True) -> NoReturn:
+                 verbose: bool = True, reweighting: bool = False) -> NoReturn:
         """
             The system class is wrapping all components needed for a simulation.
             It can be used as the control unit for executing a simulation (simulate) and also to manage the generated data or input data.
@@ -279,6 +279,21 @@ class system(_baseClass):
         ################################
         # Declare Attributes
         #################################
+
+        self._custom_update_current_state = self.__update_current_state_basic_state
+
+        ###Check if user wants to use reweighting
+        if reweighting:
+            ###Check if Langevin integrator is used
+            if (issubclass(sampler.__class__, (langevinIntegrator))):
+                #for reweighting the random number and the original potential is needed. They are included in the reweightedState
+                self.state = data.reweightedState
+                self._custom_update_current_state = self.__update_current_state_reweighting
+            else:
+                raise ValueError("Reweighting is only supported for the stochastic Langevin sampler. Please change the"
+                                 "sampler to langevinIntegrator or set reweighting=False. ")
+
+
 
         ##Physical parameters
         self.nParticles = 1  # FUTURE: adapt it to be multiple particles
@@ -526,9 +541,35 @@ class system(_baseClass):
         -------
         NoReturn
         """
-        self._currentState = self.state(self._currentPosition, self._currentTemperature,
-                                        self._currentTotE, self._currentTotPot, self._currentTotKin,
-                                        self._currentForce, self._currentVelocities)
+        # update the current state based on the chosen method (reweighting or not)
+        # done here as function call to avoid checking it every time
+        self._currentState = self._custom_update_current_state()
+
+    def __update_current_state_basic_state(self) -> NoReturn:
+        """
+            __update_current_state_basic_state
+                update a basic current state from the _current vars.
+
+        Returns
+        -------
+        self.state
+        """
+        return self.state(self._currentPosition, self._currentTemperature,
+                          self._currentTotE, self._currentTotPot, self._currentTotKin,
+                          self._currentForce, self._currentVelocities)
+
+    def __update_current_state_reweighting(self) -> NoReturn:
+        """
+            __update_current_state_reweighting
+                update a current reweighting state from the _current vars.
+
+        Returns
+        -------
+        self.state
+        """
+        return self.state(self._currentPosition, self._currentTemperature,
+                          self._currentTotE, self._currentTotPot, self._currentTotKin,
+                          self._currentForce, self._currentVelocities, 0, 0)
 
     def _update_temperature(self) -> NoReturn:
         """
