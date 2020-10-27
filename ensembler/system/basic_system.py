@@ -314,6 +314,7 @@ class system(_baseClass):
         self._currentPosition: (Number or Iterable[Number]) = np.nan
         self._currentVelocities: (Number or Iterable[Number]) = np.nan
         self._currentForce: (Number or Iterable[Number]) = np.nan
+        self._origForce: (Number or Iterable[Number]) = np.nan
         self._currentTemperature: (Number or Iterable[Number]) = np.nan
 
         # BUILD System
@@ -402,9 +403,17 @@ class system(_baseClass):
 
         # Try to init the force
         try:
-            self._currentForce = self.potential.force(self.initial_position)  # initialise forces!
+            self._currentForce = -self.potential.force(self.initial_position)  # initialise forces!
         except:
             warnings.warn("Could not initialize the force of the potential? Check if you need it!")
+
+        #Try to init the origPotential force used in enhaced sampling with reweighting
+        if self.reweighting:
+            try:
+                self._origForce = -self.potential.origPotential.force(self.initial_position)
+            except:
+                warnings.warn("You specified reweigting but have no enhanced sampling potential.")
+                self._origForce = None
 
         if (init_velocity):
             self._init_velocities()
@@ -573,7 +582,7 @@ class system(_baseClass):
         """
         return self.state(self._currentPosition, self._currentTemperature,
                           self._currentTotE, self._currentTotPot, self._currentTotKin,
-                          self._currentForce, self._currentVelocities, self._previous_random, 0)
+                          self._currentForce, self._currentVelocities, self._previous_random, self._origForce)
 
     def _update_temperature(self) -> NoReturn:
         """
@@ -723,7 +732,8 @@ class system(_baseClass):
 
         """
         if self.reweighting:
-            self._currentPosition, self._currentVelocities, self._currentForce, self._previous_random = self.sampler.step(self)
+            self._currentPosition, self._currentVelocities, self._currentForce, self._previous_random, self._origForce \
+                = self.sampler.step(self)
         else:
             self._currentPosition, self._currentVelocities, self._currentForce = self.sampler.step(self)
 

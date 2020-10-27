@@ -10,6 +10,7 @@ import scipy.constants as const
 from ensembler.samplers._basicSamplers import _samplerCls
 from ensembler.util.ensemblerTypes import Union, List, Tuple, Number
 from ensembler.util.ensemblerTypes import systemCls as systemType
+import warnings
 
 
 class stochasticSampler(_samplerCls):
@@ -417,6 +418,19 @@ class langevinIntegrator(stochasticSampler):
         # update position
         self._oldPosition = self.currentPosition
 
+        #Here we now calculate the force of the unbiased system if reweighting is enabled.
+        if system.reweighting:
+            #check if the potential has the value origpotential. If yes caluculate the derivative
+            try:
+                # calculate the force
+                orig_force = -system.potential.origPotential.force(self.currentPosition)
+            except AttributeError:
+                warnings.warn("You did not select an enhanced sampling potential. If you set reweighting=True choose one"
+                              "of the available enhanced sampling methods. Otherwise no force will be written in the "
+                                 "dhdpos_orig column.")
+                orig_force = None
+
+
         if (self.verbose):
             print(str(self.__name__) + ": current forces\t ", self.newForces)
             print(str(self.__name__) + ": old Position\t ", self._oldPosition)
@@ -426,10 +440,12 @@ class langevinIntegrator(stochasticSampler):
             print(str(self.__name__) + ": newVelocity\t ", new_velocity)
             if system.reweigting:
                 print(str(self.__name__) + ": oldRandomNumber\t ", curr_random)
+                print(str(self.__name__) + ": originalForce\t ", orig_force)
             print("\n")
 
+
         if system.reweighting:
-            return new_position, new_velocity, self.newForces, curr_random
+            return new_position, new_velocity, self.newForces, curr_random, orig_force
         else:
             return new_position, new_velocity, self.newForces
 
