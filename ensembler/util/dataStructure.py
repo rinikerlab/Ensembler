@@ -27,7 +27,8 @@ envelopedPStstate = namedtuple("EDS_State", ["position", "temperature",
                                              "dhdpos", "velocity",
                                              "s", "eoff"])
 
-reweightedState = namedtuple("Reweighted_State", list(basicState.__dict__["_fields"])+ ["previous_random_number", "dhdpos_orig"])
+reweightedState = namedtuple("Reweighted_State", list(basicState.__dict__["_fields"])
+                             + ["previous_random_number", "dhdpos_orig", "potential_energy_orig"])
 # make states pickle-able
 setattr(__main__, basicState.__name__, basicState)
 basicState.__module__ = "__main__"

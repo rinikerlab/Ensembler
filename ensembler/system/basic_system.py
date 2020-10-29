@@ -315,6 +315,7 @@ class system(_baseClass):
         self._currentVelocities: (Number or Iterable[Number]) = np.nan
         self._currentForce: (Number or Iterable[Number]) = np.nan
         self._origForce: (Number or Iterable[Number]) = np.nan
+        self._origEnergy: (Number) = np.nan
         self._currentTemperature: (Number or Iterable[Number]) = np.nan
 
         # BUILD System
@@ -582,7 +583,7 @@ class system(_baseClass):
         """
         return self.state(self._currentPosition, self._currentTemperature,
                           self._currentTotE, self._currentTotPot, self._currentTotKin,
-                          self._currentForce, self._currentVelocities, self._previous_random, self._origForce)
+                          self._currentForce, self._currentVelocities, self._previous_random, self._origForce, self._origEnergy)
 
     def _update_temperature(self) -> NoReturn:
         """
@@ -610,6 +611,14 @@ class system(_baseClass):
         self._currentTotKin = self.calculate_total_kinetic_energy()
         self._currentTotE = self._currentTotPot if (np.isnan(self._currentTotKin)) else np.add(self._currentTotKin,
                                                                                                self._currentTotPot)
+        if self.reweighting:
+            #for reweighting we also need the energy if the original system
+            try:
+                self._origEnergy = self.potential.origPotential.ene(self._currentPosition)
+            except:
+                warnings.warn("You specified reweigting but have no enhanced sampling potential. "
+                              "No original energy will be written")
+                self._origEnergy = None
 
     def _update_current_vars_from_current_state(self):
         """
