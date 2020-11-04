@@ -47,10 +47,6 @@ The full Documentation can be found here:  https://rinikerlab.github.io/Ensemble
    This module contains at the moment only Free Energy Calculations.
 
 ## How To Install
-If you want to use the package you can install the package with pip:
-
-    pip install ensembler
-
 Alternativley you can download the git and use the setup.py script of the repository:
 
     cd /path/to/local/Ensembler/repo
