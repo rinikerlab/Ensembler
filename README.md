@@ -47,7 +47,7 @@ The full Documentation can be found here:  https://rinikerlab.github.io/Ensemble
    This module contains at the moment only Free Energy Calculations.
 
 ## How To Install
-Alternativley you can download the git and use the setup.py script of the repository:
+Download the git and use the setup.py script of the repository:
 
     cd /path/to/local/Ensembler/repo
     pyton setup.py install
