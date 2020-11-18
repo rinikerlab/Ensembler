@@ -34,7 +34,7 @@ jobs:
           ulimit -a
 
       # More info on options: https://github.com/goanpeca/setup-miniconda
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: goanpeca/setup-miniconda@v2
         with:
           python-version: ${{ matrix.python-version }}
           environment-file: devtools/conda-envs/test_env.yaml
@@ -42,7 +42,7 @@ jobs:
           channels: conda-forge,defaults
 
           activate-environment: test
-          auto-update-conda: true
+          auto-update-conda: truea
           auto-activate-base: false
           show-channel-urls: true
 
