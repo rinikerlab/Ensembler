@@ -46,19 +46,29 @@ class conveyorBelt(_mutliReplicaApproach):
 
 
     def __str__(self):
-        outstr = ''
+        outstr = '{:5s}{:10s}{:10s}\n'.format("i",
+                                               "lambda_i",
+                                               "E_i"
+                                               )
+        outstr += "-" * 25 + "\n"
         for i in self.replicas:
-            outstr += '{:.1f}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
+            outstr += '{:5d}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
                                                         float(self.replicas[i].total_system_energy))
         return outstr
 
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self, capital_lambda: float, n_replicas: int,
-                 system:systemCls = perturbed_system.perturbedSystem(temperature=300.0, lam=0.0,
-                                                                      potential=pot.OneD.linearCoupledPotentials(),
-                                                                      sampler=stochastic.metropolisMonteCarloIntegrator()),
+    def __init__(self,
+                 capital_lambda: float,
+                 n_replicas: int,
+                 system:systemCls =
+                         perturbed_system.perturbedSystem(
+                             temperature=300.0,
+                             lam=0.0,
+                             potential=pot.OneD.linearCoupledPotentials(),
+                             sampler=stochastic.metropolisMonteCarloIntegrator()
+                         ),
                  build: bool = False):
         """
             initialize Ensemble object
@@ -84,7 +94,13 @@ class conveyorBelt(_mutliReplicaApproach):
         self.build = build  # build
 
         self.dis = 2.0 * np.pi / n_replicas
-        self.exchange_dimensions = {self._parameter_name: np.arange(0, 2 * np.pi, self.dis)}
+        self.exchange_dimensions = {
+            self._parameter_name:
+                [
+                    self.calculate_replica_lambda(self.capital_lambda, i)
+                    for i in range(n_replicas)
+                 ]
+        }
 
         self._temperature_exchange = system.temperature
 
@@ -123,9 +139,14 @@ class conveyorBelt(_mutliReplicaApproach):
 
         ## * Conveyor belt specifics
         for i in self.replicas:
+            self.replicas[i].lam = self.calculate_replica_lambda(self.capital_lambda, i)
             self.replicas[i]._update_dHdLambda()
 
-    def simulate(self, ntrials: int, steps_between_trials: int = None, reset_ensemble: bool = False,
+
+    def simulate(self,
+                 ntrials: int,
+                 steps_between_trials: int = None,
+                 reset_ensemble: bool = False,
                  verbosity: bool = True):
         """
             Integrates the conveyor belt ensemble
