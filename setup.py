@@ -3,12 +3,10 @@ Ensembler
 Code to sample ensembles of simple (toy) models with various algorithms. 
 """
 import sys
-
 import versioneer
 
 short_description = __doc__.split("\n")
 
-# from https://github.com/pytest-dev/pytest-runner#conditional-requirement
 needs_pytest = {'pytest', 'test', 'ptr'}.intersection(sys.argv)
 pytest_runner = ['pytest-runner'] if needs_pytest else []
 
@@ -29,18 +27,18 @@ NAME = 'ensembler'
 DESCRIPTION = 'This Package shall be a tool for fast and efficient development of theoretic thermodynamic simulation tools or teaching.'
 URL = 'https://github.com/rinikerlab/Ensembler'
 EMAIL = 'bschroed@ethz.ch'
-AUTHOR = 'Benjamin Schroeder; David Friedrich Hahn; Stephanie Linker'
+AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
 # What packages are required for this module to be executed?
 REQUIRED = ['typing', #Code: used for type declarations
             'pytest', #Code: used for testing
-            'pandas', #Code: core functionality
-            'numpy', #Code: core functionality
-            'sympy', #Code: core functionality
-            'scipy', #Code: core functionality
-            'matplotlib', #Visualization
+            'pandas>=1.1.2', #Code: core functionality
+            'numpy>=1.18.1', #Code: core functionality
+            'sympy>=1.6.2', #Code: core functionality
+            'scipy>=1.4.1', #Code: core functionality
+            'matplotlib>=3.1.3', #Visualization
             'jupyter', # Tutorial/Examples: basics
             'ipywidgets',# Tutorial/Examples: Interactive widgets
             'tqdm',# Tutorial/Examples: nice progressbar
@@ -121,9 +119,9 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     # Self-descriptive entries which should always be present
-    name='ensembler',
-    author='Benjamin Schroeder, Stephanie Linker, David Hahn',
-    author_email='benjamin.schroeder@phys.chem.ethz.ch',
+    name=NAME,
+    author=AUTHOR,
+    author_email=EMAIL,
     description=short_description[0],
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -142,25 +140,17 @@ setup(
     include_package_data=True,
 
     # Allows `setup.py test` to work correctly with pytest
-    setup_requires=['typing',
-                    'pandas',
-                    'numpy',
-                    'sympy',
-                    'scipy',
-                    'tqdm',
-                    'ipywidgets',
-                    'matplotlib'] + pytest_runner,
+    setup_requires=REQUIRED + pytest_runner,
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
-    # url='http://www.my_package.com',  # Website
-    # install_requires=[],              # Required packages, pulls from pip if needed; do not use for Conda deployment
+    url='https://github.com/rinikerlab/Ensembler',  # Website
+    # install_requires=[REQUIRED],              # Required packages, pulls from pip if needed; do not use for Conda deployment
     # platforms=['Linux',
     #            'Mac OS-X',
     #            'Unix',
     #            'Windows'],            # Valid platforms your code works on, adjust to your flavor
-    # python_requires=">=3.5",          # Python version restrictions
+    python_requires=">=3.5",          # Python version restrictions
 
     # Manual control if final package is compressible or not, set False to prevent the .egg from being made
     # zip_safe=False,
-
 )
