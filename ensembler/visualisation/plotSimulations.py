@@ -421,12 +421,12 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
     ax2.set_title("Sampling Histogramm")
 
     if(issubclass(system.sampler.__class__, newtonian.newtonianSampler) or issubclass(system.sampler.__class__, optimizers.optimizer)):
-        ax3.set_title("Forces")
+        ax3.set_title("Forces Timeseries")
         ax3.set_ylabel("$dhdpos_1$")
         ax4.set_ylabel("$dhdpos_2$")
 
     if(issubclass(system.sampler.__class__, stochastic.stochasticSampler)):
-        ax3.set_title("Shifts")
+        ax3.set_title("Shift Timeseries")
         ax3.set_ylabel("$dr_1$")
         ax4.set_ylabel("$dr_2$")
 
