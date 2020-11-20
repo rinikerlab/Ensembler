@@ -31,7 +31,7 @@ AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
-# What packages are required for this module to be executed?
+# What packages are required for this module to be executed? - for minimal package version, please check the requirement files
 REQUIRED = ['typing', #Code: used for type declarations
             'pytest', #Code: used for testing
             'pandas', #Code: core functionality
@@ -45,7 +45,7 @@ REQUIRED = ['typing', #Code: used for type declarations
             'sphinx', #Documentation: autodocu tool
             'sphinx_rtd_theme', #Documentation: style
             'nbsphinx', #Documentation: for inclusion of jupyter notebooks
-            'm2r' #Documentation: converts markdown to rst
+            'm2r', #Documentation: converts markdown to rst
             'ffmpeg' #Visualizations: for animations in general
             ]
 
