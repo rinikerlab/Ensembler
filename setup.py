@@ -34,11 +34,11 @@ VERSION = None
 # What packages are required for this module to be executed?
 REQUIRED = ['typing', #Code: used for type declarations
             'pytest', #Code: used for testing
-            'pandas>=1.1.2', #Code: core functionality
-            'numpy>=1.18.1', #Code: core functionality
-            'sympy>=1.6.2', #Code: core functionality
-            'scipy>=1.4.1', #Code: core functionality
-            'matplotlib>=3.1.3', #Visualization
+            'pandas', #Code: core functionality
+            'numpy', #Code: core functionality
+            'sympy', #Code: core functionality
+            'scipy', #Code: core functionality
+            'matplotlib', #Visualization
             'jupyter', # Tutorial/Examples: basics
             'ipywidgets',# Tutorial/Examples: Interactive widgets
             'tqdm',# Tutorial/Examples: nice progressbar
