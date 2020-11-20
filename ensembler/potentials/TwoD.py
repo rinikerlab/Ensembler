@@ -317,11 +317,11 @@ class gaussPotential(_potential2DCls):
                                                         0.5 * (sigma).applyfunc(lambda x: x ** (-2))).applyfunc(sp.exp))
 
     i = sp.Symbol("i")
-    V_functional = sp.product(V_dim[i, 0], (i, 0, nDimensions))
+    V_functional = sp.summation(V_dim[i, 0], (i, 0, nDimensions))
 
     # V_orig = V_dim[0, 0] * V_dim[1, 0]
 
-    def __init__(self, amplitude=1., mu=(0., 0.), sigma=(1., 1.)):
+    def __init__(self, amplitude=1., mu=(0., 0.), sigma=(1., 1.), negative_sign:bool=False):
         '''
          __init__
             This is the Constructor of a 2D Gauss Potential
@@ -334,6 +334,8 @@ class gaussPotential(_potential2DCls):
             mean of the gauss function, defaults to (0., 0.)
         sigma: tupel, optional
             standard deviation of the gauss function, defaults to (1., 1.)
+        negative_sign: bool, optional
+            this option is switching the sign of the final potential energy landscape. ==> mu defines the minima location, not maxima location
         '''
 
 
@@ -342,6 +344,7 @@ class gaussPotential(_potential2DCls):
         self.constants.update({"mu_" + str(j): mu[j] for j in range(nDimensions)})
         self.constants.update({"sigma_" + str(j): sigma[j] for j in range(nDimensions)})
         self.constants.update({self.nDimensions:nDimensions})
+        self._negative_sign=negative_sign
         super().__init__()
 
     def _initialize_functions(self):
@@ -364,7 +367,10 @@ class gaussPotential(_potential2DCls):
 
         # self.V_functional = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions- 1))
         # Not too beautiful, but sp.Product raises errors
-        self.V_functional = self.V_dim[0, 0] * self.V_dim[1, 0]
+        if(self._negative_sign):
+            self.V_functional = -(self.V_dim[0, 0] * self.V_dim[1, 0])
+        else:
+            self.V_functional = self.V_dim[0, 0] + self.V_dim[1, 0]
 
     def _update_functions(self):
         """
