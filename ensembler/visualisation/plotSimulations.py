@@ -21,7 +21,7 @@ def simulation_analysis_plot(system: systemCls, title: str = "", out_path: str =
                               limits_coordinate_space: Tuple[float, float] = None,
                               oneD_limits_potential_system_energy: Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
                               twoD_number_of_bins:int=25,
-                              resolution_full_space=style.potential_resolution) -> Tuple[plt.figure, str]:
+                              resolution_full_space=style.potential_resolution, figsize:Tuple[float, float]=figaspect(0.25)) -> Tuple[plt.figure, str]:
     """
     This is a wrapper function for the analysis of
 
@@ -43,24 +43,24 @@ def simulation_analysis_plot(system: systemCls, title: str = "", out_path: str =
                                                                  limits_coordinate_space=limits_coordinate_space,
                                                                  limits_potential_system_energy=oneD_limits_potential_system_energy,
                                                                  limits_force=limits_force,
-                                                                 resolution_full_space=resolution_full_space)
+                                                                 resolution_full_space=resolution_full_space, figsize=figsize)
         else:
             fig, out_path = oneD_simulation_analysis_plot(system=system, title=title, out_path=out_path,
                                                         limits_coordinate_space=limits_coordinate_space,
                                                           limits_potential_system_energy=oneD_limits_potential_system_energy,
                                                           limits_force=limits_force,
-                                                        resolution_full_space=resolution_full_space)
+                                                        resolution_full_space=resolution_full_space, figsize=figsize)
     elif(system.nDimensions == 2):
         fig, out_path = twoD_simulation_analysis_plot(system=system, title=title, out_path=out_path,
                                                         limits_coordinate_space=limits_coordinate_space,
                                                         number_of_bins=twoD_number_of_bins,
-                                                        resolution_full_space=resolution_full_space)
+                                                        resolution_full_space=resolution_full_space, figsize=figsize)
 
     return fig, out_path
 
 def oneD_simulation_analysis_plot(system: systemCls, title: str = "", out_path: str = None,
                                   limits_coordinate_space: Tuple[float, float] = None, limits_potential_system_energy: Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
-                                  resolution_full_space=style.potential_resolution) -> Tuple[plt.figure, str]:
+                                  resolution_full_space=style.potential_resolution, figsize:Tuple[float, float]=figaspect(0.25)) -> Tuple[plt.figure, str]:
     """
         This plot gives insight into sampled coordinate - space, the position distribution and the force timeseries
 
@@ -106,7 +106,7 @@ def oneD_simulation_analysis_plot(system: systemCls, title: str = "", out_path: 
     ytot_space = system.potential.ene(x_pot)
 
     # plot
-    w, h = figaspect(0.25)
+    w, h = figsize
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[w, h])
 
     #plot coordinate exploration
@@ -188,7 +188,7 @@ def oneD_simulation_analysis_plot(system: systemCls, title: str = "", out_path: 
 
 def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None, title: str = "",
                                          limits_coordinate_space: Tuple[float, float] = None, limits_potential_system_energy:Tuple[float, float] = None, limits_force: Tuple[float, float] = None,
-                                         resolution_full_space: int = style.potential_resolution) -> str:
+                                         resolution_full_space: int = style.potential_resolution, figsize:Tuple[float, float]=figaspect(0.25)) -> str:
     '''
     Plot giving the sampled space, position distribution and forces
 
@@ -234,7 +234,7 @@ def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None
     ytot_space = system.potential.ene(x_pot)
 
     # plot
-    w, h = figaspect(0.25)
+    w, h = figsize
     fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=[w, h])
 
     # traj
@@ -320,7 +320,7 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
                                   limits_coordinate_space: Tuple[Tuple[float, float], Tuple[float, float]] = [
                                         [-180, 180], [-180, 180]],
                                   number_of_bins: int = 25, limits_force: Tuple[float, float] = None,
-                                  resolution_full_space: int = style.potential_resolution) -> Tuple[plt.Figure, Union[str, None]]:
+                                  resolution_full_space: int = style.potential_resolution, figsize:Tuple[float, float]=figaspect(0.25)) -> Tuple[plt.Figure, Union[str, None]]:
     """
         Plot giving the sampled space, position histogram and forces of a 2D simulation
 
@@ -380,7 +380,7 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
     positions2D = np.array([x_positions.flatten(), y_positions.flatten()]).T
 
     # plot
-    w, h = figaspect(0.25)
+    w, h = figsize
     fig = plt.figure(figsize=[w, h])
     gs = fig.add_gridspec(2, 3)
     ax1 = fig.add_subplot(gs[:, 0])
@@ -420,13 +420,17 @@ def twoD_simulation_analysis_plot(system: systemCls, out_path: str = None, title
     ax2.set_ylabel("$y$")
     ax2.set_title("Sampling Histogramm")
 
-    ax3.set_xlabel("$t$")
-    ax3.set_ylabel("$dhdpos$")
-    ax3.set_title("Forces/Shifts in 1. Dim")
+    if(issubclass(system.sampler.__class__, newtonian.newtonianSampler) or issubclass(system.sampler.__class__, optimizers.optimizer)):
+        ax3.set_title("Forces")
+        ax3.set_ylabel("$dhdpos_1$")
+        ax4.set_ylabel("$dhdpos_2$")
+
+    if(issubclass(system.sampler.__class__, stochastic.stochasticSampler)):
+        ax3.set_title("Shifts")
+        ax3.set_ylabel("$dr_1$")
+        ax4.set_ylabel("$dr_2$")
 
     ax4.set_xlabel("$t$")
-    ax4.set_ylabel("$dhdpos$")
-    ax4.set_title("Forces/Shifts in 2. Dim")
 
     cb.set_label("$p$")
 
