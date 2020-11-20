@@ -370,7 +370,7 @@ class gaussPotential(_potential2DCls):
         if(self._negative_sign):
             self.V_functional = -(self.V_dim[0, 0] * self.V_dim[1, 0])
         else:
-            self.V_functional = self.V_dim[0, 0] + self.V_dim[1, 0]
+            self.V_functional = self.V_dim[0, 0] * self.V_dim[1, 0]
 
     def _update_functions(self):
         """

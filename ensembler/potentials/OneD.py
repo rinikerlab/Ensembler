@@ -10,8 +10,8 @@ import scipy.constants as const
 import sympy as sp
 
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
-from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
 
+from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
 """
     SIMPLE POTENTIALS
 """
@@ -1169,6 +1169,72 @@ class addedPotentials(_potential1DCls):
 
         super().__init__()
 
+class sumPotentials(_potential1DCls):
+    """
+    Adds n different potentials.
+     For adding up wavepotentials, we recommend using the addedwavePotential class.
+    """
+    name: str = "Summed Potential"
+
+    position = sp.symbols("r")
+    potentials: sp.Matrix = sp.Matrix([sp.symbols("V_x")])
+
+    nPotentials = sp.symbols("N")
+    i = sp.symbols("i", cls=sp.Idx)
+
+    V_functional = sp.Sum(potentials[i, 0], (i, 0, nPotentials))
+
+    def __init__(self, potentials: t.List[_potential1DCls] = (harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=1))):
+        """
+        __init__
+            This is the Constructor of an summed Potentials
+
+        Parameters
+        ----------
+        potentials: List[_potential2DCls], optional
+            it uses the 2D potential class to generate its potential,
+            default to (wavePotential(), wavePotential(multiplicity=[3, 3]))
+        """
+        self.constants = {self.nPotentials: len(potentials)}
+        self.constants.update({"V_" + str(i): potentials[i].V for i in range(len(potentials))})
+
+        super().__init__()
+
+    def _initialize_functions(self):
+        """
+        _initialize_functions
+            converts the symbolic mathematics of sympy to a matrix representation that is compatible
+            with multi-dimentionality.
+        """
+        #self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDimensions])])
+        self.potentials = sp.Matrix(
+            [sp.symbols("V_" + str(i)) for i in range(self.constants[self.nPotentials])])
+        # Function
+        self.V_functional = sp.Sum(self.potentials[self.i, 0], (self.i, 0, self.nPotentials - 1))
+
+    def __str__(self) -> str:
+        msg = self.__name__() + "\n"
+        msg += "\tStates: " + str(self.constants[self.nStates]) + "\n"
+        msg += "\tDimensions: " + str(self.nDimensions) + "\n"
+        msg += "\n\tFunctional:\n "
+        msg += "\t\tV:\t" + str(self.V_functional) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos_functional) + "\n"
+        msg += "\n\tSimplified Function\n"
+        msg += "\t\tV:\t" + str(self.V) + "\n"
+        msg += "\t\tdVdpos:\t" + str(self.dVdpos) + "\n"
+        msg += "\n"
+        return msg
+
+    # OVERRIDE
+    def _update_functions(self):
+        """
+        _update_functions
+            calculates the current energy and derivative of the energy
+        """
+        super()._update_functions()
+
+        self.tmp_Vfunc = self._calculate_energies
+        self.tmp_dVdpfunc = self._calculate_dVdpos
 
 """
     TIME DEPENDENT BIASES 
