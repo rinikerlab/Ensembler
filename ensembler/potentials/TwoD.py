@@ -387,7 +387,7 @@ class gaussPotential(_potential2DCls):
         self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
 
 
-from ensembler.potentials.ND import envelopedPotential
+from ensembler.potentials.ND import envelopedPotential, sumPotentials
 
 """
 Biased potentials
@@ -438,7 +438,6 @@ class addedPotentials(_potential2DCls):
 
         nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
-
 
 """
     TIME DEPENDENT BIASES 

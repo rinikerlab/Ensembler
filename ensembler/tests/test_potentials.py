@@ -528,6 +528,45 @@ class potentialCls_gaussPotential1D(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!",
                                        decimal=2)
 
+class potentialCls_sumPotentials(test_potentialCls):
+    potential_class = OneD.sumPotentials
+    a = OneD.harmonicOscillatorPotential()
+    b = OneD.harmonicOscillatorPotential(x_shift=2)
+    c = OneD.harmonicOscillatorPotential(x_shift=-2)
+
+    def test_constructor_ListPotentials(self):
+        potential = self.potential_class([self.a,self.b,self.c])
+
+    def test_energies(self):
+        positions = np.linspace(-3,3, 10)
+        expected_result = np.array([17.5       , 12.16666667,  8.16666667,  5.5       ,  4.16666667,
+        4.16666667,  5.5       ,  8.16666667, 12.16666667, 17.5       ])
+
+        potential = self.potential_class([self.a,self.b,self.c])
+        energies = potential.ene(positions)
+
+        print(energies)
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
+                                       err_msg="The results of " + potential.name + " are not correct!",
+                                       decimal=8)
+
+    def test_dHdpos(self):
+        positions = np.linspace(-3,3, 10)
+        expected_result = np.array([-9., -7., -5., -3., -1.,  1.,  3.,  5.,  7.,  9.])
+
+        potential = self.potential_class([self.a,self.b,self.c])
+        forces = potential.force(positions)
+
+        print(forces)
+
+        self.assertEqual(type(expected_result), type(forces),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!",
+                                       decimal=8)
+
 
 """
 TEST for perturbed Potentials 1D
@@ -1281,6 +1320,91 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!", decimal=8)
 
 
+class potentialCls_2D_sumPotentials(test_potentialCls):
+    potential_class = TwoD.sumPotentials
+
+    def test_constructor_ListPotentials(self):
+        WavePotential = TwoD.wavePotential()
+        WavePotential2 = TwoD.wavePotential()
+        potential = self.potential_class(potentials=[WavePotential, WavePotential2])
+
+    def test_energies(self):
+        phase_shift = (0.0, 0)
+        multiplicity = (1.0, 1.0)
+        amplitude = (1.0, 1.0)
+        y_offset = (0.0, 0, 0)
+        radians = True
+
+        positions = np.deg2rad(np.array([(0, 0), (90, 0), (180, 270), (270, 180), (360, 360)]))
+
+        expected_result = np.array([4, 2, -2, -2, 4])
+
+        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
+                                           y_offset=y_offset, radians=radians)
+        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
+                                            y_offset=y_offset, radians=radians)
+        potential = self.potential_class(potentials=[WavePotential, WavePotential2])
+
+        energies = potential.ene(positions)
+
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
+                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+
+    def test_energies_phase_shifted(self):
+        phase_shift1 = (0.0, 0)
+        phase_shift2 = (180, 180)
+        multiplicity = (1.0, 1.0)
+        amplitude = (1.0, 1.0)
+        y_offset = (0.0, 0, 0)
+
+        positions = np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)])
+        expected_result = np.array([ 0.00000000e+00, -7.35035672e-15,  0.00000000e+00,  3.66373598e-15,
+        0.00000000e+00])
+
+        WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude,
+                                           y_offset=y_offset)
+        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude,
+                                            y_offset=y_offset)
+        potential = self.potential_class(potentials=[WavePotential, WavePotential2])
+        energies = potential.ene(positions)
+
+        print(energies)
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
+                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+
+    def test_dHdpos(self):
+        phase_shift = (0.0, 0)
+        multiplicity = (1.0, 1.0)
+        amplitude = (1.0, 1.0)
+        y_offset = (0.0, 0, 0)
+        radians = True
+
+        positions = np.deg2rad(np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)]))
+        expected_result = np.array([[ 0.0000000e+00,  0.0000000e+00],
+                                     [-2.0000000e+00, -2.0000000e+00],
+                                     [-2.4492936e-16,  0.0000000e+00],
+                                     [ 2.0000000e+00,  0.0000000e+00],
+                                     [ 4.8985872e-16,  0.0000000e+00]])
+
+        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
+                                           y_offset=y_offset, radians=radians)
+        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
+                                            y_offset=y_offset, radians=radians)
+        potential = self.potential_class(potentials=[WavePotential, WavePotential2])
+        forces = potential.force(positions)
+
+        print(forces)
+
+        self.assertEqual(type(expected_result), type(forces),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+
+
 """
 Test Simple ND Potentials:
 """
@@ -1321,6 +1445,47 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!", decimal=8)
 
         # for ind, (expected, actual) in enumerate(zip(expected_result, forces.T)):
+
+
+class potentialCls_ND_sumPotentials(test_potentialCls):
+    potential_class = TwoD.sumPotentials
+
+    def test_constructor_ListPotentials(self):
+        potential = self.potential_class()
+
+    def test_energies(self):
+        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2,2,0)])
+        expected_result = np.array([1.5, 1.5, 1.5, 1.5, 5.5])
+
+        potential = self.potential_class()
+
+        energies = potential.ene(positions)
+
+        self.assertEqual(type(expected_result), type(energies),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
+                                       err_msg="The results of " + potential.name + " are not correct!",
+                                       decimal=8)
+
+    def test_dHdpos(self):
+        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2,2,0)])
+        expected_result = np.array([[-1., -1., -1.],
+                                 [ 1., -1., -1.],
+                                 [ 1., 1., -1.],
+                                 [ 1.,  1.,  1.],
+                                 [ 3.,  3., -1.]])
+
+        potential = self.potential_class()
+        forces = potential.force(positions)
+
+        print(forces)
+
+        self.assertEqual(type(expected_result), type(forces),
+                         msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
+                                       err_msg="The results of " + potential.name + " are not correct!",
+                                       decimal=8)
+
 
 """
 biased potentials
