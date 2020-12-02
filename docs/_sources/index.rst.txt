@@ -8,7 +8,6 @@
    :maxdepth: 2
    :caption: Contents:
 
-   getting_started
    Tutorials/index
    Examples/index
    _source/index

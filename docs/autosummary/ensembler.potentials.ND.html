@@ -89,7 +89,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../_source/index.html">Documentation</a></li>
@@ -198,8 +197,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.ND.harmonicOscillatorPotential" title="ensembler.potentials.ND.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, r_shift, …)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.ND.envelopedPotential" title="ensembler.potentials.ND.envelopedPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">envelopedPotential</span></code></a>(V_is, s, eoff, T, kb)</p></td>
+<td><p>This implementation of exponential Coupling for EDS is a more numeric robust and variable implementation, it allows N states.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.ND.harmonicOscillatorPotential" title="ensembler.potentials.ND.harmonicOscillatorPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">harmonicOscillatorPotential</span></code></a>(k, r_shift, …)</p></td>
 <td><p>ND  harmonic oscillator potential</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../_source/ensembler.potentials.html#ensembler.potentials.ND.lambdaEDSPotential" title="ensembler.potentials.ND.lambdaEDSPotential"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambdaEDSPotential</span></code></a>(V_is, lam, s, eoff, T, kb)</p></td>
+<td><p>This implementation of exponential Coupling combined with linear compling is called $lambda$-EDS the implementation of function is more numerical robust to the hybrid coupling class.</p></td>
 </tr>
 </tbody>
 </table>

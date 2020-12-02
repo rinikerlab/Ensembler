@@ -89,7 +89,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
@@ -316,6 +315,7 @@
                                       <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">]):</span>
             <span class="n">originalEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
             <span class="n">swapEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
+
             <span class="n">exchanges_to_make</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{(</span><span class="n">partner1</span><span class="p">,</span> <span class="n">partner2</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_criterium</span><span class="p">(</span><span class="n">originalEnergies</span><span class="p">,</span> <span class="n">swapEnergies</span><span class="p">)})</span>
 
@@ -388,22 +388,18 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbose</span><span class="p">):</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;original Coords &quot;</span><span class="p">,</span> <span class="n">original_exCoord</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;swapped Coords &quot;</span><span class="p">,</span> <span class="n">swapped_exCoord</span><span class="p">)</span>
-
         <span class="c1"># SWAP Params to calculate energies in swapped case</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">set_parameter_set</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">swapped_exCoord</span><span class="p">,</span> <span class="n">replica_indices</span><span class="o">=</span><span class="n">original_exCoord</span><span class="p">)</span>  <span class="c1"># swap parameters</span>
-
-        <span class="c1"># Exchange coordinate paramters:</span>
-        <span class="c1">##scaleVel</span>
+        <span class="c1">##scaleVel - adapt to new parameter set</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_adapt_system_to_exchange_coordinate</span><span class="p">()</span>
-
         <span class="c1">##get_swapped energies</span>
         <span class="n">swapped_totPots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">get_replica_total_energies</span><span class="p">()</span>  <span class="c1"># calc swapped parameter Energies</span>
 
-        <span class="c1">##scale Vel back</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_adapt_system_to_exchange_coordinate</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">set_parameter_set</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">swapped_exCoord</span><span class="p">,</span>
+        <span class="c1">#Swap back</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">set_parameter_set</span><span class="p">(</span><span class="n">coordinates</span><span class="o">=</span><span class="n">original_exCoord</span><span class="p">,</span>
                                              <span class="n">replica_indices</span><span class="o">=</span><span class="n">original_exCoord</span><span class="p">)</span>  <span class="c1"># swap back parameters</span>
-
+        <span class="c1">##scaleVel - adapt to old parameter set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">_adapt_system_to_exchange_coordinate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">original_exCoord</span><span class="p">,</span> <span class="n">original_totPots</span><span class="p">,</span> <span class="n">swapped_exCoord</span><span class="p">,</span> <span class="n">swapped_totPots</span></div></div>
 
 

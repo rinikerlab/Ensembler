@@ -169,7 +169,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     name = "Metropolis Monte Carlo Integrator"
     # Parameters:
     maxIterationTillAccept: float = np.inf  # how often shall the samplers iterate till it accepts a step forcefully
-    convergence_limit: int = 10000  # after reaching a certain limit abort iteration
+    convergence_limit: int = np.inf  # after reaching a certain limit abort iteration
 
     # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
@@ -181,7 +181,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     def __init__(self, space_range: tuple = None,
                  step_size_coefficient: Number = 5, minimal_step_size: float = None,
                  fixed_step_size=None,
-                 randomness_increase_factor=1.25, max_iteration_tillAccept: int = np.inf):
+                 randomness_increase_factor=1.25, max_iteration_tillAccept: int = 10000):
         """
         __init__
             This is the Constructor of the Metropolis-MonteCarlo samplers.
@@ -404,7 +404,11 @@ class langevinIntegrator(stochasticSampler):
             # get old position from velocity, only during initialization
             print("initializing Langevin old Positions\t ")
             print("\n")
+
             self._oldPosition = self.currentPosition - self.currentVelocity * self.dt
+
+            if(system.nDimensions < len(np.array(self._oldPosition, ndmin=1))):   #this is not such a nice fix, but if multiple states are involved, multiple vels are needed as well.
+                self._oldPosition = np.squeeze(self._oldPosition[:system.nDimensions])
         else:
             self._oldPosition = np.array(self._oldPosition)
 

@@ -247,7 +247,6 @@ class _mutliReplicaApproach(_baseClass):
             for coords, replica in zip(coordinates, replica_indices):
                 for ind, parameter_Name in enumerate(self.exchange_dimensions):
                     parameters = list(self.exchange_dimensions[self.parameter_Name])
-
                     # set parameter set
                     if (hasattr(self.replicas[replica], parameter_Name)):
                         setattr(self.replicas[replica], parameter_Name, parameters[coords[ind]])
@@ -258,7 +257,6 @@ class _mutliReplicaApproach(_baseClass):
 
             for coords, replica in zip(coordinates, replica_indices):
                 # set parameter set
-                #print(coords, replica)
                 if (hasattr(self.replicas[replica], self.parameter_names[0])):
                     setattr(self.replicas[replica], self.parameter_names[0], parameters[coords])
 

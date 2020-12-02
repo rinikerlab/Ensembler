@@ -91,7 +91,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
@@ -238,6 +237,196 @@
 </dd>
 </dl>
 <dl class="py class">
+<dt id="ensembler.potentials.ND.envelopedPotential">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.ND.</code><code class="sig-name descname">envelopedPotential</code><span class="sig-paren">(</span><em class="sig-param">V_is: List[ensembler.potentials._basicPotentials._potentialNDCls] = (&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;)</em>, <em class="sig-param">s: float = 1.0</em>, <em class="sig-param">eoff: List[float] = None</em>, <em class="sig-param">T: float = 1</em>, <em class="sig-param">kb: float = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potentialNDCls</span></code></p>
+<p>This implementation of exponential Coupling for EDS is a more numeric robust and variable implementation, it allows N states.
+Therefore the computation of energies and the deviation is not symbolic.</p>
+<p>Here N-states are coupled by the log-sum-exp resulting in a new reference state $V_R$,</p>
+<p>$V_R = -1/{eta} * ln(sum_i^Ne^(-eta*s*(V_i-E^R_i)))$</p>
+<p>This potential coupling is for example used in EDS.</p>
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.Eoff">
+<em class="property">property </em><code class="sig-name descname">Eoff</code><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.Eoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Energy offsets are used to bias the single states in the reference potential by a constant offset.
+Therefore each state of the enveloping potential has its own energy offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>Eoff</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>t.List[Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.Eoff_i">
+<em class="property">property </em><code class="sig-name descname">Eoff_i</code><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.Eoff_i" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Energy offsets are used to bias the single states in the reference potential by a constant offset.
+Therefore each state of the enveloping potential has its own energy offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>Eoff</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>t.List[Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.Eoffis">
+<code class="sig-name descname">Eoffis</code><em class="property"> = Matrix([[Eoff_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.Eoffis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.T">
+<code class="sig-name descname">T</code><em class="property"> = T</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.V_functional">
+<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = -T*kb*log(Sum(exp(-(-Matrix([[Eoff_i]])[i, 0] + Matrix([[V_i]])[i, 0])*Matrix([[s_i]])[i, 0]/(T*kb)), (i, 0, N)))/s_i</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.V_functional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.V_is">
+<em class="property">property </em><code class="sig-name descname">V_is</code><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.V_is" title="Permalink to this definition">¶</a></dt>
+<dd><p>V_is are the state potential classes enveloped by the reference state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>V_is</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>t.List[_potential1DCls]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.Vis">
+<code class="sig-name descname">Vis</code><em class="property"> = Matrix([[V_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.Vis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">V_is: List[ensembler.potentials._basicPotentials._potentialNDCls] = (&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;)</em>, <em class="sig-param">s: float = 1.0</em>, <em class="sig-param">eoff: List[float] = None</em>, <em class="sig-param">T: float = 1</em>, <em class="sig-param">kb: float = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>__init__</dt><dd><p>This function constructs a enveloped potential, enveloping all given states.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>V_is</strong> (<em>List[_potential1DCls], optional</em>) – The states(potential classes) to be enveloped (default: [harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)])</p></li>
+<li><p><strong>s</strong> (<em>float, optional</em>) – the smoothing parameter, lowering the barriers between the states</p></li>
+<li><p><strong>eoff</strong> (<em>List[float], optional</em>) – the energy offsets of the individual states in the reference potential. These can be used to allow a more uniform sampling. (default: seta ll to 0)</p></li>
+<li><p><strong>T</strong> (<em>float, optional</em>) – the temperature of the reference state (default: 1 = T)</p></li>
+<li><p><strong>kb</strong> (<em>float, optional</em>) – the boltzman constant (default: 1 = kb)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential._calculate_dvdpos_singlePos_overwrite">
+<code class="sig-name descname">_calculate_dvdpos_singlePos_overwrite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>float<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential._calculate_dvdpos_singlePos_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential._calculate_dvdpos_singlePos_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>positions</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential._initialize_functions">
+<code class="sig-name descname">_initialize_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential._initialize_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential._initialize_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>build the symbolic functionality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential._logsumexp_calc_gromos">
+<code class="sig-name descname">_logsumexp_calc_gromos</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential._logsumexp_calc_gromos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential._logsumexp_calc_gromos" title="Permalink to this definition">¶</a></dt>
+<dd><p>code from gromos:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>position</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.beta">
+<code class="sig-name descname">beta</code><em class="property"> = 1/(T*kb)</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.beta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.i">
+<code class="sig-name descname">i</code><em class="property"> = i</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.kb">
+<code class="sig-name descname">kb</code><em class="property"> = kb</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.kb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.nStates">
+<code class="sig-name descname">nStates</code><em class="property"> = N</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.nStates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Enveloping Potential'</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.s">
+<em class="property">property </em><code class="sig-name descname">s</code><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.s_i">
+<em class="property">property </em><code class="sig-name descname">s_i</code><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.s_i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.set_Eoff">
+<code class="sig-name descname">set_Eoff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Eoff</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential.set_Eoff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.set_Eoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is setting the Energy offsets of the states enveloped by the reference state.
+:Parameters: <strong>Eoff</strong> (<em>Union[Number, Iterable[Number]]</em>)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.envelopedPotential.set_s">
+<code class="sig-name descname">set_s</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#envelopedPotential.set_s"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.set_s" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>set_s
+is a function used to set an smoothing parameter.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>Union[Number, Iterable[Number]]</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.envelopedPotential.sis">
+<code class="sig-name descname">sis</code><em class="property"> = Matrix([[s_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.envelopedPotential.sis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="ensembler.potentials.ND.harmonicOscillatorPotential">
 <em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.ND.</code><code class="sig-name descname">harmonicOscillatorPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k</span><span class="p">:</span> <span class="n">numpy.array</span> <span class="o">=</span> <span class="default_value">array([1.0, 1.0, 1.0])</span></em>, <em class="sig-param"><span class="n">r_shift</span><span class="p">:</span> <span class="n">numpy.array</span> <span class="o">=</span> <span class="default_value">array([0.0, 0.0, 0.0])</span></em>, <em class="sig-param"><span class="n">Voff</span><span class="p">:</span> <span class="n">numpy.array</span> <span class="o">=</span> <span class="default_value">array([0.0, 0.0, 0.0])</span></em>, <em class="sig-param"><span class="n">nDimensions</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#harmonicOscillatorPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.harmonicOscillatorPotential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potentialNDCls</span></code></p>
@@ -316,11 +505,201 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.ND.</code><code class="sig-name descname">lambdaEDSPotential</code><span class="sig-paren">(</span><em class="sig-param">V_is: List[ensembler.potentials._basicPotentials._potentialNDCls] = (&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;)</em>, <em class="sig-param">lam: numbers.Number = 0.5</em>, <em class="sig-param">s: float = 1.0</em>, <em class="sig-param">eoff: List[float] = None</em>, <em class="sig-param">T: float = 1</em>, <em class="sig-param">kb: float = 1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#lambdaEDSPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.potentials.ND.envelopedPotential" title="ensembler.potentials.ND.envelopedPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials.ND.envelopedPotential</span></code></a></p>
+<blockquote>
+<div><p>This implementation of exponential Coupling combined with linear compling is called $lambda$-EDS the implementation of function is more numerical robust to the hybrid coupling class.</p>
+<p>Here two-states are coupled by the log-sum-exp and weighted by lambda resulting in a new reference state $V_R$,</p>
+<p>$V_R = -</p>
+</div></blockquote>
+<p>rac{1}{eta*s} * ln(lambda * e^(-eta*s*(V_A-E^R_A)) + (1-lambda)*e^(-eta*s*(V_B-E^R_B)))$</p>
+<blockquote>
+<div><p>This potential coupling is for example used in $lambda$-EDS.</p>
+</div></blockquote>
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.Eoffis">
+<code class="sig-name descname">Eoffis</code><em class="property"> = Matrix([[Eoff_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.Eoffis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.T">
+<code class="sig-name descname">T</code><em class="property"> = T</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.V_functional">
+<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = -T*kb*log(Sum(exp(-(-Matrix([[Eoff_i]])[i, 0] + Matrix([[V_i]])[i, 0])*Matrix([[s_i]])[i, 0]/(T*kb))*Matrix([[λ]])[i, 0], (i, 0, N)))/s_i</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.V_functional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.Vis">
+<code class="sig-name descname">Vis</code><em class="property"> = Matrix([[V_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.Vis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.beta">
+<code class="sig-name descname">beta</code><em class="property"> = 1/(T*kb)</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.beta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.i">
+<code class="sig-name descname">i</code><em class="property"> = i</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.kb">
+<code class="sig-name descname">kb</code><em class="property"> = kb</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.kb" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.lam">
+<em class="property">property </em><code class="sig-name descname">lam</code><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.lam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.lam_i">
+<em class="property">property </em><code class="sig-name descname">lam_i</code><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.lam_i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.lamis">
+<code class="sig-name descname">lamis</code><em class="property"> = Matrix([[λ]])</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.lamis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.nStates">
+<code class="sig-name descname">nStates</code><em class="property"> = N</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.nStates" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'lambda enveloped Potential'</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.set_lam">
+<code class="sig-name descname">set_lam</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lam</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#lambdaEDSPotential.set_lam"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.set_lam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.lambdaEDSPotential.sis">
+<code class="sig-name descname">sis</code><em class="property"> = Matrix([[s_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.sis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-ensembler.potentials.OneD">
 <span id="ensembler-potentials-oned-module"></span><h2>ensembler.potentials.OneD module<a class="headerlink" href="#module-ensembler.potentials.OneD" title="Permalink to this headline">¶</a></h2>
 <p>Module: Potential
 This module shall be used to implement subclasses of Potential. This module contains all available potentials.</p>
+<dl class="py class">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">_metadynamicsPotentialSympy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_metadynamicsPotentialSympy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>The metadynamics bias potential adds Gaussian potentials on top of
+the original potential. The added gaussian potential is centered on the current position.
+Thereby the valleys of the potential “flooded” and barrier crossing is easier</p>
+<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_metadynamicsPotentialSympy.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the metadynamicsPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>amplitude</strong> (<em>float</em>) – scaling of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>sigma</strong> (<em>float</em>) – standard deviation of the gaussian potential added in the metadynamcis step</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Metadynamics potential will be added after every n_trigger’th steps</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_metadynamicsPotentialSympy._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds a gaussian centered on the
+current position to the potential</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curr_position</strong> (<em>float</em>) – current x position</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_metadynamicsPotentialSympy.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System using sympy'</em><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD._metadynamicsPotentialSympy.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD._metadynamicsPotentialSympy.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.OneD._timedependendBias">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">_timedependendBias</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_timedependendBias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<p>The timedependend bias potential adds a user defined potential on top of
+the original potential.</p>
+<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._timedependendBias.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_timedependendBias.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of the addedPotential class.
+:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>addPotential</strong> (<em>potential type</em>) – The potential added on top of the unbiased potential to
+bias the system, usually of gaussian type</p></li>
+<li><p><strong>n_trigger</strong> (<em>int</em>) – Added potential will be added after every n_trigger’th steps</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._timedependendBias._update_potential">
+<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_timedependendBias._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias._update_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is triggered by check_for_metastep(). Adds the pre-defined potential on the
+current position to the potential</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD._timedependendBias.check_for_metastep">
+<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#_timedependendBias.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias.check_for_metastep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the bias potential should be added at the current step
+:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD._timedependendBias.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System'</em><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD._timedependendBias.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD._timedependendBias.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py class">
 <dt id="ensembler.potentials.OneD.addedPotentials">
 <em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">addedPotentials</code><span class="sig-paren">(</span><em class="sig-param">origPotential=&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">addPotential=&lt;ensembler.potentials.OneD.gaussPotential object&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#addedPotentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.addedPotentials" title="Permalink to this definition">¶</a></dt>
@@ -352,7 +731,7 @@ bias the system</p></li>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.addedPotentials.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.addedPotentials.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.addedPotentials.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -402,7 +781,7 @@ bias the system</p></li>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.coulombPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.coulombPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.coulombPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -454,7 +833,7 @@ bias the system</p></li>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.doubleWellPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.doubleWellPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.doubleWellPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -483,7 +862,7 @@ It returns a constant value equalling the y_shift parameter.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.dummyPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.dummyPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.dummyPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -590,13 +969,10 @@ Therefore each state of the enveloping potential has its own energy offset.</p>
 
 <dl class="py method">
 <dt id="ensembler.potentials.OneD.envelopedPotential._calculate_dvdpos_singlePos_overwrite">
-<code class="sig-name descname">_calculate_dvdpos_singlePos_overwrite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">position</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>float<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#envelopedPotential._calculate_dvdpos_singlePos_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.envelopedPotential._calculate_dvdpos_singlePos_overwrite" title="Permalink to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Todo: improve numerical stability.</p>
-</div></blockquote>
-<dl class="field-list simple">
+<code class="sig-name descname">_calculate_dvdpos_singlePos_overwrite</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">positions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>float<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.array<a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#envelopedPotential._calculate_dvdpos_singlePos_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.envelopedPotential._calculate_dvdpos_singlePos_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>position</strong></p>
+<dd class="field-odd"><p><strong>positions</strong></p>
 </dd>
 </dl>
 </dd></dl>
@@ -645,7 +1021,7 @@ Therefore each state of the enveloping potential has its own energy offset.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.envelopedPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.envelopedPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.envelopedPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -754,7 +1130,7 @@ Here N-states are coupled by the log-sum-exp resulting in a new reference state 
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.exponentialCoupledPotentials.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.exponentialCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.exponentialCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -948,7 +1324,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.fourWellPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.fourWellPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.fourWellPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -980,12 +1356,18 @@ If a position is outside, the y_max val will be returned.</p>
 <li><p><strong>sigma</strong> (<em>float, optional</em>) –</p>
 <p>standard deviation of the gauss function, defaults to 1.</p>
 <blockquote>
-<div><p>TODO: make numerical stable</p>
+<div><p>TODO: improve numerical stablility</p>
 </div></blockquote>
 </li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD.gaussPotential._update_functions">
+<code class="sig-name descname">_update_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#gaussPotential._update_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.gaussPotential._update_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -1000,7 +1382,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.gaussPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.gaussPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.gaussPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1047,7 +1429,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.harmonicOscillatorPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.harmonicOscillatorPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.harmonicOscillatorPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1134,7 +1516,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.hybridCoupledPotentials.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.hybridCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.hybridCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1229,7 +1611,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.lambdaEDSPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lambdaEDSPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lambdaEDSPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1285,7 +1667,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.lennardJonesForceFieldPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lennardJonesForceFieldPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lennardJonesForceFieldPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1338,7 +1720,7 @@ If a position is outside, the y_max val will be returned.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.lennardJonesPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lennardJonesPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.lennardJonesPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1413,7 +1795,7 @@ Linear Coupled Potentials, like in FEP or TI simulations.]</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.linearCoupledPotentials.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.linearCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.linearCoupledPotentials.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1475,7 +1857,7 @@ current position to the potential</p>
 
 <dl class="py method">
 <dt id="ensembler.potentials.OneD.metadynamicsPotential.apply">
-<code class="sig-name descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotential.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotential.apply" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">currentPosition</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotential.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotential.apply" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1538,107 +1920,7 @@ current position to the potential</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.metadynamicsPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">metadynamicsPotentialSympy</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotentialSympy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
-<p>The metadynamics bias potential adds Gaussian potentials on top of
-the original potential. The added gaussian potential is centered on the current position.
-Thereby the valleys of the potential “flooded” and barrier crossing is easier</p>
-<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">n_trigger</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotentialSympy.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the Constructor of the metadynamicsPotential class.
-:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>amplitude</strong> (<em>float</em>) – scaling of the gaussian potential added in the metadynamcis step</p></li>
-<li><p><strong>sigma</strong> (<em>float</em>) – standard deviation of the gaussian potential added in the metadynamcis step</p></li>
-<li><p><strong>n_trigger</strong> (<em>int</em>) – Metadynamics potential will be added after every n_trigger’th steps</p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy._update_potential">
-<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotentialSympy._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy._update_potential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is triggered by check_for_metastep(). Adds a gaussian centered on the
-current position to the potential</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>curr_position</strong> (<em>float</em>) – current x position</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy.check_for_metastep">
-<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#metadynamicsPotentialSympy.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy.check_for_metastep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the bias potential should be added at the current step
-:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy.name">
-<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System using sympy'</em><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="ensembler.potentials.OneD.metadynamicsPotentialSympy.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotentialSympy.position" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt id="ensembler.potentials.OneD.timedependendBias">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">timedependendBias</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#timedependendBias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
-<p>The timedependend bias potential adds a user defined potential on top of
-the original potential.</p>
-<p>This implementation uses sympy instead of a grid and is therefore super slow</p>
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.timedependendBias.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">origPotential</span></em>, <em class="sig-param"><span class="n">addPotential</span></em>, <em class="sig-param"><span class="n">n_trigger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#timedependendBias.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is the Constructor of the addedPotential class.
-:Parameters: * <strong>origPotential</strong> (<em>potential type</em>) – The unbiased potential</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><strong>addPotential</strong> (<em>potential type</em>) – The potential added on top of the unbiased potential to
-bias the system, usually of gaussian type</p></li>
-<li><p><strong>n_trigger</strong> (<em>int</em>) – Added potential will be added after every n_trigger’th steps</p></li>
-</ul>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.timedependendBias._update_potential">
-<code class="sig-name descname">_update_potential</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#timedependendBias._update_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias._update_potential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Is triggered by check_for_metastep(). Adds the pre-defined potential on the
-current position to the potential</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="ensembler.potentials.OneD.timedependendBias.check_for_metastep">
-<code class="sig-name descname">check_for_metastep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">curr_position</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#timedependendBias.check_for_metastep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias.check_for_metastep" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if the bias potential should be added at the current step
-:Parameters: <strong>curr_position</strong> (<em>flaot</em>) – current x position</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="ensembler.potentials.OneD.timedependendBias.name">
-<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Metadynamics Enhanced Sampling System'</em><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="ensembler.potentials.OneD.timedependendBias.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.timedependendBias.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1696,7 +1978,7 @@ current position to the potential</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.torsionPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.torsionPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.torsionPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1781,7 +2063,7 @@ current position to the potential</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.OneD.wavePotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.wavePotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.wavePotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1842,11 +2124,6 @@ bias the system</p></li>
 <dl class="py attribute">
 <dt id="ensembler.potentials.TwoD.addedPotentials.bias_potential">
 <code class="sig-name descname">bias_potential</code><em class="property"> = True</em><a class="headerlink" href="#ensembler.potentials.TwoD.addedPotentials.bias_potential" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="ensembler.potentials.TwoD.addedPotentials.nDimensions">
-<code class="sig-name descname">nDimensions</code><em class="property">: int</em><em class="property"> = nDimensions</em><a class="headerlink" href="#ensembler.potentials.TwoD.addedPotentials.nDimensions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -1916,7 +2193,7 @@ with multi-dimentionality.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.TwoD.addedWavePotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.TwoD.addedWavePotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.TwoD.addedWavePotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1988,6 +2265,12 @@ with multi-dimentionality.</p>
 <code class="sig-name descname">_initialize_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential._initialize_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential._initialize_functions" title="Permalink to this definition">¶</a></dt>
 <dd><p>converts the symbolic mathematics of sympy to a matrix representation that is compatible
 with multi-dimentionality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.TwoD.gaussPotential._update_functions">
+<code class="sig-name descname">_update_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential._update_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential._update_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -2222,7 +2505,7 @@ current position to the potential</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.TwoD.metadynamicsPotential.position">
-<code class="sig-name descname">position</code><em class="property">: r</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.TwoD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.TwoD.metadynamicsPotential.position" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -2320,6 +2603,11 @@ with multi-dimentionality.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.TwoD.wavePotential.set_phaseshift">
+<code class="sig-name descname">set_phaseshift</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">phaseshift</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#wavePotential.set_phaseshift"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.wavePotential.set_phaseshift" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="ensembler.potentials.TwoD.wavePotential.set_radians">

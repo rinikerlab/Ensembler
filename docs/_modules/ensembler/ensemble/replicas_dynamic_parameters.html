@@ -89,7 +89,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
@@ -248,10 +247,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_temperature_exchange</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">temperature</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initialise</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_all_lambda</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">,</span> <span class="s2">&quot;biasE&quot;</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_trajs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span></div>
+
 
     <span class="c1"># public functions</span>
 <div class="viewcode-block" id="conveyorBelt.initialise"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.initialise">[docs]</a>    <span class="k">def</span> <span class="nf">initialise</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
@@ -309,9 +310,12 @@
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">steps_between_trials</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_simulation_steps_between_trials</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="n">steps_between_trials</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ntrials</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Trials: &quot;</span><span class="p">,</span> <span class="n">mininterval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="n">verbosity</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">accept_move</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">accept_move</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span><span class="p">)],</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
         <span class="c1"># self.exchange_information = self.exchange_information</span>
 
@@ -346,10 +350,8 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_update_dHdLambda</span><span class="p">()</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">{</span><span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span>
-                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span>
+                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reject</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_all_lambda</span><span class="p">(</span><span class="n">oldBlam</span><span class="p">)</span>
@@ -357,12 +359,12 @@
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_update_dHdLambda</span><span class="p">()</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="p">{</span><span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="n">oldBlam</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">oldEne</span><span class="p">),</span>
-                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">oldBiasene</span><span class="p">),</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="n">oldBlam</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">oldEne</span><span class="p">),</span>
+                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">oldBiasene</span><span class="p">),</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">build_mem</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="conveyorBelt.revert"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.revert">[docs]</a>    <span class="k">def</span> <span class="nf">revert</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -534,7 +536,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">system_trajs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">,</span> <span class="s2">&quot;biasE&quot;</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">])</span></div>
 
-    <span class="c1"># Todo: should be inherited.</span>
 <div class="viewcode-block" id="conveyorBelt.set_simulation_steps_between_trials"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_steps_between_trials">[docs]</a>    <span class="k">def</span> <span class="nf">set_simulation_steps_between_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                    Sets the integration steps of the replicas between a trail move.</span>
@@ -548,11 +549,14 @@
         <span class="k">for</span> <span class="n">coord</span><span class="p">,</span> <span class="n">replica</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">replica</span><span class="o">.</span><span class="n">nsteps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nSteps_between_trials</span></div>
 
-    <span class="c1"># Todo: PUT SOMEWHERE ELSE OR NUMPY?.</span>
+
 <div class="viewcode-block" id="conveyorBelt.spline"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.spline">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">spline</span><span class="p">(</span><span class="n">dg</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        calculates the value of the spline function depending on the deviation dg from the grid point</span>
+
+<span class="sd">        # Todo: PUT SOMEWHERE ELSE OR NUMPY? : numpy.interp¶.</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        dg:float</span>

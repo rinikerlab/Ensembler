@@ -17,20 +17,14 @@ Here, we provide insights into the package's implementation, its usage, and an a
 The full Documentation can be found here:  https://rinikerlab.github.io/Ensembler/
 ### Potential functions
 
-  Contains simple functions, that can be stocked together. 
-  Also implementation of new potentials is very easy, as there only few functions that need to be overwritten.
-  Examples: Harmonic Oscillator, Wa*ve function, etc.. 
-  Also different dimensionalities can be used.
+  Implement mathematical functions of interest for modelling purposes for esxample in chemistry.
+  Implementation of new potentials is very easy, as there are only few functions that need to be overwritten.
+  Implemented Potentials: Harmonic Oscillator, Wave function, etc.. 
+  Also different dimensionalities can be used like 1D, 2D, and ND.
 
-   * OneD
-
-   * TwoD
-
-   * ND
-
-   You can try the code in your Browser here: 
+   You can try the code in your Browser here (or check out down below the Tutorial&Example section): 
    
-   [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb)
+  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=example%2FTutorial_Potentials.ipynb)
 
 ### Samplers
 
@@ -53,42 +47,63 @@ The full Documentation can be found here:  https://rinikerlab.github.io/Ensemble
    This module contains at the moment only Free Energy Calculations.
 
 ## How To Install
-If you want to use the package you can either install the package with pip:
+Download the git and use the setup.py script of the repository:
 
-   ' pip install ensembler '
+    cd /path/to/local/Ensembler/repo
+    pyton setup.py install
 
-Or you can also add the path to the Ensembler repository, if you want to use the code and modify it.
-   UNIX:
-   'export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo'
+Instead of install one could add the path to the Ensembler repository, if you want to use the code and modify it. 
+The requirements need then to be installed as well like in the following examples.
+  
+   PIP:
+    
+    export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
+    cd /path/to/local/Ensembler/repo
+    pip install -r requirements.txt
+    
+   Anaconda:
    
-   if you are using Anaconda:
-    'conda-develop /path/to/local/Ensembler/repo'
+    conda-develop /path/to/local/Ensembler/repo
+    cd /path/to/local/Ensembler/repo
+    conda create -n ensembler --file environment_unix.yml
+    conda activate ensembler
 
-   Keep in mind: IDE's have their own awesome ways of doing this.
+For windows, we also provide the requirment files (requirements_unix.txt and environment_windows.yml).
 
-## Examples:
+Keep in mind: IDE's have their own awesome ways of doing this.
+
+## Tutorials and Examples:
 
 ### Tutorials
-You can try the tutorials with the fast track directly in your browser.
+Here we provide short introductions into how Potential functions can be used and sampled in simulations in Ensembler .
+You can try the tutorials with Binder directly from your browser!
+
 Potentials: 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicPotentials.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Potentials.ipynb)
 
 Simulations: 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FBasicSimulations.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Simulations.ipynb)
 
-Interactive ConveyorBelt: 
+### Examples
+Examples are advanced jupyter notebooks, covering a certain topic, going deeper into the methodology.
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FConveyorBelt.ipynb)
+Enhanced Sampling: 
 
-EDS-Potentials: 
-
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FEDS.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EnhancedSampling.ipynb)
 
 Free Energy Calculations: 
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FFreeEnergyCalculations.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_FreeEnergyCalculationSimulation.ipynb)
+
+Interactive ConveyorBelt: 
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_ConveyorBelt.ipynb)
+
+EDS-Potentials: 
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EDS.ipynb)
 
 
 ## Authors

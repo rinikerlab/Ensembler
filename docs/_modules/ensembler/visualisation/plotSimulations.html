@@ -89,7 +89,6 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../getting_started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
@@ -540,8 +539,6 @@
     <span class="n">x_positions</span><span class="p">,</span> <span class="n">y_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">positionsX</span><span class="p">,</span> <span class="n">positionsY</span><span class="p">)</span>
     <span class="n">positions2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">y_positions</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span>
 
-    <span class="n">ytot_space</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span>
-
     <span class="c1"># plot</span>
     <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="n">figaspect</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">])</span>
@@ -553,7 +550,8 @@
 
     <span class="c1"># traj</span>
     <span class="c1"># plot energy landscape of total potential</span>
-    <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">resolution_full_space</span><span class="p">,</span> <span class="n">resolution_full_space</span><span class="p">]),</span>
+    <span class="n">ene_space</span> <span class="o">=</span> <span class="n">potential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">positions2D</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">resolution_full_space</span><span class="p">,</span> <span class="n">resolution_full_space</span><span class="p">])</span>
+    <span class="n">ax1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">ene_space</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
                <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">limits_coordinate_space</span><span class="o">.</span><span class="n">flat</span><span class="p">])</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">trajectory_color</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_traj</span><span class="p">)</span>
     <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">traj_pos</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">traj_start</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">)</span>  <span class="c1"># start_point</span>
