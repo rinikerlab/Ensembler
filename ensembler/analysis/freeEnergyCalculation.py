@@ -360,7 +360,7 @@ class zwanzig(zwanzigEquation):
     pass
 
 
-class threeStateZwanzigReweighting(zwanzigEquation):
+class threeStateZwanzig(zwanzigEquation):
     """
             this class provides the implementation for the Free energy calculation with EDS.
             It calculates the free energy via the reference state.
@@ -461,7 +461,7 @@ class threeStateZwanzigReweighting(zwanzigEquation):
         return dF
 
 
-class dfEDS(threeStateZwanzigReweighting):
+class dfEDS(threeStateZwanzig):
     pass
 
 

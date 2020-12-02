@@ -4,7 +4,7 @@ import tempfile
 import unittest
 
 
-from ensembler.analysis.freeEnergyCalculation import  zwanzigEquation, threeStateZwanzigReweighting, bennetAcceptanceRatio
+from ensembler.analysis.freeEnergyCalculation import  zwanzigEquation, threeStateZwanzig, bennetAcceptanceRatio
 
 class test_ZwanzigEquation(unittest.TestCase):
     feCalculation = zwanzigEquation
@@ -103,7 +103,7 @@ class test_BAR(test_ZwanzigEquation):
 
 
 class test_threeStateZwanzigReweighting(test_ZwanzigEquation):
-    feCalculation = threeStateZwanzigReweighting
+    feCalculation = threeStateZwanzig
 
 
     def test_free_Energy1(self):
