@@ -311,20 +311,20 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     ax.set_xlim(-0.1, 1.1)
     ax.set_ylim(0, 1.2 / goldRat)
     ax.set_xticks([0.0, 0.5, 1.0])
-    ax.set_xticklabels(['0\n(A)', r'$\sfrac{1}{2}$', '1\n(B)'])
+    ax.set_xticklabels(['0\n(A)', r'$\frac{1}{2}$', '1\n(B)'])
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_ticks_position('left')
     ax.set_yticks([])
     ax.spines['left'].set_color('None')
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
-    ax.set_title("Conveyor Belt over simulated Free Energy Landscape")
+    ax.set_title("Conveyor belt over free energy landscape")
 
     ax.annotate('', xy=(0, 0),
                          xytext=(0, 0.5 / goldRat), ha='center', va='bottom',
                          arrowprops=dict(arrowstyle='<|-', facecolor='k', linewidth=1.5))
     ax.text(-0.025, 0.25 / goldRat, '$G(\lambda)$', ha='right', va='center', fontsize=14)
-    ax.text(1.025, 0.0, '$\lambda$', ha='left', va='center', fontsize=14)
+    ax.text(1.025, -0.1, '$\lambda$', ha='left', va='center', fontsize=14)
     return fig, ax
 
 
