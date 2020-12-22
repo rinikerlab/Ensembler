@@ -20,7 +20,7 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lambda(lam)
+        sys.lam=lam
         ens = self.convBelt(0.0, 1, system=sys)
         ens.calculate_total_ensemble_energy()
         ens.run()
@@ -48,7 +48,7 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 1.0
-        sys.set_lambda(lam)
+        sys.lam=lam
         ens = self.convBelt(0.0, 1, system=sys)
 
         ens.calculate_total_ensemble_energy()
@@ -64,7 +64,7 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lambda(lam)
+        sys.lam=lam
         ens = self.convBelt(0.0, 1, system=sys)
         ens.calculate_total_ensemble_energy()
         ens.run()
@@ -79,7 +79,7 @@ class testEnsemble(unittest.TestCase):
         sys = perturbedSystem(temperature=300.0, potential=pot, sampler=integrator)
 
         lam = 0.5
-        sys.set_lambda(lam)
+        sys.lam=lam
         ens = self.convBelt(0.0, 1, system=sys)
 
         # print(ens.run(())

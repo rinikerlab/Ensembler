@@ -57,8 +57,11 @@ class test_MonteCarlo_Integrator(standard_IntegratorTests):
         sys = system.system(potential=potent, sampler=integrator)
 
         old_pos, oldForce = sys._currentPosition, sys._currentForce
+        print(sys.trajectory.shape)
         integrator.integrate(system=sys, steps=steps)
+        print(sys.trajectory.shape)
         new_pos, new_Force = sys._currentPosition, sys._currentForce
+        print(sys.trajectory.shape)
 
         self.assertEqual(steps + 1, len(sys.trajectory), msg="The simulation did not run or was too short!")
         self.assertNotEqual(old_pos, new_pos, msg="Nothing happened here!")

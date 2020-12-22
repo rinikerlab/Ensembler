@@ -328,7 +328,6 @@ class system(_baseClass):
             init_velocity = True
         else:
             init_velocity = False
-
         self.initialise(withdraw_Traj=True, init_position=True, init_velocity=init_velocity,
                         set_initial_position=start_position)
 
@@ -627,8 +626,8 @@ class system(_baseClass):
             self._init_velocities()
 
         if (withdraw_traj):
-            self._trajectory = []
-            self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+            self.clear_trajectory()
+            self._trajectory.append(self.current_state._asdict())
 
         self.update_current_state()
         self.update_system_properties()
@@ -735,7 +734,6 @@ class system(_baseClass):
         :return: None
         """
         self._trajectory = []
-        self._trajectory.append(self.current_state._asdict())
 
     def write_trajectory(self, out_path: str) -> str:
         """

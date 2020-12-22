@@ -77,6 +77,7 @@ class perturbedSystem(system):
                          start_position=start_position)
 
         self.lam = lam
+        self.update_system_properties()
         self.update_current_state()
 
     """

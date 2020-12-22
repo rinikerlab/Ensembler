@@ -52,12 +52,12 @@ class test_System(unittest.TestCase):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
-                               msg="The initialised total_system_energy is not correct!")
         self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
                                msg="The initialised total_potential_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
                          msg="The initialised total_kinetic_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
@@ -476,7 +476,11 @@ class test_perturbedSystem1D(test_System):
                                          total_kinetic_energy=np.nan, dhdpos=[[np.nan]],
                                          velocity=np.nan)  # Monte carlo does not use dhdpos or velocity
 
-        sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position, temperature=temperature)
+        sys = self.system_class(potential=self.pot,
+                                sampler=self.sampler,
+                                start_position=position,
+                                temperature=temperature,
+                                lam=1.0)
         curState = sys.current_state
 
         # check attributes
@@ -488,12 +492,12 @@ class test_perturbedSystem1D(test_System):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
-                               msg="The initialised total_system_energy is not correct!")
         self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
                                msg="The initialised total_potential_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
                          msg="The initialised total_kinetic_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
@@ -897,12 +901,12 @@ class test_edsSystem1D(test_System):
         self.assertEqual(expected_state.position, curState.position, msg="The initialised Position is not correct!")
         self.assertEqual(expected_state.temperature, curState.temperature,
                          msg="The initialised temperature is not correct!")
-        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
-                               msg="The initialised total_system_energy is not correct!")
         self.assertAlmostEqual(expected_state.total_potential_energy, curState.total_potential_energy,
                                msg="The initialised total_potential_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.total_kinetic_energy), np.isnan(curState.total_kinetic_energy),
                          msg="The initialised total_kinetic_energy is not correct!")
+        self.assertAlmostEqual(expected_state.total_system_energy, curState.total_system_energy,
+                               msg="The initialised total_system_energy is not correct!")
         self.assertEqual(np.isnan(expected_state.velocity), np.isnan(curState.velocity),
                          msg="The initialised velocity is not correct!")
 
