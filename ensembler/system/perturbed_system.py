@@ -172,7 +172,7 @@ class perturbedSystem(system):
         self._update_dHdLambda()
         self.update_current_state()
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state._asdict())
 
     """
     Functionality

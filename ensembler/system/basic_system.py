@@ -173,7 +173,7 @@ class system(_baseClass):
 
     @property
     def trajectory(self) -> pd.DataFrame:
-        return self._trajectory
+        return pd.DataFrame(self._trajectory, columns=list(self.state.__dict__["_fields"]))
 
     @property
     def position(self) -> Union[Number, Iterable[Number]]:
@@ -288,7 +288,7 @@ class system(_baseClass):
 
         # Output
         self._currentState = self.state(**{key: np.nan for key in self.state.__dict__["_fields"]})
-        self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+        self._trajectory =[]
 
         # tmpvars - private:
         self._currentTotE: (Number) = np.nan
@@ -399,7 +399,7 @@ class system(_baseClass):
         self.step = 0
         self.update_system_properties()
         self.update_current_state()
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state._asdict())
 
     def _init_position(self, initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
         """
@@ -627,8 +627,8 @@ class system(_baseClass):
             self._init_velocities()
 
         if (withdraw_traj):
-            self._trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-            self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+            self._trajectory = []
+            self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
         self.update_current_state()
         self.update_system_properties()
@@ -641,7 +641,6 @@ class system(_baseClass):
             iteration_queue = range(steps)
 
         # Simulation loop
-        tmp_traj = []
         for self.step in iteration_queue:
 
             # Do one simulation Step.
@@ -657,12 +656,10 @@ class system(_baseClass):
             self.update_current_state()
 
             if (self.step % save_every_state == 0 and self.step != steps - 1):
-                tmp_traj.append(self.current_state._asdict())
+                self._trajectory.append(self.current_state._asdict())
 
-        tmp_traj.append(self.current_state._asdict())
-        self._trajectory = pd.concat([self._trajectory, pd.DataFrame(tmp_traj)],ignore_index=True)
-        del tmp_traj
 
+        self._trajectory.append(self.current_state._asdict())
         return self.current_state
 
     def propagate(self) -> (
@@ -718,7 +715,7 @@ class system(_baseClass):
         self._update_energies()
         self.update_current_state()
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state._asdict())
 
     def revert_step(self) -> NoReturn:
         """
@@ -737,8 +734,8 @@ class system(_baseClass):
         deletes all entries of trajectory and adds current state as first timestep to the trajectory
         :return: None
         """
-        self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory = []
+        self._trajectory.append(self.current_state._asdict())
 
     def write_trajectory(self, out_path: str) -> str:
         """
@@ -761,5 +758,6 @@ class system(_baseClass):
         """
         if (not os.path.exists(os.path.dirname(os.path.abspath(out_path)))):
             raise Exception("Could not find output folder: " + os.path.dirname(out_path))
-        self.trajectory.to_csv(out_path, header=True)
+        traj = self.trajectory
+        traj.to_csv(out_path, header=True)
         return out_path
