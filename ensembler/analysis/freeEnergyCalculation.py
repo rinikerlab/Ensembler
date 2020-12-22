@@ -16,8 +16,8 @@ from scipy import constants as const
 
 class _FreeEnergyCalculator:
     constants: dict
-    equation: sp.function
-    simplified_equation: sp.function
+    equation: sp.Function
+    simplified_equation: sp.Function
 
     exp = np.vectorize(lambda x: mp.exp(x))  # this function deals with decimals to
     ln = lambda self, x: mp.ln(x)
@@ -49,17 +49,17 @@ class _FreeEnergyCalculator:
         return tuple(map(lambda arr: np.array(list(map(lambda x: np.float(x), arr)),ndmin=1), arrays))
 
     @classmethod
-    def get_equation(cls) -> sp.function:
+    def get_equation(cls) -> sp.Function:
         """
         get_equation returns the symoblic Equation
 
         :return: symbolic implementation of Zwanzig
-        :rtype: sp.function
+        :rtype: sp.Function
         """
         return cls.equation
 
     @classmethod
-    def get_equation_simplified(cls) -> sp.function:
+    def get_equation_simplified(cls) -> sp.Function:
         cls._update_function()
         return cls.simplified_equation
 
@@ -80,7 +80,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
 
     """
     k, T, Vi, Vj = sp.symbols("k T, Vi, Vj")
-    equation: sp.function = -(1 / (k * T)) * sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vi)))
+    equation: sp.Function = -(1 / (k * T)) * sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vi)))
     constants: dict
 
     def __init__(self, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False, kJ: bool = False,
@@ -368,7 +368,7 @@ class threeStateZwanzig(zwanzigEquation):
             $dF = dF_{BR}-dF_{AR} = \frac{1}{\beta} * ( \ln(\langle e^{-\beta * (V_j-V_R)}\rangle) - \ln(\langle e^{-\beta * (V_i-V_R)}\rangle))$
     """
     k, T, Vi, Vj, Vr = sp.symbols("k T Vi Vj Vr")
-    equation: sp.function = -(1 / (k * T)) * (
+    equation: sp.Function = -(1 / (k * T)) * (
             sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
 
     def __init__(self, kCal: bool = False, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False,
@@ -474,7 +474,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
     """
     k, T, beta, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T beta C  Vi_i Vj_i Vi_j Vj_j")
-    equation: sp.function = (1 / (k * T)) * (
+    equation: sp.Function = (1 / (k * T)) * (
             sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C))))
     constants: dict = {T: 298, k: const.k * const.Avogadro, C: Number}
 
