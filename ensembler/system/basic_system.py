@@ -143,7 +143,8 @@ class system(_baseClass):
 
     def set_current_state(self, current_position: Union[Number, Iterable[Number]],
                           current_velocities: Union[Number, Iterable[Number]] = 0,
-                          current_force: Union[Number, Iterable[Number]] = 0, current_temperature: Number = 298):
+                          current_force: Union[Number, Iterable[Number]] = 0,
+                          current_temperature: Number = 298):
         """
         set_current_state
             set the current State of the system.
@@ -377,7 +378,7 @@ class system(_baseClass):
 
         """
         if (withdraw_Traj):
-            self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+            self.clear_trajectory()
 
         if (init_position):
             self._init_position(initial_position=set_initial_position)
@@ -730,6 +731,14 @@ class system(_baseClass):
         """
         self._currentState = self.trajectory.iloc[-2]
         self._update_current_vars_from_current_state()
+
+    def clear_trajectory(self):
+        """
+        deletes all entries of trajectory and adds current state as first timestep to the trajectory
+        :return: None
+        """
+        self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
 
     def write_trajectory(self, out_path: str) -> str:
         """

@@ -45,10 +45,7 @@ class perturbedSystem(system):
                               "It cannot be lower than 0 or larger than 1.")
         self._currentLambda = lam
         self.potential.set_lambda(lam=self._currentLambda)
-        self._update_energies()
-
-    def set_lambda(self, lam: float):
-        self.lam = lam
+        self.update_current_state()
 
     """
     Magic
@@ -76,18 +73,18 @@ class perturbedSystem(system):
         lam: Number, optional
             the value of the copuling lambda
         """
-
-        self._currentLambda = lam
-
         super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
                          start_position=start_position)
-        self.set_lambda(lam)
+
+        self.lam = lam
+        self.update_current_state()
 
     """
     Overwrite Functions to adapt to EDS
     """
 
-    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
+    def set_current_state(self,
+                          current_position: Union[Number, Iterable[Number]],
                           current_velocities: Union[Number, Iterable[Number]] = 0,
                           current_force: Union[Number, Iterable[Number]] = 0,
                           current_temperature: Union[Number, Iterable[Number]] = 298,

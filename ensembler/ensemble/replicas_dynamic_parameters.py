@@ -105,10 +105,7 @@ class conveyorBelt(_mutliReplicaApproach):
         self._temperature_exchange = system.temperature
 
         self.initialise()
-        self.update_all_lambda(self.capital_lambda)
 
-        self.exchange_information: pd.DataFrame = pd.DataFrame(
-            columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
         self.system_trajs: dict = {}
 
 
@@ -142,7 +139,20 @@ class conveyorBelt(_mutliReplicaApproach):
         ## * Conveyor belt specifics
         for i in self.replicas:
             self.replicas[i].lam = self.calculate_replica_lambda(self.capital_lambda, i)
-            self.replicas[i]._update_dHdLambda()
+            self.replicas[i].update_current_state()
+            # 10 equilibration steps
+            self.replicas[i].simulate(steps=10)
+            self.replicas[i].clear_trajectory()
+        self.exchange_information = pd.DataFrame(
+                                                   [{
+                                                       "Step": self._currentTrial,
+                                                       "capital_lambda": self.capital_lambda,
+                                                       "TotE": self.calculate_total_ensemble_energy(),
+                                                       "biasE": self.biasene,
+                                                       "doAccept": True
+                                                   }
+                                                       ]
+                                                )
 
 
     def simulate(self,
@@ -175,8 +185,8 @@ class conveyorBelt(_mutliReplicaApproach):
 
         self.__tmp_exchange_traj = []
         for _ in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
-            self.run()
             self.accept_move()
+            self.run()
 
         self.exchange_information = pd.concat([self.exchange_information, pd.DataFrame(self.__tmp_exchange_traj)],ignore_index=True)
 
@@ -209,7 +219,6 @@ class conveyorBelt(_mutliReplicaApproach):
         self.update_all_lambda(self.capital_lambda)
 
         newEne = self.calculate_total_ensemble_energy()
-        print(newEne)
         if self._default_metropolis_criterion(originalParams=oldEne, swappedParams=newEne):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
@@ -398,6 +407,8 @@ class conveyorBelt(_mutliReplicaApproach):
 
         """
         self.system_trajs = {}
+        for i in self.replicas:
+            self.replicas[i].clear_trajectory()
         self.exchange_information = pd.DataFrame(columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
 
     def set_simulation_n_steps_between_trials(self, n_steps: int) -> NoReturn:
