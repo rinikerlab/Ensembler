@@ -66,7 +66,10 @@ class conveyorBelt(_mutliReplicaApproach):
                          perturbed_system.perturbedSystem(
                              temperature=300.0,
                              lam=0.0,
-                             potential=pot.OneD.linearCoupledPotentials(),
+                             potential=pot.OneD.linearCoupledPotentials(
+                                 Va=pot.OneD.harmonicOscillatorPotential(k=1, x_shift=0),
+                                 Vb=pot.OneD.harmonicOscillatorPotential(k=2, x_shift=0)
+                             ),
                              sampler=stochastic.metropolisMonteCarloIntegrator()
                          ),
                  build: bool = False):
@@ -140,8 +143,6 @@ class conveyorBelt(_mutliReplicaApproach):
         for i in self.replicas:
             self.replicas[i].lam = self.calculate_replica_lambda(self.capital_lambda, i)
             self.replicas[i].update_current_state()
-            # 10 equilibration steps
-            self.replicas[i].simulate(steps=10)
             self.replicas[i].clear_trajectory()
         self.exchange_information = pd.DataFrame(
                                                    [{
