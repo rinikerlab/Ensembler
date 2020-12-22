@@ -26,7 +26,7 @@ class conveyorBelt(_mutliReplicaApproach):
     coordinate_dimensions: int = 1
     replica_graph_dimensions: int = 1
     exchange_dimensions: Dict[str, np.array]
-    n_steps_between_trials: int = 1
+    nSteps_between_trials: int = 1
 
     exchange_information: pd.DataFrame = pd.DataFrame(columns=["Step", "capital_lambda", "TotE", "biasE", "doAccept"])
     system_trajs: dict = {}
@@ -147,7 +147,7 @@ class conveyorBelt(_mutliReplicaApproach):
 
     def simulate(self,
                  ntrials: int,
-                 n_steps_between_trials: int = 1,
+                 nSteps_between_trials: int = 1,
                  reset_ensemble: bool = False,
                  verbosity: bool = True):
         """
@@ -157,7 +157,7 @@ class conveyorBelt(_mutliReplicaApproach):
         ----------
         ntrials:int
             Number of conveyor belt steps
-        n_steps_between_trials: int, optional
+        nSteps_between_trials: int, optional
             number of integration steps of replicas between a move of the conveyor belt  (Default: None)
         reset_ensemble: bool, optional
             reset ensemble for starting the simulation? (Default: False)
@@ -170,8 +170,8 @@ class conveyorBelt(_mutliReplicaApproach):
 
         """
 
-        if (isinstance(n_steps_between_trials, int)):
-            self.set_simulation_n_steps_between_trials(n_steps=n_steps_between_trials)
+        if (isinstance(nSteps_between_trials, int)):
+            self.set_simulation_n_steps_between_trials(n_steps=nSteps_between_trials)
 
         self.__tmp_exchange_traj = []
         for _ in tqdm(range(ntrials), desc="Trials: ", mininterval=1.0, leave=verbosity):
@@ -184,12 +184,12 @@ class conveyorBelt(_mutliReplicaApproach):
 
     def run(self, verbosity: bool = False) -> NoReturn:
         """
-                Integrates the systems of the ensemble for the :var:n_steps_between_trials.
+                Integrates the systems of the ensemble for the :var:nSteps_between_trials.
         """
 
         self._currentTrial += 1
         for replica_coords, replica in self.replicas.items():
-            replica.simulate(steps=self.n_steps_between_trials, verbosity=verbosity)
+            replica.simulate(steps=self.nSteps_between_trials, verbosity=verbosity)
 
     def accept_move(self) -> NoReturn:
         """
@@ -409,9 +409,9 @@ class conveyorBelt(_mutliReplicaApproach):
         n_steps:int
             number of steps
         """
-        self.n_steps_between_trials = n_steps
+        self.nSteps_between_trials = n_steps
         for coord, replica in self.replicas.items():
-            replica.nsteps = self.n_steps_between_trials
+            replica.nsteps = self.nSteps_between_trials
 
 
     @staticmethod
