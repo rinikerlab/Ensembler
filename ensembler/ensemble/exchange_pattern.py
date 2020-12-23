@@ -112,7 +112,8 @@ class Exchange_pattern:
                  "TotEJ": swapped_totPots[I],
                  "doExchange": exchange}, ignore_index=True)
 
-        if (self.exchange_offset == 0):
+        round_reps =len(self.replica_graph.replicas)%2==0
+        if ((self.exchange_offset == 0 and not round_reps) or (self.exchange_offset == 1 and round_reps)):
             exchange = False
             IJ = original_exchange_coordinates[-1]
             replicaIJ = self.replica_graph.replicas[IJ]
