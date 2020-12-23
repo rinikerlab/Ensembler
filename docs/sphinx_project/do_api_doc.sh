@@ -4,6 +4,7 @@ make clean;
 #make doku
 ##configurations
 sphinx-apidoc -o _source ../../ensembler
+cp ../../EnsemblerLogo_with_whiteBackground.png .
 
 cp ../../examples/Tutorial*ipynb ./Tutorials
 cp ../../examples/Example*ipynb ./Examples
