@@ -183,7 +183,7 @@
     text-align: unset;
 }
 </style>
-<a class="reference external image-reference" href="EnsemblerLogo_with_whiteBackround.png"><img alt="Here a logo should be!" src="EnsemblerLogo_with_whiteBackround.png" /></a>
+<a class="reference external image-reference" href=".img/EnsemblerLogo_with_whiteBackround.png"><img alt="Here a logo should be!" src=".img/EnsemblerLogo_with_whiteBackround.png" /></a>
 <div class="section" id="welcome-to-ensembler">
 <h1>Welcome to Ensembler<a class="headerlink" href="#welcome-to-ensembler" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://github.com/rinikerlab/ensembler/actions?query=branch%3Amaster+workflow%3ACI"><img alt="GitHub Actions Build Status" src="https://github.com/rinikerlab/ensembler/workflows/CI/badge.svg" /></a>
@@ -193,90 +193,88 @@
 <a class="reference external image-reference" href="https://rinikerlab.github.io/Ensembler/index.html"><img alt="Documentation" src="https://img.shields.io/badge/Documentation-here-white.svg" /></a>
 <div class="section" id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
-<p>Ensembler is a python package that allows fast and easy access to simulation of one and two-dimensional model systems.
+<p>Ensembler is a python package that allows fast and easy access to one and two-dimensional model systems simulations.
 It enables method development using small test systems and to deepen the understanding of a broad spectrum of molecular dynamics (MD) methods, starting from basic techniques to enhanced sampling and free energy calculations.
-The ease of installing and using the package increases shareability, comparability, and reproducibility of scientific code developments.
-Here, we provide insights into the package’s implementation, its usage, and an application example for free energy calculation.</p>
+It is easy to install, fast, increases shareability, comparability, and reproducibility of scientific code developments.
+Here, we provide insights into the package’s implementation, usage, and an application example for free energy calculation.</p>
 </div>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
-<p>The full Documentation can be found here:  <a class="reference external" href="https://rinikerlab.github.io/Ensembler/">https://rinikerlab.github.io/Ensembler/</a></p>
-<div class="section" id="potential-functions">
-<h3>Potential functions<a class="headerlink" href="#potential-functions" title="Permalink to this headline">¶</a></h3>
+<p>The full documentation can be found here:  <a class="reference external" href="https://rinikerlab.github.io/Ensembler/">https://rinikerlab.github.io/Ensembler/</a></p>
+<div class="section" id="potentials-potential-energy-functions">
+<h3>potentials - Potential Energy Functions<a class="headerlink" href="#potentials-potential-energy-functions" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>Implement mathematical functions of interest for modelling purposes for esxample in chemistry.
-Implementation of new potentials is very easy, as there are only few functions that need to be overwritten.
-Implemented Potentials: Harmonic Oscillator, Wave function, etc..
-Also different dimensionalities can be used like 1D, 2D, and ND.</p>
-<p>You can try the code in your Browser here (or check out down below the Tutorial&amp;Example section):</p>
+<div><p>Implement mathematical functions of interest for modeling purposes, for example, in chemistry.
+Implementation of new potential energy functions is straightforward, as there are only a few functions that need to be overwritten.
+Implemented Potentials: Harmonic Oscillator, Wave functions, etc.
+Also, different dimensionalities can be used, like 1D, 2D, and ND.</p>
 </div></blockquote>
 </div>
-<div class="section" id="samplers">
-<h3>Samplers<a class="headerlink" href="#samplers" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="samplers-sampling-methods">
+<h3>samplers - Sampling Methods<a class="headerlink" href="#samplers-sampling-methods" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>This module provides integrators for integrating potential functions. E.g. Monte Carlo, Velocity Verlet,…</p>
+<div><p>This module provides integrators for integrating potential functions. E.g., Monte Carlo, Velocity Verlet.</p>
 </div></blockquote>
 </div>
-<div class="section" id="systems">
-<h3>Systems<a class="headerlink" href="#systems" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="systems-used-for-simulations">
+<h3>systems - Used for  Simulations<a class="headerlink" href="#systems-used-for-simulations" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>This module is used to setup a simulation. It gets a potential, integrator and other parameters.</p>
+<div><p>This module is used to set up a simulation with a system class that contains a potential energy function and a sampling method, plus optional other parameters.</p>
 </div></blockquote>
 </div>
-<div class="section" id="ensembles">
-<h3>Ensembles<a class="headerlink" href="#ensembles" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="ensemble-multi-replica-approaches">
+<h3>ensemble - Multi Replica Approaches<a class="headerlink" href="#ensemble-multi-replica-approaches" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><p>This module contains the implementation of the ConveyorBelt and will contain in future additional Replica Exchange approaches.</p>
 </div></blockquote>
 </div>
 <div class="section" id="visualization">
-<h3>Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h3>
+<h3>visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>This module contains predefined visualization a and animation functions.</p>
+<div><p>This module contains predefined visualization, animation and widget functions.</p>
 </div></blockquote>
 </div>
 <div class="section" id="analysis">
-<h3>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<h3>analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><p>This module contains at the moment only Free Energy Calculations.</p>
+<div><p>This module contains at the moment Free Energy Calculations.</p>
 </div></blockquote>
 </div>
-</div>
-<div class="section" id="how-to-install">
-<h2>How To Install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
-<p>Download the git and use the setup.py script of the repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
-<span class="n">pyton</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
-</pre></div>
-</div>
-<p>Instead of install one could add the path to the Ensembler repository, if you want to use the code and modify it.
-The requirements need then to be installed as well like in the following examples.</p>
-<blockquote>
-<div><p>PIP:</p>
-</div></blockquote>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
-cd /path/to/local/Ensembler/repo
-pip install -r devtools/pip_requirements/requirements_unix.txt
-
-
-Anaconda:
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span><span class="o">-</span><span class="n">develop</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
-<span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
-<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">ensembler</span> <span class="o">--</span><span class="n">file</span> <span class="n">devtools</span><span class="o">/</span><span class="n">conda</span><span class="o">-</span><span class="n">envs</span><span class="o">/</span><span class="n">environment_unix</span><span class="o">.</span><span class="n">yml</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">ensembler</span>
-</pre></div>
-</div>
-<p>For windows, we also provide the requirment files (requirements_unix.txt and environment_windows.yml).</p>
-<p>Keep in mind: IDE’s have their own awesome ways of doing this.</p>
 </div>
 <div class="section" id="tutorials-and-examples">
 <h2>Tutorials and Examples:<a class="headerlink" href="#tutorials-and-examples" title="Permalink to this headline">¶</a></h2>
+<p>You can try Ensembler online via the binder links below or on your machine with our provided jupyter notebooks showing use cases for Ensembler with visualizations.
+The Binder links might take some time to build the repo; depending on the traffic, it can take up to 10 minutes to be built.</p>
 <div class="section" id="tutorials">
 <h3>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h3>
-<p>Here we provide short introductions into how Potential functions can be used and sampled in simulations in Ensembler .
-You can try the tutorials with Binder directly from your browser (can take up to 10 minutes to be build)!</p>
+<dl class="simple">
+<dt>We provide short introductions into how potential energy functions can be used and sampled in simulations</dt><dd><p>in Ensembler with the jupyter notebooks in the example folder that can be also accessed by the binder links.</p>
+</dd>
+</dl>
+<p>Here is an small example of a simple simulation:</p>
+<p>CODE:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##Imports</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">fourWellPotential</span>
+<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">langevinIntegrator</span>
+<span class="kn">from</span> <span class="nn">ensembler.system</span> <span class="kn">import</span> <span class="n">system</span>
+<span class="kn">from</span> <span class="nn">ensembler.visualisation.plotSimulations</span> <span class="kn">import</span> <span class="n">oneD_simulation_analysis_plot</span>
+
+<span class="c1">##Simulation Setup</span>
+<span class="n">V</span> <span class="o">=</span> <span class="n">fourWellPotential</span><span class="p">(</span><span class="n">Vmax</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">9.0</span><span class="p">,</span>  <span class="n">ah</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">bh</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">ch</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">dh</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">langevinIntegrator</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">V</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">,</span> <span class="n">start_position</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">##Simulate</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1">##Visualize</span>
+<span class="n">positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="c1">#phase space to be visualized</span>
+<span class="n">oneD_simulation_analysis_plot</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Langevin Simulation&quot;</span><span class="p">,</span> <span class="n">limits_coordinate_space</span><span class="o">=</span><span class="n">positions</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>OUT:</p>
+<a class="reference external image-reference" href=".img/langevin_simulation.png"><img alt="Here a simulation plot should be!" src=".img/langevin_simulation.png" /></a>
+<p>In the following links you can find more features of Ensembler.</p>
 <p>Potentials:</p>
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Potentials.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
 <p>Simulations:</p>
@@ -284,7 +282,7 @@ You can try the tutorials with Binder directly from your browser (can take up to
 </div>
 <div class="section" id="examples">
 <h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
-<p>Examples are advanced jupyter notebooks, covering a certain topic, going deeper into the methodology (can take up to 10 minutes to be build).</p>
+<p>Examples are advanced jupyter notebooks, covering a specific topic, going deeper into the methodology and having nice visualizations.</p>
 <p>Enhanced Sampling:</p>
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EnhancedSampling.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
 <p>Free Energy Calculations:</p>
@@ -294,6 +292,55 @@ You can try the tutorials with Binder directly from your browser (can take up to
 <p>EDS-Potentials:</p>
 <a class="reference external image-reference" href="https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EDS.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a>
 </div>
+</div>
+<div class="section" id="how-to-install">
+<h2>How To Install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
+<p>There are many ways to get the Ensembler package.</p>
+<ul>
+<li><p>If you want to use Ensembler (don’t forget to download the examples):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ensembler</span><span class="o">-</span><span class="n">rinikerlab</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you want to use Ensembler, see the example notebooks or develop Ensembler:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">rinikerlab</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">Ensembler</span>
+<span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you want to use Ensembler, see the example notebooks or develop Ensembler - but not install the package:
+Add the path to the Ensembler repository; the requirements needed for the package can be used like in the following examples:</p>
+<ul>
+<li><p>PIP:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/rinikerlab/Ensembler.git
+cd Ensembler
+export PYTHONPATH=${PYTHONPATH}:${PWD}
+pip install -r devtools/pip_requirements/requirements_unix.txt
+</pre></div>
+</div>
+</li>
+<li><p>Anaconda:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">rinikerlab</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">Ensembler</span>
+<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">Ensembler</span> <span class="o">--</span><span class="n">file</span> <span class="n">devtools</span><span class="o">/</span><span class="n">conda</span><span class="o">-</span><span class="n">envs</span><span class="o">/</span><span class="n">environment_unix</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">Ensembler</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+<p>For windows, we also provide the required files in the same folders:</p>
+<ul class="simple">
+<li><p>devtools/pip_requirements/requirements_windows.txt</p></li>
+<li><p>devtools/conda-envs/environment_windows.yml).</p></li>
+</ul>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>If you would like to contribute to Ensembler, you are most welcome!
+Just raise an issue or write us a mail.</p>
 </div>
 <div class="section" id="authors">
 <h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
@@ -306,7 +353,7 @@ David F. Hahn</p>
 <p>Copyright (c) 2020, Benjamin Ries, Stephanie M. Linker, David F. Hahn</p>
 <div class="section" id="acknowledgements">
 <h3>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h3>
-<p>Project based on the
+<p>Project-based on the
 <a class="reference external" href="https://github.com/molssi/cookiecutter-cms">Computational Molecular Science Python Cookiecutter</a> version 1.3.</p>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
@@ -314,8 +361,9 @@ David F. Hahn</p>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Welcome to Ensembler</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#description">Description</a></li>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#contents">Contents</a></li>
-<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-install">How To Install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#tutorials-and-examples">Tutorials and Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#how-to-install">How To Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="introduction.html#contributing">Contributing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#authors">Authors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="introduction.html#copyright">Copyright</a></li>
 </ul>
@@ -332,7 +380,8 @@ David F. Hahn</p>
 <li class="toctree-l2"><a class="reference internal" href="Examples/Example_FreeEnergyCalculationSimulation.html">Free Energy Calculations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="_source/modules.html">Documentation</a><ul class="simple">
+<li class="toctree-l1"><a class="reference internal" href="_source/modules.html">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="_source/ensembler.html">ensembler package</a></li>
 </ul>
 </li>
 </ul>

@@ -23,14 +23,14 @@ import sys
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'ensembler'
+NAME = 'ensembler-rinikerlab'
 DESCRIPTION = 'This Package shall be a tool for fast and efficient development of theoretic thermodynamic simulation tools or teaching.'
 URL = 'https://github.com/rinikerlab/Ensembler'
 DOWNLOAD_URL = "https://github.com/rinikerlab/Ensembler/archive/1.0.tar.gz"
 EMAIL = 'bschroed@ethz.ch'
 AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = 1.0
+VERSION = None #"1.0.0"
 KEYWORDS = ["teaching", "method development", "statistical mechanics", "statistical thermodynamics", "physics", "chemistry",
             "free energy calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor Belt - TI", "numerical integration", "science"]
 
@@ -45,16 +45,15 @@ REQUIRED = ['typing', #Code: used for type declarations
             'jupyter', # Tutorial/Examples: basics
             'ipywidgets',# Tutorial/Examples: Interactive widgets
             'tqdm',# Tutorial/Examples: nice progressbar
-            'sphinx', #Documentation: autodocu tool
-            'sphinx_rtd_theme', #Documentation: style
-            'nbsphinx', #Documentation: for inclusion of jupyter notebooks
-            'm2r', #Documentation: converts markdown to rst
             'ffmpeg' #Visualizations: for animations in general
             ]
 
 # What packages are optional?
 EXTRAS = {
-    # 'fancy feature': ['django'],
+           'sphinx', #Documentation: autodocu tool
+           'sphinx_rtd_theme', #Documentation: style
+           'nbsphinx', #Documentation: for inclusion of jupyter notebooks
+           'm2r', #Documentation: converts markdown to rst
 }
 
 # The rest you shouldn't have to touch too much :)
@@ -67,7 +66,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 # Import the README.md and use it as the long-description.
 # Note: this will only work if 'README.md.md' is present in your MANIFEST.in file!
 try:
-    with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    #with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    with io.open(os.path.join(here, 'docs/sphinx_project/introduction.rst'), encoding='utf-8') as f:
+
         long_description = '\n' + f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
@@ -75,11 +76,11 @@ except FileNotFoundError:
 # Load the package's __version__.py module as a dictionary.
 about = {}
 if not VERSION:
-    with open(os.path.join(here, NAME, '__version__.py')) as f:
+    with open(os.path.join(here, "ensembler", '__version__.py')) as f:
         exec(f.read(), about)
 else:
     about['__version__'] = VERSION
-
+VERSION = about['__version__']
 
 class UploadCommand(Command):
     """Support setup.py upload."""
@@ -113,7 +114,7 @@ class UploadCommand(Command):
         os.system('twine upload dist/*')
 
         self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git tag v{0}'.format(VERSION))
         os.system('git push --tags')
 
         sys.exit()
@@ -128,8 +129,8 @@ setup(
     description=short_description[0],
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version=versioneer.get_version(),
-    cmdclass=versioneer.get_cmdclass(),
+    version=VERSION, #versioneer.get_version(),
+    #cmdclass=versioneer.get_cmdclass(),
     license='MIT',
     keywords=KEYWORDS,
     # Which Python importable modules should be included when your package is installed
@@ -143,7 +144,7 @@ setup(
     include_package_data=True,
 
     # Allows `setup.py test` to work correctly with pytest
-    setup_requires=REQUIRED + pytest_runner,
+    setup_requires=REQUIRED,
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     url=URL,  # Website
@@ -154,7 +155,6 @@ setup(
                 'Unix',
                 'Windows'],            # Valid platforms your code works on, adjust to your flavor
     python_requires=">=3.5",          # Python version restrictions
-
     # Manual control if final package is compressible or not, set False to prevent the .egg from being made
     # zip_safe=False,
 )

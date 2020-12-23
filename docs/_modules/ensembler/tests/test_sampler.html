@@ -194,8 +194,8 @@
         <span class="n">integrator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span><span class="p">)</span>
         <span class="k">del</span> <span class="n">integrator</span>
 
-        <span class="n">integrator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrator_class</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">integrator</span><span class="p">)</span></div></div>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrator_class</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span><span class="p">)</span></div></div>
+        <span class="c1">#print(integrator)</span>
 
 
 <div class="viewcode-block" id="test_MonteCarlo_Integrator"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_sampler.test_MonteCarlo_Integrator">[docs]</a><span class="k">class</span> <span class="nc">test_MonteCarlo_Integrator</span><span class="p">(</span><span class="n">standard_IntegratorTests</span><span class="p">):</span>
@@ -314,7 +314,7 @@
         <span class="n">integrator</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
         <span class="n">new_pos</span><span class="p">,</span> <span class="n">new_Force</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentForce</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
+        <span class="c1">#print(sys.trajectory)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">trajectory</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The simulation did not run or was too short!&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">old_pos</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Nothing happened here!&quot;</span><span class="p">)</span>

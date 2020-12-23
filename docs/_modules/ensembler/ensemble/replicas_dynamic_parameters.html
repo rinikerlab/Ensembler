@@ -205,10 +205,7 @@
 
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">outstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:&lt;5s}{:&lt;10s}{:&lt;10s}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span>
-                                               <span class="s2">&quot;lambda_i&quot;</span><span class="p">,</span>
-                                               <span class="s2">&quot;E_i&quot;</span>
-                                               <span class="p">)</span>
+        <span class="n">outstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:&lt;5s}{:&lt;10s}{:&lt;10s}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="s2">&quot;lambda_i&quot;</span><span class="p">,</span> <span class="s2">&quot;E_i&quot;</span> <span class="p">)</span>
         <span class="n">outstr</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">25</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
             <span class="n">outstr</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:5d}{:10.2f}{:10.3f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lam</span><span class="p">,</span>

@@ -22,9 +22,7 @@ from ensembler.visualisation.plotSimulations import oneD_simulation_analysis_plo
 
 ##Simulation Setup
 V = fourWellPotential(Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0,  ah=2., bh=0., ch=0.5, dh=1.)
-
 sampler = langevinIntegrator(dt=0.1, gamma=10)
-
 sys = system(potential=V, sampler=sampler, start_position=4, temperature=1)
 
 ##Simulate
