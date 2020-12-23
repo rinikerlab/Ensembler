@@ -15,8 +15,12 @@ class standard_IntegratorTests(unittest.TestCase):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        test_dir = os.getcwd()+"/tests_out"
+        if(not os.path.exists(test_dir)):
+            os.mkdir(test_dir)
+
         if(__class__.tmp_test_dir is None):
-            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_sampler")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.integrator_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
     def test_constructor(self):
@@ -150,6 +154,8 @@ class test_LangevinVelocity_Integrator(standard_IntegratorTests):
         old_pos, oldForce = sys._currentPosition, sys._currentForce
         integrator.integrate(system=sys, steps=steps)
         new_pos, new_Force = sys._currentPosition, sys._currentForce
+
+        print(sys.trajectory)
 
         self.assertEqual(steps + 1, len(sys.trajectory), msg="The simulation did not run or was too short!")
         self.assertNotEqual(old_pos, new_pos, msg="Nothing happened here!")

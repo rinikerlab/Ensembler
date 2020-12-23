@@ -61,7 +61,7 @@ class stochasticSampler(_samplerCls):
         else:
             shift = self.step_size_coefficient * np.array(np.abs(np.random.rand(nDimensions)), ndmin=1)
 
-        # Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
+        # Is the step shift in the allowed area?
         if (self.minStepSize != None and any([s < self.minStepSize for s in shift])):
             self.posShift = np.multiply(sign, np.array([s if (s > self.minStepSize) else self.minStepSize for s in shift]))
         else:

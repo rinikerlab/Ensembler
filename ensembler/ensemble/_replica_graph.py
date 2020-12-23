@@ -340,6 +340,10 @@ class _mutliReplicaApproach(_baseClass):
         """
         ## deepcopy all
         self._nReplicas = len(list(coordinates))
+
+        #for x in range(self.nReplicas):
+        #    print("COPY!", x)
+        #    copy.deepcopy(self.system)
         replicas = [copy.deepcopy(self.system) for x in range(self.nReplicas)]  # generate deepcopies
 
         # build up graph - set parameters
@@ -399,7 +403,8 @@ class _replicaExchange(_mutliReplicaApproach):
         -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
                 originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
 
-    def __init__(self, system: systemCls, exchange_dimensions: Dict[str, Iterable], exchange_criterium=_default_metropolis_criterion,
+    def __init__(self, system: systemCls, exchange_dimensions: Dict[str, Iterable],
+                 exchange_criterium=_default_metropolis_criterion,
                  steps_between_trials: int = 10):
         """
             __init__

@@ -121,3 +121,9 @@ ensembler/tests/tmp_test_*
 #jupyter_nB
 **/.ipynb_checkpoints
 /.pypirc.py
+
+#tmp doc files
+/docs/sphinx_project/Examples/*ipynb
+/docs/sphinx_project/Tutorials/*ipynb
+/docs/sphinx_project/_source/*.rst
+/ensembler/tests/tests_out/

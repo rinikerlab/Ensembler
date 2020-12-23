@@ -226,4 +226,4 @@ class edsSystem(system):
         self.update_system_properties()
         self.update_current_state()
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state)

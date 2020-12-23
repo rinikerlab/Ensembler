@@ -24,29 +24,31 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
     """
     # if none given build cvb
     if (isinstance(conveyorBelt, type(None))):
-        import ensembler.ensemble.replicas_dynamic_parameters as cvb
-        conveyorBelt = cvb.conveyorBelt(capital_lambda=0.0, n_replicas=numsys)
-        conveyorBelt.simulate(steps)
+        lam = np.linspace(0, 1, nbins)
+        ene = lam * np.sin(lam*np.pi) + lam**2
+    else:
 
-    (cvb_traj, systrajs) = conveyorBelt.get_trajs()
+        (cvb_traj, systrajs) = conveyorBelt.get_trajs()
 
-    if (len(cvb_traj) == 0):
-        raise IOError("Could not find any conveyor belt simulation in conveyorbelt traj. Please simulate first.")
+        if (len(cvb_traj) == 0):
+            raise IOError("Could not find any conveyor belt simulation in conveyorbelt traj. Please simulate first.")
 
-    bins = np.zeros(nbins)
-    dhdlbins = np.zeros(nbins)
-    for i in systrajs:
-        for j in range(systrajs[i].shape[0]):
-            index = int(np.floor(systrajs[i].lam[j] / nbins))
-            if index == nbins:
-                index = nbins - 1
-            bins[index] += 1
-            dhdlbins[index] += systrajs[i].dhdlam[j]
-    dhdlbins /= bins
-    ene = np.cumsum(dhdlbins) / nbins
+        bins = np.zeros(nbins)
+        dhdlbins = np.zeros(nbins)
+        for i in systrajs:
+            for j in range(systrajs[i].shape[0]):
+                index = int(np.floor(systrajs[i].lam[j] / nbins))
+                if index == nbins:
+                    index=nbins-1
+                bins[index]+=1
+                dhdlbins[index]+=systrajs[i].dhdlam[j]
+        for i, b in enumerate(bins):
+            if b > 0:
+                dhdlbins[i]/=b
+        ene = np.cumsum(dhdlbins)/nbins
 
-    lam = np.linspace(0, 1, nbins)
-    conveyorBelt.nReplicas
+        lam = np.linspace(0, 1, nbins)
+
 
     def redraw(CapLam, M):
         plotEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)

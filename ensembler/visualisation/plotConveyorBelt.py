@@ -54,20 +54,23 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     [path_effects.SimpleLineShadow(), path_effects.Normal()]
     fig = plt.figure(figsize=(pSize * goldRat, pSize))
     ax = fig.gca()
-    fig.subplots_adjust(left=0.1, right=1.0 - 0.1, bottom=0.24, top=0.99)
-    rx = 0.05
-    ry = rx
-    shifty = 0.75 / goldRat
-    cvb_bot = np.zeros((90, 2))
-    cvb_bot[:, 0] = np.linspace(calc_lam(CapLam, 1, numsys=2), 1.0 - rx, 90)
-    cvb_bot[:, 1] = np.ones(90) * shifty
-    cvb_top = np.zeros((90, 2))
-    cvb_top[:, 0] = np.linspace(calc_lam(CapLam, 0, numsys=2), 1.0 - rx, 90)
-    cvb_top[:, 1] = np.ones(90) * (shifty + 2.0 * ry)
-    lamVals = x - x.min()
-    lamVals /= lamVals.max()
-    gVals = y - y.min()
-    gVals /= (2.0 * gVals.max() * goldRat)
+    fig.subplots_adjust(left=0.1, right=1.0-0.1, bottom=0.24, top=0.99)
+    rx=0.05
+    ry=rx
+    shifty=0.75/goldRat
+    cvb_bot=np.zeros((90,2))
+    cvb_bot[:,0]=np.linspace(calc_lam(CapLam, 1, numsys=2), 1.0-rx, 90)
+    cvb_bot[:,1]=np.ones(90)*shifty
+    cvb_top=np.zeros((90,2))
+    cvb_top[:,0]=np.linspace(calc_lam(CapLam, 0, numsys=2), 1.0-rx, 90)
+    cvb_top[:,1]=np.ones(90)*(shifty+2.0*ry)
+    lamVals=x-x.min()
+    lamVals/=lamVals.max()
+    gVals=y-y.min()
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     l = CapLam
@@ -161,7 +164,6 @@ def drawFunicular(x, y, CapLam=0.1, M=2, drawArrows=False):
     ax.yaxis.set_ticks_position('left')
     ax.set_yticks([])
     ax.spines['left'].set_color('None')
-    ax.spines['bottom'].set_smart_bounds(True)
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
 
@@ -180,20 +182,23 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     [path_effects.SimpleLineShadow(), path_effects.Normal()]
     fig = plt.figure(figsize=(pSize * goldRat, pSize))
     ax = fig.gca()
-    fig.subplots_adjust(left=0.1, right=1.0 - 0.1, bottom=0.25, top=0.964)
-    rx = 0.05
-    ry = rx
-    shifty = 0.75 / goldRat
-    cvb_bot = np.zeros((90, 2))
-    cvb_bot[:, 0] = np.linspace(rx, 1.0 - rx, 90)
-    cvb_bot[:, 1] = np.ones(90) * shifty
-    cvb_top = np.zeros((90, 2))
-    cvb_top[:, 0] = np.linspace(rx, 1.0 - rx, 90)
-    cvb_top[:, 1] = np.ones(90) * (shifty + 2.0 * ry)
-    lamVals = x - x.min()
-    lamVals /= lamVals.max()
-    gVals = y - y.min()
-    gVals /= (2.0 * gVals.max() * goldRat)
+    fig.subplots_adjust(left=0.1, right=1.0-0.1, bottom=0.25, top=0.964)
+    rx=0.05
+    ry=rx
+    shifty=0.75/goldRat
+    cvb_bot=np.zeros((90,2))
+    cvb_bot[:,0]=np.linspace(rx, 1.0-rx, 90)
+    cvb_bot[:,1]=np.ones(90)*shifty
+    cvb_top=np.zeros((90,2))
+    cvb_top[:,0]=np.linspace(rx, 1.0-rx, 90)
+    cvb_top[:,1]=np.ones(90)*(shifty+2.0*ry)
+    lamVals=x-x.min()
+    lamVals/=lamVals.max()
+    gVals=y-y.min()
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     l = CapLam
@@ -311,7 +316,6 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
     ax.yaxis.set_ticks_position('left')
     ax.set_yticks([])
     ax.spines['left'].set_color('None')
-    ax.spines['bottom'].set_smart_bounds(True)
     ax.spines['right'].set_color('None')
     ax.spines['top'].set_color('None')
     ax.set_title("Conveyor Belt over simulated Free Energy Landscape")
@@ -330,19 +334,22 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
     lineWidth = 1
     [path_effects.SimpleLineShadow(), path_effects.Normal()]
 
-    rx = 0.05
-    ry = rx
-    shifty = 0.75 / goldRat
-    cvb_bot = np.zeros((90, 2))
-    cvb_bot[:, 0] = np.linspace(rx, 1.0 - rx, 90)
-    cvb_bot[:, 1] = np.ones(90) * shifty
-    cvb_top = np.zeros((90, 2))
-    cvb_top[:, 0] = np.linspace(rx, 1.0 - rx, 90)
-    cvb_top[:, 1] = np.ones(90) * (shifty + 2.0 * ry)
-    lamVals = x - x.min()
-    lamVals /= lamVals.max()
-    gVals = y - y.min()
-    gVals /= (2.0 * gVals.max() * goldRat)
+    rx=0.05
+    ry=rx
+    shifty=0.75/goldRat
+    cvb_bot=np.zeros((90,2))
+    cvb_bot[:,0]=np.linspace(rx, 1.0-rx, 90)
+    cvb_bot[:,1]=np.ones(90)*shifty
+    cvb_top=np.zeros((90,2))
+    cvb_top[:,0]=np.linspace(rx, 1.0-rx, 90)
+    cvb_top[:,1]=np.ones(90)*(shifty+2.0*ry)
+    lamVals=x-x.min()
+    lamVals/=lamVals.max()
+    gVals=y-y.min()
+    if gVals.max() != 0.0:
+        gVals/=(2.0*gVals.max()*goldRat)
+    else:
+        gVals+=1/(2.0*goldRat)
     ax.plot(lamVals[2:], gVals[2:], 'k', lw=lineWidth)
 
     rotation = []

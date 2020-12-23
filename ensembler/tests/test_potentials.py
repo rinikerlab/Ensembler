@@ -17,8 +17,12 @@ class test_potentialCls(unittest.TestCase):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        test_dir = os.getcwd()+"/tests_out"
+        if(not os.path.exists(test_dir)):
+            os.mkdir(test_dir)
+
         if(__class__.tmp_test_dir is None):
-            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_potentials")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.potential_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
     def test_constructor(self):

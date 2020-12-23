@@ -157,7 +157,6 @@ class localExchangeScheme(Exchange_pattern):
                                       original_exchange_coordinates[1 + self.exchange_offset::2]):
             originalEnergies = np.add(original_totPots.get(partner1), original_totPots.get(partner2))
             swapEnergies = np.add(swapped_totPots.get(partner1), swapped_totPots.get(partner2))
-
             exchanges_to_make.update(
                 {(partner1, partner2): self.replica_graph.exchange_criterium(originalEnergies, swapEnergies)})
 

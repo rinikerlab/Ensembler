@@ -14,8 +14,12 @@ class test_System(unittest.TestCase):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        test_dir = os.getcwd()+"/tests_out"
+        if(not os.path.exists(test_dir)):
+            os.mkdir(test_dir)
+
         if(__class__.tmp_test_dir is None):
-            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_system")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
         self.sampler = samplers.stochastic.metropolisMonteCarloIntegrator()
@@ -412,8 +416,12 @@ class test_perturbedSystem1D(test_System):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        test_dir = os.getcwd()+"/tests_out"
+        if(not os.path.exists(test_dir)):
+            os.mkdir(test_dir)
+
         if (__class__.tmp_test_dir is None):
-            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_perturbedSystem")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
                                                 dir=__class__.tmp_test_dir)
 
@@ -813,7 +821,7 @@ class test_perturbedSystem1D(test_System):
 
         sys = self.system_class(potential=self.pot, sampler=self.sampler, start_position=position,
                                                       temperature=temperature, lam=lam)
-        self.assertEqual(50.0, sys.total_potential_energy, msg="Could not get the correct Pot Energy!")
+        self.assertEqual(0.0, sys.total_potential_energy, msg="Could not get the correct Pot Energy!")
 
 
 class test_edsSystem1D(test_System):
@@ -821,8 +829,12 @@ class test_edsSystem1D(test_System):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
+        test_dir = os.getcwd()+"/tests_out"
+        if(not os.path.exists(test_dir)):
+            os.mkdir(test_dir)
+
         if (__class__.tmp_test_dir is None):
-            __class__.tmp_test_dir = tempfile.mkdtemp(dir=os.getcwd(), prefix="tmp_test_potentials")
+            __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_eds_system")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.system_class.name, suffix=".obj",
                                                 dir=__class__.tmp_test_dir)
 
@@ -974,8 +986,11 @@ class test_edsSystem1D(test_System):
         expected_state = sys.current_state
         sys.append_state(new_position=newPosition2, new_velocity=newVelocity2, new_forces=newForces2, new_s=newS2, new_eoff=newEoff2)
         not_expected_state = sys.current_state
+        print(len(sys._trajectory), sys._trajectory)
         sys.revert_step()
         curState = sys.current_state
+        print(curState)
+        print(not_expected_state)
 
         # check current state intialisation
         self.assertEqual(curState.position, expected_state.position,
