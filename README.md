@@ -113,13 +113,13 @@ EDS-Potentials:
 
 ## Authors
 
-Benjamin J. Ries;
+Benjamin Ries;
 Stephanie M. Linker;
 David F. Hahn
 
 ## Copyright
 
-Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn
+Copyright (c) 2020, Benjamin Ries, Stephanie M. Linker, David F. Hahn
 
 
 ### Acknowledgements
