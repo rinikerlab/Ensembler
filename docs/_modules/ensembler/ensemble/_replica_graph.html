@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -498,6 +499,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">## deepcopy all</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nReplicas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">coordinates</span><span class="p">))</span>
+
+        <span class="c1">#for x in range(self.nReplicas):</span>
+        <span class="c1">#    print(&quot;COPY!&quot;, x)</span>
+        <span class="c1">#    copy.deepcopy(self.system)</span>
         <span class="n">replicas</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nReplicas</span><span class="p">)]</span>  <span class="c1"># generate deepcopies</span>
 
         <span class="c1"># build up graph - set parameters</span>
@@ -557,7 +562,8 @@
         <span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">const</span><span class="o">.</span><span class="n">gas_constant</span> <span class="o">/</span> <span class="mf">1000.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temperature_exchange</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="n">originalParams</span> <span class="o">-</span> <span class="n">swappedParams</span> <span class="o">+</span> <span class="mf">0.0000001</span><span class="p">)))</span>  <span class="c1"># pseudo count, if params are equal</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">],</span> <span class="n">exchange_criterium</span><span class="o">=</span><span class="n">_default_metropolis_criterion</span><span class="p">,</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">],</span>
+                 <span class="n">exchange_criterium</span><span class="o">=</span><span class="n">_default_metropolis_criterion</span><span class="p">,</span>
                  <span class="n">steps_between_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            __init__</span>

@@ -20,9 +20,9 @@ from ensembler.util.ensemblerTypes import samplerCls, conditionCls, potentialCls
 from ensembler.util import dataStructure as data
 
 from ensembler.samplers.newtonian import newtonianSampler
-from ensembler.samplers.stochastic import langevinIntegrator
+from ensembler.samplers.stochastic import langevinIntegrator, metropolisMonteCarloIntegrator
 
-from ensembler.potentials.OneD import metadynamicsPotential as metadynamicsPotential1D
+from ensembler.potentials.OneD import metadynamicsPotential as metadynamicsPotential1D, harmonicOscillatorPotential
 from ensembler.potentials.TwoD import metadynamicsPotential as metadynamicsPotential2D
 
 
@@ -143,7 +143,8 @@ class system(_baseClass):
 
     def set_current_state(self, current_position: Union[Number, Iterable[Number]],
                           current_velocities: Union[Number, Iterable[Number]] = 0,
-                          current_force: Union[Number, Iterable[Number]] = 0, current_temperature: Number = 298):
+                          current_force: Union[Number, Iterable[Number]] = 0,
+                          current_temperature: Number = 298):
         """
         set_current_state
             set the current State of the system.
@@ -172,7 +173,7 @@ class system(_baseClass):
 
     @property
     def trajectory(self) -> pd.DataFrame:
-        return self._trajectory
+        return pd.DataFrame(list(map(lambda x: x._asdict(), self._trajectory)), columns=list(self.state.__dict__["_fields"]))
 
     @property
     def position(self) -> Union[Number, Iterable[Number]]:
@@ -251,7 +252,7 @@ class system(_baseClass):
 
 
 
-    def __init__(self, potential: potentialCls, sampler: samplerCls, conditions: Iterable[conditionCls] = None,
+    def __init__(self, potential: potentialCls=harmonicOscillatorPotential(), sampler: samplerCls=metropolisMonteCarloIntegrator(), conditions: Iterable[conditionCls] = None,
                  temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
                  verbose: bool = True) -> NoReturn:
         """
@@ -287,7 +288,7 @@ class system(_baseClass):
 
         # Output
         self._currentState = self.state(**{key: np.nan for key in self.state.__dict__["_fields"]})
-        self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+        self._trajectory =[]
 
         # tmpvars - private:
         self._currentTotE: (Number) = np.nan
@@ -377,7 +378,7 @@ class system(_baseClass):
 
         """
         if (withdraw_Traj):
-            self._trajectory = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
+            self.clear_trajectory()
 
         if (init_position):
             self._init_position(initial_position=set_initial_position)
@@ -398,7 +399,8 @@ class system(_baseClass):
         self.step = 0
         self.update_system_properties()
         self.update_current_state()
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+
+        self._trajectory.append(self.current_state)
 
     def _init_position(self, initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
         """
@@ -626,8 +628,8 @@ class system(_baseClass):
             self._init_velocities()
 
         if (withdraw_traj):
-            self._trajectory: pd.DataFrame = pd.DataFrame(columns=list(self.state.__dict__["_fields"]))
-            self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+            self._trajectory = []
+            self._trajectory.append(self.current_state)
 
         self.update_current_state()
         self.update_system_properties()
@@ -640,7 +642,6 @@ class system(_baseClass):
             iteration_queue = range(steps)
 
         # Simulation loop
-        tmp_traj = []
         for self.step in iteration_queue:
 
             # Do one simulation Step.
@@ -656,12 +657,10 @@ class system(_baseClass):
             self.update_current_state()
 
             if (self.step % save_every_state == 0 and self.step != steps - 1):
-                tmp_traj.append(self.current_state._asdict())
+                self._trajectory.append(self.current_state)
 
-        tmp_traj.append(self.current_state._asdict())
-        self._trajectory = pd.concat([self._trajectory, pd.DataFrame(tmp_traj)],ignore_index=True)
-        del tmp_traj
 
+        self._trajectory.append(self.current_state)
         return self.current_state
 
     def propagate(self) -> (
@@ -717,7 +716,7 @@ class system(_baseClass):
         self._update_energies()
         self.update_current_state()
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state)
 
     def revert_step(self) -> NoReturn:
         """
@@ -728,8 +727,18 @@ class system(_baseClass):
         -------
         NoReturn
         """
-        self._currentState = self.trajectory.iloc[-2]
-        self._update_current_vars_from_current_state()
+        if(len(self._trajectory)>1):
+            self._trajectory.pop()
+            self._currentState = self._trajectory[-1]
+            self._update_current_vars_from_current_state()
+        else:
+            warnings.warn("Could not revert step, as only 1 step is in the trajectory!")
+    def clear_trajectory(self):
+        """
+        deletes all entries of trajectory and adds current state as first timestep to the trajectory
+        :return: None
+        """
+        self._trajectory = []
 
     def write_trajectory(self, out_path: str) -> str:
         """
@@ -752,5 +761,6 @@ class system(_baseClass):
         """
         if (not os.path.exists(os.path.dirname(os.path.abspath(out_path)))):
             raise Exception("Could not find output folder: " + os.path.dirname(out_path))
-        self.trajectory.to_csv(out_path, header=True)
+        traj = self.trajectory
+        traj.to_csv(out_path, header=True)
         return out_path

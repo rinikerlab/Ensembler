@@ -119,7 +119,6 @@ def oneD_simulation_analysis_plot(system: systemCls, title: str = "", out_path: 
         ax1.plot(x_pot, system.potential.origPotential.ene(x_pot), c="k", alpha=style.alpha_val, zorder=10, label="original Potential")
 
     if (not isinstance(limits_potential_system_energy, type(None))):
-        print(limits_potential_system_energy)
         ax1.set_ylim(limits_potential_system_energy)
 
     # plot position distribution
@@ -254,9 +253,6 @@ def oneD_biased_simulation_analysis_plot(system: systemCls, out_path: str = None
         ax1.scatter(x[last_frame], y[last_frame], c=style.traj_end, alpha=style.alpha_val)  # end_point
     else:
         ax1.scatter(x, y, c=style.trajectory_color, alpha=style.alpha_traj)
-        print(system)
-        print(system.potential.origPotential)
-        print(x_pot)
 
         oP = system.potential.origPotential
         oP._update_functions()

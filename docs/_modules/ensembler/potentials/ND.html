@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -655,6 +656,79 @@
         <span class="n">sum_prefactors</span> <span class="o">=</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">prefactors</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lam</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">sum_prefactors</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prefactors</span><span class="p">,</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">T</span></div>
+
+<div class="viewcode-block" id="sumPotentials"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials">[docs]</a><span class="k">class</span> <span class="nc">sumPotentials</span><span class="p">(</span><span class="n">_potentialNDCls</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds n different potentials.</span>
+<span class="sd">     For adding up wavepotentials, we recommend using the addedwavePotential class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Summed Potential&quot;</span>
+
+    <span class="n">position</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">potentials</span><span class="p">:</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;V_x&quot;</span><span class="p">)])</span>
+
+    <span class="n">nPotentials</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span> <span class="bp">cls</span><span class="o">=</span><span class="n">sp</span><span class="o">.</span><span class="n">Idx</span><span class="p">)</span>
+
+    <span class="n">V_functional</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">potentials</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nPotentials</span><span class="p">))</span>
+
+<div class="viewcode-block" id="sumPotentials.__init__"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potentials</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">_potentialNDCls</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">harmonicOscillatorPotential</span><span class="p">(),</span> <span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">r_shift</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">nDimensions</span><span class="o">=</span><span class="mi">3</span><span class="p">))):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        __init__</span>
+<span class="sd">            This is the Constructor of an summed Potentials</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        potentials: List[_potential2DCls], optional</span>
+<span class="sd">            it uses the 2D potential class to generate its potential,</span>
+<span class="sd">            default to (wavePotential(), wavePotential(multiplicity=[3, 3]))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">all</span><span class="p">([</span><span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">V</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span> <span class="o">==</span> <span class="n">V</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">V</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span> <span class="k">for</span> <span class="n">V</span> <span class="ow">in</span> <span class="n">potentials</span><span class="p">])):</span>
+            <span class="n">nDim</span> <span class="o">=</span> <span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">potentials</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The potentials don&#39;t share the same dimensionality!</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">([</span><span class="n">V</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">V</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span> <span class="k">for</span> <span class="n">V</span> <span class="ow">in</span> <span class="n">potentials</span><span class="p">]))</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">nPotentials</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">potentials</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;V_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">potentials</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">V</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">potentials</span><span class="p">))})</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">nDimensions</span><span class="o">=</span><span class="n">nDim</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="sumPotentials._initialize_functions"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials._initialize_functions">[docs]</a>    <span class="k">def</span> <span class="nf">_initialize_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _initialize_functions</span>
+<span class="sd">            converts the symbolic mathematics of sympy to a matrix representation that is compatible</span>
+<span class="sd">            with multi-dimentionality.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;r_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">])])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">potentials</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;V_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nPotentials</span><span class="p">])])</span>
+        <span class="c1"># Function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V_functional</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">potentials</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nPotentials</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__name__</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">States: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nStates</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">Dimensions: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">Functional:</span><span class="se">\n</span><span class="s2"> &quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">V:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V_functional</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">dVdpos:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dVdpos_functional</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">Simplified Function</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">V:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\t\t</span><span class="s2">dVdpos:</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dVdpos</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">msg</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+    <span class="c1"># OVERRIDE</span>
+<div class="viewcode-block" id="sumPotentials._update_functions"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials._update_functions">[docs]</a>    <span class="k">def</span> <span class="nf">_update_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        _update_functions</span>
+<span class="sd">            calculates the current energy and derivative of the energy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_update_functions</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_Vfunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_energies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dVdpfunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_dVdpos</span></div></div>
 </pre></div>
 
            </div>

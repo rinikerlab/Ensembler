@@ -91,26 +91,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.system package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.system.basic_system">ensembler.system.basic_system module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.system.eds_system">ensembler.system.eds_system module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.system.perturbed_system">ensembler.system.perturbed_system module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.system">Module contents</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ensembler.html">ensembler package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ensembler.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -159,7 +161,9 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">Documentation</a> &raquo;</li>
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="ensembler.html">ensembler package</a> &raquo;</li>
         
       <li>ensembler.system package</li>
     
@@ -217,12 +221,12 @@
 </dl>
 <dl class="py class">
 <dt id="ensembler.system.basic_system.system">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.basic_system.</code><code class="sig-name descname">system</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span><span class="p">:</span> <span class="n">potential</span></em>, <em class="sig-param"><span class="n">sampler</span><span class="p">:</span> <span class="n">samplers</span></em>, <em class="sig-param"><span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>condition<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">temperature</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">298.0</span></em>, <em class="sig-param"><span class="n">start_position</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.basic_system.</code><code class="sig-name descname">system</code><span class="sig-paren">(</span><em class="sig-param">potential: potential = &lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = None</em>, <em class="sig-param">temperature: numbers.Number = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">mass: numbers.Number = 1</em>, <em class="sig-param">verbose: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ensembler.util.html#ensembler.util.basic_class._baseClass" title="ensembler.util.basic_class._baseClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.util.basic_class._baseClass</span></code></a></p>
 <p>The system class is managing the simulation approaches and all system data as well as the simulation results.</p>
 <dl class="py method">
 <dt id="ensembler.system.basic_system.system.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#ensembler.system.basic_system.system.potential" title="ensembler.system.basic_system.system.potential">potential</a></span></em>, <em class="sig-param"><span class="n">sampler</span><span class="p">:</span> <span class="n">samplers</span></em>, <em class="sig-param"><span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>condition<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">temperature</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">298.0</span></em>, <em class="sig-param"><span class="n">start_position</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mass</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potential: potential = &lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = None</em>, <em class="sig-param">temperature: numbers.Number = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">mass: numbers.Number = 1</em>, <em class="sig-param">verbose: bool = True</em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>The system class is wrapping all components needed for a simulation.
 It can be used as the control unit for executing a simulation (simulate) and also to manage the generated data or input data.</p>
@@ -431,6 +435,13 @@ It can be used as the control unit for executing a simulation (simulate) and als
 <dd class="field-even"><p>Union[Iterable[Number], Number]</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.clear_trajectory">
+<code class="sig-name descname">clear_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.clear_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.clear_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes all entries of trajectory and adds current state as first timestep to the trajectory
+:return: None</p>
 </dd></dl>
 
 <dl class="py method">
@@ -974,11 +985,11 @@ Energy Offsets for the EDS-potential</p>
 </dl>
 <dl class="py class">
 <dt id="ensembler.system.perturbed_system.perturbedSystem">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.perturbed_system.</code><code class="sig-name descname">perturbedSystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span><span class="p">:</span> <span class="n">ensembler.potentials._basicPotentials._potential1DClsPerturbed</span></em>, <em class="sig-param"><span class="n">sampler</span><span class="p">:</span> <span class="n">samplers</span></em>, <em class="sig-param"><span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>condition<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">temperature</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298.0</span></em>, <em class="sig-param"><span class="n">start_position</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lam</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.perturbed_system.</code><code class="sig-name descname">perturbedSystem</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials._basicPotentials._potential1DClsPerturbed = &lt;ensembler.potentials.OneD.linearCoupledPotentials object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = []</em>, <em class="sig-param">temperature: float = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">lam: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ensembler.system.basic_system.system" title="ensembler.system.basic_system.system"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.system.basic_system.system</span></code></a></p>
 <dl class="py method">
 <dt id="ensembler.system.perturbed_system.perturbedSystem.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">potential</span><span class="p">:</span> <span class="n">ensembler.potentials._basicPotentials._potential1DClsPerturbed</span></em>, <em class="sig-param"><span class="n">sampler</span><span class="p">:</span> <span class="n">samplers</span></em>, <em class="sig-param"><span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>condition<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">temperature</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">298.0</span></em>, <em class="sig-param"><span class="n">start_position</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lam</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials._basicPotentials._potential1DClsPerturbed = &lt;ensembler.potentials.OneD.linearCoupledPotentials object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = []</em>, <em class="sig-param">temperature: float = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">lam: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><dl class="simple">
 <dt>__init__</dt><dd><p>construct a eds-System that can be used to manage a simulation.</p>
@@ -1076,11 +1087,6 @@ Energy Offsets for the EDS-potential</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py method">
-<dt id="ensembler.system.perturbed_system.perturbedSystem.set_lambda">
-<code class="sig-name descname">set_lambda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lam</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.set_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.set_lambda" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="ensembler.system.perturbed_system.perturbedSystem.state">

@@ -2,12 +2,14 @@ import numpy as np
 from matplotlib import animation, pyplot as plt
 
 from ensembler.util.ensemblerTypes import systemCls, Iterable, List, Tuple, Union, Number
-from ensembler.visualisation import style
+from ensembler.visualisation import style, dpi_animation, animation_figsize
+from ensembler.potentials.OneD import metadynamicsPotential
+
 
 def animation_trajectory(simulated_system:systemCls,
                          limits_coordinate_space: Tuple[float, float]=None, limits_potential_system_energy: Tuple[float, float]=None, resolution_of_analytic_potential:int=1000,
                          title: str = None, out_path: str = None,
-                         out_writer: str = "pillow", dpi: int = style.dpi_animation, every_n_frame:int=1) -> Tuple[animation.Animation, Union[str, None]]:
+                         out_writer: str = "pillow", dpi: int = dpi_animation, every_n_frame:int=1) -> Tuple[animation.Animation, Union[str, None]]:
     """
         this function is generating a animation out of a simulation.
     Parameters
@@ -59,11 +61,14 @@ def animation_trajectory(simulated_system:systemCls,
     active_dots = 20
 
     # build figure
-    fig = plt.figure(dpi=60)
+    fig = plt.figure(dpi=60, figsize=animation_figsize)
     ax = fig.add_subplot(111)
 
     ## setup static parts
     ax.plot(xtot_space, ytot_space, label="Potential", c=style.potential_light)
+
+    if(isinstance(simulated_system.potential, metadynamicsPotential)):   #for metadynamics, show original potential
+        ax.plot(xtot_space, simulated_system.potential.origPotential.ene(xtot_space), c="k", alpha=style.alpha_val, zorder=10, label="original Potential")
 
     ### Params
     if (limits_coordinate_space != None):
@@ -199,7 +204,7 @@ def animation_EDS_trajectory(system: systemCls,
     xdata, ydata = [], []
 
     # figures
-    fig = plt.figure()
+    fig = plt.figure(figsize=animation_figsize)
     ax = fig.add_subplot(111)
 
     from ensembler.visualisation.plotPotentials import envPot_differentS_overlay_plot

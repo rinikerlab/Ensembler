@@ -1,5 +1,6 @@
 
-![myimg](./EnsemblerLogo.png)
+![Here a logo should be!](EnsemblerLogo_with_whiteBackround.png)
+
 
 Welcome to Ensembler
 ==============================
@@ -63,13 +64,13 @@ The requirements need then to be installed as well like in the following example
     
     export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
     cd /path/to/local/Ensembler/repo
-    pip install -r requirements.txt
+    pip install -r devtools/pip_requirements/requirements_unix.txt
     
    Anaconda:
    
     conda-develop /path/to/local/Ensembler/repo
     cd /path/to/local/Ensembler/repo
-    conda create -n ensembler --file environment_unix.yml
+    conda create -n ensembler --file devtools/conda-envs/environment_unix.yml
     conda activate ensembler
 
 For windows, we also provide the requirment files (requirements_unix.txt and environment_windows.yml).
@@ -112,13 +113,13 @@ EDS-Potentials:
 
 ## Authors
 
-Benjamin J. Ries;
+Benjamin Ries;
 Stephanie M. Linker;
 David F. Hahn
 
 ## Copyright
 
-Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn
+Copyright (c) 2020, Benjamin Ries, Stephanie M. Linker, David F. Hahn
 
 
 ### Acknowledgements

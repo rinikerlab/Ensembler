@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -475,11 +476,11 @@
                                                         <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">applyfunc</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)))</span><span class="o">.</span><span class="n">applyfunc</span><span class="p">(</span><span class="n">sp</span><span class="o">.</span><span class="n">exp</span><span class="p">))</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Symbol</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
-    <span class="n">V_functional</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">V_dim</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">))</span>
+    <span class="n">V_functional</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">summation</span><span class="p">(</span><span class="n">V_dim</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">nDimensions</span><span class="p">))</span>
 
     <span class="c1"># V_orig = V_dim[0, 0] * V_dim[1, 0]</span>
 
-<div class="viewcode-block" id="gaussPotential.__init__"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">)):</span>
+<div class="viewcode-block" id="gaussPotential.__init__"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">sigma</span><span class="o">=</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="n">negative_sign</span><span class="p">:</span><span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">         __init__</span>
 <span class="sd">            This is the Constructor of a 2D Gauss Potential</span>
@@ -492,6 +493,8 @@
 <span class="sd">            mean of the gauss function, defaults to (0., 0.)</span>
 <span class="sd">        sigma: tupel, optional</span>
 <span class="sd">            standard deviation of the gauss function, defaults to (1., 1.)</span>
+<span class="sd">        negative_sign: bool, optional</span>
+<span class="sd">            this option is switching the sign of the final potential energy landscape. ==&gt; mu defines the minima location, not maxima location</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
 
@@ -500,6 +503,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;mu_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">):</span> <span class="n">mu</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;sigma_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">):</span> <span class="n">sigma</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">:</span><span class="n">nDimensions</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_negative_sign</span><span class="o">=</span><span class="n">negative_sign</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="gaussPotential._initialize_functions"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential._initialize_functions">[docs]</a>    <span class="k">def</span> <span class="nf">_initialize_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -522,7 +526,10 @@
 
         <span class="c1"># self.V_functional = sp.Product(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions- 1))</span>
         <span class="c1"># Not too beautiful, but sp.Product raises errors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">V_functional</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">if</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_negative_sign</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V_functional</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V_functional</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">V_dim</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="gaussPotential._update_functions"><a class="viewcode-back" href="../../../_source/ensembler.potentials.html#ensembler.potentials.TwoD.gaussPotential._update_functions">[docs]</a>    <span class="k">def</span> <span class="nf">_update_functions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -539,7 +546,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_dVdpos</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lambdify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dVdpos</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">)</span></div></div>
 
 
-<span class="kn">from</span> <span class="nn">ensembler.potentials.ND</span> <span class="kn">import</span> <span class="n">envelopedPotential</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.ND</span> <span class="kn">import</span> <span class="n">envelopedPotential</span><span class="p">,</span> <span class="n">sumPotentials</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Biased potentials</span>
@@ -590,7 +597,6 @@
 
         <span class="n">nDimensions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">Matrix</span><span class="p">([</span><span class="n">sp</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;r_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)])</span></div>
-
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    TIME DEPENDENT BIASES </span>

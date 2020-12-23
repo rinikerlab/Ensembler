@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -162,12 +163,14 @@
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span><span class="p">,</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">systemCls</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Number</span>
-<span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">style</span>
+<span class="kn">from</span> <span class="nn">ensembler.visualisation</span> <span class="kn">import</span> <span class="n">style</span><span class="p">,</span> <span class="n">dpi_animation</span><span class="p">,</span> <span class="n">animation_figsize</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span>
+
 
 <div class="viewcode-block" id="animation_trajectory"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.animationSimulation.animation_trajectory">[docs]</a><span class="k">def</span> <span class="nf">animation_trajectory</span><span class="p">(</span><span class="n">simulated_system</span><span class="p">:</span><span class="n">systemCls</span><span class="p">,</span>
                          <span class="n">limits_coordinate_space</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">limits_potential_system_energy</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">resolution_of_analytic_potential</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
                          <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                         <span class="n">out_writer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pillow&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">style</span><span class="o">.</span><span class="n">dpi_animation</span><span class="p">,</span> <span class="n">every_n_frame</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">animation</span><span class="o">.</span><span class="n">Animation</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
+                         <span class="n">out_writer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pillow&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">dpi_animation</span><span class="p">,</span> <span class="n">every_n_frame</span><span class="p">:</span><span class="nb">int</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">animation</span><span class="o">.</span><span class="n">Animation</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        this function is generating a animation out of a simulation.</span>
 <span class="sd">    Parameters</span>
@@ -219,11 +222,14 @@
     <span class="n">active_dots</span> <span class="o">=</span> <span class="mi">20</span>
 
     <span class="c1"># build figure</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">dpi</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="n">animation_figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
     <span class="c1">## setup static parts</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtot_space</span><span class="p">,</span> <span class="n">ytot_space</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Potential&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">potential_light</span><span class="p">)</span>
+
+    <span class="k">if</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">simulated_system</span><span class="o">.</span><span class="n">potential</span><span class="p">,</span> <span class="n">metadynamicsPotential</span><span class="p">)):</span>   <span class="c1">#for metadynamics, show original potential</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtot_space</span><span class="p">,</span> <span class="n">simulated_system</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">origPotential</span><span class="o">.</span><span class="n">ene</span><span class="p">(</span><span class="n">xtot_space</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">style</span><span class="o">.</span><span class="n">alpha_val</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;original Potential&quot;</span><span class="p">)</span>
 
     <span class="c1">### Params</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">limits_coordinate_space</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">):</span>
@@ -359,7 +365,7 @@
     <span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 
     <span class="c1"># figures</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">animation_figsize</span><span class="p">)</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 
     <span class="kn">from</span> <span class="nn">ensembler.visualisation.plotPotentials</span> <span class="kn">import</span> <span class="n">envPot_differentS_overlay_plot</span>

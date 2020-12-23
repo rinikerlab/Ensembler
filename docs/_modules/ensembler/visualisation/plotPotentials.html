@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -199,10 +200,10 @@
     <span class="k">elif</span><span class="p">(</span><span class="n">potential</span><span class="o">.</span><span class="n">constants</span><span class="p">[</span><span class="n">potential</span><span class="o">.</span><span class="n">nDimensions</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">plot_2DPotential</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
                      <span class="n">out_path</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span></div>
+
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd"> 1D Plotting Functions</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
 <div class="viewcode-block" id="plot_1DPotential"><a class="viewcode-back" href="../../../_source/ensembler.visualisation.html#ensembler.visualisation.plotPotentials.plot_1DPotential">[docs]</a><span class="k">def</span> <span class="nf">plot_1DPotential</span><span class="p">(</span><span class="n">potential</span><span class="p">:</span> <span class="n">_potential1DCls</span><span class="p">,</span> <span class="n">positions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                      <span class="n">x_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -349,10 +350,13 @@
 
     <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">axes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">([</span><span class="n">axes</span><span class="p">])</span>
-    <span class="n">plot_2D_potential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">positions2D</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">space_range</span><span class="o">=</span><span class="p">[</span><span class="n">x1_range</span><span class="p">,</span> <span class="n">x2_range</span><span class="p">],</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">surf</span> <span class="o">=</span> <span class="n">plot_2D_potential_V</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">positions2D</span><span class="o">=</span><span class="n">positions</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">space_range</span><span class="o">=</span><span class="p">[</span><span class="n">x1_range</span><span class="p">,</span> <span class="n">x2_range</span><span class="p">],</span>
                        <span class="n">title</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x_label</span><span class="o">=</span><span class="s2">&quot;$r_1$&quot;</span><span class="p">,</span> <span class="n">y_label</span><span class="o">=</span><span class="s2">&quot;$r_2$&quot;</span><span class="p">)</span>
     <span class="c1">#plot_2D_potential_force(potential=potential, positions2D=positions, ax=axes[1], space_range=[x1_range,x2_range],</span>
     <span class="c1">#                        title=&quot;&quot;)</span>
+
+    <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span>
+    <span class="n">cb</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;V [kT]&quot;</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>

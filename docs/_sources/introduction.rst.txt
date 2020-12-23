@@ -1,4 +1,10 @@
 
+
+.. image:: EnsemblerLogo_with_whiteBackround.png
+   :target: EnsemblerLogo_with_whiteBackround.png
+   :alt: Here a logo should be!
+
+
 Welcome to Ensembler
 ====================
 
@@ -85,14 +91,7 @@ Analysis
 How To Install
 --------------
 
-If you want to use the package you can install the package with pip:
-
-.. code-block::
-
-   pip install ensembler
-
-
-Alternativley you can download the git and use the setup.py script of the repository:
+Download the git and use the setup.py script of the repository:
 
 .. code-block::
 
@@ -109,7 +108,7 @@ The requirements need then to be installed as well like in the following example
 
    export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
    cd /path/to/local/Ensembler/repo
-   pip install -r requirements.txt
+   pip install -r devtools/pip_requirements/requirements_unix.txt
 
 
    Anaconda:
@@ -118,7 +117,7 @@ The requirements need then to be installed as well like in the following example
 
    conda-develop /path/to/local/Ensembler/repo
    cd /path/to/local/Ensembler/repo
-   conda create -n ensembler --file environment_unix.yml
+   conda create -n ensembler --file devtools/conda-envs/environment_unix.yml
    conda activate ensembler
 
 
@@ -191,14 +190,14 @@ EDS-Potentials:
 Authors
 -------
 
-Benjamin J. Ries;
+Benjamin Ries;
 Stephanie M. Linker;
 David F. Hahn
 
 Copyright
 ---------
 
-Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn
+Copyright (c) 2020, Benjamin Ries, Stephanie M. Linker, David F. Hahn
 
 Acknowledgements
 ^^^^^^^^^^^^^^^^

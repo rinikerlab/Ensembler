@@ -61,7 +61,7 @@ class stochasticSampler(_samplerCls):
         else:
             shift = self.step_size_coefficient * np.array(np.abs(np.random.rand(nDimensions)), ndmin=1)
 
-        # Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional
+        # Is the step shift in the allowed area?
         if (self.minStepSize != None and any([s < self.minStepSize for s in shift])):
             self.posShift = np.multiply(sign, np.array([s if (s > self.minStepSize) else self.minStepSize for s in shift]))
         else:
@@ -348,10 +348,6 @@ class langevinIntegrator(stochasticSampler):
             This Tuple contains the new: (new Position, new velocity=None)
             for velocity return use langevinVelocityIntegrator
 
-        Raises
-        ------
-        NotImplementedError
-            You need to implement this function in the subclass (i.e. in your samplers)
 
         """
 
@@ -388,10 +384,6 @@ class langevinIntegrator(stochasticSampler):
         Tuple[float, float, float]
             This Tuple contains the new: (new Position, new velocity, position Shift/ force)
 
-        Raises
-        ------
-        NotImplementedError
-            You need to implement this function in the subclass (i.e. in your samplers)
 
         """
         # get current positiona and velocity form system class
@@ -458,11 +450,6 @@ class langevinVelocityIntegrator(langevinIntegrator):
             This Tuple contains the new: (new Position, new velocity)
 
             returns both velocities and positions at full steps
-
-        Raises
-        ------
-        NotImplementedError
-            You need to implement this function in the subclass (i.e. in your samplers)
 
         """
 

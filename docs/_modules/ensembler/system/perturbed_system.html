@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -171,6 +172,9 @@
 <span class="kn">from</span> <span class="nn">ensembler.util.ensemblerTypes</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Number</span>
 
 <span class="kn">from</span> <span class="nn">ensembler.potentials._basicPotentials</span> <span class="kn">import</span> <span class="n">_potential1DClsPerturbed</span> <span class="k">as</span> <span class="n">_perturbedPotentialCls</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">linearCoupledPotentials</span>
+<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">metropolisMonteCarloIntegrator</span>
+
 <span class="kn">from</span> <span class="nn">ensembler.system.basic_system</span> <span class="kn">import</span> <span class="n">system</span>
 
 
@@ -191,25 +195,24 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Attributes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lam</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Number</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentLambda</span>
 
     <span class="nd">@lam</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">lam</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="n">Number</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">lam</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">lam</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable lam = </span><span class="si">{</span><span class="n">lam</span><span class="si">}</span><span class="s2">.&quot;</span>\
+                              <span class="s2">&quot;It cannot be lower than 0 or larger than 1.&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_currentLambda</span> <span class="o">=</span> <span class="n">lam</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">potential</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_currentLambda</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_energies</span><span class="p">()</span>
-
-<div class="viewcode-block" id="perturbedSystem.set_lambda"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.set_lambda">[docs]</a>    <span class="k">def</span> <span class="nf">set_lambda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="n">lam</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Magic</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="perturbedSystem.__init__"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span> <span class="n">_perturbedPotentialCls</span><span class="p">,</span> <span class="n">sampler</span><span class="p">:</span> <span class="n">samplerCls</span><span class="p">,</span>
+<div class="viewcode-block" id="perturbedSystem.__init__"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span> <span class="n">_perturbedPotentialCls</span><span class="o">=</span><span class="n">linearCoupledPotentials</span><span class="p">(),</span> <span class="n">sampler</span><span class="p">:</span> <span class="n">samplerCls</span><span class="o">=</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">(),</span>
                  <span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">conditionCls</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
                  <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">298.0</span><span class="p">,</span> <span class="n">start_position</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -231,18 +234,18 @@
 <span class="sd">        lam: Number, optional</span>
 <span class="sd">            the value of the copuling lambda</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">_currentLambda</span> <span class="o">=</span> <span class="n">lam</span>
-
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">,</span> <span class="n">conditions</span><span class="o">=</span><span class="n">conditions</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
                          <span class="n">start_position</span><span class="o">=</span><span class="n">start_position</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_lambda</span><span class="p">(</span><span class="n">lam</span><span class="p">)</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="n">lam</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span></div>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Overwrite Functions to adapt to EDS</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="perturbedSystem.set_current_state"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.set_current_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_position</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]],</span>
+<div class="viewcode-block" id="perturbedSystem.set_current_state"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.set_current_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                          <span class="n">current_position</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]],</span>
                           <span class="n">current_velocities</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                           <span class="n">current_force</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
                           <span class="n">current_temperature</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">298</span><span class="p">,</span>
@@ -330,7 +333,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_dHdLambda</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span></div>
 
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Functionality</span>

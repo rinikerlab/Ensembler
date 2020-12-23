@@ -13,6 +13,9 @@ from ensembler.util.ensemblerTypes import samplerCls, conditionCls
 from ensembler.util.ensemblerTypes import Union, Iterable, NoReturn, Number
 
 from ensembler.potentials._basicPotentials import _potential1DClsPerturbed as _perturbedPotentialCls
+from ensembler.potentials.OneD import linearCoupledPotentials
+from ensembler.samplers.stochastic import metropolisMonteCarloIntegrator
+
 from ensembler.system.basic_system import system
 
 
@@ -33,25 +36,24 @@ class perturbedSystem(system):
     """
     Attributes
     """
-
     @property
     def lam(self) -> Number:
         return self._currentLambda
 
     @lam.setter
     def lam(self, lam: Number):
+        if lam < 0.0 or lam > 1.0:
+            raise ValueError(f"Variable lam = {lam}."\
+                              "It cannot be lower than 0 or larger than 1.")
         self._currentLambda = lam
         self.potential.set_lambda(lam=self._currentLambda)
-        self._update_energies()
-
-    def set_lambda(self, lam: float):
-        self.lam = lam
+        self.update_current_state()
 
     """
     Magic
     """
 
-    def __init__(self, potential: _perturbedPotentialCls, sampler: samplerCls,
+    def __init__(self, potential: _perturbedPotentialCls=linearCoupledPotentials(), sampler: samplerCls=metropolisMonteCarloIntegrator(),
                  conditions: Iterable[conditionCls] = [],
                  temperature: float = 298.0, start_position: (Iterable[Number] or float) = None, lam: float = 0.0):
         """
@@ -73,18 +75,18 @@ class perturbedSystem(system):
         lam: Number, optional
             the value of the copuling lambda
         """
-
-        self._currentLambda = lam
-
         super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
                          start_position=start_position)
-        self.set_lambda(lam)
+
+        self.lam = lam
+        self.update_current_state()
 
     """
     Overwrite Functions to adapt to EDS
     """
 
-    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
+    def set_current_state(self,
+                          current_position: Union[Number, Iterable[Number]],
                           current_velocities: Union[Number, Iterable[Number]] = 0,
                           current_force: Union[Number, Iterable[Number]] = 0,
                           current_temperature: Union[Number, Iterable[Number]] = 298,
@@ -172,7 +174,7 @@ class perturbedSystem(system):
         self._update_dHdLambda()
         self.update_current_state()
 
-        self._trajectory = self._trajectory.append(self.current_state._asdict(), ignore_index=True)
+        self._trajectory.append(self.current_state)
 
     """
     Functionality

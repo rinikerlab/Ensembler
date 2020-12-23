@@ -5,6 +5,7 @@ Module: basic_class
 
 import io
 import pickle
+import copy
 from typing import Union, Callable
 
 
@@ -27,16 +28,23 @@ class _baseClass:
         preperation for pickling:
         remove the non trivial pickling parts
         """
-        dict = self.__dict__
-        keys = list(dict.keys())
-        for key in keys:
-            if (isinstance(dict[key], Callable)):
-                del dict[key]
+        attribute_dict = self.__dict__
+        new_dict ={}
+        for key in attribute_dict.keys():
+            if (not isinstance(attribute_dict[key], Callable)):
+                new_dict.update({key:attribute_dict[key]})
 
-        return dict
+        return new_dict
 
     def __setstate__(self, state):
         self.__dict__ = state
+
+    def __deepcopy__(self, memo):
+        copy_obj = self.__class__()
+        copy_obj.__setstate__(copy.deepcopy(self.__getstate__()))
+        return copy_obj
+
+
 
     """
     Attributes

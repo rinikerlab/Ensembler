@@ -38,7 +38,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.analysis package" href="ensembler.analysis.html" />
+    <link rel="prev" title="Documentation" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,10 +90,31 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">Documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-ensembler">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
             
@@ -137,6 +160,8 @@
   <ul class="wy-breadcrumbs">
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
         
       <li>ensembler package</li>
     
@@ -210,16 +235,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#ensembler-potentials-biased-potentials-biasoned-module">ensembler.potentials.biased_potentials.biasOneD module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#ensembler-potentials-biased-potentials-biastwod-module">ensembler.potentials.biased_potentials.biasTwoD module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials.ND">ensembler.potentials.ND module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html#module-ensembler.potentials.OneD">ensembler.potentials.OneD module</a></li>
@@ -253,6 +268,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_potentials">ensembler.tests.test_potentials module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_sampler">ensembler.tests.test_sampler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_system">ensembler.tests.test_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests.test_visualization">ensembler.tests.test_visualization module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html#module-ensembler.tests">Module contents</a></li>
 </ul>
 </li>
@@ -299,6 +315,15 @@ Code to sample ensembles of 1D and 2D models with various algorithms.</p>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.analysis.html" class="btn btn-neutral float-right" title="ensembler.analysis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -270,7 +271,8 @@
                  <span class="s2">&quot;TotEJ&quot;</span><span class="p">:</span> <span class="n">swapped_totPots</span><span class="p">[</span><span class="n">I</span><span class="p">],</span>
                  <span class="s2">&quot;doExchange&quot;</span><span class="p">:</span> <span class="n">exchange</span><span class="p">},</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">round_reps</span> <span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">)</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span>
+        <span class="k">if</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">round_reps</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">round_reps</span><span class="p">)):</span>
             <span class="n">exchange</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="n">IJ</span> <span class="o">=</span> <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">replicaIJ</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">IJ</span><span class="p">]</span>
@@ -315,7 +317,6 @@
                                       <span class="n">original_exchange_coordinates</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">exchange_offset</span><span class="p">::</span><span class="mi">2</span><span class="p">]):</span>
             <span class="n">originalEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">original_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
             <span class="n">swapEnergies</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner1</span><span class="p">),</span> <span class="n">swapped_totPots</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">partner2</span><span class="p">))</span>
-
             <span class="n">exchanges_to_make</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
                 <span class="p">{(</span><span class="n">partner1</span><span class="p">,</span> <span class="n">partner2</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">replica_graph</span><span class="o">.</span><span class="n">exchange_criterium</span><span class="p">(</span><span class="n">originalEnergies</span><span class="p">,</span> <span class="n">swapEnergies</span><span class="p">)})</span>
 

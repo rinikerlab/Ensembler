@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -184,7 +185,7 @@
     <span class="n">coordinate_dimensions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">replica_graph_dimensions</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">exchange_dimensions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span>
-    <span class="n">nSteps_between_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">nSteps_between_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="n">exchange_information</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">,</span> <span class="s2">&quot;biasE&quot;</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">])</span>
     <span class="n">system_trajs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -204,19 +205,32 @@
 
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">outstr</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">outstr</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:&lt;5s}{:&lt;10s}{:&lt;10s}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">,</span>
+                                               <span class="s2">&quot;lambda_i&quot;</span><span class="p">,</span>
+                                               <span class="s2">&quot;E_i&quot;</span>
+                                               <span class="p">)</span>
+        <span class="n">outstr</span> <span class="o">+=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">25</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
-            <span class="n">outstr</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:.1f}{:10.2f}{:10.3f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_currentLambda</span><span class="p">,</span>
-                                                        <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">getTotEnergy</span><span class="p">()))</span>
+            <span class="n">outstr</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{:5d}{:10.2f}{:10.3f}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lam</span><span class="p">,</span>
+                                                        <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">total_system_energy</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">outstr</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
 
-<div class="viewcode-block" id="conveyorBelt.__init__"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capital_lambda</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_replicas</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-                 <span class="n">system</span><span class="p">:</span><span class="n">systemCls</span> <span class="o">=</span> <span class="n">perturbed_system</span><span class="o">.</span><span class="n">perturbedSystem</span><span class="p">(</span><span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                                                                      <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="o">.</span><span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(),</span>
-                                                                      <span class="n">sampler</span><span class="o">=</span><span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()),</span>
+<div class="viewcode-block" id="conveyorBelt.__init__"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">capital_lambda</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                 <span class="n">n_replicas</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">system</span><span class="p">:</span><span class="n">systemCls</span> <span class="o">=</span>
+                         <span class="n">perturbed_system</span><span class="o">.</span><span class="n">perturbedSystem</span><span class="p">(</span>
+                             <span class="n">temperature</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span>
+                             <span class="n">lam</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                             <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="o">.</span><span class="n">OneD</span><span class="o">.</span><span class="n">linearCoupledPotentials</span><span class="p">(</span>
+                                 <span class="n">Va</span><span class="o">=</span><span class="n">pot</span><span class="o">.</span><span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                 <span class="n">Vb</span><span class="o">=</span><span class="n">pot</span><span class="o">.</span><span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">x_shift</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                             <span class="p">),</span>
+                             <span class="n">sampler</span><span class="o">=</span><span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+                         <span class="p">),</span>
                  <span class="n">build</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            initialize Ensemble object</span>
@@ -242,15 +256,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">build</span> <span class="o">=</span> <span class="n">build</span>  <span class="c1"># build</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">dis</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">n_replicas</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameter_name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dis</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parameter_name</span><span class="p">:</span>
+                <span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">calculate_replica_lambda</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_replicas</span><span class="p">)</span>
+                 <span class="p">]</span>
+        <span class="p">}</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_temperature_exchange</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">temperature</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">initialise</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update_all_lambda</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">,</span> <span class="s2">&quot;biasE&quot;</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_trajs</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
@@ -283,9 +300,25 @@
 
         <span class="c1">## * Conveyor belt specifics</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_update_dHdLambda</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">lam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_replica_lambda</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">clear_trajectory</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                                                   <span class="p">[{</span>
+                                                       <span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span>
+                                                       <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span>
+                                                       <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">calculate_total_ensemble_energy</span><span class="p">(),</span>
+                                                       <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">biasene</span><span class="p">,</span>
+                                                       <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                                                   <span class="p">}</span>
+                                                       <span class="p">]</span>
+                                                <span class="p">)</span></div>
 
-<div class="viewcode-block" id="conveyorBelt.simulate"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntrials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">steps_between_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reset_ensemble</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+
+<div class="viewcode-block" id="conveyorBelt.simulate"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">ntrials</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+                 <span class="n">nSteps_between_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">reset_ensemble</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
                  <span class="n">verbosity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Integrates the conveyor belt ensemble</span>
@@ -294,7 +327,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        ntrials:int</span>
 <span class="sd">            Number of conveyor belt steps</span>
-<span class="sd">        steps_between_trials: int, optional</span>
+<span class="sd">        nSteps_between_trials: int, optional</span>
 <span class="sd">            number of integration steps of replicas between a move of the conveyor belt  (Default: None)</span>
 <span class="sd">        reset_ensemble: bool, optional</span>
 <span class="sd">            reset ensemble for starting the simulation? (Default: False)</span>
@@ -307,13 +340,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">steps_between_trials</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_simulation_steps_between_trials</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="n">steps_between_trials</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">nSteps_between_trials</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_simulation_n_steps_between_trials</span><span class="p">(</span><span class="n">n_steps</span><span class="o">=</span><span class="n">nSteps_between_trials</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ntrials</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Trials: &quot;</span><span class="p">,</span> <span class="n">mininterval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="n">verbosity</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">accept_move</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span><span class="p">)],</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -351,7 +384,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_update_dHdLambda</span><span class="p">()</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">__tmp_exchange_traj</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Step&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_currentTrial</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">capital_lambda</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span>
-                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">newEne</span><span class="p">),</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+                 <span class="s2">&quot;biasE&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">biasene</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">reject</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_all_lambda</span><span class="p">(</span><span class="n">oldBlam</span><span class="p">)</span>
@@ -534,9 +567,11 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">system_trajs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replicas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">clear_trajectory</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exchange_information</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Step&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_lambda&quot;</span><span class="p">,</span> <span class="s2">&quot;TotE&quot;</span><span class="p">,</span> <span class="s2">&quot;biasE&quot;</span><span class="p">,</span> <span class="s2">&quot;doAccept&quot;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="conveyorBelt.set_simulation_steps_between_trials"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_steps_between_trials">[docs]</a>    <span class="k">def</span> <span class="nf">set_simulation_steps_between_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="conveyorBelt.set_simulation_n_steps_between_trials"><a class="viewcode-back" href="../../../_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_n_steps_between_trials">[docs]</a>    <span class="k">def</span> <span class="nf">set_simulation_n_steps_between_trials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                    Sets the integration steps of the replicas between a trail move.</span>
 

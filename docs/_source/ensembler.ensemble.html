@@ -91,26 +91,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.ensemble package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.ensemble.exchange_pattern">ensembler.ensemble.exchange_pattern module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.ensemble.replica_exchange">ensembler.ensemble.replica_exchange module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.ensemble.replicas_dynamic_parameters">ensembler.ensemble.replicas_dynamic_parameters module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.ensemble">Module contents</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ensembler.html">ensembler package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ensembler.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ensembler.ensemble package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -159,7 +161,9 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">Documentation</a> &raquo;</li>
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="ensembler.html">ensembler package</a> &raquo;</li>
         
       <li>ensembler.ensemble package</li>
     
@@ -672,7 +676,7 @@ initialises the replica graph and updates the systems.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.nSteps_between_trials">
-<code class="sig-name descname">nSteps_between_trials</code><em class="property">: int</em><em class="property"> = 2</em><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.nSteps_between_trials" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">nSteps_between_trials</code><em class="property">: int</em><em class="property"> = 1</em><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.nSteps_between_trials" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -693,8 +697,8 @@ initialises the replica graph and updates the systems.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_steps_between_trials">
-<code class="sig-name descname">set_simulation_steps_between_trials</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_steps</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/ensemble/replicas_dynamic_parameters.html#conveyorBelt.set_simulation_steps_between_trials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_steps_between_trials" title="Permalink to this definition">¶</a></dt>
+<dt id="ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_n_steps_between_trials">
+<code class="sig-name descname">set_simulation_n_steps_between_trials</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n_steps</span><span class="p">:</span> <span class="n">int</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/ensemble/replicas_dynamic_parameters.html#conveyorBelt.set_simulation_n_steps_between_trials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_n_steps_between_trials" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Sets the integration steps of the replicas between a trail move.</p>
 </div></blockquote>
@@ -707,7 +711,7 @@ initialises the replica graph and updates the systems.</p>
 
 <dl class="py method">
 <dt id="ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.simulate">
-<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ntrials</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">steps_between_trials</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">reset_ensemble</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/ensemble/replicas_dynamic_parameters.html#conveyorBelt.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.simulate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ntrials</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">nSteps_between_trials</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">reset_ensemble</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/ensemble/replicas_dynamic_parameters.html#conveyorBelt.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.simulate" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Integrates the conveyor belt ensemble</p>
 </div></blockquote>
@@ -715,7 +719,7 @@ initialises the replica graph and updates the systems.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ntrials</strong> (<em>int</em>) – Number of conveyor belt steps</p></li>
-<li><p><strong>steps_between_trials</strong> (<em>int, optional</em>) – number of integration steps of replicas between a move of the conveyor belt  (Default: None)</p></li>
+<li><p><strong>nSteps_between_trials</strong> (<em>int, optional</em>) – number of integration steps of replicas between a move of the conveyor belt  (Default: None)</p></li>
 <li><p><strong>reset_ensemble</strong> (<em>bool, optional</em>) – reset ensemble for starting the simulation? (Default: False)</p></li>
 <li><p><strong>verbosity</strong> (<em>bool, optional</em>) – verbose output? (Default: False)</p></li>
 </ul>

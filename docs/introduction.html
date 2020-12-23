@@ -38,7 +38,9 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" /> 
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tutorials" href="Tutorials/index.html" />
+    <link rel="prev" title="Welcome to Ensembler" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,10 +90,34 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Welcome to Ensembler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contents">Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#potential-functions">Potential functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#samplers">Samplers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#systems">Systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ensembles">Ensembles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualization">Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#analysis">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-install">How To Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tutorials-and-examples">Tutorials and Examples:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tutorials">Tutorials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copyright">Copyright</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -181,6 +207,7 @@
     text-align: unset;
 }
 </style>
+<a class="reference external image-reference" href="EnsemblerLogo_with_whiteBackround.png"><img alt="Here a logo should be!" src="EnsemblerLogo_with_whiteBackround.png" /></a>
 <div class="section" id="welcome-to-ensembler">
 <h1>Welcome to Ensembler<a class="headerlink" href="#welcome-to-ensembler" title="Permalink to this headline">¶</a></h1>
 <a class="reference external image-reference" href="https://github.com/rinikerlab/ensembler/actions?query=branch%3Amaster+workflow%3ACI"><img alt="GitHub Actions Build Status" src="https://github.com/rinikerlab/ensembler/workflows/CI/badge.svg" /></a>
@@ -244,11 +271,7 @@ Also different dimensionalities can be used like 1D, 2D, and ND.</p>
 </div>
 <div class="section" id="how-to-install">
 <h2>How To Install<a class="headerlink" href="#how-to-install" title="Permalink to this headline">¶</a></h2>
-<p>If you want to use the package you can install the package with pip:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ensembler</span>
-</pre></div>
-</div>
-<p>Alternativley you can download the git and use the setup.py script of the repository:</p>
+<p>Download the git and use the setup.py script of the repository:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
 <span class="n">pyton</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
@@ -260,7 +283,7 @@ The requirements need then to be installed as well like in the following example
 </div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export PYTHONPATH=${PYTHONPATH}:/path/to/local/Ensembler/repo
 cd /path/to/local/Ensembler/repo
-pip install -r requirements.txt
+pip install -r devtools/pip_requirements/requirements_unix.txt
 
 
 Anaconda:
@@ -268,7 +291,7 @@ Anaconda:
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span><span class="o">-</span><span class="n">develop</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
 <span class="n">cd</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">Ensembler</span><span class="o">/</span><span class="n">repo</span>
-<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">ensembler</span> <span class="o">--</span><span class="n">file</span> <span class="n">environment_unix</span><span class="o">.</span><span class="n">yml</span>
+<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">ensembler</span> <span class="o">--</span><span class="n">file</span> <span class="n">devtools</span><span class="o">/</span><span class="n">conda</span><span class="o">-</span><span class="n">envs</span><span class="o">/</span><span class="n">environment_unix</span><span class="o">.</span><span class="n">yml</span>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">ensembler</span>
 </pre></div>
 </div>
@@ -301,13 +324,13 @@ You can try the tutorials with Binder directly from your browser!</p>
 </div>
 <div class="section" id="authors">
 <h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
-<p>Benjamin J. Ries;
+<p>Benjamin Ries;
 Stephanie M. Linker;
 David F. Hahn</p>
 </div>
 <div class="section" id="copyright">
 <h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
-<p>Copyright (c) 2020, Benjamin  J. Ries, Stephanie M. Linker, David F. Hahn</p>
+<p>Copyright (c) 2020, Benjamin Ries, Stephanie M. Linker, David F. Hahn</p>
 <div class="section" id="acknowledgements">
 <h3>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h3>
 <p>Project based on the
@@ -321,6 +344,15 @@ David F. Hahn</p>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Tutorials/index.html" class="btn btn-neutral float-right" title="Tutorials" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Ensembler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

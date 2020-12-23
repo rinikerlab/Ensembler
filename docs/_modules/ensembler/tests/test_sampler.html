@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -173,8 +174,12 @@
     <span class="n">tmp_test_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="standard_IntegratorTests.setUp"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_sampler.standard_IntegratorTests.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">test_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;/tests_out&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)</span>
+
         <span class="k">if</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_test_potentials&quot;</span><span class="p">)</span>
+            <span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_test_sampler&quot;</span><span class="p">)</span>
         <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">integrator_class</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="standard_IntegratorTests.test_constructor"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_sampler.standard_IntegratorTests.test_constructor">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -308,6 +313,8 @@
         <span class="n">old_pos</span><span class="p">,</span> <span class="n">oldForce</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentForce</span>
         <span class="n">integrator</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
         <span class="n">new_pos</span><span class="p">,</span> <span class="n">new_Force</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentPosition</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">_currentForce</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">trajectory</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The simulation did not run or was too short!&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">old_pos</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Nothing happened here!&quot;</span><span class="p">)</span>

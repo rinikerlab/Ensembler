@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -157,12 +158,10 @@
             
   <h1>Source code for ensembler.tests.test_analysis</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
 <span class="kn">import</span> <span class="nn">unittest</span>
 
 
-<span class="kn">from</span> <span class="nn">ensembler.analysis.freeEnergyCalculation</span> <span class="kn">import</span>  <span class="n">zwanzigEquation</span><span class="p">,</span> <span class="n">threeStateZwanzigReweighting</span><span class="p">,</span> <span class="n">bennetAcceptanceRatio</span>
+<span class="kn">from</span> <span class="nn">ensembler.analysis.freeEnergyCalculation</span> <span class="kn">import</span>  <span class="n">zwanzigEquation</span><span class="p">,</span> <span class="n">threeStateZwanzig</span><span class="p">,</span> <span class="n">bennetAcceptanceRatio</span>
 
 <div class="viewcode-block" id="test_ZwanzigEquation"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_analysis.test_ZwanzigEquation">[docs]</a><span class="k">class</span> <span class="nc">test_ZwanzigEquation</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
     <span class="n">feCalculation</span> <span class="o">=</span> <span class="n">zwanzigEquation</span>
@@ -261,7 +260,7 @@
 
 
 <div class="viewcode-block" id="test_threeStateZwanzigReweighting"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_analysis.test_threeStateZwanzigReweighting">[docs]</a><span class="k">class</span> <span class="nc">test_threeStateZwanzigReweighting</span><span class="p">(</span><span class="n">test_ZwanzigEquation</span><span class="p">):</span>
-    <span class="n">feCalculation</span> <span class="o">=</span> <span class="n">threeStateZwanzigReweighting</span>
+    <span class="n">feCalculation</span> <span class="o">=</span> <span class="n">threeStateZwanzig</span>
 
 
 <div class="viewcode-block" id="test_threeStateZwanzigReweighting.test_free_Energy1"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_analysis.test_threeStateZwanzigReweighting.test_free_Energy1">[docs]</a>    <span class="k">def</span> <span class="nf">test_free_Energy1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

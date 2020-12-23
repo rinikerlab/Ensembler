@@ -1,14 +1,6 @@
 ensembler.potentials package
 ============================
 
-Subpackages
------------
-
-.. toctree::
-   :maxdepth: 4
-
-   ensembler.potentials.biased_potentials
-
 Submodules
 ----------
 

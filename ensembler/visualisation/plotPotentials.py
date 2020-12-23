@@ -39,10 +39,10 @@ def plot_potential(potential: _potentialNDCls, positions: list, out_path:str=Non
     elif(potential.constants[potential.nDimensions] == 2):
         return plot_2DPotential(potential=potential, positions=positions, title=title,
                      out_path=out_path)
+
 """
  1D Plotting Functions
 """
-
 def plot_1DPotential(potential: _potential1DCls, positions: list, out_path: str = None,
                      x_range=None, y_range=None, title: str = None, ax=None):
     fig, axes = plt.subplots(nrows=1, ncols=2)
@@ -189,10 +189,13 @@ def plot_2DPotential(potential: pot2D._potential2DCls, positions: List[Tuple[Num
 
     fig, axes = plt.subplots(nrows=1, ncols=1)
     axes = list([axes])
-    plot_2D_potential_V(potential=potential, positions2D=positions, ax=axes[0], space_range=[x1_range, x2_range],
+    _, _, surf = plot_2D_potential_V(potential=potential, positions2D=positions, ax=axes[0], space_range=[x1_range, x2_range],
                        title="", x_label="$r_1$", y_label="$r_2$")
     #plot_2D_potential_force(potential=potential, positions2D=positions, ax=axes[1], space_range=[x1_range,x2_range],
     #                        title="")
+
+    cb = plt.colorbar(surf)
+    cb.set_label("V [kT]")
 
     fig.tight_layout()
     fig.subplots_adjust(top=0.8)

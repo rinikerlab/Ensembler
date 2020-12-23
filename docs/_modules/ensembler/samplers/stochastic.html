@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -219,7 +220,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">shift</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_size_coefficient</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">nDimensions</span><span class="p">)),</span> <span class="n">ndmin</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># Is the step shift in the allowed area? #Todo: fix min and max for mutliDimensional</span>
+        <span class="c1"># Is the step shift in the allowed area?</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="n">s</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shift</span><span class="p">])):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">posShift</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">sign</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">s</span> <span class="k">if</span> <span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">minStepSize</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">shift</span><span class="p">]))</span>
         <span class="k">else</span><span class="p">:</span>
@@ -506,10 +507,6 @@
 <span class="sd">            This Tuple contains the new: (new Position, new velocity=None)</span>
 <span class="sd">            for velocity return use langevinVelocityIntegrator</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        NotImplementedError</span>
-<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -546,10 +543,6 @@
 <span class="sd">        Tuple[float, float, float]</span>
 <span class="sd">            This Tuple contains the new: (new Position, new velocity, position Shift/ force)</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        NotImplementedError</span>
-<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># get current positiona and velocity form system class</span>
@@ -616,11 +609,6 @@
 <span class="sd">            This Tuple contains the new: (new Position, new velocity)</span>
 
 <span class="sd">            returns both velocities and positions at full steps</span>
-
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        NotImplementedError</span>
-<span class="sd">            You need to implement this function in the subclass (i.e. in your samplers)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 

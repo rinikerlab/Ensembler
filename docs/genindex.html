@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -192,7 +193,7 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.__init__">__init__() (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio method)</a>
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.__init__">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting method)</a>
+        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.__init__">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzig method)</a>
 </li>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.__init__">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation method)</a>
 </li>
@@ -217,6 +218,8 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.envelopedPotential.__init__">(ensembler.potentials.ND.envelopedPotential method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.harmonicOscillatorPotential.__init__">(ensembler.potentials.ND.harmonicOscillatorPotential method)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.__init__">(ensembler.potentials.ND.sumPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD._metadynamicsPotentialSympy.__init__">(ensembler.potentials.OneD._metadynamicsPotentialSympy method)</a>
 </li>
@@ -251,6 +254,8 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.linearCoupledPotentials.__init__">(ensembler.potentials.OneD.linearCoupledPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.metadynamicsPotential.__init__">(ensembler.potentials.OneD.metadynamicsPotential method)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.__init__">(ensembler.potentials.OneD.sumPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential.__init__">(ensembler.potentials.OneD.torsionPotential method)</a>
 </li>
@@ -291,10 +296,10 @@
         <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replica_exchange.temperatureReplicaExchange._adapt_system_to_exchange_coordinate">(ensembler.ensemble.replica_exchange.temperatureReplicaExchange method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.util.html#ensembler.util.basic_class._baseClass">_baseClass (class in ensembler.util.basic_class)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.conditions.html#ensembler.conditions.box_conditions._boundaryCondition">_boundaryCondition (class in ensembler.conditions.box_conditions)</a>
 </li>
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio._calc_bar">_calc_bar() (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio method)</a>
@@ -313,7 +318,7 @@
 </li>
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_implementation_bruteForce">_calculate_implementation_bruteForce() (ensembler.analysis.freeEnergyCalculation.zwanzigEquation method)</a>
 </li>
-      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting._calculate_implementation_useZwanzig">_calculate_implementation_useZwanzig() (ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting method)</a>
+      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig._calculate_implementation_useZwanzig">_calculate_implementation_useZwanzig() (ensembler.analysis.freeEnergyCalculation.threeStateZwanzig method)</a>
 </li>
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation._calculate_meanEfficient">_calculate_meanEfficient() (ensembler.analysis.freeEnergyCalculation.zwanzigEquation method)</a>
 </li>
@@ -344,7 +349,11 @@
       <ul>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.harmonicOscillatorPotential._initialize_functions">(ensembler.potentials.ND.harmonicOscillatorPotential method)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials._initialize_functions">(ensembler.potentials.ND.sumPotentials method)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.envelopedPotential._initialize_functions">(ensembler.potentials.OneD.envelopedPotential method)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials._initialize_functions">(ensembler.potentials.OneD.sumPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.TwoD.addedWavePotential._initialize_functions">(ensembler.potentials.TwoD.addedWavePotential method)</a>
 </li>
@@ -375,9 +384,13 @@
 </li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system._update_energies">_update_energies() (ensembler.system.basic_system.system method)</a>
 </li>
-      <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential._update_functions">_update_functions() (ensembler.potentials.OneD.gaussPotential method)</a>
+      <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials._update_functions">_update_functions() (ensembler.potentials.ND.sumPotentials method)</a>
 
       <ul>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential._update_functions">(ensembler.potentials.OneD.gaussPotential method)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials._update_functions">(ensembler.potentials.OneD.sumPotentials method)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential._update_functions">(ensembler.potentials.OneD.torsionPotential method)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.wavePotential._update_functions">(ensembler.potentials.OneD.wavePotential method)</a>
@@ -418,6 +431,8 @@
 </li>
       </ul></li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential.A">A (ensembler.potentials.OneD.gaussPotential attribute)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.a">a (ensembler.tests.test_potentials.potentialCls_sumPotentials attribute)</a>
 </li>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.accept_move">accept_move() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
 </li>
@@ -500,6 +515,8 @@
       <ul>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.fourWellPotential.b">(ensembler.potentials.OneD.fourWellPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.b">(ensembler.tests.test_potentials.potentialCls_sumPotentials attribute)</a>
+</li>
       </ul></li>
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bar">bar (class in ensembler.analysis.freeEnergyCalculation)</a>
 </li>
@@ -566,7 +583,11 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.C">C (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio attribute)</a>
 </li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.fourWellPotential.c">c (ensembler.potentials.OneD.fourWellPotential attribute)</a>
+
+      <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.c">(ensembler.tests.test_potentials.potentialCls_sumPotentials attribute)</a>
 </li>
+      </ul></li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesForceFieldPotential.c12">c12 (ensembler.potentials.OneD.lennardJonesForceFieldPotential attribute)</a>
 </li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesForceFieldPotential.c6">c6 (ensembler.potentials.OneD.lennardJonesForceFieldPotential attribute)</a>
@@ -576,7 +597,7 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.calculate">calculate() (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio method)</a>
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.calculate">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting method)</a>
+        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.calculate">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzig method)</a>
 </li>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.calculate">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation method)</a>
 </li>
@@ -609,12 +630,10 @@
       </ul></li>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.clear_all_trajs">clear_all_trajs() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
 </li>
-      <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.cm2inch">cm2inch() (in module ensembler.visualisation)</a>
-
-      <ul>
-        <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.style.cm2inch">(in module ensembler.visualisation.style)</a>
+      <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.clear_trajectory">clear_trajectory() (ensembler.system.basic_system.system method)</a>
 </li>
-      </ul></li>
+      <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.cm2inch">cm2inch() (in module ensembler.visualisation)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.condition_class">condition_class (ensembler.tests.test_conditions.boxBoundaryCondition attribute)</a>
 
       <ul>
@@ -761,324 +780,317 @@
     ensembler
 
       <ul>
-        <li><a href="_source/ensembler.html#module-ensembler">module</a>, <a href="autosummary/ensembler.html#module-ensembler">[1]</a>
+        <li><a href="_source/ensembler.html#module-ensembler">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.analysis
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis">module</a>, <a href="autosummary/ensembler.analysis.html#module-ensembler.analysis">[1]</a>
+        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.analysis.freeEnergyCalculation
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis.freeEnergyCalculation">module</a>, <a href="autosummary/ensembler.analysis.freeEnergyCalculation.html#module-ensembler.analysis.freeEnergyCalculation">[1]</a>
+        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis.freeEnergyCalculation">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.conditions
 
       <ul>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions">module</a>, <a href="autosummary/ensembler.conditions.html#module-ensembler.conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.conditions.box_conditions
 
       <ul>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.box_conditions">module</a>, <a href="autosummary/ensembler.conditions.box_conditions.html#module-ensembler.conditions.box_conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.box_conditions">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.conditions.restrain_conditions
 
       <ul>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.restrain_conditions">module</a>, <a href="autosummary/ensembler.conditions.restrain_conditions.html#module-ensembler.conditions.restrain_conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.restrain_conditions">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.conditions.thermostats
 
       <ul>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.thermostats">module</a>, <a href="autosummary/ensembler.conditions.thermostats.html#module-ensembler.conditions.thermostats">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.thermostats">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.ensemble
 
       <ul>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble">module</a>, <a href="autosummary/ensembler.ensemble.html#module-ensembler.ensemble">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.ensemble.exchange_pattern
 
       <ul>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.exchange_pattern">module</a>, <a href="autosummary/ensembler.ensemble.exchange_pattern.html#module-ensembler.ensemble.exchange_pattern">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.exchange_pattern">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.ensemble.replica_exchange
 
       <ul>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replica_exchange">module</a>, <a href="autosummary/ensembler.ensemble.replica_exchange.html#module-ensembler.ensemble.replica_exchange">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replica_exchange">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.ensemble.replicas_dynamic_parameters
 
       <ul>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replicas_dynamic_parameters">module</a>, <a href="autosummary/ensembler.ensemble.replicas_dynamic_parameters.html#module-ensembler.ensemble.replicas_dynamic_parameters">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replicas_dynamic_parameters">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.ensembler
 
       <ul>
-        <li><a href="_source/ensembler.html#module-ensembler.ensembler">module</a>, <a href="autosummary/ensembler.ensembler.html#module-ensembler.ensembler">[1]</a>
+        <li><a href="_source/ensembler.html#module-ensembler.ensembler">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.potentials
 
       <ul>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials">module</a>, <a href="autosummary/ensembler.potentials.html#module-ensembler.potentials">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.potentials.ND
 
       <ul>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.ND">module</a>, <a href="autosummary/ensembler.potentials.ND.html#module-ensembler.potentials.ND">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.ND">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.potentials.OneD
 
       <ul>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.OneD">module</a>, <a href="autosummary/ensembler.potentials.OneD.html#module-ensembler.potentials.OneD">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.OneD">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.potentials.TwoD
 
       <ul>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.TwoD">module</a>, <a href="autosummary/ensembler.potentials.TwoD.html#module-ensembler.potentials.TwoD">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.TwoD">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.samplers
 
       <ul>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers">module</a>, <a href="autosummary/ensembler.samplers.html#module-ensembler.samplers">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.samplers.newtonian
 
       <ul>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.newtonian">module</a>, <a href="autosummary/ensembler.samplers.newtonian.html#module-ensembler.samplers.newtonian">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.newtonian">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.samplers.optimizers
 
       <ul>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.optimizers">module</a>, <a href="autosummary/ensembler.samplers.optimizers.html#module-ensembler.samplers.optimizers">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.optimizers">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.samplers.stochastic
 
       <ul>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.stochastic">module</a>, <a href="autosummary/ensembler.samplers.stochastic.html#module-ensembler.samplers.stochastic">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.stochastic">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.system
 
       <ul>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system">module</a>, <a href="autosummary/ensembler.system.html#module-ensembler.system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.system.basic_system
 
       <ul>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.basic_system">module</a>, <a href="autosummary/ensembler.system.basic_system.html#module-ensembler.system.basic_system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.basic_system">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.system.eds_system
 
       <ul>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.eds_system">module</a>, <a href="autosummary/ensembler.system.eds_system.html#module-ensembler.system.eds_system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.eds_system">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.system.perturbed_system
 
       <ul>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.perturbed_system">module</a>, <a href="autosummary/ensembler.system.perturbed_system.html#module-ensembler.system.perturbed_system">[1]</a>
-</li>
-      </ul></li>
-      <li>
-    ensembler.test
-
-      <ul>
-        <li><a href="autosummary/ensembler.test.html#module-ensembler.test">module</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.perturbed_system">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests">module</a>, <a href="autosummary/ensembler.tests.html#module-ensembler.tests">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_analysis
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_analysis">module</a>, <a href="autosummary/ensembler.tests.test_analysis.html#module-ensembler.tests.test_analysis">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_analysis">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_conditions
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conditions">module</a>, <a href="autosummary/ensembler.tests.test_conditions.html#module-ensembler.tests.test_conditions">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conditions">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_conveyorBelt
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conveyorBelt">module</a>, <a href="autosummary/ensembler.tests.test_conveyorBelt.html#module-ensembler.tests.test_conveyorBelt">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conveyorBelt">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_ensemble
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensemble">module</a>, <a href="autosummary/ensembler.tests.test_ensemble.html#module-ensembler.tests.test_ensemble">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensemble">module</a>
+</li>
+      </ul></li>
+      <li>
+    ensembler.tests.test_ensembler
+
+      <ul>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensembler">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    ensembler.tests.test_ensembler
-
-      <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensembler">module</a>, <a href="autosummary/ensembler.tests.test_ensembler.html#module-ensembler.tests.test_ensembler">[1]</a>
-</li>
-      </ul></li>
-      <li>
     ensembler.tests.test_potentials
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_potentials">module</a>, <a href="autosummary/ensembler.tests.test_potentials.html#module-ensembler.tests.test_potentials">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_potentials">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_sampler
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_sampler">module</a>, <a href="autosummary/ensembler.tests.test_sampler.html#module-ensembler.tests.test_sampler">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_sampler">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_system
 
       <ul>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_system">module</a>, <a href="autosummary/ensembler.tests.test_system.html#module-ensembler.tests.test_system">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_system">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.tests.test_visualization
 
       <ul>
-        <li><a href="autosummary/ensembler.tests.test_visualization.html#module-ensembler.tests.test_visualization">module</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_visualization">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.util
 
       <ul>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util">module</a>, <a href="autosummary/ensembler.util.html#module-ensembler.util">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.util.basic_class
 
       <ul>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.basic_class">module</a>, <a href="autosummary/ensembler.util.basic_class.html#module-ensembler.util.basic_class">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.basic_class">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.util.dataStructure
 
       <ul>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.dataStructure">module</a>, <a href="autosummary/ensembler.util.dataStructure.html#module-ensembler.util.dataStructure">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.dataStructure">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.util.ensemblerTypes
 
       <ul>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.ensemblerTypes">module</a>, <a href="autosummary/ensembler.util.ensemblerTypes.html#module-ensembler.util.ensemblerTypes">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.ensemblerTypes">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation">module</a>, <a href="autosummary/ensembler.visualisation.html#module-ensembler.visualisation">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.animationSimulation
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.animationSimulation">module</a>, <a href="autosummary/ensembler.visualisation.animationSimulation.html#module-ensembler.visualisation.animationSimulation">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.animationSimulation">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.interactive_plots
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.interactive_plots">module</a>, <a href="autosummary/ensembler.visualisation.interactive_plots.html#module-ensembler.visualisation.interactive_plots">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.interactive_plots">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.plotConveyorBelt
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotConveyorBelt">module</a>, <a href="autosummary/ensembler.visualisation.plotConveyorBelt.html#module-ensembler.visualisation.plotConveyorBelt">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotConveyorBelt">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.plotPotentials
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotPotentials">module</a>, <a href="autosummary/ensembler.visualisation.plotPotentials.html#module-ensembler.visualisation.plotPotentials">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotPotentials">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.plotSimulations
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotSimulations">module</a>, <a href="autosummary/ensembler.visualisation.plotSimulations.html#module-ensembler.visualisation.plotSimulations">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotSimulations">module</a>
 </li>
       </ul></li>
       <li>
     ensembler.visualisation.style
 
       <ul>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.style">module</a>, <a href="autosummary/ensembler.visualisation.style.html#module-ensembler.visualisation.style">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.style">module</a>
 </li>
       </ul></li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.envelopedPotential">envelopedPotential (class in ensembler.potentials.ND)</a>
@@ -1136,7 +1148,7 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.equation">equation (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio attribute)</a>
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.equation">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.equation">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 </li>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.equation">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation attribute)</a>
 </li>
@@ -1258,9 +1270,13 @@
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.lambdaEDSPotential.i">(ensembler.potentials.ND.lambdaEDSPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.i">(ensembler.potentials.ND.sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.envelopedPotential.i">(ensembler.potentials.OneD.envelopedPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lambdaEDSPotential.i">(ensembler.potentials.OneD.lambdaEDSPotential attribute)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.i">(ensembler.potentials.OneD.sumPotentials attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential.i">(ensembler.potentials.OneD.torsionPotential attribute)</a>
 </li>
@@ -1275,14 +1291,14 @@
       </ul></li>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.init_mem">init_mem() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.initialise">initialise() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
 
       <ul>
         <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.initialise">(ensembler.system.basic_system.system method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.integrator">integrator (ensembler.tests.test_ensemble.test_ReplicaExchangeCls attribute)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.standard_IntegratorTests.integrator_class">integrator_class (ensembler.tests.test_sampler.standard_IntegratorTests attribute)</a>
@@ -1318,7 +1334,7 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.k">k (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio attribute)</a>
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.k">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.k">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 </li>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.k">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation attribute)</a>
 </li>
@@ -1447,97 +1463,95 @@
     module
 
       <ul>
-        <li><a href="_source/ensembler.html#module-ensembler">ensembler</a>, <a href="autosummary/ensembler.html#module-ensembler">[1]</a>
+        <li><a href="_source/ensembler.html#module-ensembler">ensembler</a>
 </li>
-        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis">ensembler.analysis</a>, <a href="autosummary/ensembler.analysis.html#module-ensembler.analysis">[1]</a>
+        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis">ensembler.analysis</a>
 </li>
-        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis.freeEnergyCalculation">ensembler.analysis.freeEnergyCalculation</a>, <a href="autosummary/ensembler.analysis.freeEnergyCalculation.html#module-ensembler.analysis.freeEnergyCalculation">[1]</a>
+        <li><a href="_source/ensembler.analysis.html#module-ensembler.analysis.freeEnergyCalculation">ensembler.analysis.freeEnergyCalculation</a>
 </li>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions">ensembler.conditions</a>, <a href="autosummary/ensembler.conditions.html#module-ensembler.conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions">ensembler.conditions</a>
 </li>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.box_conditions">ensembler.conditions.box_conditions</a>, <a href="autosummary/ensembler.conditions.box_conditions.html#module-ensembler.conditions.box_conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.box_conditions">ensembler.conditions.box_conditions</a>
 </li>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.restrain_conditions">ensembler.conditions.restrain_conditions</a>, <a href="autosummary/ensembler.conditions.restrain_conditions.html#module-ensembler.conditions.restrain_conditions">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.restrain_conditions">ensembler.conditions.restrain_conditions</a>
 </li>
-        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.thermostats">ensembler.conditions.thermostats</a>, <a href="autosummary/ensembler.conditions.thermostats.html#module-ensembler.conditions.thermostats">[1]</a>
+        <li><a href="_source/ensembler.conditions.html#module-ensembler.conditions.thermostats">ensembler.conditions.thermostats</a>
 </li>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble">ensembler.ensemble</a>, <a href="autosummary/ensembler.ensemble.html#module-ensembler.ensemble">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble">ensembler.ensemble</a>
 </li>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.exchange_pattern">ensembler.ensemble.exchange_pattern</a>, <a href="autosummary/ensembler.ensemble.exchange_pattern.html#module-ensembler.ensemble.exchange_pattern">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.exchange_pattern">ensembler.ensemble.exchange_pattern</a>
 </li>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replica_exchange">ensembler.ensemble.replica_exchange</a>, <a href="autosummary/ensembler.ensemble.replica_exchange.html#module-ensembler.ensemble.replica_exchange">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replica_exchange">ensembler.ensemble.replica_exchange</a>
 </li>
-        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replicas_dynamic_parameters">ensembler.ensemble.replicas_dynamic_parameters</a>, <a href="autosummary/ensembler.ensemble.replicas_dynamic_parameters.html#module-ensembler.ensemble.replicas_dynamic_parameters">[1]</a>
+        <li><a href="_source/ensembler.ensemble.html#module-ensembler.ensemble.replicas_dynamic_parameters">ensembler.ensemble.replicas_dynamic_parameters</a>
 </li>
-        <li><a href="_source/ensembler.html#module-ensembler.ensembler">ensembler.ensembler</a>, <a href="autosummary/ensembler.ensembler.html#module-ensembler.ensembler">[1]</a>
+        <li><a href="_source/ensembler.html#module-ensembler.ensembler">ensembler.ensembler</a>
 </li>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials">ensembler.potentials</a>, <a href="autosummary/ensembler.potentials.html#module-ensembler.potentials">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials">ensembler.potentials</a>
 </li>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.ND">ensembler.potentials.ND</a>, <a href="autosummary/ensembler.potentials.ND.html#module-ensembler.potentials.ND">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.ND">ensembler.potentials.ND</a>
 </li>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.OneD">ensembler.potentials.OneD</a>, <a href="autosummary/ensembler.potentials.OneD.html#module-ensembler.potentials.OneD">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.OneD">ensembler.potentials.OneD</a>
 </li>
-        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.TwoD">ensembler.potentials.TwoD</a>, <a href="autosummary/ensembler.potentials.TwoD.html#module-ensembler.potentials.TwoD">[1]</a>
+        <li><a href="_source/ensembler.potentials.html#module-ensembler.potentials.TwoD">ensembler.potentials.TwoD</a>
 </li>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers">ensembler.samplers</a>, <a href="autosummary/ensembler.samplers.html#module-ensembler.samplers">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers">ensembler.samplers</a>
 </li>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.newtonian">ensembler.samplers.newtonian</a>, <a href="autosummary/ensembler.samplers.newtonian.html#module-ensembler.samplers.newtonian">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.newtonian">ensembler.samplers.newtonian</a>
 </li>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.optimizers">ensembler.samplers.optimizers</a>, <a href="autosummary/ensembler.samplers.optimizers.html#module-ensembler.samplers.optimizers">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.optimizers">ensembler.samplers.optimizers</a>
 </li>
-        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.stochastic">ensembler.samplers.stochastic</a>, <a href="autosummary/ensembler.samplers.stochastic.html#module-ensembler.samplers.stochastic">[1]</a>
+        <li><a href="_source/ensembler.samplers.html#module-ensembler.samplers.stochastic">ensembler.samplers.stochastic</a>
 </li>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system">ensembler.system</a>, <a href="autosummary/ensembler.system.html#module-ensembler.system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system">ensembler.system</a>
 </li>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.basic_system">ensembler.system.basic_system</a>, <a href="autosummary/ensembler.system.basic_system.html#module-ensembler.system.basic_system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.basic_system">ensembler.system.basic_system</a>
 </li>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.eds_system">ensembler.system.eds_system</a>, <a href="autosummary/ensembler.system.eds_system.html#module-ensembler.system.eds_system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.eds_system">ensembler.system.eds_system</a>
 </li>
-        <li><a href="_source/ensembler.system.html#module-ensembler.system.perturbed_system">ensembler.system.perturbed_system</a>, <a href="autosummary/ensembler.system.perturbed_system.html#module-ensembler.system.perturbed_system">[1]</a>
+        <li><a href="_source/ensembler.system.html#module-ensembler.system.perturbed_system">ensembler.system.perturbed_system</a>
 </li>
-        <li><a href="autosummary/ensembler.test.html#module-ensembler.test">ensembler.test</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests">ensembler.tests</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests">ensembler.tests</a>, <a href="autosummary/ensembler.tests.html#module-ensembler.tests">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_analysis">ensembler.tests.test_analysis</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_analysis">ensembler.tests.test_analysis</a>, <a href="autosummary/ensembler.tests.test_analysis.html#module-ensembler.tests.test_analysis">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conditions">ensembler.tests.test_conditions</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conditions">ensembler.tests.test_conditions</a>, <a href="autosummary/ensembler.tests.test_conditions.html#module-ensembler.tests.test_conditions">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conveyorBelt">ensembler.tests.test_conveyorBelt</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_conveyorBelt">ensembler.tests.test_conveyorBelt</a>, <a href="autosummary/ensembler.tests.test_conveyorBelt.html#module-ensembler.tests.test_conveyorBelt">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensemble">ensembler.tests.test_ensemble</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensemble">ensembler.tests.test_ensemble</a>, <a href="autosummary/ensembler.tests.test_ensemble.html#module-ensembler.tests.test_ensemble">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensembler">ensembler.tests.test_ensembler</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_ensembler">ensembler.tests.test_ensembler</a>, <a href="autosummary/ensembler.tests.test_ensembler.html#module-ensembler.tests.test_ensembler">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_potentials">ensembler.tests.test_potentials</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_potentials">ensembler.tests.test_potentials</a>, <a href="autosummary/ensembler.tests.test_potentials.html#module-ensembler.tests.test_potentials">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_sampler">ensembler.tests.test_sampler</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_sampler">ensembler.tests.test_sampler</a>, <a href="autosummary/ensembler.tests.test_sampler.html#module-ensembler.tests.test_sampler">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_system">ensembler.tests.test_system</a>
 </li>
-        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_system">ensembler.tests.test_system</a>, <a href="autosummary/ensembler.tests.test_system.html#module-ensembler.tests.test_system">[1]</a>
+        <li><a href="_source/ensembler.tests.html#module-ensembler.tests.test_visualization">ensembler.tests.test_visualization</a>
 </li>
-        <li><a href="autosummary/ensembler.tests.test_visualization.html#module-ensembler.tests.test_visualization">ensembler.tests.test_visualization</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util">ensembler.util</a>
 </li>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util">ensembler.util</a>, <a href="autosummary/ensembler.util.html#module-ensembler.util">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.basic_class">ensembler.util.basic_class</a>
 </li>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.basic_class">ensembler.util.basic_class</a>, <a href="autosummary/ensembler.util.basic_class.html#module-ensembler.util.basic_class">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.dataStructure">ensembler.util.dataStructure</a>
 </li>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.dataStructure">ensembler.util.dataStructure</a>, <a href="autosummary/ensembler.util.dataStructure.html#module-ensembler.util.dataStructure">[1]</a>
+        <li><a href="_source/ensembler.util.html#module-ensembler.util.ensemblerTypes">ensembler.util.ensemblerTypes</a>
 </li>
-        <li><a href="_source/ensembler.util.html#module-ensembler.util.ensemblerTypes">ensembler.util.ensemblerTypes</a>, <a href="autosummary/ensembler.util.ensemblerTypes.html#module-ensembler.util.ensemblerTypes">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation">ensembler.visualisation</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation">ensembler.visualisation</a>, <a href="autosummary/ensembler.visualisation.html#module-ensembler.visualisation">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.animationSimulation">ensembler.visualisation.animationSimulation</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.animationSimulation">ensembler.visualisation.animationSimulation</a>, <a href="autosummary/ensembler.visualisation.animationSimulation.html#module-ensembler.visualisation.animationSimulation">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.interactive_plots">ensembler.visualisation.interactive_plots</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.interactive_plots">ensembler.visualisation.interactive_plots</a>, <a href="autosummary/ensembler.visualisation.interactive_plots.html#module-ensembler.visualisation.interactive_plots">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotConveyorBelt">ensembler.visualisation.plotConveyorBelt</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotConveyorBelt">ensembler.visualisation.plotConveyorBelt</a>, <a href="autosummary/ensembler.visualisation.plotConveyorBelt.html#module-ensembler.visualisation.plotConveyorBelt">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotPotentials">ensembler.visualisation.plotPotentials</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotPotentials">ensembler.visualisation.plotPotentials</a>, <a href="autosummary/ensembler.visualisation.plotPotentials.html#module-ensembler.visualisation.plotPotentials">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotSimulations">ensembler.visualisation.plotSimulations</a>
 </li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.plotSimulations">ensembler.visualisation.plotSimulations</a>, <a href="autosummary/ensembler.visualisation.plotSimulations.html#module-ensembler.visualisation.plotSimulations">[1]</a>
-</li>
-        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.style">ensembler.visualisation.style</a>, <a href="autosummary/ensembler.visualisation.style.html#module-ensembler.visualisation.style">[1]</a>
+        <li><a href="_source/ensembler.visualisation.html#module-ensembler.visualisation.style">ensembler.visualisation.style</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1581,6 +1595,8 @@
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.lambdaEDSPotential.name">(ensembler.potentials.ND.lambdaEDSPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.name">(ensembler.potentials.ND.sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD._metadynamicsPotentialSympy.name">(ensembler.potentials.OneD._metadynamicsPotentialSympy attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD._timedependendBias.name">(ensembler.potentials.OneD._timedependendBias attribute)</a>
@@ -1616,6 +1632,8 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.linearCoupledPotentials.name">(ensembler.potentials.OneD.linearCoupledPotentials attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.metadynamicsPotential.name">(ensembler.potentials.OneD.metadynamicsPotential attribute)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.name">(ensembler.potentials.OneD.sumPotentials attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential.name">(ensembler.potentials.OneD.torsionPotential attribute)</a>
 </li>
@@ -1676,6 +1694,12 @@
 </li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.nParticles">nParticles (ensembler.system.basic_system.system attribute)</a>
 </li>
+      <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.nPotentials">nPotentials (ensembler.potentials.ND.sumPotentials attribute)</a>
+
+      <ul>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.nPotentials">(ensembler.potentials.OneD.sumPotentials attribute)</a>
+</li>
+      </ul></li>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.envelopedPotential.nStates">nStates (ensembler.potentials.ND.envelopedPotential attribute)</a>
 
       <ul>
@@ -1775,6 +1799,8 @@
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.lambdaEDSPotential.position">(ensembler.potentials.ND.lambdaEDSPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.position">(ensembler.potentials.ND.sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD._metadynamicsPotentialSympy.position">(ensembler.potentials.OneD._metadynamicsPotentialSympy attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD._timedependendBias.position">(ensembler.potentials.OneD._timedependendBias attribute)</a>
@@ -1809,6 +1835,8 @@
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.metadynamicsPotential.position">(ensembler.potentials.OneD.metadynamicsPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.position">(ensembler.potentials.OneD.sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential.position">(ensembler.potentials.OneD.torsionPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.wavePotential.position">(ensembler.potentials.OneD.wavePotential attribute)</a>
@@ -1836,19 +1864,21 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition">(class in ensembler.tests.test_conditions)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.samplers.html#ensembler.samplers.newtonian.positionVerletIntegrator">positionVerletIntegrator (class in ensembler.samplers.newtonian)</a>
 </li>
       <li><a href="_source/ensembler.samplers.html#ensembler.samplers.stochastic.stochasticSampler.posShift">posShift (ensembler.samplers.stochastic.stochasticSampler attribute)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.potential">potential (ensembler.tests.test_ensemble.test_ReplicaExchangeCls attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.potential">potential() (ensembler.system.basic_system.system property)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_harmonicOscillatorPotential.potential_class">potential_class (ensembler.tests.test_potentials.potentialCls_2D_harmonicOscillatorPotential attribute)</a>
 
       <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_2D_sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.potential_class">(ensembler.tests.test_potentials.potentialCls_2D_torsionPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_wavePotential.potential_class">(ensembler.tests.test_potentials.potentialCls_2D_wavePotential attribute)</a>
@@ -1879,6 +1909,8 @@
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_harmonicOscillatorPotential.potential_class">(ensembler.tests.test_potentials.potentialCls_ND_harmonicOscillatorPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_sumPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_ND_sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_envelopedPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_perturbed_envelopedPotentials attribute)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_exponentialCoupledPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_perturbed_exponentialCoupledPotentials attribute)</a>
@@ -1889,6 +1921,8 @@
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials attribute)</a>
 </li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.potential_class">(ensembler.tests.test_potentials.potentialCls_sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_torsionPotential.potential_class">(ensembler.tests.test_potentials.potentialCls_torsionPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_wavePotential.potential_class">(ensembler.tests.test_potentials.potentialCls_wavePotential attribute)</a>
@@ -1897,6 +1931,8 @@
 </li>
       </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_harmonicOscillatorPotential">potentialCls_2D_harmonicOscillatorPotential (class in ensembler.tests.test_potentials)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials">potentialCls_2D_sumPotentials (class in ensembler.tests.test_potentials)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential">potentialCls_2D_torsionPotential (class in ensembler.tests.test_potentials)</a>
 </li>
@@ -1928,6 +1964,8 @@
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_harmonicOscillatorPotential">potentialCls_ND_harmonicOscillatorPotential (class in ensembler.tests.test_potentials)</a>
 </li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_sumPotentials">potentialCls_ND_sumPotentials (class in ensembler.tests.test_potentials)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_envelopedPotentials">potentialCls_perturbed_envelopedPotentials (class in ensembler.tests.test_potentials)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_exponentialCoupledPotentials">potentialCls_perturbed_exponentialCoupledPotentials (class in ensembler.tests.test_potentials)</a>
@@ -1938,12 +1976,20 @@
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials">potentialCls_perturbedLinearCoupledPotentials (class in ensembler.tests.test_potentials)</a>
 </li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials">potentialCls_sumPotentials (class in ensembler.tests.test_potentials)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_torsionPotential">potentialCls_torsionPotential (class in ensembler.tests.test_potentials)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_wavePotential">potentialCls_wavePotential (class in ensembler.tests.test_potentials)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialNDCls">potentialNDCls (class in ensembler.tests.test_potentials)</a>
 </li>
+      <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.potentials">potentials (ensembler.potentials.ND.sumPotentials attribute)</a>
+
+      <ul>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.potentials">(ensembler.potentials.OneD.sumPotentials attribute)</a>
+</li>
+      </ul></li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.propagate">propagate() (ensembler.system.basic_system.system method)</a>
 </li>
   </ul></td>
@@ -1964,16 +2010,18 @@
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.RE">RE (ensembler.tests.test_ensemble.test_ReplicaExchangeCls attribute)</a>
 </li>
+      <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.interactive_plots.interactive_eds.redraw">redraw() (ensembler.visualisation.interactive_plots.interactive_eds method)</a>
+</li>
       <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.interactive_plots.interactive_eds.redraw_eoff">redraw_eoff() (ensembler.visualisation.interactive_plots.interactive_eds method)</a>
 </li>
       <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.interactive_plots.interactive_eds.redraw_s">redraw_s() (ensembler.visualisation.interactive_plots.interactive_eds method)</a>
 </li>
       <li><a href="_source/ensembler.visualisation.html#ensembler.visualisation.interactive_plots.interactive_eds.redraw_states">redraw_states() (ensembler.visualisation.interactive_plots.interactive_eds method)</a>
 </li>
-      <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern.replica_graph">replica_graph (ensembler.ensemble.exchange_pattern.Exchange_pattern attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.exchange_pattern.Exchange_pattern.replica_graph">replica_graph (ensembler.ensemble.exchange_pattern.Exchange_pattern attribute)</a>
+</li>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replica_exchange.replicaExchangeEnvelopingDistributionSampling.replica_graph_dimensions">replica_graph_dimensions (ensembler.ensemble.replica_exchange.replicaExchangeEnvelopingDistributionSampling attribute)</a>
 
       <ul>
@@ -2062,8 +2110,6 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lambdaEDSPotential.set_lam">(ensembler.potentials.OneD.lambdaEDSPotential method)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.system.html#ensembler.system.perturbed_system.perturbedSystem.set_lambda">set_lambda() (ensembler.system.perturbed_system.perturbedSystem method)</a>
-</li>
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.set_parameters">set_parameters() (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio method)</a>
 
       <ul>
@@ -2096,14 +2142,12 @@
         <li><a href="_source/ensembler.system.html#ensembler.system.eds_system.edsSystem.set_s">(ensembler.system.eds_system.edsSystem method)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_steps_between_trials">set_simulation_steps_between_trials() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
+      <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt.set_simulation_n_steps_between_trials">set_simulation_n_steps_between_trials() (ensembler.ensemble.replicas_dynamic_parameters.conveyorBelt method)</a>
 </li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.set_temperature">set_temperature() (ensembler.system.basic_system.system method)</a>
 </li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system.set_velocities">set_velocities() (ensembler.system.basic_system.system method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.setUp">setUp() (ensembler.tests.test_conditions.boxBoundaryCondition method)</a>
 
       <ul>
@@ -2122,6 +2166,8 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_System.setUp">(ensembler.tests.test_system.test_System method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.gaussPotential.sigma">sigma (ensembler.potentials.OneD.gaussPotential attribute)</a>
 
       <ul>
@@ -2184,6 +2230,12 @@
 </li>
       <li><a href="_source/ensembler.samplers.html#ensembler.samplers.stochastic.stochasticSampler">stochasticSampler (class in ensembler.samplers.stochastic)</a>
 </li>
+      <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials">sumPotentials (class in ensembler.potentials.ND)</a>
+
+      <ul>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials">(class in ensembler.potentials.OneD)</a>
+</li>
+      </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.sys">sys (ensembler.tests.test_ensemble.test_ReplicaExchangeCls attribute)</a>
 </li>
       <li><a href="_source/ensembler.system.html#ensembler.system.basic_system.system">system (class in ensembler.system.basic_system)</a>
@@ -2211,7 +2263,7 @@
       <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio.T">T (ensembler.analysis.freeEnergyCalculation.bennetAcceptanceRatio attribute)</a>
 
       <ul>
-        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.T">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+        <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.T">(ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 </li>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.T">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation attribute)</a>
 </li>
@@ -2235,6 +2287,16 @@
       <li><a href="_source/ensembler.conditions.html#ensembler.conditions.thermostats.andersonThermostat.temperature_noise_range">temperature_noise_range (ensembler.conditions.thermostats.andersonThermostat attribute)</a>
 </li>
       <li><a href="_source/ensembler.ensemble.html#ensembler.ensemble.replica_exchange.temperatureReplicaExchange">temperatureReplicaExchange (class in ensembler.ensemble.replica_exchange)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Animations.test_1D_animation">test_1D_animation() (ensembler.tests.test_visualization.test_plot_Animations method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_interactive_widgets.test_1D_cvb">test_1D_cvb() (ensembler.tests.test_visualization.test_interactive_widgets method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_interactive_widgets.test_1D_eds">test_1D_eds() (ensembler.tests.test_visualization.test_interactive_widgets method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_ConveyorBelt.test_1D_plotEnsembler">test_1D_plotEnsembler() (ensembler.tests.test_visualization.test_plot_ConveyorBelt method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Potentials.test_1DPotential_V">test_1DPotential_V() (ensembler.tests.test_visualization.test_plot_Potentials method)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_edsSystem1D.test_append_state">test_append_state() (ensembler.tests.test_system.test_edsSystem1D method)</a>
 
@@ -2300,9 +2362,15 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_constructor2D">(ensembler.tests.test_conditions.periodicBoundaryCondition method)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_constructor_ListPotentials">test_constructor_ListPotentials() (ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials.test_constructor_ListPotentials">test_constructor_ListPotentials() (ensembler.tests.test_potentials.potentialCls_2D_sumPotentials method)</a>
 
       <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_constructor_ListPotentials">(ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+</li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_sumPotentials.test_constructor_ListPotentials">(ensembler.tests.test_potentials.potentialCls_ND_sumPotentials method)</a>
+</li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.test_constructor_ListPotentials">(ensembler.tests.test_potentials.potentialCls_sumPotentials method)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_torsionPotential.test_constructor_ListPotentials">(ensembler.tests.test_potentials.potentialCls_torsionPotential method)</a>
 </li>
       </ul></li>
@@ -2314,8 +2382,16 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials.test_dHdlam">(ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials method)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_dHdpos">test_dHdpos() (ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials.test_dHdpos">test_dHdpos() (ensembler.tests.test_potentials.potentialCls_2D_sumPotentials method)</a>
+
+      <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_dHdpos">(ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
 </li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_sumPotentials.test_dHdpos">(ensembler.tests.test_potentials.potentialCls_ND_sumPotentials method)</a>
+</li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.test_dHdpos">(ensembler.tests.test_potentials.potentialCls_sumPotentials method)</a>
+</li>
+      </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_wavePotential.test_dHdpos2D1Pos">test_dHdpos2D1Pos() (ensembler.tests.test_potentials.potentialCls_2D_wavePotential method)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_harmonicOscillatorPotential.test_dHdpos2DNPos">test_dHdpos2DNPos() (ensembler.tests.test_potentials.potentialCls_2D_harmonicOscillatorPotential method)</a>
@@ -2382,9 +2458,11 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_lambdaEnvelopedPotentials.test_ene_NPos">(ensembler.tests.test_potentials.potentialCls_perturbed_lambdaEnvelopedPotentials method)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_energies">test_energies() (ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials.test_energies">test_energies() (ensembler.tests.test_potentials.potentialCls_2D_sumPotentials method)</a>
 
       <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_energies">(ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_addedPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_addedPotentials2D.test_energies">(ensembler.tests.test_potentials.potentialCls_addedPotentials2D method)</a>
@@ -2409,11 +2487,15 @@
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_metadynamics2D.test_energies">(ensembler.tests.test_potentials.potentialCls_metadynamics2D method)</a>
 </li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_sumPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_ND_sumPotentials method)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_exponentialCoupledPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_perturbed_exponentialCoupledPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbed_hybridCoupledPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_perturbed_hybridCoupledPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_perturbedLinearCoupledPotentials method)</a>
+</li>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_sumPotentials.test_energies">(ensembler.tests.test_potentials.potentialCls_sumPotentials method)</a>
 </li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_torsionPotential.test_energies">(ensembler.tests.test_potentials.potentialCls_torsionPotential method)</a>
 </li>
@@ -2430,9 +2512,11 @@
       </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_ND_harmonicOscillatorPotential.test_energies3DNPos">test_energies3DNPos() (ensembler.tests.test_potentials.potentialCls_ND_harmonicOscillatorPotential method)</a>
 </li>
-      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_energies_phase_shifted">test_energies_phase_shifted() (ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_sumPotentials.test_energies_phase_shifted">test_energies_phase_shifted() (ensembler.tests.test_potentials.potentialCls_2D_sumPotentials method)</a>
 
       <ul>
+        <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_2D_torsionPotential.test_energies_phase_shifted">(ensembler.tests.test_potentials.potentialCls_2D_torsionPotential method)</a>
+</li>
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_potentials.potentialCls_torsionPotential.test_energies_phase_shifted">(ensembler.tests.test_potentials.potentialCls_torsionPotential method)</a>
 </li>
       </ul></li>
@@ -2464,6 +2548,8 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_analysis.test_ZwanzigEquation.test_free_Energy1">(ensembler.tests.test_analysis.test_ZwanzigEquation method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_edsSystem1D.test_get_Pot">test_get_Pot() (ensembler.tests.test_system.test_edsSystem1D method)</a>
 
       <ul>
@@ -2472,8 +2558,6 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_System.test_get_Pot">(ensembler.tests.test_system.test_System method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_System.test_get_Trajectory">test_get_Trajectory() (ensembler.tests.test_system.test_System method)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_getTotPot_1DREnsemble">test_getTotPot_1DREnsemble() (ensembler.tests.test_ensemble.test_ReplicaExchangeCls method)</a>
@@ -2514,6 +2598,8 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_verlocityVerletIntegrator_Integrator.test_integrate">(ensembler.tests.test_sampler.test_verlocityVerletIntegrator_Integrator method)</a>
 </li>
       </ul></li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_interactive_widgets">test_interactive_widgets (class in ensembler.tests.test_visualization)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_Langevin_Integrator">test_Langevin_Integrator (class in ensembler.tests.test_sampler)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_LangevinVelocity_Integrator">test_LangevinVelocity_Integrator (class in ensembler.tests.test_sampler)</a>
@@ -2539,6 +2625,18 @@
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_MonteCarlo_Integrator">test_MonteCarlo_Integrator (class in ensembler.tests.test_sampler)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_perturbedSystem1D">test_perturbedSystem1D (class in ensembler.tests.test_system)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Potentials.test_plot_1DPotential">test_plot_1DPotential() (ensembler.tests.test_visualization.test_plot_Potentials method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Potentials.test_plot_1DPotential_dhdpos">test_plot_1DPotential_dhdpos() (ensembler.tests.test_visualization.test_plot_Potentials method)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Animations">test_plot_Animations (class in ensembler.tests.test_visualization)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_ConveyorBelt">test_plot_ConveyorBelt (class in ensembler.tests.test_visualization)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Potentials">test_plot_Potentials (class in ensembler.tests.test_visualization)</a>
+</li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Simulations">test_plot_Simulations (class in ensembler.tests.test_visualization)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_positionVerletIntegrator_Integrator">test_positionVerletIntegrator_Integrator (class in ensembler.tests.test_sampler)</a>
 </li>
@@ -2610,6 +2708,8 @@
       </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_simulate_good_exchange">test_simulate_good_exchange() (ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls method)</a>
 </li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Simulations.test_static_sim_plots">test_static_sim_plots() (ensembler.tests.test_visualization.test_plot_Simulations method)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_cg_Integrator.test_step">test_step() (ensembler.tests.test_sampler.test_cg_Integrator method)</a>
 
       <ul>
@@ -2668,6 +2768,8 @@
         <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_System.test_totPot">(ensembler.tests.test_system.test_System method)</a>
 </li>
       </ul></li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_plot_Simulations.test_twoD_simulation_ana_plot">test_twoD_simulation_ana_plot() (ensembler.tests.test_visualization.test_plot_Simulations method)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_system.test_edsSystem1D.test_updateEne">test_updateEne() (ensembler.tests.test_system.test_edsSystem1D method)</a>
 
       <ul>
@@ -2686,6 +2788,8 @@
       </ul></li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_sampler.test_verlocityVerletIntegrator_Integrator">test_verlocityVerletIntegrator_Integrator (class in ensembler.tests.test_sampler)</a>
 </li>
+      <li><a href="_source/ensembler.tests.html#ensembler.tests.test_visualization.test_Visualization">test_Visualization (class in ensembler.tests.test_visualization)</a>
+</li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_analysis.test_ZwanzigEquation">test_ZwanzigEquation (class in ensembler.tests.test_analysis)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conveyorBelt.testEnsemble">testEnsemble (class in ensembler.tests.test_conveyorBelt)</a>
@@ -2694,7 +2798,7 @@
 </li>
       <li><a href="_source/ensembler.conditions.html#ensembler.conditions.thermostats.thermostat">thermostat (class in ensembler.conditions.thermostats)</a>
 </li>
-      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting">threeStateZwanzigReweighting (class in ensembler.analysis.freeEnergyCalculation)</a>
+      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig">threeStateZwanzig (class in ensembler.analysis.freeEnergyCalculation)</a>
 </li>
       <li><a href="_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.tmp_test_dir">tmp_test_dir (ensembler.tests.test_conditions.boxBoundaryCondition attribute)</a>
 
@@ -2785,6 +2889,8 @@
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.lambdaEDSPotential.V_functional">(ensembler.potentials.ND.lambdaEDSPotential attribute)</a>
 </li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.ND.sumPotentials.V_functional">(ensembler.potentials.ND.sumPotentials attribute)</a>
+</li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.coulombPotential.V_functional">(ensembler.potentials.OneD.coulombPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.doubleWellPotential.V_functional">(ensembler.potentials.OneD.doubleWellPotential attribute)</a>
@@ -2802,6 +2908,8 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesForceFieldPotential.V_functional">(ensembler.potentials.OneD.lennardJonesForceFieldPotential attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lennardJonesPotential.V_functional">(ensembler.potentials.OneD.lennardJonesPotential attribute)</a>
+</li>
+        <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.sumPotentials.V_functional">(ensembler.potentials.OneD.sumPotentials attribute)</a>
 </li>
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.torsionPotential.V_functional">(ensembler.potentials.OneD.torsionPotential attribute)</a>
 </li>
@@ -2824,6 +2932,8 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.envelopedPotential.V_is">(ensembler.potentials.OneD.envelopedPotential property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.exponentialCoupledPotentials.Va">Va (ensembler.potentials.OneD.exponentialCoupledPotentials attribute)</a>
 
       <ul>
@@ -2832,8 +2942,6 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.linearCoupledPotentials.Va">(ensembler.potentials.OneD.linearCoupledPotentials attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.exponentialCoupledPotentials.Vb">Vb (ensembler.potentials.OneD.exponentialCoupledPotentials attribute)</a>
 
       <ul>
@@ -2850,7 +2958,7 @@
 </li>
       <li><a href="_source/ensembler.util.html#ensembler.util.basic_class._baseClass.verbose">verbose() (ensembler.util.basic_class._baseClass property)</a>
 </li>
-      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vi">Vi (ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.Vi">Vi (ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 
       <ul>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vi">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation attribute)</a>
@@ -2870,7 +2978,7 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.OneD.lambdaEDSPotential.Vis">(ensembler.potentials.OneD.lambdaEDSPotential attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vj">Vj (ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.Vj">Vj (ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 
       <ul>
         <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.zwanzigEquation.Vj">(ensembler.analysis.freeEnergyCalculation.zwanzigEquation attribute)</a>
@@ -2892,7 +3000,7 @@
         <li><a href="_source/ensembler.potentials.html#ensembler.potentials.TwoD.harmonicOscillatorPotential.Voff">(ensembler.potentials.TwoD.harmonicOscillatorPotential attribute)</a>
 </li>
       </ul></li>
-      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting.Vr">Vr (ensembler.analysis.freeEnergyCalculation.threeStateZwanzigReweighting attribute)</a>
+      <li><a href="_source/ensembler.analysis.html#ensembler.analysis.freeEnergyCalculation.threeStateZwanzig.Vr">Vr (ensembler.analysis.freeEnergyCalculation.threeStateZwanzig attribute)</a>
 </li>
   </ul></td>
 </tr></table>

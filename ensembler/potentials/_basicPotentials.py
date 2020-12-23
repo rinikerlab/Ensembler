@@ -1,3 +1,4 @@
+import copy
 import numpy as np, sympy as sp
 
 from ensembler.util.basic_class import _baseClass, notImplementedERR
@@ -112,6 +113,7 @@ class _potentialNDCls(_potentialCls):
         self.__dict__ = state
         self._initialize_functions()
         self._update_functions()
+
 
     """
         private

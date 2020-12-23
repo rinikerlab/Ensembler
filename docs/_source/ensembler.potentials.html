@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="ensembler.potentials.biased_potentials package" href="ensembler.potentials.biased_potentials.html" />
+    <link rel="next" title="ensembler.samplers package" href="ensembler.samplers.html" />
     <link rel="prev" title="ensembler.ensemble package" href="ensembler.ensemble.html" /> 
 </head>
 
@@ -91,30 +91,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.potentials package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ensembler.html">ensembler package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ensembler.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ensembler.potentials package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.ND">ensembler.potentials.ND module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.OneD">ensembler.potentials.OneD module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials.TwoD">ensembler.potentials.TwoD module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.potentials">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
 </ul>
@@ -163,7 +161,9 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">Documentation</a> &raquo;</li>
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="ensembler.html">ensembler package</a> &raquo;</li>
         
       <li>ensembler.potentials package</li>
     
@@ -210,20 +210,6 @@
 </style>
 <div class="section" id="ensembler-potentials-package">
 <h1>ensembler.potentials package<a class="headerlink" href="#ensembler-potentials-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#ensembler-potentials-biased-potentials-biasoned-module">ensembler.potentials.biased_potentials.biasOneD module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#ensembler-potentials-biased-potentials-biastwod-module">ensembler.potentials.biased_potentials.biasTwoD module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html#module-contents">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -591,6 +577,71 @@ is a function used to set an smoothing parameter.</p>
 <dl class="py attribute">
 <dt id="ensembler.potentials.ND.lambdaEDSPotential.sis">
 <code class="sig-name descname">sis</code><em class="property"> = Matrix([[s_i]])</em><a class="headerlink" href="#ensembler.potentials.ND.lambdaEDSPotential.sis" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="ensembler.potentials.ND.sumPotentials">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.ND.</code><code class="sig-name descname">sumPotentials</code><span class="sig-paren">(</span><em class="sig-param">potentials: List[ensembler.potentials._basicPotentials._potentialNDCls] = (&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#sumPotentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potentialNDCls</span></code></p>
+<dl class="simple">
+<dt>Adds n different potentials.</dt><dd><p>For adding up wavepotentials, we recommend using the addedwavePotential class.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.V_functional">
+<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = Sum(Matrix([[V_x]])[i, 0], (i, 0, N))</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.V_functional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.sumPotentials.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potentials: List[ensembler.potentials._basicPotentials._potentialNDCls] = (&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.ND.harmonicOscillatorPotential object&gt;)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#sumPotentials.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of an summed Potentials</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>potentials</strong> (<em>List[_potential2DCls], optional</em>) – it uses the 2D potential class to generate its potential,
+default to (wavePotential(), wavePotential(multiplicity=[3, 3]))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.sumPotentials._initialize_functions">
+<code class="sig-name descname">_initialize_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#sumPotentials._initialize_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials._initialize_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts the symbolic mathematics of sympy to a matrix representation that is compatible
+with multi-dimentionality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.ND.sumPotentials._update_functions">
+<code class="sig-name descname">_update_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/ND.html#sumPotentials._update_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials._update_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the current energy and derivative of the energy</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.i">
+<code class="sig-name descname">i</code><em class="property"> = i</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.nPotentials">
+<code class="sig-name descname">nPotentials</code><em class="property"> = N</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.nPotentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Summed Potential'</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.ND.sumPotentials.potentials">
+<code class="sig-name descname">potentials</code><em class="property">: sympy.matrices.dense.MutableDenseMatrix</em><em class="property"> = Matrix([[V_x]])</em><a class="headerlink" href="#ensembler.potentials.ND.sumPotentials.potentials" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1926,6 +1977,71 @@ current position to the potential</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="ensembler.potentials.OneD.sumPotentials">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">sumPotentials</code><span class="sig-paren">(</span><em class="sig-param">potentials: List[ensembler.potentials._basicPotentials._potential1DCls] = (&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#sumPotentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
+<dl class="simple">
+<dt>Adds n different potentials.</dt><dd><p>For adding up wavepotentials, we recommend using the addedwavePotential class.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.V_functional">
+<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = Sum(Matrix([[V_x]])[i, 0], (i, 0, N))</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.V_functional" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD.sumPotentials.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potentials: List[ensembler.potentials._basicPotentials._potential1DCls] = (&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">&lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#sumPotentials.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the Constructor of an summed Potentials</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>potentials</strong> (<em>List[_potential2DCls], optional</em>) – it uses the 2D potential class to generate its potential,
+default to (wavePotential(), wavePotential(multiplicity=[3, 3]))</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD.sumPotentials._initialize_functions">
+<code class="sig-name descname">_initialize_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#sumPotentials._initialize_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials._initialize_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts the symbolic mathematics of sympy to a matrix representation that is compatible
+with multi-dimentionality.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.potentials.OneD.sumPotentials._update_functions">
+<code class="sig-name descname">_update_functions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#sumPotentials._update_functions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials._update_functions" title="Permalink to this definition">¶</a></dt>
+<dd><p>calculates the current energy and derivative of the energy</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.i">
+<code class="sig-name descname">i</code><em class="property"> = i</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.i" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.nPotentials">
+<code class="sig-name descname">nPotentials</code><em class="property"> = N</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.nPotentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'Summed Potential'</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.position">
+<code class="sig-name descname">position</code><em class="property">: sympy.core.symbol.Symbol</em><em class="property"> = r</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.potentials.OneD.sumPotentials.potentials">
+<code class="sig-name descname">potentials</code><em class="property">: sympy.matrices.dense.MutableDenseMatrix</em><em class="property"> = Matrix([[V_x]])</em><a class="headerlink" href="#ensembler.potentials.OneD.sumPotentials.potentials" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="ensembler.potentials.OneD.torsionPotential">
 <em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.OneD.</code><code class="sig-name descname">torsionPotential</code><span class="sig-paren">(</span><em class="sig-param">wavePotentials=[&lt;ensembler.potentials.OneD.wavePotential object&gt;, &lt;ensembler.potentials.OneD.wavePotential object&gt;], radians=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/OneD.html#torsionPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.OneD.torsionPotential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential1DCls</span></code></p>
@@ -2227,7 +2343,7 @@ with multi-dimentionality.</p>
 
 <dl class="py class">
 <dt id="ensembler.potentials.TwoD.gaussPotential">
-<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.TwoD.</code><code class="sig-name descname">gaussPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0, 0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1.0, 1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.potentials.TwoD.</code><code class="sig-name descname">gaussPotential</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0, 0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1.0, 1.0</span></em>, <em class="sig-param"><span class="n">negative_sign</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.potentials._basicPotentials._potential2DCls</span></code></p>
 <p>Gaussian like potential, usually used for metadynamics</p>
 <dl class="py attribute">
@@ -2237,12 +2353,12 @@ with multi-dimentionality.</p>
 
 <dl class="py attribute">
 <dt id="ensembler.potentials.TwoD.gaussPotential.V_functional">
-<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = Product(Matrix([[A_gauss*exp(-0.5*(-mu + r)**2/sigma**2)]])[i, 0], (i, 0, nDimensions))</em><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential.V_functional" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">V_functional</code><em class="property">: sympy.core.function.Function</em><em class="property"> = Sum(Matrix([[A_gauss*exp(-0.5*(-mu + r)**2/sigma**2)]])[i, 0], (i, 0, nDimensions))</em><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential.V_functional" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="ensembler.potentials.TwoD.gaussPotential.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0, 0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1.0, 1.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">mu</span><span class="o">=</span><span class="default_value">0.0, 0.0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="o">=</span><span class="default_value">1.0, 1.0</span></em>, <em class="sig-param"><span class="n">negative_sign</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/potentials/TwoD.html#gaussPotential.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.potentials.TwoD.gaussPotential.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><dl class="simple">
 <dt>__init__</dt><dd><p>This is the Constructor of a 2D Gauss Potential</p>
@@ -2255,6 +2371,7 @@ with multi-dimentionality.</p>
 <li><p><strong>A</strong> (<em>float, optional</em>) – scaling of the gauss function, defaults to 1.</p></li>
 <li><p><strong>mu</strong> (<em>tupel, optional</em>) – mean of the gauss function, defaults to (0., 0.)</p></li>
 <li><p><strong>sigma</strong> (<em>tupel, optional</em>) – standard deviation of the gauss function, defaults to (1., 1.)</p></li>
+<li><p><strong>negative_sign</strong> (<em>bool, optional</em>) – this option is switching the sign of the final potential energy landscape. ==&gt; mu defines the minima location, not maxima location</p></li>
 </ul>
 </dd>
 </dl>
@@ -2642,7 +2759,7 @@ with multi-dimentionality.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ensembler.potentials.biased_potentials.html" class="btn btn-neutral float-right" title="ensembler.potentials.biased_potentials package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ensembler.samplers.html" class="btn btn-neutral float-right" title="ensembler.samplers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ensembler.ensemble.html" class="btn btn-neutral float-left" title="ensembler.ensemble package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

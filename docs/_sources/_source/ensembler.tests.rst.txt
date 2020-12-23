@@ -68,6 +68,14 @@ ensembler.tests.test\_system module
    :undoc-members:
    :show-inheritance:
 
+ensembler.tests.test\_visualization module
+------------------------------------------
+
+.. automodule:: ensembler.tests.test_visualization
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 

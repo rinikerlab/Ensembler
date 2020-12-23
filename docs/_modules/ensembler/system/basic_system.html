@@ -89,9 +89,10 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../_source/index.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
 </ul>
 
             
@@ -178,9 +179,9 @@
 <span class="kn">from</span> <span class="nn">ensembler.util</span> <span class="kn">import</span> <span class="n">dataStructure</span> <span class="k">as</span> <span class="n">data</span>
 
 <span class="kn">from</span> <span class="nn">ensembler.samplers.newtonian</span> <span class="kn">import</span> <span class="n">newtonianSampler</span>
-<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">langevinIntegrator</span>
+<span class="kn">from</span> <span class="nn">ensembler.samplers.stochastic</span> <span class="kn">import</span> <span class="n">langevinIntegrator</span><span class="p">,</span> <span class="n">metropolisMonteCarloIntegrator</span>
 
-<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential1D</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials.OneD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential1D</span><span class="p">,</span> <span class="n">harmonicOscillatorPotential</span>
 <span class="kn">from</span> <span class="nn">ensembler.potentials.TwoD</span> <span class="kn">import</span> <span class="n">metadynamicsPotential</span> <span class="k">as</span> <span class="n">metadynamicsPotential2D</span>
 
 
@@ -301,7 +302,8 @@
 
 <div class="viewcode-block" id="system.set_current_state"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.set_current_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_current_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_position</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]],</span>
                           <span class="n">current_velocities</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-                          <span class="n">current_force</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">current_temperature</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mi">298</span><span class="p">):</span>
+                          <span class="n">current_force</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                          <span class="n">current_temperature</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mi">298</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        set_current_state</span>
 <span class="sd">            set the current State of the system.</span>
@@ -330,7 +332,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;_fields&quot;</span><span class="p">]))</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]:</span>
@@ -409,7 +411,7 @@
 
 
 
-<div class="viewcode-block" id="system.__init__"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span> <span class="n">potentialCls</span><span class="p">,</span> <span class="n">sampler</span><span class="p">:</span> <span class="n">samplerCls</span><span class="p">,</span> <span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">conditionCls</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="system.__init__"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potential</span><span class="p">:</span> <span class="n">potentialCls</span><span class="o">=</span><span class="n">harmonicOscillatorPotential</span><span class="p">(),</span> <span class="n">sampler</span><span class="p">:</span> <span class="n">samplerCls</span><span class="o">=</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">(),</span> <span class="n">conditions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">conditionCls</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">temperature</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mf">298.0</span><span class="p">,</span> <span class="n">start_position</span><span class="p">:</span> <span class="p">(</span><span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]</span> <span class="ow">or</span> <span class="n">Number</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mass</span><span class="p">:</span> <span class="n">Number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
                  <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -445,7 +447,7 @@
 
         <span class="c1"># Output</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_currentState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;_fields&quot;</span><span class="p">]})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;_fields&quot;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span><span class="p">[]</span>
 
         <span class="c1"># tmpvars - private:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_currentTotE</span><span class="p">:</span> <span class="p">(</span><span class="n">Number</span><span class="p">)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
@@ -535,7 +537,7 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">withdraw_Traj</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;_fields&quot;</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear_trajectory</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">init_position</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_position</span><span class="p">(</span><span class="n">initial_position</span><span class="o">=</span><span class="n">set_initial_position</span><span class="p">)</span>
@@ -556,7 +558,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_system_properties</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="system._init_position"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system._init_position">[docs]</a>    <span class="k">def</span> <span class="nf">_init_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_position</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Number</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Number</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -784,8 +787,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_init_velocities</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">withdraw_traj</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s2">&quot;_fields&quot;</span><span class="p">]))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_system_properties</span><span class="p">()</span>
@@ -798,7 +801,6 @@
             <span class="n">iteration_queue</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
 
         <span class="c1"># Simulation loop</span>
-        <span class="n">tmp_traj</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="ow">in</span> <span class="n">iteration_queue</span><span class="p">:</span>
 
             <span class="c1"># Do one simulation Step.</span>
@@ -814,12 +816,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">%</span> <span class="n">save_every_state</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span> <span class="o">!=</span> <span class="n">steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="n">tmp_traj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span>
 
-        <span class="n">tmp_traj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">tmp_traj</span><span class="p">)],</span><span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">del</span> <span class="n">tmp_traj</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_state</span></div>
 
 <div class="viewcode-block" id="system.propagate"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.propagate">[docs]</a>    <span class="k">def</span> <span class="nf">propagate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
@@ -875,7 +875,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_energies</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_current_state</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="o">.</span><span class="n">_asdict</span><span class="p">(),</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_state</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="system.revert_step"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.revert_step">[docs]</a>    <span class="k">def</span> <span class="nf">revert_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -886,8 +886,18 @@
 <span class="sd">        -------</span>
 <span class="sd">        NoReturn</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_currentState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_update_current_vars_from_current_state</span><span class="p">()</span></div>
+        <span class="k">if</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_currentState</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_current_vars_from_current_state</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Could not revert step, as only 1 step is in the trajectory!&quot;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="system.clear_trajectory"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.clear_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">clear_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        deletes all entries of trajectory and adds current state as first timestep to the trajectory</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_trajectory</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="system.write_trajectory"><a class="viewcode-back" href="../../../_source/ensembler.system.html#ensembler.system.basic_system.system.write_trajectory">[docs]</a>    <span class="k">def</span> <span class="nf">write_trajectory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -910,7 +920,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">out_path</span><span class="p">)))):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Could not find output folder: &quot;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">out_path</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">traj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trajectory</span>
+        <span class="n">traj</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">out_path</span></div></div>
 </pre></div>
 

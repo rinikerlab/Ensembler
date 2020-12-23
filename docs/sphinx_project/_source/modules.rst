@@ -1,4 +1,4 @@
-ensembler
+Documentation
 =========
 
 .. toctree::

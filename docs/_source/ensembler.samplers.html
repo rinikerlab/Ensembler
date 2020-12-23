@@ -40,7 +40,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ensembler.system package" href="ensembler.system.html" />
-    <link rel="prev" title="ensembler.potentials.biased_potentials package" href="ensembler.potentials.biased_potentials.html" /> 
+    <link rel="prev" title="ensembler.potentials package" href="ensembler.potentials.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,26 +91,28 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">Documentation</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.potentials.biased_potentials.html">ensembler.potentials.biased_potentials package</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">ensembler.samplers package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.samplers.newtonian">ensembler.samplers.newtonian module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.samplers.optimizers">ensembler.samplers.optimizers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.samplers.stochastic">ensembler.samplers.stochastic module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-ensembler.samplers">Module contents</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ensembler.html">ensembler package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ensembler.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ensembler.samplers package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.system.html">ensembler.system package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -159,7 +161,9 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="index.html">Documentation</a> &raquo;</li>
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="ensembler.html">ensembler package</a> &raquo;</li>
         
       <li>ensembler.samplers package</li>
     
@@ -578,9 +582,6 @@ Integrator does not calculate velocities. Therefore, the kinetic energy is undef
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tuple[float, float, float]</p>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
-</dd>
 </dl>
 </dd></dl>
 
@@ -604,9 +605,6 @@ for velocity return use langevinVelocityIntegrator</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tuple[float, None]</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -652,9 +650,6 @@ The purpose of this function is to perform one integration step.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Tuple[float, None]</p>
-</dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>NotImplementedError</strong> – You need to implement this function in the subclass (i.e. in your samplers)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -892,7 +887,7 @@ stochastic type samplers currently comprise various Monte-Carlo and Langevin Met
         <a href="ensembler.system.html" class="btn btn-neutral float-right" title="ensembler.system package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ensembler.potentials.biased_potentials.html" class="btn btn-neutral float-left" title="ensembler.potentials.biased_potentials package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ensembler.potentials.html" class="btn btn-neutral float-left" title="ensembler.potentials package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
