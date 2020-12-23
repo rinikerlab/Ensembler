@@ -1,5 +1,6 @@
 
-![myimg](./EnsemblerLogo.png)
+![Here a logo should be!](EnsemblerLogo_with_whiteBackround.png)
+
 
 Welcome to Ensembler
 ==============================

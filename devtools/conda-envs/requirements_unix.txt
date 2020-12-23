@@ -1,0 +1,19 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+#ffmpeg==4.3.1
+ipykernel==5.3.4
+ipywidgets==7.5.1
+jupyter==1.0.0
+m2r==0.2.1
+matplotlib==3.3.2
+nbsphinx==0.7.1
+notebook==6.1.4
+numpy==1.19.1
+pandas==1.1.2
+scipy==1.5.2
+sphinx==3.2.1
+sympy==1.6.2
+tqdm==4.49.0
+typing==3.7.4.3
+
