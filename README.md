@@ -27,9 +27,8 @@ The full Documentation can be found here:  https://rinikerlab.github.io/Ensemble
   Implemented Potentials: Harmonic Oscillator, Wave function, etc.. 
   Also different dimensionalities can be used like 1D, 2D, and ND.
 
-   You can try the code in your Browser here (or check out down below the Tutorial&Example section): 
+  You can try the code in your Browser here (or check out down below the Tutorial&Example section): 
    
-  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=example%2FTutorial_Potentials.ipynb)
 
 ### Samplers
 
@@ -81,7 +80,7 @@ Keep in mind: IDE's have their own awesome ways of doing this.
 
 ### Tutorials
 Here we provide short introductions into how Potential functions can be used and sampled in simulations in Ensembler .
-You can try the tutorials with Binder directly from your browser!
+You can try the tutorials with Binder directly from your browser (can take up to 10 minutes to be build)!
 
 Potentials: 
 
@@ -92,7 +91,7 @@ Simulations:
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Simulations.ipynb)
 
 ### Examples
-Examples are advanced jupyter notebooks, covering a certain topic, going deeper into the methodology.
+Examples are advanced jupyter notebooks, covering a certain topic, going deeper into the methodology (can take up to 10 minutes to be build).
 
 Enhanced Sampling: 
 
