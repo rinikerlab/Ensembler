@@ -24,15 +24,15 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'ensembler-rinikerlab'
-DESCRIPTION = 'This Package shall be a tool for fast and efficient development of theoretic thermodynamic simulation tools or teaching.'
+DESCRIPTION = 'Ensembler is a tool for fast and efficient development of simulation methods or for teaching purposes.'
 URL = 'https://github.com/rinikerlab/Ensembler'
 DOWNLOAD_URL = "https://github.com/rinikerlab/Ensembler/archive/1.0.tar.gz"
 EMAIL = 'bschroed@ethz.ch'
 AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None #"1.0.0"
-KEYWORDS = ["teaching", "method development", "statistical mechanics", "statistical thermodynamics", "physics", "chemistry",
-            "free energy calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor Belt - TI", "numerical integration", "science"]
+KEYWORDS = "".join(["teaching", "method development", "statistical mechanics", "statistical thermodynamics", "physics", "chemistry",
+            "free energy calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor Belt - TI", "numerical integration", "science"])
 
 # What packages are required for this module to be executed? - for minimal package version, please check the requirement files
 REQUIRED = ['typing', #Code: used for type declarations
