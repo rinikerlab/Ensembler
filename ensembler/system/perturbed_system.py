@@ -49,6 +49,9 @@ class perturbedSystem(system):
         self.potential.set_lambda(lam=self._currentLambda)
         self.update_current_state()
 
+    def set_lambda(self, lam:Number):
+        self.lam = lam
+
     """
     Magic
     """

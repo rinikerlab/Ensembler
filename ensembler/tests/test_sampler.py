@@ -36,7 +36,7 @@ class standard_IntegratorTests(unittest.TestCase):
         del integrator
 
         integrator = self.integrator_class.load(self.tmp_out_path)
-        print(integrator)
+        #print(integrator)
 
 
 class test_MonteCarlo_Integrator(standard_IntegratorTests):
@@ -155,7 +155,7 @@ class test_LangevinVelocity_Integrator(standard_IntegratorTests):
         integrator.integrate(system=sys, steps=steps)
         new_pos, new_Force = sys._currentPosition, sys._currentForce
 
-        print(sys.trajectory)
+        #print(sys.trajectory)
 
         self.assertEqual(steps + 1, len(sys.trajectory), msg="The simulation did not run or was too short!")
         self.assertNotEqual(old_pos, new_pos, msg="Nothing happened here!")

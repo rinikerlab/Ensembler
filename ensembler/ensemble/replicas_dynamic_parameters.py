@@ -46,10 +46,7 @@ class conveyorBelt(_mutliReplicaApproach):
 
 
     def __str__(self):
-        outstr = '{:<5s}{:<10s}{:<10s}\n'.format("i",
-                                               "lambda_i",
-                                               "E_i"
-                                               )
+        outstr = '{:<5s}{:<10s}{:<10s}\n'.format("i", "lambda_i", "E_i" )
         outstr += "-" * 25 + "\n"
         for i in self.replicas:
             outstr += '{:5d}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
