@@ -534,7 +534,7 @@ molecule (phase space areas) and the alchemical free energy is describing a chan
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">steps</span> <span class="o">=</span> <span class="n">simulation_steps_total_per_approach</span> <span class="o">=</span> <span class="mi">100</span><span class="c1">#00 #more steps better free energies, but if you just want to try 1000 ist quite fast.</span>
+<span></span><span class="n">steps</span> <span class="o">=</span> <span class="n">simulation_steps_total_per_approach</span> <span class="o">=</span> <span class="mi">1000</span><span class="c1">#0 #more steps better free energies, but if you just want to try 1000 ist quite fast.</span>
 <span class="n">equilibration_steps</span> <span class="o">=</span> <span class="n">simulation_steps_total_per_approach</span><span class="o">//</span><span class="mi">10</span>
 
 <span class="n">space_range</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span> <span class="c1">#This defines our one dimensional coordinate space</span>
@@ -643,7 +643,7 @@ expected dF:  1.2746530721670273
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 5046.75it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 7246.35it/s]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -686,9 +686,9 @@ Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Expected Result:  1.2746530721670273
-Zwanzig Result:  -1.0673475731663553
+Zwanzig Result:  9.458652580434903
 
-Difference: -2.342000645333383
+Difference: 8.183999508267876
 </pre></div></div>
 </div>
 </div>
@@ -729,8 +729,8 @@ Difference: -2.342000645333383
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 4906.14it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 127.16it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 7932.26it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 4853.62it/s]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -826,23 +826,33 @@ Text(0.5, 1.0, &#39;single state simulations&#39;)
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Iterate:        convergence raidus: 0.01
-Iteration: 0    dF: 5.312159617709778   convergence 5.312159617709778
-Iteration: 1    dF: 6.30192824866377    convergence 0.9897686309539919
-Iteration: 2    dF: 6.843891407476693   convergence 0.5419631588129228
-Iteration: 3    dF: 7.143907240693938   convergence 0.30001583321724556
-Iteration: 4    dF: 7.311132130071263   convergence 0.16722488937732471
-Iteration: 5    dF: 7.4051820596147255  convergence 0.0940499295434627
-Iteration: 6    dF: 7.45844778962537    convergence 0.053265730010644496
-Iteration: 7    dF: 7.488752609194908   convergence 0.030304819569537678
-Iteration: 8    dF: 7.506041889052739   convergence 0.01728927985783102
-Iteration: 9    dF: 7.515921769607192   convergence 0.009879880554453102
+Iteration: 0    dF: 4.89514829177051    convergence 4.89514829177051
+Iteration: 1    dF: 1.3482323409585346  convergence 3.546915950811975
+Iteration: 2    dF: 3.759908094421086   convergence 2.4116757534625513
+Iteration: 3    dF: 1.9977739354704562  convergence 1.7621341589506296
+Iteration: 4    dF: 3.2321914606067796  convergence 1.2344175251363234
+Iteration: 5    dF: 2.3329398137103015  convergence 0.8992516468964782
+Iteration: 6    dF: 2.972574216508149   convergence 0.6396344027978476
+Iteration: 7    dF: 2.5085368986795284  convergence 0.46403731782862057
+Iteration: 8    dF: 2.840858382764675   convergence 0.3323214840851465
+Iteration: 9    dF: 2.6004706994560425  convergence 0.24038768330863247
+Iteration: 10   dF: 2.7731687664836535  convergence 0.17269806702761104
+Iteration: 11   dF: 2.648461778548513   convergence 0.12470698793514057
+Iteration: 12   dF: 2.738190318130793   convergence 0.08972853958228022
+Iteration: 13   dF: 2.673458300060104   convergence 0.06473201807068918
+Iteration: 14   dF: 2.7200696041722554  convergence 0.04661130411215142
+Iteration: 15   dF: 2.6864604442314923  convergence 0.03360915994076308
+Iteration: 16   dF: 2.7106706711548023  convergence 0.024210226923309985
+Iteration: 17   dF: 2.6932185555551067  convergence 0.017452115599695617
+Iteration: 18   dF: 2.7057926338457565  convergence 0.012574078290649826
+Iteration: 19   dF: 2.696729799639751   convergence 0.009062834206005732
 
-Final Iterations:  9  Result:  7.515921769607192
+Final Iterations:  19  Result:  2.696729799639751
 
 Expected Result:  1.2746530721670273
-BAR Result:  7.515921769607192
+BAR Result:  2.696729799639751
 
-Difference: 6.241268697440164
+Difference: 1.4220767274727235
 </pre></div></div>
 </div>
 </div>
@@ -928,16 +938,16 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 4857.55it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 4278.29it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 5882.37it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 3296.84it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 3118.67it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 3328.36it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 3568.86it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 2373.36it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 2552.04it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 2969.44it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 7690.44it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 6942.23it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 7040.67it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 6709.36it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 7142.95it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 6367.75it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 6368.02it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 6248.03it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 5986.58it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 5680.06it/s]
 </pre></div></div>
 </div>
 </div>
@@ -1054,9 +1064,9 @@ Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;
 <div class="highlight"><pre>
 
 Expected Result:  1.2746530721670273
-Sum of intermediates Result:  0.7509801133760812
+Sum of intermediates Result:  0.9272665097892323
 
-Difference: -0.5236729587909461
+Difference: -0.34738656237779497
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1140,9 +1150,9 @@ Text(0.5, 0.98, &#39;$dH/d\\lambda$ for each Lambda point&#39;)
 <div class="highlight"><pre>
 
 Expected Result:  1.2746530721670273
-trapez Rule Result:  1.5341099931896047 +- 3.4204416170439425
+trapez Rule Result:  1.2585164418681876 +- 1.921424060043597
 
-Difference: 0.25945692102257745
+Difference: -0.016136630298839716
 </pre></div></div>
 </div>
 </div>
@@ -1228,7 +1238,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 1829.57it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:00&lt;00:00, 3418.02it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1313,8 +1323,8 @@ Text(0.5, 1.0, &#39;EDS&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dF  2.3366227041357663
-deviation:  1.061969631968739
+dF  1.3342146267729023
+deviation:  0.05956155460587498
 </pre></div></div>
 </div>
 </div>
@@ -1368,12 +1378,12 @@ deviation:  1.061969631968739
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 
-Final Iterations:  5  Result:  -0.5167721401556298
+Final Iterations:  6  Result:  -0.7411502009636552
 
-Final Iterations:  5  Result:  2.735161926331498
-1R -0.5167721401556298 2R 2.735161926331498
-dF_BAR:   2.218389786175868
-deviation:  0.9437367140088408
+Final Iterations:  7  Result:  1.9671002387367924
+1R -0.7411502009636552 2R 1.9671002387367924
+dF_BAR:   1.2259500377731372
+deviation:  -0.04870303439389012
 </pre></div></div>
 </div>
 </div>
@@ -1508,7 +1518,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;00:00, 1790.37it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:02&lt;00:00, 407.93it/s]
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
@@ -1534,8 +1544,8 @@ Simulation:  Simulation: 100%|██████████| 100/100 [00:00&lt;
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Simulation:  Simulation: 100%|██████████| 100/100 [00:02&lt;00:00, 40.96it/s]
-Simulation:  Simulation: 100%|██████████| 100/100 [00:02&lt;00:00, 37.42it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:02&lt;00:00, 491.07it/s]
+Simulation:  Simulation: 100%|██████████| 1000/1000 [00:01&lt;00:00, 714.28it/s]
 </pre></div></div>
 </div>
 </div>
@@ -1636,8 +1646,8 @@ Text(0.5, 1.0, &#39;$\\lambda$-EDS&#39;)
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-dF  1.864237147514947
-deviation:  0.5895840753479198
+dF  1.6217106324985453
+deviation:  0.347057560331518
 </pre></div></div>
 </div>
 </div>
@@ -1687,7 +1697,7 @@ deviation:  0.5895840753479198
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "9e72e42f92d54f77ad9ef2e9d476939d", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d3805d767262498080fc803cf13a3dee", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -1849,9 +1859,9 @@ Text(0.5, 1.0, &#39;Conveyor Belt Sampling&#39;)
 <div class="highlight"><pre>
 
 Expected Result:  1.2746530721670273
-trapez Rule Result:  0.2406082990408867 +- 3.0451131643051697
+trapez Rule Result:  1.252518064480879 +- -7.896120863351601
 
-Difference: -1.0340447731261406
+Difference: -0.022135007686148178
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -1870,7 +1880,7 @@ Difference: -1.0340447731261406
 <div class="section" id="id11">
 <h4>Build System<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1921,11 +1931,11 @@ Difference: -1.0340447731261406
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-DO trials:  5 steps:  20
+DO trials:  50 steps:  20
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -1944,7 +1954,7 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 <div class="section" id="id12">
 <h4>Simulate<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1959,14 +1969,14 @@ Text(0.5, 1.0, &#39;Sampled Potentials&#39;)
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-Running trials: 100%|██████████| 100/100 [00:40&lt;00:00,  2.49it/s]
+Running trials: 100%|██████████| 50/50 [00:07&lt;00:00,  6.75it/s]
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="id13">
 <h4>Analysis<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1998,7 +2008,7 @@ Running trials: 100%|██████████| 100/100 [00:40&lt;00:00,  2
 </div>
 </div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -2014,7 +2024,7 @@ Text(0.5, 1.0, &#39;RE-EDS&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2051,7 +2061,7 @@ Text(0.5, 1.0, &#39;RE-EDS&#39;)
 <h4>Visualization of Replica Exchanges<a class="headerlink" href="#Visualization-of-Replica-Exchanges" title="Permalink to this headline">¶</a></h4>
 <p>here the Exchanges of the different replicas are shown.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2091,7 +2101,7 @@ Text(0.5, 1.0, &#39;RE-EDS&#39;)
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2148,16 +2158,16 @@ Text(0.5, 1.0, &#39;RE-EDS&#39;)
 
         Expected Result:  1.2746530721670273
 s               dF              diff
-1.0             3.94409         2.66944
-0.77426         6.85809         5.58344
-0.59948         5.60009         4.32544
-0.46416         3.17554         1.90089
-0.35938         2.66814         1.39348
-0.27826         1.05054         -0.22411
-0.21544         0.17714         -1.09751
-0.16681         -0.17674                -1.45139
-0.12915         -0.07538                -1.35003
-0.1             1.18102         -0.09363
+1.0             4.43087         3.15622
+0.77426         4.57542         3.30077
+0.59948         4.1126          2.83795
+0.46416         2.72726         1.45261
+0.35938         2.30432         1.02966
+0.27826         0.43009         -0.84457
+0.21544         -0.01605                -1.2907
+0.16681         -0.57568                -1.85033
+0.12915         -0.43843                -1.71309
+0.1             -0.51003                -1.78468
 
 
 
@@ -2170,7 +2180,7 @@ s               dF              diff
 <div class="section" id="Final-Results">
 <h2>Final Results<a class="headerlink" href="#Final-Results" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -2204,8 +2214,8 @@ s               dF              diff
 <div class="output_area docutils container">
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 67%" />
-<col style="width: 12%" />
+<col style="width: 69%" />
+<col style="width: 10%" />
 <col style="width: 21%" />
 </colgroup>
 <thead>
@@ -2220,43 +2230,52 @@ s               dF              diff
 <td></td>
 </tr>
 <tr class="row-odd"><td><p>Zwanzig</p></td>
-<td><p>-1.07</p></td>
-<td><p>-2.34</p></td>
+<td><p>9.46</p></td>
+<td><p>8.18</p></td>
 </tr>
 <tr class="row-even"><td><p>BAR</p></td>
-<td><p>7.52</p></td>
-<td><p>6.24</p></td>
+<td><p>2.7</p></td>
+<td><p>1.42</p></td>
 </tr>
 <tr class="row-odd"><td><p>FEP 10-<span class="math notranslate nohighlight">\(\lambda\)</span> Points</p></td>
-<td><p>0.75</p></td>
-<td><p>-0.52</p></td>
+<td><p>0.93</p></td>
+<td><p>-0.35</p></td>
 </tr>
 <tr class="row-even"><td><p>TI 10-<span class="math notranslate nohighlight">\(\lambda\)</span> Points</p></td>
-<td><p>1.53</p></td>
-<td><p>0.26</p></td>
+<td><p>1.26</p></td>
+<td><p>-0.02</p></td>
 </tr>
 <tr class="row-odd"><td><p>EDS</p></td>
-<td><p>2.34</p></td>
-<td><p>1.06</p></td>
+<td><p>1.33</p></td>
+<td><p>0.06</p></td>
 </tr>
 <tr class="row-even"><td><p>EDS-BAR</p></td>
-<td><p>2.22</p></td>
-<td><p>0.94</p></td>
+<td><p>1.23</p></td>
+<td><p>-0.05</p></td>
 </tr>
 <tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(\lambda\)</span> EDS</p></td>
-<td><p>1.86</p></td>
-<td><p>0.59</p></td>
+<td><p>1.62</p></td>
+<td><p>0.35</p></td>
 </tr>
 <tr class="row-even"><td><p>conveyor belt TI</p></td>
-<td><p>0.24</p></td>
-<td><p>-1.03</p></td>
+<td><p>1.25</p></td>
+<td><p>-0.02</p></td>
 </tr>
 <tr class="row-odd"><td><p>RE-DS</p></td>
-<td><p>1.05</p></td>
-<td><p>-0.22</p></td>
+<td><p>0.43</p></td>
+<td><p>-0.84</p></td>
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
 </div>
 </div>
 </div>

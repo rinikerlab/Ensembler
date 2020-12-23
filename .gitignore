@@ -127,3 +127,4 @@ ensembler/tests/tmp_test_*
 /docs/sphinx_project/Tutorials/*ipynb
 /docs/sphinx_project/_source/ensembler*.rst
 /ensembler/tests/tests_out/
+/docs/sphinx_project/introduction.rst
