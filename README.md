@@ -1,5 +1,5 @@
 
-![Here a logo should be!](.img/EnsemblerLogo_with_whiteBackround.png)
+![](.img/EnsemblerLogo_with_whiteBackround.png)
 
 
 Welcome to Ensembler
@@ -79,7 +79,7 @@ CODE:
     oneD_simulation_analysis_plot(system=sys, title="Langevin Simulation", limits_coordinate_space=positions)
     
 OUT:
-![Here a simulation plot should be!](.img/langevin_simulation.png)
+![Not Visible with pip](.img/langevin_simulation.png)
 
 In the following links you can find more features of Ensembler.
 
