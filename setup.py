@@ -30,7 +30,9 @@ DOWNLOAD_URL = "https://github.com/rinikerlab/Ensembler/archive/1.0.tar.gz"
 EMAIL = 'bschroed@ethz.ch'
 AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = None
+VERSION = 1.0
+KEYWORDS = ["teaching", "method development", "statistical mechanics", "statistical thermodynamics", "physics", "chemistry",
+            "free energy calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor Belt - TI", "numerical integration", "science"]
 
 # What packages are required for this module to be executed? - for minimal package version, please check the requirement files
 REQUIRED = ['typing', #Code: used for type declarations
@@ -129,7 +131,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     license='MIT',
-
+    keywords=KEYWORDS,
     # Which Python importable modules should be included when your package is installed
     # Handled automatically by setuptools. Use 'exclude' to prevent some specific
     # subpackage(s) from being added, if needed
