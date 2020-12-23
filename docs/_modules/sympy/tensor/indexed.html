@@ -1,0 +1,1016 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympy.tensor.indexed &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sympy.tensor.indexed</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sympy.tensor.indexed</h1><div class="highlight"><pre>
+<span></span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Module that defines indexed objects</span>
+
+<span class="sd">The classes ``IndexedBase``, ``Indexed``, and ``Idx`` represent a</span>
+<span class="sd">matrix element ``M[i, j]`` as in the following diagram::</span>
+
+<span class="sd">       1) The Indexed class represents the entire indexed object.</span>
+<span class="sd">                  |</span>
+<span class="sd">               ___|___</span>
+<span class="sd">              &#39;       &#39;</span>
+<span class="sd">               M[i, j]</span>
+<span class="sd">              /   \__\______</span>
+<span class="sd">              |             |</span>
+<span class="sd">              |             |</span>
+<span class="sd">              |     2) The Idx class represents indices; each Idx can</span>
+<span class="sd">              |        optionally contain information about its range.</span>
+<span class="sd">              |</span>
+<span class="sd">        3) IndexedBase represents the &#39;stem&#39; of an indexed object, here `M`.</span>
+<span class="sd">           The stem used by itself is usually taken to represent the entire</span>
+<span class="sd">           array.</span>
+
+<span class="sd">There can be any number of indices on an Indexed object.  No</span>
+<span class="sd">transformation properties are implemented in these Base objects, but</span>
+<span class="sd">implicit contraction of repeated indices is supported.</span>
+
+<span class="sd">Note that the support for complicated (i.e. non-atomic) integer</span>
+<span class="sd">expressions as indices is limited.  (This should be improved in</span>
+<span class="sd">future releases.)</span>
+
+<span class="sd">Examples</span>
+<span class="sd">========</span>
+
+<span class="sd">To express the above matrix element example you would write:</span>
+
+<span class="sd">&gt;&gt;&gt; from sympy import symbols, IndexedBase, Idx</span>
+<span class="sd">&gt;&gt;&gt; M = IndexedBase(&#39;M&#39;)</span>
+<span class="sd">&gt;&gt;&gt; i, j = symbols(&#39;i j&#39;, cls=Idx)</span>
+<span class="sd">&gt;&gt;&gt; M[i, j]</span>
+<span class="sd">M[i, j]</span>
+
+<span class="sd">Repeated indices in a product implies a summation, so to express a</span>
+<span class="sd">matrix-vector product in terms of Indexed objects:</span>
+
+<span class="sd">&gt;&gt;&gt; x = IndexedBase(&#39;x&#39;)</span>
+<span class="sd">&gt;&gt;&gt; M[i, j]*x[j]</span>
+<span class="sd">M[i, j]*x[j]</span>
+
+<span class="sd">If the indexed objects will be converted to component based arrays, e.g.</span>
+<span class="sd">with the code printers or the autowrap framework, you also need to provide</span>
+<span class="sd">(symbolic or numerical) dimensions.  This can be done by passing an</span>
+<span class="sd">optional shape parameter to IndexedBase upon construction:</span>
+
+<span class="sd">&gt;&gt;&gt; dim1, dim2 = symbols(&#39;dim1 dim2&#39;, integer=True)</span>
+<span class="sd">&gt;&gt;&gt; A = IndexedBase(&#39;A&#39;, shape=(dim1, 2*dim1, dim2))</span>
+<span class="sd">&gt;&gt;&gt; A.shape</span>
+<span class="sd">(dim1, 2*dim1, dim2)</span>
+<span class="sd">&gt;&gt;&gt; A[i, j, 3].shape</span>
+<span class="sd">(dim1, 2*dim1, dim2)</span>
+
+<span class="sd">If an IndexedBase object has no shape information, it is assumed that the</span>
+<span class="sd">array is as large as the ranges of its indices:</span>
+
+<span class="sd">&gt;&gt;&gt; n, m = symbols(&#39;n m&#39;, integer=True)</span>
+<span class="sd">&gt;&gt;&gt; i = Idx(&#39;i&#39;, m)</span>
+<span class="sd">&gt;&gt;&gt; j = Idx(&#39;j&#39;, n)</span>
+<span class="sd">&gt;&gt;&gt; M[i, j].shape</span>
+<span class="sd">(m, n)</span>
+<span class="sd">&gt;&gt;&gt; M[i, j].ranges</span>
+<span class="sd">[(0, m - 1), (0, n - 1)]</span>
+
+<span class="sd">The above can be compared with the following:</span>
+
+<span class="sd">&gt;&gt;&gt; A[i, 2, j].shape</span>
+<span class="sd">(dim1, 2*dim1, dim2)</span>
+<span class="sd">&gt;&gt;&gt; A[i, 2, j].ranges</span>
+<span class="sd">[(0, m - 1), None, (0, n - 1)]</span>
+
+<span class="sd">To analyze the structure of indexed expressions, you can use the methods</span>
+<span class="sd">get_indices() and get_contraction_structure():</span>
+
+<span class="sd">&gt;&gt;&gt; from sympy.tensor import get_indices, get_contraction_structure</span>
+<span class="sd">&gt;&gt;&gt; get_indices(A[i, j, j])</span>
+<span class="sd">({i}, {})</span>
+<span class="sd">&gt;&gt;&gt; get_contraction_structure(A[i, j, j])</span>
+<span class="sd">{(j,): {A[i, j, j]}}</span>
+
+<span class="sd">See the appropriate docstrings for a detailed explanation of the output.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#   TODO:  (some ideas for improvement)</span>
+<span class="c1">#</span>
+<span class="c1">#   o test and guarantee numpy compatibility</span>
+<span class="c1">#      - implement full support for broadcasting</span>
+<span class="c1">#      - strided arrays</span>
+<span class="c1">#</span>
+<span class="c1">#   o more functions to analyze indexed expressions</span>
+<span class="c1">#      - identify standard constructs, e.g matrix-vector product in a subexpression</span>
+<span class="c1">#</span>
+<span class="c1">#   o functions to generate component based arrays (numpy and sympy.Matrix)</span>
+<span class="c1">#      - generate a single array directly from Indexed</span>
+<span class="c1">#      - convert simple sub-expressions</span>
+<span class="c1">#</span>
+<span class="c1">#   o sophisticated indexing (possibly in subclasses to preserve simplicity)</span>
+<span class="c1">#      - Idx with range smaller than dimension of Indexed</span>
+<span class="c1">#      - Idx with stepsize != 1</span>
+<span class="c1">#      - Idx with step determined by function call</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+
+<span class="kn">from</span> <span class="nn">sympy.core.assumptions</span> <span class="kn">import</span> <span class="n">StdFactKB</span>
+<span class="kn">from</span> <span class="nn">sympy.core</span> <span class="kn">import</span> <span class="n">Expr</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">sympify</span><span class="p">,</span> <span class="n">S</span>
+<span class="kn">from</span> <span class="nn">sympy.core.symbol</span> <span class="kn">import</span> <span class="n">_filter_assumptions</span><span class="p">,</span> <span class="n">Symbol</span>
+<span class="kn">from</span> <span class="nn">sympy.core.compatibility</span> <span class="kn">import</span> <span class="p">(</span><span class="n">is_sequence</span><span class="p">,</span> <span class="n">string_types</span><span class="p">,</span> <span class="n">NotIterable</span><span class="p">,</span>
+                                      <span class="n">Iterable</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sympy.core.logic</span> <span class="kn">import</span> <span class="n">fuzzy_bool</span>
+<span class="kn">from</span> <span class="nn">sympy.core.sympify</span> <span class="kn">import</span> <span class="n">_sympify</span>
+<span class="kn">from</span> <span class="nn">sympy.functions.special.tensor_functions</span> <span class="kn">import</span> <span class="n">KroneckerDelta</span>
+
+
+<span class="k">class</span> <span class="nc">IndexException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+
+<span class="k">class</span> <span class="nc">Indexed</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents a mathematical object with indices.</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy import Indexed, IndexedBase, Idx, symbols</span>
+<span class="sd">    &gt;&gt;&gt; i, j = symbols(&#39;i j&#39;, cls=Idx)</span>
+<span class="sd">    &gt;&gt;&gt; Indexed(&#39;A&#39;, i, j)</span>
+<span class="sd">    A[i, j]</span>
+
+<span class="sd">    It is recommended that ``Indexed`` objects be created by indexing ``IndexedBase``:</span>
+<span class="sd">    ``IndexedBase(&#39;A&#39;)[i, j]`` instead of ``Indexed(IndexedBase(&#39;A&#39;), i, j)``.</span>
+
+<span class="sd">    &gt;&gt;&gt; A = IndexedBase(&#39;A&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; a_ij = A[i, j]           # Prefer this,</span>
+<span class="sd">    &gt;&gt;&gt; b_ij = Indexed(A, i, j)  # over this.</span>
+<span class="sd">    &gt;&gt;&gt; a_ij == b_ij</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_commutative</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_Indexed</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_symbol</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_Atom</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.utilities.misc</span> <span class="kn">import</span> <span class="n">filldedent</span>
+        <span class="kn">from</span> <span class="nn">sympy.tensor.array.ndim_array</span> <span class="kn">import</span> <span class="n">NDimArray</span>
+        <span class="kn">from</span> <span class="nn">sympy.matrices.matrices</span> <span class="kn">import</span> <span class="n">MatrixBase</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="s2">&quot;Indexed needs at least one index.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">string_types</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">)):</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="n">IndexedBase</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s1">&#39;__getitem__&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">IndexedBase</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">filldedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                The base can only be replaced with a string, Symbol,</span>
+<span class="s2">                IndexedBase or an object with a method for getting</span>
+<span class="s2">                items (i.e. an object with a `__getitem__` method).</span>
+<span class="s2">                &quot;&quot;&quot;</span><span class="p">))</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">sympify</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="p">(</span><span class="n">NDimArray</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">MatrixBase</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">([</span><span class="n">i</span><span class="o">.</span><span class="n">is_number</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">base</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">base</span><span class="p">[</span><span class="n">args</span><span class="p">]</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">Expr</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">IndexedBase</span><span class="o">.</span><span class="n">_set_assumptions</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">assumptions0</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">IndexedBase</span><span class="o">.</span><span class="n">_set_assumptions</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">_hashable_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Indexed</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_hashable_content</span><span class="p">()</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assumptions0</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_diff_wrt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allow derivatives with respect to an ``Indexed`` object.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">_eval_derivative</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wrt</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.tensor.array.ndim_array</span> <span class="kn">import</span> <span class="n">NDimArray</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wrt</span><span class="p">,</span> <span class="n">Indexed</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wrt</span><span class="o">.</span><span class="n">base</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wrt</span><span class="o">.</span><span class="n">indices</span><span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Different # of indices: d(</span><span class="si">{!s}</span><span class="s2">)/d(</span><span class="si">{!s}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                                                       <span class="n">wrt</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">One</span>
+            <span class="k">for</span> <span class="n">index1</span><span class="p">,</span> <span class="n">index2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">,</span> <span class="n">wrt</span><span class="o">.</span><span class="n">indices</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">*=</span> <span class="n">KroneckerDelta</span><span class="p">(</span><span class="n">index1</span><span class="p">,</span> <span class="n">index2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">NDimArray</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">sympy.tensor.array</span> <span class="kn">import</span> <span class="n">derive_by_array</span>
+            <span class="k">return</span> <span class="n">Indexed</span><span class="p">(</span><span class="n">derive_by_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">,</span> <span class="n">wrt</span><span class="p">),</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span><span class="o">.</span><span class="n">has</span><span class="p">(</span><span class="n">wrt</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">S</span><span class="o">.</span><span class="n">NaN</span>
+            <span class="k">return</span> <span class="n">S</span><span class="o">.</span><span class="n">Zero</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">assumptions0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_assumptions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the ``IndexedBase`` of the ``Indexed`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Indexed, IndexedBase, Idx, symbols</span>
+<span class="sd">        &gt;&gt;&gt; i, j = symbols(&#39;i j&#39;, cls=Idx)</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, i, j).base</span>
+<span class="sd">        A</span>
+<span class="sd">        &gt;&gt;&gt; B = IndexedBase(&#39;B&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; B == B[i, j].base</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">indices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the indices of the ``Indexed`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Indexed, Idx, symbols</span>
+<span class="sd">        &gt;&gt;&gt; i, j = symbols(&#39;i j&#39;, cls=Idx)</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, i, j).indices</span>
+<span class="sd">        (i, j)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rank</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the rank of the ``Indexed`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Indexed, Idx, symbols</span>
+<span class="sd">        &gt;&gt;&gt; i, j, k, l, m = symbols(&#39;i:m&#39;, cls=Idx)</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, i, j).rank</span>
+<span class="sd">        2</span>
+<span class="sd">        &gt;&gt;&gt; q = Indexed(&#39;A&#39;, i, j, k, l, m)</span>
+<span class="sd">        &gt;&gt;&gt; q.rank</span>
+<span class="sd">        5</span>
+<span class="sd">        &gt;&gt;&gt; q.rank == len(q.indices)</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list with dimensions of each index.</span>
+
+<span class="sd">        Dimensions is a property of the array, not of the indices.  Still, if</span>
+<span class="sd">        the ``IndexedBase`` does not define a shape attribute, it is assumed</span>
+<span class="sd">        that the ranges of the indices correspond to the shape of the array.</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import IndexedBase, Idx, symbols</span>
+<span class="sd">        &gt;&gt;&gt; n, m = symbols(&#39;n m&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; i = Idx(&#39;i&#39;, m)</span>
+<span class="sd">        &gt;&gt;&gt; j = Idx(&#39;j&#39;, m)</span>
+<span class="sd">        &gt;&gt;&gt; A = IndexedBase(&#39;A&#39;, shape=(n, n))</span>
+<span class="sd">        &gt;&gt;&gt; B = IndexedBase(&#39;B&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; A[i, j].shape</span>
+<span class="sd">        (n, n)</span>
+<span class="sd">        &gt;&gt;&gt; B[i, j].shape</span>
+<span class="sd">        (m, m)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">sympy.utilities.misc</span> <span class="kn">import</span> <span class="n">filldedent</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">sizes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="n">filldedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    Range is not defined for all indices in: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="n">upper</span> <span class="o">-</span> <span class="n">lower</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="n">filldedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    Shape cannot be inferred from Idx with</span>
+<span class="s2">                    undefined range: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="p">))</span>
+            <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">*</span><span class="n">sizes</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a list of tuples with lower and upper range of each index.</span>
+
+<span class="sd">        If an index does not define the data members upper and lower, the</span>
+<span class="sd">        corresponding slot in the list contains ``None`` instead of a tuple.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Indexed,Idx, symbols</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, Idx(&#39;i&#39;, 2), Idx(&#39;j&#39;, 4), Idx(&#39;k&#39;, 8)).ranges</span>
+<span class="sd">        [(0, 1), (0, 3), (0, 7)]</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, Idx(&#39;i&#39;, 3), Idx(&#39;j&#39;, 3), Idx(&#39;k&#39;, 3)).ranges</span>
+<span class="sd">        [(0, 2), (0, 2), (0, 2)]</span>
+<span class="sd">        &gt;&gt;&gt; x, y, z = symbols(&#39;x y z&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; Indexed(&#39;A&#39;, x, y, z).ranges</span>
+<span class="sd">        [None, None, None]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+            <span class="n">sentinel</span> <span class="o">=</span> <span class="nb">object</span><span class="p">()</span>
+            <span class="n">upper</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="n">sentinel</span><span class="p">)</span>
+            <span class="n">lower</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="n">sentinel</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">sentinel</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">upper</span><span class="p">,</span> <span class="n">lower</span><span class="p">):</span>
+                <span class="n">ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ranges</span>
+
+    <span class="k">def</span> <span class="nf">_sympystr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">doprint</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">))</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">[</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">doprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">),</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">indices</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">free_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">base_free_symbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">free_symbols</span>
+        <span class="n">indices_free_symbols</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">fs</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span> <span class="k">for</span> <span class="n">fs</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">base_free_symbols</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="p">}</span> <span class="o">|</span> <span class="n">base_free_symbols</span> <span class="o">|</span> <span class="n">indices_free_symbols</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">indices_free_symbols</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">expr_free_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">IndexedBase</span><span class="p">(</span><span class="n">Expr</span><span class="p">,</span> <span class="n">NotIterable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represent the base or stem of an indexed object</span>
+
+<span class="sd">    The IndexedBase class represent an array that contains elements. The main purpose</span>
+<span class="sd">    of this class is to allow the convenient creation of objects of the Indexed</span>
+<span class="sd">    class.  The __getitem__ method of IndexedBase returns an instance of</span>
+<span class="sd">    Indexed.  Alone, without indices, the IndexedBase class can be used as a</span>
+<span class="sd">    notation for e.g. matrix equations, resembling what you could do with the</span>
+<span class="sd">    Symbol class.  But, the IndexedBase class adds functionality that is not</span>
+<span class="sd">    available for Symbol instances:</span>
+
+<span class="sd">      -  An IndexedBase object can optionally store shape information.  This can</span>
+<span class="sd">         be used in to check array conformance and conditions for numpy</span>
+<span class="sd">         broadcasting.  (TODO)</span>
+<span class="sd">      -  An IndexedBase object implements syntactic sugar that allows easy symbolic</span>
+<span class="sd">         representation of array operations, using implicit summation of</span>
+<span class="sd">         repeated indices.</span>
+<span class="sd">      -  The IndexedBase object symbolizes a mathematical structure equivalent</span>
+<span class="sd">         to arrays, and is recognized as such for code generation and automatic</span>
+<span class="sd">         compilation and wrapping.</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy.tensor import IndexedBase, Idx</span>
+<span class="sd">    &gt;&gt;&gt; from sympy import symbols</span>
+<span class="sd">    &gt;&gt;&gt; A = IndexedBase(&#39;A&#39;); A</span>
+<span class="sd">    A</span>
+<span class="sd">    &gt;&gt;&gt; type(A)</span>
+<span class="sd">    &lt;class &#39;sympy.tensor.indexed.IndexedBase&#39;&gt;</span>
+
+<span class="sd">    When an IndexedBase object receives indices, it returns an array with named</span>
+<span class="sd">    axes, represented by an Indexed object:</span>
+
+<span class="sd">    &gt;&gt;&gt; i, j = symbols(&#39;i j&#39;, integer=True)</span>
+<span class="sd">    &gt;&gt;&gt; A[i, j, 2]</span>
+<span class="sd">    A[i, j, 2]</span>
+<span class="sd">    &gt;&gt;&gt; type(A[i, j, 2])</span>
+<span class="sd">    &lt;class &#39;sympy.tensor.indexed.Indexed&#39;&gt;</span>
+
+<span class="sd">    The IndexedBase constructor takes an optional shape argument.  If given,</span>
+<span class="sd">    it overrides any shape information in the indices. (But not the index</span>
+<span class="sd">    ranges!)</span>
+
+<span class="sd">    &gt;&gt;&gt; m, n, o, p = symbols(&#39;m n o p&#39;, integer=True)</span>
+<span class="sd">    &gt;&gt;&gt; i = Idx(&#39;i&#39;, m)</span>
+<span class="sd">    &gt;&gt;&gt; j = Idx(&#39;j&#39;, n)</span>
+<span class="sd">    &gt;&gt;&gt; A[i, j].shape</span>
+<span class="sd">    (m, n)</span>
+<span class="sd">    &gt;&gt;&gt; B = IndexedBase(&#39;B&#39;, shape=(o, p))</span>
+<span class="sd">    &gt;&gt;&gt; B[i, j].shape</span>
+<span class="sd">    (o, p)</span>
+
+<span class="sd">    Assumptions can be specified with keyword arguments the same way as for Symbol:</span>
+
+<span class="sd">    &gt;&gt;&gt; A_real = IndexedBase(&#39;A&#39;, real=True)</span>
+<span class="sd">    &gt;&gt;&gt; A_real.is_real</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; A != A_real</span>
+<span class="sd">    True</span>
+
+<span class="sd">    Assumptions can also be inherited if a Symbol is used to initialize the IndexedBase:</span>
+
+<span class="sd">    &gt;&gt;&gt; I = symbols(&#39;I&#39;, integer=True)</span>
+<span class="sd">    &gt;&gt;&gt; C_inherit = IndexedBase(I)</span>
+<span class="sd">    &gt;&gt;&gt; C_explicit = IndexedBase(&#39;I&#39;, integer=True)</span>
+<span class="sd">    &gt;&gt;&gt; C_inherit == C_explicit</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_commutative</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_symbol</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_Atom</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_set_assumptions</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">assumptions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set assumptions on obj, making sure to apply consistent values.&quot;&quot;&quot;</span>
+        <span class="n">tmp_asm_copy</span> <span class="o">=</span> <span class="n">assumptions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">is_commutative</span> <span class="o">=</span> <span class="n">fuzzy_bool</span><span class="p">(</span><span class="n">assumptions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;commutative&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+        <span class="n">assumptions</span><span class="p">[</span><span class="s1">&#39;commutative&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">is_commutative</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_assumptions</span> <span class="o">=</span> <span class="n">StdFactKB</span><span class="p">(</span><span class="n">assumptions</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_assumptions</span><span class="o">.</span><span class="n">_generator</span> <span class="o">=</span> <span class="n">tmp_asm_copy</span>  <span class="c1"># Issue #8873</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">MatrixBase</span><span class="p">,</span> <span class="n">NDimArray</span>
+
+        <span class="n">assumptions</span><span class="p">,</span> <span class="n">kw_args</span> <span class="o">=</span> <span class="n">_filter_assumptions</span><span class="p">(</span><span class="n">kw_args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="o">**</span><span class="n">assumptions</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">Symbol</span><span class="p">):</span>
+            <span class="n">assumptions</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">_merge</span><span class="p">(</span><span class="n">assumptions</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">MatrixBase</span><span class="p">,</span> <span class="n">NDimArray</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">label</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">_sympify</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">_sympify</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_sequence</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">kw_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="n">S</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span>
+        <span class="n">strides</span> <span class="o">=</span> <span class="n">kw_args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;strides&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">Expr</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">Expr</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_strides</span> <span class="o">=</span> <span class="n">strides</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="n">IndexedBase</span><span class="o">.</span><span class="n">_set_assumptions</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">assumptions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+
+    <span class="k">def</span> <span class="nf">_hashable_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">IndexedBase</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_hashable_content</span><span class="p">()</span> <span class="o">+</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">assumptions0</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">assumptions0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_assumptions</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is_sequence</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+            <span class="c1"># Special case needed because M[*my_tuple] is a syntax error.</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="s2">&quot;Rank mismatch.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Indexed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">IndexException</span><span class="p">(</span><span class="s2">&quot;Rank mismatch.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">Indexed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indices</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the shape of the ``IndexedBase`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import IndexedBase, Idx, Symbol</span>
+<span class="sd">        &gt;&gt;&gt; from sympy.abc import x, y</span>
+<span class="sd">        &gt;&gt;&gt; IndexedBase(&#39;A&#39;, shape=(x, y)).shape</span>
+<span class="sd">        (x, y)</span>
+
+<span class="sd">        Note: If the shape of the ``IndexedBase`` is specified, it will override</span>
+<span class="sd">        any shape information given by the indices.</span>
+
+<span class="sd">        &gt;&gt;&gt; A = IndexedBase(&#39;A&#39;, shape=(x, y))</span>
+<span class="sd">        &gt;&gt;&gt; B = IndexedBase(&#39;B&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; i = Idx(&#39;i&#39;, 2)</span>
+<span class="sd">        &gt;&gt;&gt; j = Idx(&#39;j&#39;, 1)</span>
+<span class="sd">        &gt;&gt;&gt; A[i, j].shape</span>
+<span class="sd">        (x, y)</span>
+<span class="sd">        &gt;&gt;&gt; B[i, j].shape</span>
+<span class="sd">        (2, 1)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shape</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">strides</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the strided scheme for the ``IndexedBase`` object.</span>
+
+<span class="sd">        Normally this is a tuple denoting the number of</span>
+<span class="sd">        steps to take in the respective dimension when traversing</span>
+<span class="sd">        an array. For code generation purposes strides=&#39;C&#39; and</span>
+<span class="sd">        strides=&#39;F&#39; can also be used.</span>
+
+<span class="sd">        strides=&#39;C&#39; would mean that code printer would unroll</span>
+<span class="sd">        in row-major order and &#39;F&#39; means unroll in column major</span>
+<span class="sd">        order.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_strides</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">offset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the offset for the ``IndexedBase`` object.</span>
+
+<span class="sd">        This is the value added to the resulting index when the</span>
+<span class="sd">        2D Indexed object is unrolled to a 1D form. Used in code</span>
+<span class="sd">        generation.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ==========</span>
+<span class="sd">        &gt;&gt;&gt; from sympy.printing import ccode</span>
+<span class="sd">        &gt;&gt;&gt; from sympy.tensor import IndexedBase, Idx</span>
+<span class="sd">        &gt;&gt;&gt; from sympy import symbols</span>
+<span class="sd">        &gt;&gt;&gt; l, m, n, o = symbols(&#39;l m n o&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; A = IndexedBase(&#39;A&#39;, strides=(l, m, n), offset=o)</span>
+<span class="sd">        &gt;&gt;&gt; i, j, k = map(Idx, &#39;ijk&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; ccode(A[i, j, k])</span>
+<span class="sd">        &#39;A[l*i + m*j + n*k + o]&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_offset</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the label of the ``IndexedBase`` object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import IndexedBase</span>
+<span class="sd">        &gt;&gt;&gt; from sympy.abc import x, y</span>
+<span class="sd">        &gt;&gt;&gt; IndexedBase(&#39;A&#39;, shape=(x, y)).label</span>
+<span class="sd">        A</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_sympystr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">doprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Idx</span><span class="p">(</span><span class="n">Expr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents an integer index as an ``Integer`` or integer expression.</span>
+
+<span class="sd">    There are a number of ways to create an ``Idx`` object.  The constructor</span>
+<span class="sd">    takes two arguments:</span>
+
+<span class="sd">    ``label``</span>
+<span class="sd">        An integer or a symbol that labels the index.</span>
+<span class="sd">    ``range``</span>
+<span class="sd">        Optionally you can specify a range as either</span>
+
+<span class="sd">        * ``Symbol`` or integer: This is interpreted as a dimension. Lower and</span>
+<span class="sd">          upper bounds are set to ``0`` and ``range - 1``, respectively.</span>
+<span class="sd">        * ``tuple``: The two elements are interpreted as the lower and upper</span>
+<span class="sd">          bounds of the range, respectively.</span>
+
+<span class="sd">    Note: bounds of the range are assumed to be either integer or infinite (oo</span>
+<span class="sd">    and -oo are allowed to specify an unbounded range). If ``n`` is given as a</span>
+<span class="sd">    bound, then ``n.is_integer`` must not return false.</span>
+
+<span class="sd">    For convenience, if the label is given as a string it is automatically</span>
+<span class="sd">    converted to an integer symbol.  (Note: this conversion is not done for</span>
+<span class="sd">    range or dimension arguments.)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    ========</span>
+
+<span class="sd">    &gt;&gt;&gt; from sympy import IndexedBase, Idx, symbols, oo</span>
+<span class="sd">    &gt;&gt;&gt; n, i, L, U = symbols(&#39;n i L U&#39;, integer=True)</span>
+
+<span class="sd">    If a string is given for the label an integer ``Symbol`` is created and the</span>
+<span class="sd">    bounds are both ``None``:</span>
+
+<span class="sd">    &gt;&gt;&gt; idx = Idx(&#39;qwerty&#39;); idx</span>
+<span class="sd">    qwerty</span>
+<span class="sd">    &gt;&gt;&gt; idx.lower, idx.upper</span>
+<span class="sd">    (None, None)</span>
+
+<span class="sd">    Both upper and lower bounds can be specified:</span>
+
+<span class="sd">    &gt;&gt;&gt; idx = Idx(i, (L, U)); idx</span>
+<span class="sd">    i</span>
+<span class="sd">    &gt;&gt;&gt; idx.lower, idx.upper</span>
+<span class="sd">    (L, U)</span>
+
+<span class="sd">    When only a single bound is given it is interpreted as the dimension</span>
+<span class="sd">    and the lower bound defaults to 0:</span>
+
+<span class="sd">    &gt;&gt;&gt; idx = Idx(i, n); idx.lower, idx.upper</span>
+<span class="sd">    (0, n - 1)</span>
+<span class="sd">    &gt;&gt;&gt; idx = Idx(i, 4); idx.lower, idx.upper</span>
+<span class="sd">    (0, 3)</span>
+<span class="sd">    &gt;&gt;&gt; idx = Idx(i, oo); idx.lower, idx.upper</span>
+<span class="sd">    (0, oo)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">is_integer</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_finite</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_real</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_symbol</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">is_Atom</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_diff_wrt</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.utilities.misc</span> <span class="kn">import</span> <span class="n">filldedent</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">integer</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">label</span><span class="p">,</span> <span class="nb">range</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">sympify</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="nb">range</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">label</span><span class="o">.</span><span class="n">is_Number</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="o">.</span><span class="n">is_integer</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Index is not an integer number.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">label</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">label</span><span class="o">.</span><span class="n">is_integer</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Idx object requires an integer label.&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">is_sequence</span><span class="p">(</span><span class="nb">range</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">range</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">filldedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                    Idx range tuple must have length 2, but got </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="nb">range</span><span class="p">)))</span>
+            <span class="k">for</span> <span class="n">bound</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">bound</span><span class="o">.</span><span class="n">is_integer</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">and</span> <span class="n">bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">S</span><span class="o">.</span><span class="n">Infinity</span>
+                        <span class="ow">and</span> <span class="n">bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">S</span><span class="o">.</span><span class="n">NegativeInfinity</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Idx object requires integer bounds.&quot;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">*</span><span class="nb">range</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">range</span><span class="p">,</span> <span class="n">Expr</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">range</span><span class="o">.</span><span class="n">is_integer</span> <span class="ow">or</span> <span class="nb">range</span> <span class="ow">is</span> <span class="n">S</span><span class="o">.</span><span class="n">Infinity</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Idx object requires an integer dimension.&quot;</span><span class="p">)</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">range</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">range</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">filldedent</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                The range must be an ordered iterable or</span>
+<span class="s2">                integer SymPy expression.&quot;&quot;&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">label</span><span class="p">,</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">Expr</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_assumptions</span><span class="p">[</span><span class="s2">&quot;finite&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">_assumptions</span><span class="p">[</span><span class="s2">&quot;real&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">label</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the label (Integer or integer expression) of the Idx object.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Idx, Symbol</span>
+<span class="sd">        &gt;&gt;&gt; x = Symbol(&#39;x&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; Idx(x).label</span>
+<span class="sd">        x</span>
+<span class="sd">        &gt;&gt;&gt; j = Symbol(&#39;j&#39;, integer=True)</span>
+<span class="sd">        &gt;&gt;&gt; Idx(j).label</span>
+<span class="sd">        j</span>
+<span class="sd">        &gt;&gt;&gt; Idx(j + 1).label</span>
+<span class="sd">        j + 1</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lower</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the lower bound of the ``Idx``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Idx</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;, 2).lower</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;, 5).lower</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;).lower is None</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">upper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the upper bound of the ``Idx``.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import Idx</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;, 2).upper</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;, 5).upper</span>
+<span class="sd">        4</span>
+<span class="sd">        &gt;&gt;&gt; Idx(&#39;j&#39;).upper is None</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_sympystr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">doprint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">is_Symbol</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">free_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="bp">self</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Idx</span><span class="p">):</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">&lt;=</span> <span class="n">other_lower</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">&gt;</span> <span class="n">other_upper</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Idx</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__le__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Idx</span><span class="p">):</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">&gt;=</span> <span class="n">other_upper</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">&lt;</span> <span class="n">other_lower</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Idx</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__ge__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Idx</span><span class="p">):</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">&lt;</span> <span class="n">other_lower</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">&gt;=</span> <span class="n">other_upper</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Idx</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__lt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Idx</span><span class="p">):</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">upper</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span> <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">other</span><span class="o">.</span><span class="n">lower</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">other_upper</span> <span class="o">=</span> <span class="n">other</span>
+            <span class="n">other_lower</span> <span class="o">=</span> <span class="n">other</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lower</span> <span class="o">&gt;</span> <span class="n">other_upper</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">upper</span> <span class="o">&lt;=</span> <span class="n">other_lower</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Idx</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

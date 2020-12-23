@@ -125,5 +125,5 @@ ensembler/tests/tmp_test_*
 #tmp doc files
 /docs/sphinx_project/Examples/*ipynb
 /docs/sphinx_project/Tutorials/*ipynb
-/docs/sphinx_project/_source/*.rst
+/docs/sphinx_project/_source/ensembler*.rst
 /ensembler/tests/tests_out/

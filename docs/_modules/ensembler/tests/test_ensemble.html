@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.tests.test_ensemble &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.tests.test_ensemble</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.tests.test_ensemble</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">ensembler.ensemble</span> <span class="kn">import</span> <span class="n">replica_exchange</span><span class="p">,</span> <span class="n">_replica_graph</span>
+<span class="kn">from</span> <span class="nn">ensembler.samplers</span> <span class="kn">import</span> <span class="n">stochastic</span>
+<span class="kn">from</span> <span class="nn">ensembler.potentials</span> <span class="kn">import</span> <span class="n">OneD</span>
+<span class="kn">from</span> <span class="nn">ensembler.system</span> <span class="kn">import</span> <span class="n">basic_system</span> <span class="k">as</span> <span class="n">system</span>
+
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls">[docs]</a><span class="k">class</span> <span class="nc">test_ReplicaExchangeCls</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">RE</span> <span class="o">=</span> <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span>
+    <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+    <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
+    <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_tearDown"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_tearDown">[docs]</a>    <span class="k">def</span> <span class="nf">test_tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RE</span><span class="o">.</span><span class="n">replicas</span> <span class="o">=</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_init_1DREnsemble"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_init_1DREnsemble">[docs]</a>    <span class="k">def</span> <span class="nf">test_init_1DREnsemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)}</span>
+        <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="o">=</span><span class="n">exchange_dimensions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_init_2DREnsemble"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_init_2DREnsemble">[docs]</a>    <span class="k">def</span> <span class="nf">test_init_2DREnsemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">),</span>
+                               <span class="s2">&quot;mass&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)}</span>
+
+        <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="o">=</span><span class="n">exchange_dimensions</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_run_1DREnsemble"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_run_1DREnsemble">[docs]</a>    <span class="k">def</span> <span class="nf">test_run_1DREnsemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)}</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="o">=</span><span class="n">exchange_dimensions</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_getTraj_1DREnsemble"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_getTraj_1DREnsemble">[docs]</a>    <span class="k">def</span> <span class="nf">test_getTraj_1DREnsemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">replicas</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)}</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="o">=</span><span class="n">exchange_dimensions</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">nSteps_between_trials</span> <span class="o">=</span> <span class="n">nsteps</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">trajectories</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">get_trajectories</span><span class="p">()</span>
+
+        <span class="c1">##print(len(trajectories))</span>
+        <span class="c1">##print([len(trajectories[t]) for t in trajectories])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">trajectories</span><span class="p">),</span> <span class="mi">22</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;not enough trajectories were retrieved!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEquals</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">trajectories</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">trajectories</span><span class="p">],</span> <span class="n">second</span><span class="o">=</span><span class="p">[</span><span class="n">nsteps</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">replicas</span><span class="p">)],</span>
+                          <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;traj lengths are not correct!&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_ReplicaExchangeCls.test_getTotPot_1DREnsemble"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_ReplicaExchangeCls.test_getTotPot_1DREnsemble">[docs]</a>    <span class="k">def</span> <span class="nf">test_getTotPot_1DREnsemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">replicas</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">exchange_dimensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)}</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">_replica_graph</span><span class="o">.</span><span class="n">_replicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sys</span><span class="p">,</span> <span class="n">exchange_dimensions</span><span class="o">=</span><span class="n">exchange_dimensions</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">nSteps_between_trials</span> <span class="o">=</span> <span class="n">nsteps</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">totPots</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">get_replica_total_energies</span><span class="p">()</span>
+
+        <span class="c1">##print(len(totPots))</span>
+        <span class="c1">##print(totPots)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">totPots</span><span class="p">),</span> <span class="n">replicas</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;not enough trajectories were retrieved!&quot;</span><span class="p">)</span></div>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    def test_setPositionsList_1DREnsemble(self):</span>
+
+<span class="sd">        exchange_dimensions = {&quot;temperature&quot;: np.linspace(288, 310, 22)}</span>
+<span class="sd">        replicas =len(exchange_dimensions[&quot;temperature&quot;])</span>
+<span class="sd">        expected_pos= range(replicas)</span>
+
+<span class="sd">        samplers = stochastic.monteCarloIntegrator()</span>
+<span class="sd">        potential = OneD.harmonicOscillatorPotential()</span>
+<span class="sd">        sys = system.system(potential=potential, samplers=samplers)</span>
+
+<span class="sd">        group = _replica_graph.ReplicaExchange(system=sys, exchange_dimensions=exchange_dimensions)</span>
+
+<span class="sd">        initial_positions = sorted([group.replicas[replica]._currentPosition for replica in group.replicas])</span>
+<span class="sd">        group.set_replicas_positions(expected_pos)</span>
+<span class="sd">        setted_pos = sorted([group.replicas[replica]._currentPosition for replica in group.replicas])</span>
+
+<span class="sd">        self.assertEqual(len(group.replicas), replicas, msg=&quot;not enough trajectories were retrieved!&quot;)</span>
+<span class="sd">        self.assertNotEqual(initial_positions, setted_pos, msg=&quot;Setted positions are the same as before!&quot;)</span>
+<span class="sd">        self.assertEqual(setted_pos, list(expected_pos), msg=&quot;The positions were not set correctly!&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="test_TemperatureReplicaExchangeCls"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls">[docs]</a><span class="k">class</span> <span class="nc">test_TemperatureReplicaExchangeCls</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">TRE</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span>
+
+<div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_init"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_init">[docs]</a>    <span class="k">def</span> <span class="nf">test_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
+
+        <span class="n">replicas</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">T_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">temperature_range</span><span class="o">=</span><span class="n">T_range</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_run"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_run">[docs]</a>    <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
+
+        <span class="n">replicas</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">T_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">temperature_range</span><span class="o">=</span><span class="n">T_range</span><span class="p">)</span>
+        <span class="c1">#print(group.get_Total_Energy())</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">nSteps_between_trials</span> <span class="o">=</span> <span class="n">nsteps</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+        <span class="c1">#print(group.get_Total_Energy())</span>
+
+
+<div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_exchange_all"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_exchange_all">[docs]</a>    <span class="k">def</span> <span class="nf">test_exchange_all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
+
+        <span class="n">T_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">nReplicas</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">T_range</span><span class="p">)</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nReplicas</span><span class="p">)}</span>
+        <span class="n">velocities</span> <span class="o">=</span> <span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nReplicas</span><span class="p">)}</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">temperature_range</span><span class="o">=</span><span class="n">T_range</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">set_replicas_positions</span><span class="p">(</span><span class="n">positions</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">set_replicas_velocities</span><span class="p">(</span><span class="n">velocities</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">_defaultRandomness</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">False</span>
+
+        <span class="n">group</span><span class="o">.</span><span class="n">exchange</span><span class="p">()</span>
+        <span class="n">all_exchanges</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">_current_exchanges</span>
+        <span class="n">finpositions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">get_replicas_positions</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">finvelocities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">get_replicas_velocities</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+        <span class="c1"># Checking:</span>
+        <span class="c1">##constant params?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group</span><span class="o">.</span><span class="n">replicas</span><span class="p">),</span> <span class="n">nReplicas</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;not enough trajectories were retrieved!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">(</span><span class="n">finpositions</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">positions</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;Positions should not change during exchange!&quot;</span><span class="p">)</span>
+
+        <span class="c1">#self.assertListEqual(finvelocities, velocities, msg=&quot;Velocities should not change during exchange!&quot;)</span>
+        <span class="c1">##exchange process</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">nReplicas</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_exchanges</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;length of all exchanges is not correct!&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_exchanges</span><span class="o">.</span><span class="n">values</span><span class="p">())),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;not all exchanges are True!!&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="n">group</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;group&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+    <span class="sd">&quot;&quot;&quot; TODO: Fix</span>
+<span class="sd">    def test_exchange_none(self):</span>
+<span class="sd">        </span>
+
+<span class="sd">        samplers = newtonian.positionVerletIntegrator()</span>
+<span class="sd">        potential = OneD.harmonicOscillatorPotential()</span>
+<span class="sd">        sys = system.system(potential=potential, samplers=samplers)</span>
+
+<span class="sd">        T_range = [1, 200, 500]</span>
+<span class="sd">        nReplicas = len(T_range)</span>
+<span class="sd">        print(&quot;REPS&quot;, nReplicas)</span>
+<span class="sd">        positions = [float(x)*100 for x in range(nReplicas)]</span>
+<span class="sd">        velocities = list([float(1) for x in range(nReplicas)])</span>
+
+<span class="sd">        group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)</span>
+<span class="sd">        print(&quot;REPS&quot;, group.nReplicas)</span>
+
+<span class="sd">        #remove Randomness!</span>
+<span class="sd">        group._defaultRandomness= lambda x,y: False</span>
+<span class="sd">        group.set_replicas_positions(positions)</span>
+<span class="sd">        group.set_replicas_velocities(velocities)</span>
+
+<span class="sd">        #first round</span>
+<span class="sd">        group.exchange()</span>
+<span class="sd">        all_exchanges = group._current_exchanges</span>
+<span class="sd">        finpositions = list(group.get_replicas_positions().values())</span>
+<span class="sd">        finvelocities = list(group.get_replicas_velocities().values())</span>
+
+<span class="sd">        #Checking:</span>
+<span class="sd">        ##constant params?</span>
+<span class="sd">        self.assertEqual(len(group.replicas), nReplicas, msg=&quot;not enough trajectories were retrieved!&quot;)</span>
+<span class="sd">        self.assertListEqual(finpositions, positions, msg=&quot;Positions should not change during exchange!&quot;)</span>
+<span class="sd">        self.assertListEqual(finvelocities, velocities, msg=&quot;Velocities should not change during exchange!&quot;)</span>
+<span class="sd">        ##exchange process</span>
+<span class="sd">        ##print(all_exchanges.values)</span>
+<span class="sd">        self.assertEqual(nReplicas//2, len(all_exchanges), msg=&quot;length of all exchanges is not correct!&quot;)</span>
+<span class="sd">        #self.assertFalse(all(list(all_exchanges.values())), msg=&quot;length of all exchanges is not correct!&quot;)</span>
+<span class="sd">        print(group.exchange_information[[&quot;nExchange&quot;, &quot;replicaI&quot;, &quot;replicaJ&quot;, &quot;TotEI&quot;, &quot;TotEJ&quot;, &quot;doExchange&quot;]])</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="test_TemperatureReplicaExchangeCls.test_simulate_good_exchange"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_ensemble.test_TemperatureReplicaExchangeCls.test_simulate_good_exchange">[docs]</a>    <span class="k">def</span> <span class="nf">test_simulate_good_exchange</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">integrator</span> <span class="o">=</span> <span class="n">stochastic</span><span class="o">.</span><span class="n">metropolisMonteCarloIntegrator</span><span class="p">()</span>
+        <span class="n">potential</span> <span class="o">=</span> <span class="n">OneD</span><span class="o">.</span><span class="n">harmonicOscillatorPotential</span><span class="p">()</span>
+        <span class="n">sys</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">potential</span><span class="o">=</span><span class="n">potential</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">integrator</span><span class="p">)</span>
+
+        <span class="n">replicas</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">T_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">288</span><span class="p">,</span> <span class="mi">310</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">replica_exchange</span><span class="o">.</span><span class="n">temperatureReplicaExchange</span><span class="p">(</span><span class="n">system</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span> <span class="n">temperature_range</span><span class="o">=</span><span class="n">T_range</span><span class="p">)</span>
+        <span class="c1">##print(group.get_Total_Energy())</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">nSteps_between_trials</span> <span class="o">=</span> <span class="n">nsteps</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span></div>
+        <span class="c1">##print(group.get_Total_Energy())</span>
+        <span class="c1">##print(&quot;Exchanges: &quot;, group.exchange_information)</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    def test_simulate_bad_exchange(self):</span>
+<span class="sd">        samplers = newtonian.positionVerletIntegrator()</span>
+
+<span class="sd">        potential = OneD.harmonicOscillatorPotential()</span>
+<span class="sd">        sys = system.system(potential=potential, samplers=samplers)</span>
+
+<span class="sd">        replicas =3</span>
+<span class="sd">        nsteps = 1</span>
+
+<span class="sd">        T_range = [1, 2000, 5000]</span>
+<span class="sd">        positions = [float(x)*100 for x in range(len(T_range))]</span>
+
+<span class="sd">        group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)</span>
+
+<span class="sd">        #remove Randomness!</span>
+<span class="sd">        group._defaultRandomness= lambda x,y: False</span>
+<span class="sd">        group.set_replicas_positions(positions)</span>
+<span class="sd">        group.nSteps_between_trials = nsteps</span>
+<span class="sd">        group.set_replicas_velocities([float(-100) for x in range(replicas)])</span>
+
+<span class="sd">        print(&quot;STEP:\t&quot;, 0)</span>
+<span class="sd">        print(group.get_replicas_positions())</span>
+<span class="sd">        print(&quot;ENERGY: &quot;, group.get_total_energy())</span>
+<span class="sd">        print(&quot;POSITION: &quot;, group.get_replicas_positions())</span>
+<span class="sd">        print(&quot;\n&quot;.join([str(replica.getCurrentState()) for coord, replica in group.replicas.items()]))</span>
+
+
+<span class="sd">        for step in range(5):</span>
+<span class="sd">            #group.run()</span>
+<span class="sd">            group.simulate(1)</span>
+<span class="sd">            group.set_replicas_velocities([float(10) for x in range(replicas)])</span>
+<span class="sd">            #group.exchange()</span>
+<span class="sd">            #group.simulate(1)</span>
+<span class="sd">            print(&quot;STEP:\t&quot;, step)</span>
+<span class="sd">            print(&quot;ENERGY: &quot;, group.get_total_energy())</span>
+<span class="sd">            print(&quot;\n&quot;.join([str(replica.getCurrentState()) for coord,replica in group.replicas.items()]))</span>
+
+<span class="sd">        print(&quot;Exchanges: &quot;, group.exchange_information.columns)</span>
+<span class="sd">        print(group.exchange_information[[&quot;nExchange&quot;, &quot;replicaI&quot;, &quot;replicaJ&quot;, &quot;TotEI&quot;, &quot;TotEJ&quot;, &quot;doExchange&quot;]])</span>
+
+<span class="sd">        self.assertFalse(any(list(group.exchange_information.doExchange)), msg=&quot;No Exchange should happen!&quot;)</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

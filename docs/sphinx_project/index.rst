@@ -8,9 +8,10 @@
    :maxdepth: 2
    :caption: Contents:
 
+   introduction.rst
    Tutorials/index
    Examples/index
-   _source/index
+   _source/modules
 
 
 Indices and tables

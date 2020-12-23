@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.tests.test_conditions &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Welcome to Ensembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_source/modules.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ensembler.tests.test_conditions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ensembler.tests.test_conditions</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">unittest</span>
+
+<span class="kn">from</span> <span class="nn">ensembler.conditions.box_conditions</span> <span class="kn">import</span> <span class="n">periodicBoundaryCondition</span><span class="p">,</span> <span class="n">boxBoundaryCondition</span>
+<span class="kn">from</span> <span class="nn">ensembler.conditions.restrain_conditions</span> <span class="kn">import</span> <span class="n">positionRestraintCondition</span>
+
+
+
+<div class="viewcode-block" id="boxBoundaryCondition"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">boxBoundaryCondition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">condition_class</span> <span class="o">=</span> <span class="n">boxBoundaryCondition</span>
+    <span class="n">boundary1D</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="n">boundary2D</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]</span>
+    <span class="n">tmp_test_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="boxBoundaryCondition.setUp"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">test_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;/tests_out&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_test_potentials&quot;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_constructor"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_constructor">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary1D</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_constructor2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_constructor2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_save_obj_str"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_save_obj_str">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_obj_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_load_str_path"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_load_str_path">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_str_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_apply1D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_apply1D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply1D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">velocity</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">expected_vel</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">2.2</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">14</span><span class="p">]</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.2</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">velocity</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">first</span><span class="o">=</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">expected_vel</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="boxBoundaryCondition.test_apply2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.boxBoundaryCondition.test_apply2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">velocity</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">expected_vel</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_vel</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">current_velocity</span><span class="o">=</span><span class="n">velocity</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_vel</span><span class="p">,</span> <span class="n">expected_vel</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound velocity was wrong.&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="periodicBoundaryCondition"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition">[docs]</a><span class="k">class</span> <span class="nc">periodicBoundaryCondition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">condition_class</span> <span class="o">=</span> <span class="n">periodicBoundaryCondition</span>
+    <span class="n">boundary1D</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="n">boundary2D</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]]</span>
+    <span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.setUp"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">test_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;/tests_out&quot;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)</span>
+            <span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_test_potentials&quot;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_constructor"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_constructor">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary1D</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_constructor2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_constructor2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_save_obj_str"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_save_obj_str">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_obj_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_load_str_path"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_load_str_path">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_str_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_apply1D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_apply1D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply1D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary1D</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">8</span><span class="p">])</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">corr_pos</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="periodicBoundaryCondition.test_apply2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.periodicBoundaryCondition.test_apply2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary2D</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">expected_vel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">vel</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="n">corr_pos</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="positionRestraintCondition"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition">[docs]</a><span class="k">class</span> <span class="nc">positionRestraintCondition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">condition_class</span> <span class="o">=</span> <span class="n">positionRestraintCondition</span>
+    <span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="positionRestraintCondition.setUp"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.setUp">[docs]</a>    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">test_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">+</span><span class="s2">&quot;/tests_out&quot;</span>
+        <span class="k">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">test_dir</span><span class="p">)</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">(</span><span class="nb">dir</span><span class="o">=</span><span class="n">test_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;tmp_test_conditions&quot;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.obj&quot;</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="vm">__class__</span><span class="o">.</span><span class="n">tmp_test_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="positionRestraintCondition.test_constructor"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.test_constructor">[docs]</a>    <span class="k">def</span> <span class="nf">test_constructor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">position_0</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="positionRestraintCondition.test_save_obj_str"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.test_save_obj_str">[docs]</a>    <span class="k">def</span> <span class="nf">test_save_obj_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">position_0</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="positionRestraintCondition.test_load_str_path"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.test_load_str_path">[docs]</a>    <span class="k">def</span> <span class="nf">test_load_str_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmp_out_path</span>
+        <span class="n">out_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">position_0</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="bp">cls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="n">out_path</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="positionRestraintCondition.test_apply1D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.test_apply1D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply1D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">position_0</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">]</span>
+        <span class="n">expected_force</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_force</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_force</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_force</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound force was wrong.&quot;</span><span class="p">)</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mf">84.5</span><span class="p">]</span>
+        <span class="n">expected_force</span> <span class="o">=</span> <span class="p">[</span><span class="mi">13</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">14</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_force</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_pos</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">second</span><span class="o">=</span><span class="n">corr_force</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="n">expected_force</span><span class="p">,</span>
+                         <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound force was wrong.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="positionRestraintCondition.test_apply2D"><a class="viewcode-back" href="../../../_source/ensembler.tests.html#ensembler.tests.test_conditions.positionRestraintCondition.test_apply2D">[docs]</a>    <span class="k">def</span> <span class="nf">test_apply2D</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cond</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">condition_class</span><span class="p">(</span><span class="n">position_0</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">expected_force</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_force</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_force</span><span class="p">,</span> <span class="n">expected_force</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound force was wrong.&quot;</span><span class="p">)</span>
+
+        <span class="n">expected_pos</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">]</span>
+        <span class="n">expected_force</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+        <span class="n">corr_pos</span><span class="p">,</span> <span class="n">corr_force</span> <span class="o">=</span> <span class="n">cond</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">current_position</span><span class="o">=</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_pos</span><span class="p">,</span> <span class="n">expected_pos</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound position was wrong.&quot;</span><span class="p">)</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_equal</span><span class="p">(</span><span class="n">corr_force</span><span class="p">,</span> <span class="n">expected_force</span><span class="p">,</span>
+                                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;The position correction for the lower bound force was wrong.&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

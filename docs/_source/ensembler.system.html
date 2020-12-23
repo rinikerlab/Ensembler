@@ -1,0 +1,1180 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ensembler.system package &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ensembler.tests package" href="ensembler.tests.html" />
+    <link rel="prev" title="ensembler.samplers package" href="ensembler.samplers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Welcome to Ensembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="ensembler.html">ensembler package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ensembler.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ensembler.analysis.html">ensembler.analysis package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.conditions.html">ensembler.conditions package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.ensemble.html">ensembler.ensemble package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.potentials.html">ensembler.potentials package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.samplers.html">ensembler.samplers package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">ensembler.system package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.tests.html">ensembler.tests package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.util.html">ensembler.util package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ensembler.visualisation.html">ensembler.visualisation package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler.ensembler">ensembler.ensembler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ensembler.html#module-ensembler">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Documentation</a> &raquo;</li>
+        
+          <li><a href="ensembler.html">ensembler package</a> &raquo;</li>
+        
+      <li>ensembler.system package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/_source/ensembler.system.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="ensembler-system-package">
+<h1>ensembler.system package<a class="headerlink" href="#ensembler-system-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ensembler.system.basic_system">
+<span id="ensembler-system-basic-system-module"></span><h2>ensembler.system.basic_system module<a class="headerlink" href="#module-ensembler.system.basic_system" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: System</dt><dd><p>This module shall be used to implement subclasses of system. It wraps all information needed and generated by a simulation.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.system.basic_system.system">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.basic_system.</code><code class="sig-name descname">system</code><span class="sig-paren">(</span><em class="sig-param">potential: potential = &lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = None</em>, <em class="sig-param">temperature: numbers.Number = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">mass: numbers.Number = 1</em>, <em class="sig-param">verbose: bool = True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ensembler.util.html#ensembler.util.basic_class._baseClass" title="ensembler.util.basic_class._baseClass"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.util.basic_class._baseClass</span></code></a></p>
+<p>The system class is managing the simulation approaches and all system data as well as the simulation results.</p>
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potential: potential = &lt;ensembler.potentials.OneD.harmonicOscillatorPotential object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = None</em>, <em class="sig-param">temperature: numbers.Number = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">mass: numbers.Number = 1</em>, <em class="sig-param">verbose: bool = True</em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>The system class is wrapping all components needed for a simulation.
+It can be used as the control unit for executing a simulation (simulate) and also to manage the generated data or input data.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>potential</strong> (<em>_potentialCls</em>) – gives the potential function to be explored/sampled</p></li>
+<li><p><strong>sampler</strong> (<em>_samplerCls</em>) – gives the method of choice to sample/explore the potential function</p></li>
+<li><p><strong>conditions</strong> (<em>Iterable[_conditionCls], optional</em>) – apply the given conditions to the systems in a preset (tau) step iteration</p></li>
+<li><p><strong>temperature</strong> (<em>float, optional</em>) – temperature of the system</p></li>
+<li><p><strong>start_position</strong> (<em>float, optional</em>) – starting position of the system during the simulation</p></li>
+<li><p><strong>mass</strong> (<em>float, optional</em>) – mass of the single particle</p></li>
+<li><p><strong>verbose</strong> (<em>bool, optional</em>) – I can tell you a long iterative story…</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._gen_rand_vel">
+<code class="sig-name descname">_gen_rand_vel</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numbers.Number<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._gen_rand_vel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._gen_rand_vel" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_gen_rand_vel</dt><dd><p>get a random velocity according to the temperature and mass.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a randomly selected velocity</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number, Iterable[Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._init_position">
+<code class="sig-name descname">_init_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">initial_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._init_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._init_position" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_init_position</dt><dd><p>this function initializes the current position of the system.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>initial_position</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – if None, a random position is selected else the given position is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._init_velocities">
+<code class="sig-name descname">_init_velocities</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._init_velocities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._init_velocities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the initial velocity randomly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._update_current_vars_from_current_state">
+<code class="sig-name descname">_update_current_vars_from_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._update_current_vars_from_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._update_current_vars_from_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_update_current_vars_from_current_state</dt><dd><p>update the _current Vars from the currentState</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._update_energies">
+<code class="sig-name descname">_update_energies</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._update_energies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._update_energies" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_updateEne</dt><dd><p>update all total energy terms.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._update_state_from_traj">
+<code class="sig-name descname">_update_state_from_traj</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._update_state_from_traj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._update_state_from_traj" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_update_state_from_traj</dt><dd><p>replaces the current state and the currentstate vars by the last trajectory state.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system._update_temperature">
+<code class="sig-name descname">_update_temperature</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system._update_temperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system._update_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>this looks like a thermostat like thing! not implemented!&#64; TODO calc temperature from velocity</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.append_state">
+<code class="sig-name descname">append_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">, </span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_velocity</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">, </span>numbers.Number<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_forces</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">, </span>numbers.Number<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.append_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.append_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>append_state</dt><dd><p>appends a new state, based on the given arguments and updates the system to them.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_position</strong> (<em>Union[Iterable[Number], Number]</em>) – a new position</p></li>
+<li><p><strong>new_velocity</strong> (<em>Union[Iterable[Number], Number]</em>) – a new velocity</p></li>
+<li><p><strong>new_forces</strong> (<em>Union[Iterable[Number], Number]</em>) – a new Force</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.apply_conditions">
+<code class="sig-name descname">apply_conditions</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.apply_conditions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.apply_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>applyConditions</dt><dd><p>this function applies the coupled conditions  to the current state of system.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.calculate_total_kinetic_energy">
+<code class="sig-name descname">calculate_total_kinetic_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">, </span>numbers.Number<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.calculate_total_kinetic_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.calculate_total_kinetic_energy" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>totKin</dt><dd><p>returns the total kinetic energy of the system.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>total kinetic energy.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Union[Iterable[Number], Number, np.nan]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.calculate_total_potential_energy">
+<code class="sig-name descname">calculate_total_potential_energy</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">, </span>numbers.Number<span class="p">]</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.calculate_total_potential_energy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.calculate_total_potential_energy" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>totPot</dt><dd><p>return the total potential energy</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>summed up total potential energies</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Union[Iterable[Number], Number]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.clear_trajectory">
+<code class="sig-name descname">clear_trajectory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.clear_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.clear_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><p>deletes all entries of trajectory and adds current state as first timestep to the trajectory
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.conditions">
+<em class="property">property </em><code class="sig-name descname">conditions</code><a class="headerlink" href="#ensembler.system.basic_system.system.conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>conditions list contains the system conditions.
+These conditions are applied during the sampling of the potential energy function to add additional constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the list of conditions coupled to the system.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>List[_conditionCls]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.current_state">
+<em class="property">property </em><code class="sig-name descname">current_state</code><a class="headerlink" href="#ensembler.system.basic_system.system.current_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.initialise">
+<code class="sig-name descname">initialise</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">withdraw_Traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">init_position</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">init_velocity</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">set_initial_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.initialise"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.initialise" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>initialise</dt><dd><p>initialises the system, i.e. can set an initial position, initial velocities and initialize the forces.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>withdraw_Traj</strong> (<em>bool, optional</em>) – reset the simulation trajectory?</p></li>
+<li><p><strong>init_position</strong> (<em>bool, optional</em>) – reinitialize the start_position - currentPosition</p></li>
+<li><p><strong>init_velocity</strong> (<em>bool, optional</em>) – reinitialize the start_velocity - currentVelocity</p></li>
+<li><p><strong>set_initial_position</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – set the start_position to the given one.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.mass">
+<em class="property">property </em><code class="sig-name descname">mass</code><a class="headerlink" href="#ensembler.system.basic_system.system.mass" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.basic_system.system.nDimensions">
+<code class="sig-name descname">nDimensions</code><em class="property">: int</em><a class="headerlink" href="#ensembler.system.basic_system.system.nDimensions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.basic_system.system.nParticles">
+<code class="sig-name descname">nParticles</code><em class="property">: int</em><a class="headerlink" href="#ensembler.system.basic_system.system.nParticles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.basic_system.system.nStates">
+<code class="sig-name descname">nStates</code><em class="property">: int</em><a class="headerlink" href="#ensembler.system.basic_system.system.nStates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attributes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.basic_system.system.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'system'</em><a class="headerlink" href="#ensembler.system.basic_system.system.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.position">
+<em class="property">property </em><code class="sig-name descname">position</code><a class="headerlink" href="#ensembler.system.basic_system.system.position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.potential">
+<em class="property">property </em><code class="sig-name descname">potential</code><a class="headerlink" href="#ensembler.system.basic_system.system.potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>The potential energy function class can be explored in a simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>systems potential energy class</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_potentialCls</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.propagate">
+<code class="sig-name descname">propagate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.propagate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.propagate" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>propagate</dt><dd><p>Do a single exploration step.
+Not stored in the trajectory and no energies returned or updated.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>returns the new current position, the new current velocities and the new current forces</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(Union[Iterable[Number], Number], Union[Iterable[Number], Number], Union[Iterable[Number], Number])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.random_position">
+<code class="sig-name descname">random_position</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.random_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.random_position" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>randomPos</dt><dd><p>returns a randomly selected position for the system.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a random position</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Union[Number, Iterable[Number]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.revert_step">
+<code class="sig-name descname">revert_step</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.revert_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.revert_step" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>revertStep</dt><dd><p>removes the last step which was performed from the trajectory and sets back the system to the one before.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.sampler">
+<em class="property">property </em><code class="sig-name descname">sampler</code><a class="headerlink" href="#ensembler.system.basic_system.system.sampler" title="Permalink to this definition">¶</a></dt>
+<dd><p>The sampler method is used by the system to explore the potential energy function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the sampler method that can be used to explore the potential energy function.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>_samplerCls</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.set_current_state">
+<code class="sig-name descname">set_current_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">current_velocities</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_force</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_temperature</span><span class="p">:</span> <span class="n">numbers.Number</span> <span class="o">=</span> <span class="default_value">298</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.set_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.set_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the current State of the system.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_position</strong> (<em>Union[Number, Iterable[Number]]</em>) – new current system position</p></li>
+<li><p><strong>current_velocities</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system velocity. (default: 0)</p></li>
+<li><p><strong>current_force</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system force. (default: 0)</p></li>
+<li><p><strong>current_temperature</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system temperature. (default: 298)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.set_position">
+<code class="sig-name descname">set_position</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.set_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.set_position" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.set_temperature">
+<code class="sig-name descname">set_temperature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">temperature</span><span class="p">:</span> <span class="n">numbers.Number</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.set_temperature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.set_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>set Temperature</dt><dd><p>set  the systems current temperature.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>temperature</strong></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.set_velocities">
+<code class="sig-name descname">set_velocities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">velocities</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.set_velocities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.set_velocities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.simulate">
+<code class="sig-name descname">simulate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">steps</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">withdraw_traj</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">save_every_state</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">1</span></em>, <em class="sig-param"><span class="n">init_system</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">True</span></em>, <em class="sig-param"><span class="n">_progress_bar_prefix</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'Simulation: '</span></em><span class="sig-paren">)</span> &#x2192; __main__.State<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>this function executes the simulation, by exploring the potential energy function with the sampling method for the given n steps.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> (<em>int</em>) – number of integration steps</p></li>
+<li><p><strong>init_system</strong> (<em>bool, optional</em>) – initialize the system. (default: False)</p></li>
+<li><p><strong>withdraw_traj</strong> (<em>bool, optional</em>) – reset the current simulation trajectory. (default: False)</p></li>
+<li><p><strong>save_every_state</strong> (<em>int, optional</em>) – save every n step. (and leave out the rest) (default: 1 - each step)</p></li>
+<li><p><strong>verbosity</strong> (<em>bool, optional</em>) – change the verbosity of the simulation. (default: True)</p></li>
+<li><p><strong>_progress_bar_prefix</strong> (<em>str, optional</em>) – prefix of tqdm progress bar. (default: “Simulation”)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the last current state</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>state</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.basic_system.system.state">
+<code class="sig-name descname">state</code><a class="headerlink" href="#ensembler.system.basic_system.system.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__main__.State</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.temperature">
+<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#ensembler.system.basic_system.system.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The set temperature of the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>set temperature</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.total_kinetic_energy">
+<em class="property">property </em><code class="sig-name descname">total_kinetic_energy</code><a class="headerlink" href="#ensembler.system.basic_system.system.total_kinetic_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>the total kinetic energy of the current system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>total kinetic energy of the current system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.total_potential_energy">
+<em class="property">property </em><code class="sig-name descname">total_potential_energy</code><a class="headerlink" href="#ensembler.system.basic_system.system.total_potential_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>the total potential energy of the current system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>total potential energy of the current system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.total_system_energy">
+<em class="property">property </em><code class="sig-name descname">total_system_energy</code><a class="headerlink" href="#ensembler.system.basic_system.system.total_system_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>the total energy of the current system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>total energy of the current system</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.trajectory">
+<em class="property">property </em><code class="sig-name descname">trajectory</code><a class="headerlink" href="#ensembler.system.basic_system.system.trajectory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.update_current_state">
+<code class="sig-name descname">update_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.update_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.update_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>updateCurrentState</dt><dd><p>update current state from the _current vars.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.update_system_properties">
+<code class="sig-name descname">update_system_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.update_system_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.update_system_properties" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>updateSystemProperties</dt><dd><p>updates the energies and temperature of the system</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>NoReturn</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.velocity">
+<em class="property">property </em><code class="sig-name descname">velocity</code><a class="headerlink" href="#ensembler.system.basic_system.system.velocity" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>velocity</dt><dd><p>The current velocity of the system</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Union[Number, Iterable[Number]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.basic_system.system.write_trajectory">
+<code class="sig-name descname">write_trajectory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out_path</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="reference internal" href="../_modules/ensembler/system/basic_system.html#system.write_trajectory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.basic_system.system.write_trajectory" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>writeTrajectory</dt><dd><p>Writes the trajectory out to a file.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out_path</strong> (<em>str</em>) – the string, where the traj csv should be stored.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>returns the out_path</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.system.eds_system">
+<span id="ensembler-system-eds-system-module"></span><h2>ensembler.system.eds_system module<a class="headerlink" href="#module-ensembler.system.eds_system" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: System</dt><dd><p>This module shall be used to implement subclasses of system. It wraps all information needed and generated by a simulation.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.system.eds_system.edsSystem">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.eds_system.</code><code class="sig-name descname">edsSystem</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials.OneD.envelopedPotential = &lt;ensembler.potentials.OneD.envelopedPotential object&gt;, sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;, conditions: Iterable[condition] = [], temperature: float = 298.0, start_position: Union[numbers.Number, Iterable[numbers.Number]] = None, eds_s: float = 1, eds_Eoff: Iterable[numbers.Number] = [0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.system.basic_system.system" title="ensembler.system.basic_system.system"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.system.basic_system.system</span></code></a></p>
+<p>The EDS-System is collecting and providing information essential to EDS.
+The Trajectory contains s and Eoff values for each step.
+Functions like set_s (or simply access s) or set_eoff (or simply access Eoff) give direct acces to the EDS potential.</p>
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials.OneD.envelopedPotential = &lt;ensembler.potentials.OneD.envelopedPotential object&gt;, sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;, conditions: Iterable[condition] = [], temperature: float = 298.0, start_position: Union[numbers.Number, Iterable[numbers.Number]] = None, eds_s: float = 1, eds_Eoff: Iterable[numbers.Number] = [0, 0]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>__init__</dt><dd><p>construct a eds-System that can be used to manage a simulation.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>potential</strong> (<em>pot.envelopedPotential, optional</em>) – potential function class to be explored by sampling</p></li>
+<li><p><strong>sampler</strong> (<em>sampler, optional</em>) – sampling method, that allows exploring the potential function</p></li>
+<li><p><strong>conditions</strong> (<em>Iterable[condition], optional</em>) – conditions that shall be applied to the system.</p></li>
+<li><p><strong>temperature</strong> (<em>float, optional</em>) – The temperature of the system (default: 298K)</p></li>
+<li><p><strong>start_position</strong> – starting position for the simulation and setup of the system.</p></li>
+<li><p><strong>eds_s</strong> (<em>float, optional</em>) – is the S-value of the EDS-Potential</p></li>
+<li><p><strong>eds_Eoff</strong> (<em>Iterable[Number], optional</em>) – giving the energy offsets for the</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.append_state">
+<code class="sig-name descname">append_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_velocity</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_forces</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_s</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_eoff</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.append_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.append_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>append_state</dt><dd><p>Append a new state to the trajectory.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_position</strong> (<em>Union[Number, Iterable[Number]]</em>) – new position for the system</p></li>
+<li><p><strong>new_velocity</strong> (<em>Union[Number, Iterable[Number]]</em>) – new velocity for the system</p></li>
+<li><p><strong>new_forces</strong> (<em>Union[Number, Iterable[Number]]</em>) – new forces for the system</p></li>
+<li><p><strong>new_s</strong> (<em>Union[Number, Iterable[Number]]</em>) – new s-value for the system</p></li>
+<li><p><strong>new_eoff</strong> (<em>Iterable[Number]</em>) – new eoffs for the system</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.eoff">
+<em class="property">property </em><code class="sig-name descname">eoff</code><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.eoff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Eoff
+Energy Offsets for the EDS-potential</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.eds_system.edsSystem.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'eds system'</em><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.s">
+<em class="property">property </em><code class="sig-name descname">s</code><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.s" title="Permalink to this definition">¶</a></dt>
+<dd><p>smoothing parameter for the EDS-potential</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.set_current_state">
+<code class="sig-name descname">set_current_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">current_velocities</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_force</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_temperature</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">current_s</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">current_eoff</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.set_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.set_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>set_current_state</dt><dd><p>set s the current state to the given variables.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_position</strong> (<em>Union[Number, Iterable[Number]]</em>) – The new Position</p></li>
+<li><p><strong>current_velocities</strong> (<em>Union[Number, Iterable[Number]],</em>) – The new Velocities</p></li>
+<li><p><strong>current_force</strong> (<em>Union[Number, Iterable[Number]],</em>) – The new Forces of the system</p></li>
+<li><p><strong>current_temperature</strong> (<em>Union[Number, Iterable[Number]],</em>) – The new S_value</p></li>
+<li><p><strong>current_s</strong> (<em>Union[Number, Iterable[Number]],</em>) – the new s values.</p></li>
+<li><p><strong>current_eoff</strong> (<em>Iterable[Number],</em>) – the new eoff values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.set_eoff">
+<code class="sig-name descname">set_eoff</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">eoff</span><span class="p">:</span> <span class="n">Iterable<span class="p">[</span>numbers.Number<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.set_eoff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.set_eoff" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>set_Eoff</dt><dd><p>setting new Energy offsets.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>eoff</strong> (<em>Iterable[Number]</em>) – vector of new energy offsets</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.set_s">
+<code class="sig-name descname">set_s</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">numbers.Number</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.set_s"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.set_s" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>set_s</dt><dd><p>setting a new s-value to the system.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>s</strong> (<em>Number</em>) – the new smoothing parameter s</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.eds_system.edsSystem.state">
+<code class="sig-name descname">state</code><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__main__.EDS_State</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.eds_system.edsSystem.update_current_state">
+<code class="sig-name descname">update_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/eds_system.html#edsSystem.update_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.eds_system.edsSystem.update_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>updateCurrentState</dt><dd><p>This function updates the current state from the _current Variables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.system.perturbed_system">
+<span id="ensembler-system-perturbed-system-module"></span><h2>ensembler.system.perturbed_system module<a class="headerlink" href="#module-ensembler.system.perturbed_system" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Module: System</dt><dd><p>This module shall be used to implement subclasses of system. It wraps all information needed and generated by a simulation.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="ensembler.system.perturbed_system.perturbedSystem">
+<em class="property">class </em><code class="sig-prename descclassname">ensembler.system.perturbed_system.</code><code class="sig-name descname">perturbedSystem</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials._basicPotentials._potential1DClsPerturbed = &lt;ensembler.potentials.OneD.linearCoupledPotentials object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = []</em>, <em class="sig-param">temperature: float = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">lam: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ensembler.system.basic_system.system" title="ensembler.system.basic_system.system"><code class="xref py py-class docutils literal notranslate"><span class="pre">ensembler.system.basic_system.system</span></code></a></p>
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">potential: ensembler.potentials._basicPotentials._potential1DClsPerturbed = &lt;ensembler.potentials.OneD.linearCoupledPotentials object&gt;</em>, <em class="sig-param">sampler: samplers = &lt;ensembler.samplers.stochastic.metropolisMonteCarloIntegrator object&gt;</em>, <em class="sig-param">conditions: Iterable[condition] = []</em>, <em class="sig-param">temperature: float = 298.0</em>, <em class="sig-param">start_position: Iterable[numbers.Number] = None</em>, <em class="sig-param">lam: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>__init__</dt><dd><p>construct a eds-System that can be used to manage a simulation.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>potential</strong> (<em>pot.envelopedPotential, optional</em>) – potential function class to be explored by sampling</p></li>
+<li><p><strong>sampler</strong> (<em>sampler, optional</em>) – sampling method, that allows exploring the potential function</p></li>
+<li><p><strong>conditions</strong> (<em>Iterable[condition], optional</em>) – conditions that shall be applied to the system.</p></li>
+<li><p><strong>temperature</strong> (<em>float, optional</em>) – The temperature of the system (default: 298K)</p></li>
+<li><p><strong>start_position</strong> – starting position for the simulation and setup of the system.</p></li>
+<li><p><strong>lam</strong> (<em>Number, optional</em>) – the value of the copuling lambda</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem._update_dHdLambda">
+<code class="sig-name descname">_update_dHdLambda</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; numbers.Number<a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem._update_dHdLambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem._update_dHdLambda" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>_update_dHdlambda</dt><dd><p>update the current dHdLambda value</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dHdlambda</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.append_state">
+<code class="sig-name descname">append_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">new_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_velocity</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_forces</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">new_lambda</span><span class="p">:</span> <span class="n">numbers.Number</span></em><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.append_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.append_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>append_state</dt><dd><p>Append a new state to the trajectory.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_position</strong> (<em>Union[Number, Iterable[Number]]</em>) – new position for the system</p></li>
+<li><p><strong>new_velocity</strong> (<em>Union[Number, Iterable[Number]]</em>) – new velocity for the system</p></li>
+<li><p><strong>new_forces</strong> (<em>Union[Number, Iterable[Number]]</em>) – new forces for the system</p></li>
+<li><p><strong>new_lambda</strong> (<em>Union[Number, Iterable[Number]]</em>) – new lambda for the system</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.currentState">
+<code class="sig-name descname">currentState</code><em class="property">: __main__.Lambda_State</em><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.currentState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.lam">
+<em class="property">property </em><code class="sig-name descname">lam</code><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.lam" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.name">
+<code class="sig-name descname">name</code><em class="property">: str</em><em class="property"> = 'perturbed system'</em><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.set_current_state">
+<code class="sig-name descname">set_current_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current_position</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">current_velocities</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_force</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_temperature</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">298</span></em>, <em class="sig-param"><span class="n">current_lambda</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">current_dHdLambda</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>numbers.Number<span class="p">, </span>Iterable<span class="p">[</span>numbers.Number<span class="p">]</span><span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.set_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.set_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><dl class="simple">
+<dt>set_current_state</dt><dd><p>set s the current state to the given variables.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_position</strong> (<em>Union[Number, Iterable[Number]]</em>) – new current system position</p></li>
+<li><p><strong>current_velocities</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system velocity. (default: 0)</p></li>
+<li><p><strong>current_force</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system force. (default: 0)</p></li>
+<li><p><strong>current_temperature</strong> (<em>Union[Number, Iterable[Number]], optional</em>) – new current system temperature. (default: 298)</p></li>
+<li><p><strong>current_lam</strong> (<em>Union[Number, Iterable[Number]],</em>) – The new lambda value (default: 0)</p></li>
+<li><p><strong>current_dHdLam</strong> (<em>Union[Number, Iterable[Number]],</em>) – The new dHdLam(default: 0)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.state">
+<code class="sig-name descname">state</code><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">__main__.Lambda_State</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.update_current_state">
+<code class="sig-name descname">update_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.update_current_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.update_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>updateCurrentState</dt><dd><p>This function updates the current state from the _current Variables.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="ensembler.system.perturbed_system.perturbedSystem.update_system_properties">
+<code class="sig-name descname">update_system_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; NoReturn<a class="reference internal" href="../_modules/ensembler/system/perturbed_system.html#perturbedSystem.update_system_properties"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ensembler.system.perturbed_system.perturbedSystem.update_system_properties" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>updateSystemProperties</dt><dd><p>update all system properties</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ensembler.system">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ensembler.system" title="Permalink to this headline">¶</a></h2>
+<p>Systems wrap the sampler and the potential class to allow easy orchestration of simulations.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ensembler.tests.html" class="btn btn-neutral float-right" title="ensembler.tests package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ensembler.samplers.html" class="btn btn-neutral float-left" title="ensembler.samplers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

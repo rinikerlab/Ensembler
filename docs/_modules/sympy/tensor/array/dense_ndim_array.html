@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>sympy.tensor.array.dense_ndim_array &mdash; Ensembler beta documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home" alt="Documentation Home"> Ensembler
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Welcome to Ensembler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Tutorials/index.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Examples/index.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../_source/modules.html">Documentation</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Ensembler</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>sympy.tensor.array.dense_ndim_array</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for sympy.tensor.array.dense_ndim_array</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span><span class="p">,</span> <span class="n">division</span>
+<span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">Basic</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">S</span>
+<span class="kn">from</span> <span class="nn">sympy.core.sympify</span> <span class="kn">import</span> <span class="n">_sympify</span>
+<span class="kn">from</span> <span class="nn">sympy.tensor.array.mutable_ndim_array</span> <span class="kn">import</span> <span class="n">MutableNDimArray</span>
+<span class="kn">from</span> <span class="nn">sympy.tensor.array.ndim_array</span> <span class="kn">import</span> <span class="n">NDimArray</span><span class="p">,</span> <span class="n">ImmutableNDimArray</span>
+<span class="kn">from</span> <span class="nn">sympy.core.compatibility</span> <span class="kn">import</span> <span class="n">SYMPY_INTS</span>
+<span class="kn">from</span> <span class="nn">sympy.core.numbers</span> <span class="kn">import</span> <span class="n">Integer</span>
+
+
+
+<span class="k">class</span> <span class="nc">DenseNDimArray</span><span class="p">(</span><span class="n">NDimArray</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ImmutableDenseNDimArray</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows to get items from N-dim array.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import MutableDenseNDimArray</span>
+<span class="sd">        &gt;&gt;&gt; a = MutableDenseNDimArray([0, 1, 2, 3], (2, 2))</span>
+<span class="sd">        &gt;&gt;&gt; a</span>
+<span class="sd">        [[0, 1], [2, 3]]</span>
+<span class="sd">        &gt;&gt;&gt; a[0, 0]</span>
+<span class="sd">        0</span>
+<span class="sd">        &gt;&gt;&gt; a[1, 1]</span>
+<span class="sd">        3</span>
+<span class="sd">        &gt;&gt;&gt; a[0]</span>
+<span class="sd">        [0, 1]</span>
+<span class="sd">        &gt;&gt;&gt; a[1]</span>
+<span class="sd">        [2, 3]</span>
+
+
+<span class="sd">        Symbolic index:</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy.abc import i, j</span>
+<span class="sd">        &gt;&gt;&gt; a[i, j]</span>
+<span class="sd">        [[0, 1], [2, 3]][i, j]</span>
+
+<span class="sd">        Replace `i` and `j` to get element `(1, 1)`:</span>
+
+<span class="sd">        &gt;&gt;&gt; a[i, j].subs({i: 1, j: 1})</span>
+<span class="sd">        3</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">syindex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_symbolic_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">syindex</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">syindex</span>
+
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_index_for_getitem</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">]):</span>
+            <span class="n">sl_factors</span><span class="p">,</span> <span class="n">eindices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slice_data_for_array_access</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_index</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">eindices</span><span class="p">]</span>
+            <span class="n">nshape</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">el</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sl_factors</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">slice</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">array</span><span class="p">,</span> <span class="n">nshape</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">zeros</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">):</span>
+        <span class="n">list_length</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="n">S</span><span class="o">.</span><span class="n">One</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_new</span><span class="p">(([</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">list_length</span><span class="p">,),</span> <span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">tomatrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Converts MutableDenseNDimArray to Matrix. Can convert only 2-dim array, else will raise error.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import MutableDenseNDimArray</span>
+<span class="sd">        &gt;&gt;&gt; a = MutableDenseNDimArray([1 for i in range(9)], (3, 3))</span>
+<span class="sd">        &gt;&gt;&gt; b = a.tomatrix()</span>
+<span class="sd">        &gt;&gt;&gt; b</span>
+<span class="sd">        Matrix([</span>
+<span class="sd">        [1, 1, 1],</span>
+<span class="sd">        [1, 1, 1],</span>
+<span class="sd">        [1, 1, 1]])</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">sympy.matrices</span> <span class="kn">import</span> <span class="n">Matrix</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rank</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Dimensions must be of size of 2&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reshape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">newshape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns MutableDenseNDimArray instance with new shape. Elements number</span>
+<span class="sd">        must be        suitable to new shape. The only argument of method sets</span>
+<span class="sd">        new shape.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import MutableDenseNDimArray</span>
+<span class="sd">        &gt;&gt;&gt; a = MutableDenseNDimArray([1, 2, 3, 4, 5, 6], (2, 3))</span>
+<span class="sd">        &gt;&gt;&gt; a.shape</span>
+<span class="sd">        (2, 3)</span>
+<span class="sd">        &gt;&gt;&gt; a</span>
+<span class="sd">        [[1, 2, 3], [4, 5, 6]]</span>
+<span class="sd">        &gt;&gt;&gt; b = a.reshape(3, 2)</span>
+<span class="sd">        &gt;&gt;&gt; b.shape</span>
+<span class="sd">        (3, 2)</span>
+<span class="sd">        &gt;&gt;&gt; b</span>
+<span class="sd">        [[1, 2], [3, 4], [5, 6]]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">new_total_size</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">newshape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">new_total_size</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_loop_size</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid reshape parameters &quot;</span> <span class="o">+</span> <span class="n">newshape</span><span class="p">)</span>
+
+        <span class="c1"># there is no `.func` as this class does not subtype `Basic`:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">,</span> <span class="n">newshape</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">ImmutableDenseNDimArray</span><span class="p">(</span><span class="n">DenseNDimArray</span><span class="p">,</span> <span class="n">ImmutableNDimArray</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_new</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_new</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.utilities.iterables</span> <span class="kn">import</span> <span class="n">flatten</span>
+
+        <span class="n">shape</span><span class="p">,</span> <span class="n">flat_list</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_handle_ndarray_creation_inputs</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="n">_sympify</span><span class="p">,</span> <span class="n">shape</span><span class="p">))</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_check_special_bounds</span><span class="p">(</span><span class="n">flat_list</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+        <span class="n">flat_list</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="n">flat_list</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="o">*</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">Basic</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">flat_list</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_array</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_size</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;immutable N-dim array&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">as_mutable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MutableDenseNDimArray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">MutableDenseNDimArray</span><span class="p">(</span><span class="n">DenseNDimArray</span><span class="p">,</span> <span class="n">MutableNDimArray</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_new</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_new</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">sympy.utilities.iterables</span> <span class="kn">import</span> <span class="n">flatten</span>
+
+        <span class="n">shape</span><span class="p">,</span> <span class="n">flat_list</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_handle_ndarray_creation_inputs</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">shape</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">flat_list</span> <span class="o">=</span> <span class="n">flatten</span><span class="p">(</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_shape</span> <span class="o">=</span> <span class="n">shape</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_array</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rank</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_loop_size</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">:</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">shape</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">flat_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allows to set items to MutableDenseNDimArray.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        ========</span>
+
+<span class="sd">        &gt;&gt;&gt; from sympy import MutableDenseNDimArray</span>
+<span class="sd">        &gt;&gt;&gt; a = MutableDenseNDimArray.zeros(2,  2)</span>
+<span class="sd">        &gt;&gt;&gt; a[0,0] = 1</span>
+<span class="sd">        &gt;&gt;&gt; a[1,1] = 1</span>
+<span class="sd">        &gt;&gt;&gt; a</span>
+<span class="sd">        [[1, 0], [0, 1]]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">slice</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">]):</span>
+            <span class="n">value</span><span class="p">,</span> <span class="n">eindices</span><span class="p">,</span> <span class="n">slice_offsets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_slice_data_for_array_assignment</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">eindices</span><span class="p">:</span>
+                <span class="n">other_i</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind</span> <span class="o">-</span> <span class="n">j</span> <span class="k">for</span> <span class="n">ind</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">slice_offsets</span><span class="p">)</span> <span class="k">if</span> <span class="n">j</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_index</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">other_i</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setter_iterable_check</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">_sympify</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_array</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">as_immutable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ImmutableDenseNDimArray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">free_symbols</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">i</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_array</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="o">.</span><span class="n">free_symbols</span><span class="p">}</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Benjamin Ries, Stephanie Linker, David Hahn. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
