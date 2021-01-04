@@ -2,7 +2,7 @@
 
 .. image:: .img/EnsemblerLogo_with_whiteBackround.png
    :target: .img/EnsemblerLogo_with_whiteBackround.png
-   :alt: Here a logo should be!
+   :alt: 
 
 
 Welcome to Ensembler
@@ -121,7 +121,7 @@ OUT:
 
 .. image:: .img/langevin_simulation.png
    :target: .img/langevin_simulation.png
-   :alt: Here a simulation plot should be!
+   :alt: Not Visible with pip
 
 
 In the following links you can find more features of Ensembler.
