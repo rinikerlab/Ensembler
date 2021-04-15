@@ -31,8 +31,8 @@ EMAIL = 'bschroed@ethz.ch'
 AUTHOR = 'Benjamin Ries; David Friedrich Hahn; Stephanie Linker'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None #"1.0.0"
-KEYWORDS = "".join(["teaching", "method development", "statistical mechanics", "statistical thermodynamics", "physics", "chemistry",
-            "free energy calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor Belt - TI", "numerical integration", "science"])
+KEYWORDS = " ".join(["teaching", "method_development", "statistical_mechanics", "statistical_thermodynamics", "physics", "chemistry",
+            "free_energy_calculations", "free energy", "enhanced sampling", "RE-EDS", "EDS", "Conveyor_Belt_TI", "numerical_integration", "science"])
 
 # What packages are required for this module to be executed? - for minimal package version, please check the requirement files
 REQUIRED = ['typing', #Code: used for type declarations
@@ -49,12 +49,13 @@ REQUIRED = ['typing', #Code: used for type declarations
             ]
 
 # What packages are optional?
-EXTRAS = {
+EXTRAS = {"docs":[
            'sphinx', #Documentation: autodocu tool
            'sphinx_rtd_theme', #Documentation: style
            'nbsphinx', #Documentation: for inclusion of jupyter notebooks
            'm2r', #Documentation: converts markdown to rst
-}
+           ]
+         }
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
@@ -128,7 +129,7 @@ setup(
     author_email=EMAIL,
     description=short_description[0],
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    #long_description_content_type="text/markdown",
     version=VERSION, #versioneer.get_version(),
     #cmdclass=versioneer.get_cmdclass(),
     license='MIT',
@@ -144,7 +145,9 @@ setup(
     include_package_data=True,
 
     # Allows `setup.py test` to work correctly with pytest
+    install_requires=REQUIRED,
     setup_requires=REQUIRED,
+    extras_require=EXTRAS,
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     url=URL,  # Website
