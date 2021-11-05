@@ -15,6 +15,8 @@ Welcome to Ensembler
 ## Description
 Ensembler is a python package that allows fast and easy access to one and two-dimensional model systems simulations. It enables method development using small test systems and helps deepen understanding of a broad spectrum of molecular dynamics (MD) methods, starting from basic techniques to enhanced sampling and free energy calculations. It is easy to install, fast, increases shareability, comparability, and reproducibility of scientific code developments. 
 Here, we provide insights into the package's implementation, usage, and an application example for free energy calculation.
+There is an article about Ensembler in JCIM, check it out: https://doi.org/10.1021/acs.jcim.0c01283
+
 
 ## Contents
 The full documentation can be found here:  https://rinikerlab.github.io/Ensembler/
