@@ -17,6 +17,10 @@ Ensembler is a python package that allows fast and easy access to one and two-di
 Here, we provide insights into the package's implementation, usage, and an application example for free energy calculation.
 There is an article about Ensembler in JCIM, check it out: https://doi.org/10.1021/acs.jcim.0c01283
 
+**Quick Start to Simulations:**
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Simulations.ipynb)
 
 ## Contents
 The full documentation can be found here:  https://rinikerlab.github.io/Ensembler/
@@ -49,7 +53,7 @@ The full documentation can be found here:  https://rinikerlab.github.io/Ensemble
    This module contains at the moment Free Energy Calculations.
 
 ## Tutorials and Examples:
-You can try Ensembler online via the binder links below or on your machine with our provided jupyter notebooks showing use cases for Ensembler with visualizations.
+You can try Ensembler online via the binder or Google colab links below or on your machine with our provided jupyter notebooks showing use cases for Ensembler with visualizations.
 The Binder links might take some time to build the repo; depending on the traffic, it can take up to 10 minutes to be built.
 
 ### Tutorials
@@ -85,10 +89,12 @@ In the following links you can find more features of Ensembler.
 
 Potentials: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Potentials.ipynb)
 
 Simulations: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FTutorial_Simulations.ipynb)
 
 ### Examples
@@ -96,18 +102,22 @@ Examples are advanced jupyter notebooks, covering a specific topic, going deeper
 
 Enhanced Sampling: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EnhancedSampling.ipynb)
 
 Free Energy Calculations: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_FreeEnergyCalculationSimulation.ipynb)
 
 Interactive ConveyorBelt: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_ConveyorBelt.ipynb)
 
 EDS-Potentials: 
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/rinikerlab/Ensembler/blob/master/examples/Tutorial_Potentials.ipynb)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/rinikerlab/Ensembler/master?filepath=examples%2FExample_EDS.ipynb)
 
 
