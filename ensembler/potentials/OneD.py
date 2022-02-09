@@ -12,9 +12,13 @@ import sympy as sp
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
+from ensembler.util.ensemblerUnits import kJ, nm, C
+
+
 """
     SIMPLE POTENTIALS
 """
+unitless=True
 
 
 class harmonicOscillatorPotential(_potential1DCls):
@@ -25,7 +29,7 @@ class harmonicOscillatorPotential(_potential1DCls):
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
     V_functional = 0.5 * k * (position - x_shift) ** 2 + y_shift
 
-    def __init__(self, k: float = 1.0, x_shift: float = 0.0, y_shift: float = 0.0):
+    def __init__(self, k: float = 1.0*(kJ/nm**2), x_shift: float = 0.0*nm, y_shift: float = 0.0*kJ, unitless:bool=False):
         """
         __init__
             This is the Constructor of the 1D harmonic oscillator
@@ -41,12 +45,10 @@ class harmonicOscillatorPotential(_potential1DCls):
         """
 
         self.constants = {self.k: k, self.x_shift: x_shift, self.y_shift: y_shift}
-        self.V = self.V_functional.subs(self.constants)
-        self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
-
+#add Units!
 class wavePotential(_potential1DCls):
     """
        Simple 1D wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
@@ -56,7 +58,7 @@ class wavePotential(_potential1DCls):
     V_functional = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
 
     def __init__(self, amplitude: float = 1.0, multiplicity: float = 1.0, phase_shift: float = 0.0,
-                 y_shift: float = 0.0, radians: bool = False):
+                 y_shift: float = 0.0*kJ, radians: bool = False):
         """
         __init__
             This is the Constructor of the 1D wave potential function
@@ -76,7 +78,7 @@ class wavePotential(_potential1DCls):
 
         self.constants = {self.amplitude: amplitude, self.multiplicity: multiplicity, self.phase_shift: phase_shift,
                           self.y_shift: y_shift}
-        super().__init__()
+        super().__init__(unitless=unitless)
         self.set_radians(radians)
 
     # OVERRIDE
@@ -85,6 +87,7 @@ class wavePotential(_potential1DCls):
         _update_functions
             calculates the current energy and derivative of the energy
         """
+        super()._constant_unit_management()
         super()._update_functions()
 
         self.tmp_Vfunc = self._calculate_energies
@@ -123,6 +126,7 @@ class wavePotential(_potential1DCls):
             self.set_degrees(degrees=not radians)
 
 
+#Check units
 class coulombPotential(_potential1DCls):
     """
     Coulomb potential representing the pairwise electrostatic interaction of two charged particles
@@ -131,7 +135,7 @@ class coulombPotential(_potential1DCls):
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
     V_functional = (charge1 * charge2) / (position * electric_permetivity * 4 * sp.pi)
 
-    def __init__(self, q1=1, q2=1, epsilon=1):
+    def __init__(self, q1=1*C, q2=1*C, epsilon=1*(C**2/(kJ*nm))):
         """
         __init__
             This is the Constructor of the Coulomb potential
@@ -149,7 +153,8 @@ class coulombPotential(_potential1DCls):
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
+
 
 
 class lennardJonesPotential(_potential1DCls):
@@ -160,7 +165,7 @@ class lennardJonesPotential(_potential1DCls):
     sigma, epsilon, x_shift, y_shift, position = sp.symbols("s e r_0 V_off r")
     V_functional = 4 * epsilon * ((sigma / (position - x_shift)) ** 12 - (sigma / (position - x_shift)) ** 6) + y_shift
 
-    def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0, y_shift=0):
+    def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0*nm, y_shift=0*kJ):
         """
         __init__
             This is the Constructor of the Lennard-Jones Potential
@@ -182,7 +187,7 @@ class lennardJonesPotential(_potential1DCls):
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
 
 class lennardJonesForceFieldPotential(_potential1DCls):
@@ -212,7 +217,7 @@ class lennardJonesForceFieldPotential(_potential1DCls):
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
 
 class doubleWellPotential(_potential1DCls):
@@ -239,7 +244,7 @@ class doubleWellPotential(_potential1DCls):
         """
 
         self.constants = {self.Vmax: Vmax, self.a: a, self.b: b}
-        super().__init__()
+        super().__init__(unitless=unitless)
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
@@ -287,7 +292,7 @@ class fourWellPotential(_potential1DCls):
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
 
 class gaussPotential(_potential1DCls):
@@ -317,7 +322,7 @@ class gaussPotential(_potential1DCls):
                 TODO: improve numerical stablility
         '''
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def _update_functions(self):
         """
@@ -373,7 +378,7 @@ class torsionPotential(_potential1DCls):
         self.wavePotentials = sp.Matrix([sp.symbols("wave_" + str(i)) for i in range(len(wavePotentials))])
         self.V_functional = sp.Sum(self.wavePotentials[self.i, 0], (self.i, 0, self.N))
 
-        super().__init__()
+        super().__init__() #unitless=unitless
         self.set_radians(radians=radians)
 
     # OVERRIDE
@@ -467,7 +472,7 @@ class linearCoupledPotentials(_potential1DClsPerturbed):
 
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
         self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.lam: lam}
-        super().__init__()
+        super().__init__(unitless=unitless)
 
 
 class exponentialCoupledPotentials(_potential1DCls):
@@ -515,7 +520,7 @@ class exponentialCoupledPotentials(_potential1DCls):
                           self.temp: temp}
         self.V_functional = self.coupling.expand()
 
-        super().__init__(nStates=2)
+        super().__init__(nStates=2, unitless=unitless)
 
     def set_s(self, s: float):
         """
@@ -607,7 +612,7 @@ class envelopedPotential(_potential1DCls):
         self.s_i = s
         self.Eoff_i = eoff
 
-        super().__init__(nStates=len(V_is))
+        super().__init__(nStates=len(V_is), unitless=unitless)
 
     def _initialize_functions(self):
         """
@@ -887,7 +892,7 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
         self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.lam: lam, self.s: s, self.T: temp}
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def set_s(self, s: float):
         self.constants.update({self.s: s})
@@ -935,7 +940,7 @@ class lambdaEDSPotential(envelopedPotential):
         self._lam_i = [0 for x in range(nStates)]
         self.lam_i = lam
 
-        super().__init__(V_is=V_is, s=s, eoff=eoff, T=T, kb=kb)
+        super().__init__(V_is=V_is, s=s, eoff=eoff, T=T, kb=kb, unitless=unitless)
 
     def _initialize_functions(self):
         # for sympy Sympy Updates - Check!:
@@ -1069,7 +1074,7 @@ class dummyPotential(_potential1DCls):
         self.constants = {self.y_shift: y_shift}
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
-        super().__init__()
+        super().__init__(unitless=unitless)
 
         self._calculate_energies = lambda positions: np.squeeze(np.full(len(positions), y_shift))
         self.dVdpos = self._calculate_dVdpos = lambda positions: np.squeeze(np.zeros(len(positions)))
@@ -1167,7 +1172,7 @@ class addedPotentials(_potential1DCls):
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
 class sumPotentials(_potential1DCls):
     """
@@ -1198,7 +1203,7 @@ class sumPotentials(_potential1DCls):
         self.constants = {self.nPotentials: len(potentials)}
         self.constants.update({"V_" + str(i): potentials[i].V for i in range(len(potentials))})
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def _initialize_functions(self):
         """
@@ -1302,7 +1307,7 @@ class metadynamicsPotential(_potential1DCls):
         self.V_orig_part = self.V_functional.subs(self.constants)
 
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     """
     BIAS
@@ -1473,7 +1478,7 @@ class _timedependendBias(_potential1DCls):
         self.V = self.V_orig.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def check_for_metastep(self, curr_position):
         '''
@@ -1553,7 +1558,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
         self.V = self.V_orig.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def check_for_metastep(self, curr_position):
         '''
