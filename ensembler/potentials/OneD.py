@@ -45,7 +45,6 @@ class harmonicOscillatorPotential(_potential1DCls):
         """
 
         self.constants = {self.k: k, self.x_shift: x_shift, self.y_shift: y_shift}
-
         super().__init__(unitless=unitless)
 
 #add Units!

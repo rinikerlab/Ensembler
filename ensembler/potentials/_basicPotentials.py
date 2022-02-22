@@ -1,16 +1,17 @@
 import copy
+import pint
 import numpy as np, sympy as sp
 from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
 
 from ensembler.util.basic_class import _baseClass, notImplementedERR
-from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
+from ensembler.util.ensemblerTypes import Number, Union, List, Dict, Iterable
 from ensembler.util.units import quantity
 
 # from concurrent.futures.thread import ThreadPoolExecutor
 
 class _potentialCls(_baseClass):
     """
-    potential base class - the mother of all potential classes (or father).
+        potential base class - the mother of all potential classes (or father), it gives the coarse structure to what a potential class needs.
 
     @nullState
     @Strategy Pattern
@@ -19,8 +20,11 @@ class _potentialCls(_baseClass):
     #PRIVATE ATTRIBUTES
     __nDimensions: sp.Symbol = sp.symbols("nDimensions")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDimensions
     __nStates: sp.Symbol = sp.symbols("nStates") # this Attribute gives the ammount of present states(interesting for free Energy calculus), please access via nStates
-    _unitless: bool
+    __constants: Dict[sp.Symbol, Union[Number, pint.Quantity]] # in this dictionary all constants are stored.
     # __threads: int = 1  #Not satisfyingly implemented
+
+    #toward Private
+    _unitless: bool
 
     def __init__(self, nDimensions:int=1, nStates:int=2, unitless:bool=False):
         if(not hasattr(self, "_potentialCls__constants")): self.__constants: Dict[sp.Symbol, Union[Number, Iterable]] = {}#contains all set constants and values for the symbols of the potential function, access it via constants
@@ -48,7 +52,7 @@ class _potentialCls(_baseClass):
         return self.__nStates
 
     @property
-    def constants(self) -> dict:
+    def constants(self) -> Dict[sp.Symbol, Union[Number, pint.Quantity]]:
         """
         This Attribute is giving all the necessary Constants to a function
         """
@@ -57,7 +61,7 @@ class _potentialCls(_baseClass):
     @constants.setter
     def constants(self, constants: Dict[sp.Symbol, Union[Number, Iterable]]):
         self.__constants = constants
-        
+
     @property
     def unitless(self)->bool:
         return self._unitless
@@ -65,17 +69,19 @@ class _potentialCls(_baseClass):
 
 class _potentialNDCls(_potentialCls):
     '''
-    Potential Base Class for N-Dimensional equations and lower ones
+        Potential Base Class for N-Dimensional equations and lower ones - This classes is intended to use symbolic functionals with SymPy, 
+        that are translated to efficient numpy functions. 
 
     @Strategy Pattern
     '''
-    position : sp.Symbol
-    V_functional: sp.Function = notImplementedERR
-    dVdpos_functional: sp.Function = notImplementedERR
+    position : sp.Symbol    #This sympol is required and resembles the input parameter (besides the constants).
+    V_functional: sp.Function = notImplementedERR   #This attribute needs to be provided.
+    dVdpos_functional: sp.Function = notImplementedERR #This function will be generated in the constructure by initialize-functions
 
-    V: sp.Function = notImplementedERR
-    dVdpos = notImplementedERR
-
+    V: sp.Function = notImplementedERR  #This function will be generated in the constructure by initialize-functions - simplified symbolic function
+    dVdpos = notImplementedERR  #This function will be generated in the constructure by initialize-functions  - simplified symbolic function
+    dimensionless_constants: List[sp.Symbol]# These are the expected dimensionless constants, that will be used.
+    
     def __init__(self, nDimensions: int = -1, nStates: int = 1, unitless:bool=False):
         """
             __init__
@@ -87,6 +93,7 @@ class _potentialNDCls(_potentialCls):
         nStates: int, optional
             number of states in the potential.
         """
+        self.dimensionless_constants = [nDimensions, nStates]
 
         super().__init__(nDimensions=nDimensions, nStates=nStates, unitless=unitless)
 
@@ -140,33 +147,31 @@ class _potentialNDCls(_potentialCls):
     def _constant_unit_management(self):
         """
         This function, splits magnitudes and units depending on desired case
-        """
-        exception_keys = [self.nDimensions, self.nStates]
 
-        if(not self.unitless and all([(c in exception_keys) or hasattr(v, "magnitude") for c,v in self.constants.items()])):
-            self.constants_units = {k:1*v.units for k,v in self.constants.items() if (not k in exception_keys)}
-            self.constants_magnitude = {k:v.magnitude for k,v in self.constants.items() if(not k in exception_keys)}
-            
-        elif(self.unitless and all([(c in exception_keys) or hasattr(v, "magnitude") for c,v in self.constants.items()])):
-            self.constants_units = {k:1 for k,v in self.constants.items()}
-            self.constants_magnitude = {k:v.magnitude for k,v in self.constants.items() if(not k in exception_keys)}
+        """
+        get_magnitude = lambda x: x.magnitude if(isinstance(x, pint.Quantity)) else x
+        get_unit = lambda x: 1*x.units if(isinstance(x, pint.Quantity)) else 1
+        
+        if(self.unitless):
+            self._constants_units = {k:1 for k,_ in self.constants.items()}
+            self._constants_magnitude = {k:get_magnitude(v) for k,v in self.constants.items()}
             
         else:
-            self.constants_units = {k:1 for k,v in self.constants.items()}
-            self.constants_magnitude = {k:v for k,v in self.constants.items()}
-    
+            self._constants_units = {k:get_unit(v) for k,v in self.constants.items()}
+            self._constants_magnitude = {k:get_magnitude(v) for k,v in self.constants.items()}
+
     def _update_functions(self):
         """
         This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.
         """
 
-        self.V = self.V_functional.subs(self.constants_magnitude).expand() # expand does not work reliably with gaussians due to exp
-        if(not self._unitless): self.V_units = self.V_functional.subs(self.constants_units)
+        self.V = self.V_functional.subs(self._constants_magnitude).expand() # expand does not work reliably with gaussians due to exp
+        if(not self._unitless): self.V_units = self.V_functional.subs(self._constants_units)
             
         self.dVdpos_functional = sp.diff(self.V_functional, self.position)  # not always working!
         self.dVdpos = sp.diff(self.V, self.position)
         self.dVdpos = self.dVdpos.subs(self.constants)
-        if(not self._unitless): self.dVdpos_units = self.dVdpos_functional.subs(self.constants_units)
+        if(not self._unitless): self.dVdpos_units = self.dVdpos_functional.subs(self._constants_units)
         
 
         self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
@@ -239,7 +244,7 @@ class _potentialNDCls(_potentialCls):
 
 class _potential1DCls(_potentialNDCls):
     '''
-    Potential Base Class for 1-Dimensional equations
+        Potential Base Class for 1-Dimensional equations
 
     @Strategy Pattern
     '''
@@ -381,7 +386,7 @@ class _potential1DClsPerturbed(_potential1DCls):
         super()._update_functions()
 
         self.dVdlam_functional = sp.diff(self.V_functional, self.lam)
-        self.dVdlam = self.dVdlam_functional.subs(self.constants_magnitude)
+        self.dVdlam = self.dVdlam_functional.subs(self._constants_magnitude)
         self._calculate_dVdlam = sp.lambdify(self.position, self.dVdlam, "numpy")
 
     """
