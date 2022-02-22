@@ -1,8 +1,10 @@
 import copy
 import numpy as np, sympy as sp
+from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
 
 from ensembler.util.basic_class import _baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
+from ensembler.util.units import quantity
 
 # from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -17,12 +19,14 @@ class _potentialCls(_baseClass):
     #PRIVATE ATTRIBUTES
     __nDimensions: sp.Symbol = sp.symbols("nDimensions")   #this Attribute gives the symbol of dimensionality of the potential, please access via nDimensions
     __nStates: sp.Symbol = sp.symbols("nStates") # this Attribute gives the ammount of present states(interesting for free Energy calculus), please access via nStates
+    _unitless: bool
     # __threads: int = 1  #Not satisfyingly implemented
 
-    def __init__(self, nDimensions:int=1, nStates:int=2):
+    def __init__(self, nDimensions:int=1, nStates:int=2, unitless:bool=False):
         if(not hasattr(self, "_potentialCls__constants")): self.__constants: Dict[sp.Symbol, Union[Number, Iterable]] = {}#contains all set constants and values for the symbols of the potential function, access it via constants
         self.__constants.update({self.nDimensions: nDimensions, self.nStates: nStates})
         self.name = str(self.__class__.__name__)
+        self._unitless = unitless
 
     """
         Non-Class Attributes
@@ -53,6 +57,10 @@ class _potentialCls(_baseClass):
     @constants.setter
     def constants(self, constants: Dict[sp.Symbol, Union[Number, Iterable]]):
         self.__constants = constants
+        
+    @property
+    def unitless(self)->bool:
+        return self._unitless
 
 
 class _potentialNDCls(_potentialCls):
@@ -68,7 +76,7 @@ class _potentialNDCls(_potentialCls):
     V: sp.Function = notImplementedERR
     dVdpos = notImplementedERR
 
-    def __init__(self, nDimensions: int = -1, nStates: int = 1):
+    def __init__(self, nDimensions: int = -1, nStates: int = 1, unitless:bool=False):
         """
             __init__
                 This class constructs the potential class basic functions, initializes the functions if necessary and also does simplfy and derivate the symbolic equations.
@@ -80,12 +88,15 @@ class _potentialNDCls(_potentialCls):
             number of states in the potential.
         """
 
-        super().__init__(nDimensions=nDimensions, nStates=nStates)
+        super().__init__(nDimensions=nDimensions, nStates=nStates, unitless=unitless)
 
+        # Do unit managment if required:
+        self._constant_unit_management()
         # needed for multi dim functions to be generated dynamically
         self._initialize_functions()
         # apply potential simplification and update calc functions
         self._update_functions()
+        
 
     def __str__(self) -> str:
         """
@@ -111,6 +122,7 @@ class _potentialNDCls(_potentialCls):
         Setting up after pickling.
         """
         self.__dict__ = state
+        self._constant_unit_management()
         self._initialize_functions()
         self._update_functions()
 
@@ -125,19 +137,50 @@ class _potentialNDCls(_potentialCls):
         """
         notImplementedERR()
 
+    def _constant_unit_management(self):
+        """
+        This function, splits magnitudes and units depending on desired case
+        """
+        exception_keys = [self.nDimensions, self.nStates]
+
+        if(not self.unitless and all([(c in exception_keys) or hasattr(v, "magnitude") for c,v in self.constants.items()])):
+            self.constants_units = {k:1*v.units for k,v in self.constants.items() if (not k in exception_keys)}
+            self.constants_magnitude = {k:v.magnitude for k,v in self.constants.items() if(not k in exception_keys)}
+            
+        elif(self.unitless and all([(c in exception_keys) or hasattr(v, "magnitude") for c,v in self.constants.items()])):
+            self.constants_units = {k:1 for k,v in self.constants.items()}
+            self.constants_magnitude = {k:v.magnitude for k,v in self.constants.items() if(not k in exception_keys)}
+            
+        else:
+            self.constants_units = {k:1 for k,v in self.constants.items()}
+            self.constants_magnitude = {k:v for k,v in self.constants.items()}
+    
     def _update_functions(self):
         """
         This function is needed to simplyfiy the symbolic equation on the fly and to calculate the position derivateive.
         """
 
-        self.V = self.V_functional.subs(self.constants).expand() # expand does not work reliably with gaussians due to exp
-
+        self.V = self.V_functional.subs(self.constants_magnitude).expand() # expand does not work reliably with gaussians due to exp
+        if(not self._unitless): self.V_units = self.V_functional.subs(self.constants_units)
+            
         self.dVdpos_functional = sp.diff(self.V_functional, self.position)  # not always working!
         self.dVdpos = sp.diff(self.V, self.position)
         self.dVdpos = self.dVdpos.subs(self.constants)
+        if(not self._unitless): self.dVdpos_units = self.dVdpos_functional.subs(self.constants_units)
+        
 
         self._calculate_energies = sp.lambdify(self.position, self.V, "numpy")
         self._calculate_dVdpos = sp.lambdify(self.position, self.dVdpos, "numpy")
+    
+    
+    def _solve_units(self, functional, position_unit):
+        partialSolvedUnit = str(functional.subs({self.position: 6*position_unit})) 
+        try:
+            newUnit = quantity(partialSolvedUnit).units
+            return newUnit
+        except Exception as err:
+            raise Exception("The unit Conversion did not work! Please check if all variables have the correct units.\n"+
+                            "SymPy solution: "+str(partialSolvedUnit)+"\nSTDErrMsg: \t"+"\n\t".join(err.args))
 
     """
         public
@@ -160,7 +203,12 @@ class _potentialNDCls(_potentialCls):
             the calculated potential energies.
 
         """
-        return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
+        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
+            return quantity(value=np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))), 
+                        units=self._solve_units(functional=self.V_units, position_unit=positions.units))
+        else:
+            return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
+        
 
     def force(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
         """
@@ -177,7 +225,12 @@ class _potentialNDCls(_potentialCls):
             the calculated potential forces.
 
         """
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
+            return quantity(value=np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T, 
+                        units=self._solve_units(functional=self.dVdpos_units, position_unit=positions.units))
+        else:
+            return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        
 
     # just alternative name, same as force
     def dvdpos(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
@@ -190,7 +243,7 @@ class _potential1DCls(_potentialNDCls):
 
     @Strategy Pattern
     '''
-    def __init__(self, nStates: int = 1):
+    def __init__(self, nStates: int = 1, unitless:bool=False):
         """
             __init__
                 constructs a N-Dimensional class with nDimensions =1
@@ -200,7 +253,7 @@ class _potential1DCls(_potentialNDCls):
         nStates: int, optional
             number of states in the potential.
         """
-        super().__init__(nDimensions=1, nStates=nStates)
+        super().__init__(nDimensions=1, nStates=nStates, unitless=unitless)
 
     def _initialize_functions(self):
         """
@@ -223,6 +276,12 @@ class _potential1DCls(_potentialNDCls):
             the calculated potential energies.
 
         """
+        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
+            return quantity(value=np.squeeze(self._calculate_energies(np.array(positions.magnitude))), 
+                        units=self._solve_units(functional=self.V_units, position_unit=positions.units))
+        else:
+            return np.squeeze(self._calculate_energies(np.array(positions)))
+        
         return np.squeeze(self._calculate_energies(np.array(positions)))
 
     def force(self, positions: Union[Iterable[Number] or Number]) -> Union[Iterable[Number] or Number]:
@@ -240,7 +299,11 @@ class _potential1DCls(_potentialNDCls):
             the calculated potential forces.
 
         """
-        return np.squeeze(self._calculate_dVdpos(np.squeeze(np.array(positions))))
+        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
+            return quantity(value=np.squeeze(self._calculate_dVdpos(np.array(positions.magnitude))), 
+                        units=self._solve_units(functional= self.dVdpos_units, position_unit=positions.units))
+        else:
+            return np.squeeze(self._calculate_dVdpos(np.squeeze(np.array(positions))))
 
 
 class _potential2DCls(_potentialNDCls):
@@ -249,7 +312,7 @@ class _potential2DCls(_potentialNDCls):
 
     @Strategy Pattern
     '''
-    def __init__(self, nStates: int = 1):
+    def __init__(self, nStates: int = 1, unitless:bool=False):
         """
             __init__
                 constructs a N-Dimensional class with nDimensions =1
@@ -259,7 +322,7 @@ class _potential2DCls(_potentialNDCls):
         nStates: int, optional
             number of states in the potential. (default: 1)
         """
-        super().__init__(nDimensions=2, nStates=nStates)
+        super().__init__(nDimensions=2, nStates=nStates, unitless=unitless)
 
 
 class _potential1DClsPerturbed(_potential1DCls):
@@ -314,10 +377,11 @@ class _potential1DClsPerturbed(_potential1DCls):
         """
         self.V_functional = self.coupling
 
+        super()._constant_unit_management()
         super()._update_functions()
 
         self.dVdlam_functional = sp.diff(self.V_functional, self.lam)
-        self.dVdlam = self.dVdlam_functional.subs(self.constants)
+        self.dVdlam = self.dVdlam_functional.subs(self.constants_magnitude)
         self._calculate_dVdlam = sp.lambdify(self.position, self.dVdlam, "numpy")
 
     """

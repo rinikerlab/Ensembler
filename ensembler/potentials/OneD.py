@@ -12,7 +12,7 @@ import sympy as sp
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
-from ensembler.util.ensemblerUnits import kJ, nm, C
+from ensembler.util.units import kJ, nm, C
 
 
 """
@@ -378,7 +378,7 @@ class torsionPotential(_potential1DCls):
         self.wavePotentials = sp.Matrix([sp.symbols("wave_" + str(i)) for i in range(len(wavePotentials))])
         self.V_functional = sp.Sum(self.wavePotentials[self.i, 0], (self.i, 0, self.N))
 
-        super().__init__() #unitless=unitless
+        super().__init__(unitless=unitless)
         self.set_radians(radians=radians)
 
     # OVERRIDE
