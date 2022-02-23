@@ -1,0 +1,66 @@
+repos:
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: check-added-large-files
+
+  - repo: https://github.com/psf/black
+    rev: 22.1.0
+    hooks:
+      - id: black
+        name: Fixes formatting
+        language_version: python3
+        args: ["--line-length=120"]
+
+
+  # - repo: https://gitlab.com/pycqa/flake8
+  #   rev: 3.8.4
+  #   hooks:
+  #     - id: flake8
+  #       name: Checks pep8 style
+  #       args: [
+  #         "--max-line-length=120",
+  #         # Ignore imports in init files
+  #         "--per-file-ignores=*/__init__.py:F401,setup.py:E121",
+  #         # ignore long comments (E501), as long lines are formatted by black
+  #         # ignore Whitespace before ':' (E203)
+  #         # ignore Line break occurred before a binary operator (W503)
+  #         "--ignore=E501,E203,W503",
+  #         # needed to not remove * imports (for example in _all_blocks.py)
+  #         "--ignore=F405",
+  #       ]
+
+  # - repo: local
+  #   hooks:
+
+  #     - id: jupyisort
+  #       name: Sorts ipynb imports
+  #       entry: jupytext --pipe-fmt ".py" --pipe "isort - --multi-line=3 --trailing-comma --force-grid-wrap=0 --use-parentheses --line-width=99" --sync
+  #       files: \.ipynb$
+  #       language: python
+
+  #     - id: jupyblack
+  #       name: Fixes ipynb format
+  #       entry: jupytext --pipe-fmt ".py" --pipe "black - --line-length=120" --sync
+  #       files: \.ipynb$
+  #       language: python
+
+  #     - id: nbconvert
+  #       name: Removes ipynb content
+  #       entry: jupyter nbconvert
+  #       args:
+  #         [
+  #           "--ClearOutputPreprocessor.enabled=True",
+  #           "--ClearMetadataPreprocessor.enabled=True",
+  #           "--RegexRemovePreprocessor.enabled=True",
+  #           "--to=notebook",
+  #           "--log-level=ERROR",
+  #           "--inplace",
+  #         ]
+  #       files: \.ipynb$
+  #       language: python
