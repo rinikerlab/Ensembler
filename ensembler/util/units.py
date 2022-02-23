@@ -10,6 +10,7 @@ _Quantity._sympy_ = lambda s: sympify(f'{s.m}*{s.u:~}')
 
 #Build a unitRegistry
 unit_registry = pint.UnitRegistry()
+unit_registry.default_format = '~'
 quantity = unit_registry.Quantity
 
 

@@ -82,6 +82,7 @@ class _potentialNDCls(_potentialCls):
     dVdpos = notImplementedERR  #This function will be generated in the constructure by initialize-functions  - simplified symbolic function
     dimensionless_constants: List[sp.Symbol]# These are the expected dimensionless constants, that will be used.
     
+    #Todo: nice error message for the expected output units.
     def __init__(self, nDimensions: int = -1, nStates: int = 1, unitless:bool=False):
         """
             __init__
@@ -149,8 +150,15 @@ class _potentialNDCls(_potentialCls):
         This function, splits magnitudes and units depending on desired case
 
         """
-        get_magnitude = lambda x: x.magnitude if(isinstance(x, pint.Quantity)) else x
-        get_unit = lambda x: 1*x.units if(isinstance(x, pint.Quantity)) else 1
+        get_magnitude = lambda x: x.magnitude if(isinstance(x, quantity)) else x
+        
+        def get_unit(x):#we need to symbolize pint units here again, as they are not correctly handled otherwise.
+            if(isinstance(x, quantity)):
+                return 1*x.units
+            elif(x in self.dimensionless_constants):
+                return x
+            else:
+                return 1
         
         if(self.unitless):
             self._constants_units = {k:1 for k,_ in self.constants.items()}
@@ -179,13 +187,33 @@ class _potentialNDCls(_potentialCls):
     
     
     def _solve_units(self, functional, position_unit):
-        partialSolvedUnit = str(functional.subs({self.position: 6*position_unit})) 
-        try:
-            newUnit = quantity(partialSolvedUnit).units
-            return newUnit
-        except Exception as err:
-            raise Exception("The unit Conversion did not work! Please check if all variables have the correct units.\n"+
-                            "SymPy solution: "+str(partialSolvedUnit)+"\nSTDErrMsg: \t"+"\n\t".join(err.args))
+        """
+            Note: we need to symbolize pint units here again, as they are not correctly handled otherwise.
+        """
+
+        argsKV = list(self._constants_units.items())
+        argsK = [k for k,v in argsKV]
+        argsV = [1*v for k,v in argsKV]
+
+        if(self.constants[self.nDimensions]>1):
+            for p in self.position:
+                argsK.append(p)
+                argsV.append(1*position_unit)
+        else:
+            argsK.append(self.position)
+            argsV.append(1*position_unit)       
+
+        print(argsK, argsV)
+        self.argsK = tuple(argsK)
+        self.argsV = tuple(argsV)
+        self.ff = sp.lambdify(self.argsK, self.V_functional, 'numpy')
+        self._solved_units =  self.ff(*argsV)
+        print(self._solved_units, type(self._solved_units))
+
+        return self._solved_units.units
+        #except Exception as err:
+        #    raise Exception("The unit Conversion did not work! Please check if all variables have the correct units.\n"+
+        #                    "SymPy solving try: "+str(self._solved_units))
 
     """
         public
@@ -208,11 +236,15 @@ class _potentialNDCls(_potentialCls):
             the calculated potential energies.
 
         """
-        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
-            return quantity(value=np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))), 
-                        units=self._solve_units(functional=self.V_units, position_unit=positions.units))
-        else:
+        if(self._unitless):
             return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
+        else:
+            if(isinstance(positions, quantity)):
+                return quantity(value=np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))),
+                        units=self._solve_units(functional=self.V_units, position_unit=positions.units))
+            else:
+                raise ValueError("Your positions don't have a unit! (and you are not in unitless mode. Please add a unit.")
+
         
 
     def force(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
@@ -281,12 +313,15 @@ class _potential1DCls(_potentialNDCls):
             the calculated potential energies.
 
         """
-        if(hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless):
-            return quantity(value=np.squeeze(self._calculate_energies(np.array(positions.magnitude))), 
-                        units=self._solve_units(functional=self.V_units, position_unit=positions.units))
-        else:
+        if(self._unitless):
             return np.squeeze(self._calculate_energies(np.array(positions)))
-        
+        else:
+            if(isinstance(positions, quantity)):
+                return quantity(value=np.squeeze(self._calculate_energies(np.array(positions.magnitude))),
+                            units=self._solve_units(functional=self.V_units, position_unit=positions.units))
+            else:
+                raise ValueError("Your positions don't have a unit! (and you are not in unitless mode. Please add a unit. \n\t Hint: we are looking for the missing unit -  "+str(self.V_units))
+            
         return np.squeeze(self._calculate_energies(np.array(positions)))
 
     def force(self, positions: Union[Iterable[Number] or Number]) -> Union[Iterable[Number] or Number]:
@@ -327,6 +362,7 @@ class _potential2DCls(_potentialNDCls):
         nStates: int, optional
             number of states in the potential. (default: 1)
         """
+        print("Warning no units for 2D right now!")
         super().__init__(nDimensions=2, nStates=nStates, unitless=unitless)
 
 

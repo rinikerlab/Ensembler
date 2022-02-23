@@ -9,6 +9,7 @@ import sympy as sp
 
 from ensembler.potentials._basicPotentials import _potential2DCls
 from ensembler.util.ensemblerTypes import systemCls
+from ensembler.util.units import kJ, nm, C
 
 
 class harmonicOscillatorPotential(_potential2DCls):
@@ -28,8 +29,8 @@ class harmonicOscillatorPotential(_potential2DCls):
     i = sp.Symbol("i")
     V_functional = sp.Sum(V_dim[i, 0], (i, 0, nDimensions))
 
-    def __init__(self, k: np.array = np.array([1.0, 1.0]), r_shift: np.array = np.array([0.0, 0.0]),
-                 Voff: np.array = np.array([0.0, 0.0])):
+    def __init__(self, k: np.array = np.array([1.0, 1.0])*kJ, r_shift: np.array = np.array([0.0, 0.0])*nm,
+                 Voff: np.array = np.array([0.0, 0.0])*kJ, unitless:bool=False):
         """
         __init__
             This is the Constructor of the 2D harmonic oscillator
@@ -47,7 +48,7 @@ class harmonicOscillatorPotential(_potential2DCls):
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"V_off_" + str(j): Voff[j] for j in range(self.constants[self.nDimensions])})
-        super().__init__()
+        super().__init__(unitless=unitless)
 
     def _initialize_functions(self):
         """
