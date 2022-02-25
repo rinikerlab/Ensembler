@@ -3,16 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - "build_release_1"
       - "master"
   pull_request:
     branches:
       - "master"
-  schedule:
-    # Nightly tests run on master by default:
-    #   Scheduled workflows run on the latest commit on the default or base branch.
-    #   (from https://help.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule)
-    - cron: "0 0 * * *"
 
 jobs:
   test:
@@ -21,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.8, 3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -61,7 +55,7 @@ jobs:
 
         run: |
           pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
-          
+
       - name: Run example notebooks
 
         # conda setup requires this special shell
@@ -80,4 +74,3 @@ jobs:
           file: ./coverage.xml
           flags: unittests
           name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
-

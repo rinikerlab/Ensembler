@@ -1,0 +1,23 @@
+name: Ensembler
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - ipywidgets=7.5.1
+  - jupyter=1.0.0
+  - matplotlib=3.3.2
+  - mpmath=1.1.0
+  - nbsphinx=0.7.1
+  - numpy=1.19.1
+  - pandas=1.1.2
+  - pip=20.2.3
+  - python=3.9.4
+  - scipy=1.5.2
+  - sphinx=3.2.1
+  - sympy=1.6.2
+  - tqdm=4.49.0
+  - typing=3.7.4.3
+  - wheel=0.35.1
+  - pre-commit
+  - pytables
+  - jupytext

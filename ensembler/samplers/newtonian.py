@@ -16,6 +16,7 @@ class newtonianSampler(_samplerCls):
     newtonian type samplers currently comprise the Velocity Verlet, Position Verlet and
     Leapfrog integrator.
     """
+
     current_position: Number
     current_velocity: Number
     current_forces: Number
@@ -41,9 +42,10 @@ class velocityVerletIntegrator(newtonianSampler):
     The velocity Verlet Integrator is one of the simplest integrators that provides good numerical stability as well
     as time-reversibility and symplectic properties.
     It's local error in position is of order dt^4 and the local error in verlocity is of order dt^2.
-    
+
     Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
     """
+
     name = "Verlocity Verlet Integrator"
 
     def step(self, system: systemType) -> Union[Number, Number, Number]:
@@ -67,12 +69,11 @@ class velocityVerletIntegrator(newtonianSampler):
         currentForces = system._currentForce
 
         # calculation:
-        new_position = currentPosition + currentVelocity * self.dt - (
-                    (0.5 * currentForces * (self.dt ** 2)) / system.mass)
+        new_position = currentPosition + currentVelocity * self.dt - ((0.5 * currentForces * (self.dt**2)) / system.mass)
         new_forces = system.potential.force(new_position)
         new_velocity = currentVelocity - ((0.5 * (currentForces + new_forces) * self.dt) / system.mass)
 
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current forces\t ", new_forces)
             print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
             print(str(self.__name__) + ": current_position\t ", currentPosition)
@@ -85,10 +86,11 @@ class velocityVerletIntegrator(newtonianSampler):
 
 class positionVerletIntegrator(newtonianSampler):
     """
-        The position Verlet Integrator has similar properties as the verlocity Verlet Integrator.
+    The position Verlet Integrator has similar properties as the verlocity Verlet Integrator.
 
-        Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
-        """
+    Verlet, Loup (1967). "Computer "Experiments" on Classical Fluids. I. Thermodynamical Properties of Lennard−Jones Molecules". Physical Review. 159 (1): 98–103.
+    """
+
     name = "Position Verlet Integrator"
 
     def step(self, system: systemType) -> Union[Number, Number, Number]:
@@ -115,7 +117,7 @@ class positionVerletIntegrator(newtonianSampler):
         new_velocity = currentVelocity - (new_forces * self.dt / system.mass)
         new_position = currentPosition + new_velocity * self.dt
 
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current forces\t ", new_forces)
             print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
             print(str(self.__name__) + ": current_position\t ", currentPosition)
@@ -127,10 +129,11 @@ class positionVerletIntegrator(newtonianSampler):
 
 class leapFrogIntegrator(newtonianSampler):
     """
-     The leapFrogIntegrator is similar to the velocity Verlet method. Leapfrog integration is equivalent to
-     updating positions and velocities at interleaved time points, staggered in such a way that they "leapfrog"
-     over each other.
+    The leapFrogIntegrator is similar to the velocity Verlet method. Leapfrog integration is equivalent to
+    updating positions and velocities at interleaved time points, staggered in such a way that they "leapfrog"
+    over each other.
     """
+
     name = "Leap Frog Integrator"
 
     def step(self, system: systemType) -> Union[Number, Number, Number]:
@@ -160,7 +163,7 @@ class leapFrogIntegrator(newtonianSampler):
         new_forces = system.potential.force(new_position)
         new_velocity = v_halft - ((0.5 * new_forces * self.dt) / system.mass)
 
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current forces\t ", new_forces)
             print(str(self.__name__) + ": current Velocities\t ", currentVelocity)
             print(str(self.__name__) + ": current_position\t ", currentPosition)

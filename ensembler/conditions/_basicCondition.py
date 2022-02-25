@@ -11,8 +11,9 @@ class _conditionCls(_baseClass):
     """
     This class provides the basic functionality for the condition classes.
     """
+
     nDimensions: int = 0
-    nStates: int =0
+    nStates: int = 0
 
     def __init__(self, system: systemType = None, tau: int = 1, verbose: bool = False):
         """
@@ -33,7 +34,7 @@ class _conditionCls(_baseClass):
         self._verbose = verbose
         self._system = system
 
-        if (system != None):
+        if system != None:
             self.nDim = system.nDim
             self.nStates = system.nStates
 
@@ -74,14 +75,14 @@ class _conditionCls(_baseClass):
     @staticmethod
     def apply(self):
         """
-            apply function interface. Needs to be implemented. - takes all needed parameters
+        apply function interface. Needs to be implemented. - takes all needed parameters
         """
         notImplementedERR()
 
     def apply_coupled(self) -> NoReturn:
         """
-            apply_coupled function interface. Needs to be implemented if you want to use the condition with a system.
-            takes the coupled system and passes the correct parameters to apply.
+        apply_coupled function interface. Needs to be implemented if you want to use the condition with a system.
+        takes the coupled system and passes the correct parameters to apply.
         """
         notImplementedERR()
 
