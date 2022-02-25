@@ -18,8 +18,7 @@ comment:
   behavior: default
   flags: null
   paths: null
-  
+
 ignore:
   - "ensembler/visualisation/"  # ignore folders and all its contents
   - "ensembler/tests/" # ignore test files
-

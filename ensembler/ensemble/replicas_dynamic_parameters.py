@@ -17,10 +17,9 @@ from ensembler.util.ensemblerTypes import systemCls, Dict, Tuple, NoReturn
 
 class conveyorBelt(_mutliReplicaApproach):
     """
-            Conveyor belt ensemble class
-        organizes the replicas and their coupling
+        Conveyor belt ensemble class
+    organizes the replicas and their coupling
     """
-
 
     _parameter_name: str = "lam"
     coordinate_dimensions: int = 1
@@ -32,44 +31,42 @@ class conveyorBelt(_mutliReplicaApproach):
     system_trajs: dict = {}
 
     _default_metropolis_criterion = lambda self, originalParams, swappedParams: (
-            np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams,
-                                                                                        swappedParams))
+        np.greater_equal(originalParams, swappedParams) or self._default_randomness(originalParams, swappedParams)
+    )
     exchange_criterium = _default_metropolis_criterion
 
     ###random part of Metropolis Criterion:
     _randomness_factor = 0.1
     _temperature_exchange: float = 298
     _default_randomness = lambda self, originalParams, swappedParams: (
-            (1 / self._randomness_factor) * np.random.rand() <= np.exp(
-        -1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (
-                originalParams - swappedParams + 0.0000001)))  # pseudo count, if params are equal
-
+        (1 / self._randomness_factor) * np.random.rand()
+        <= np.exp(-1.0 / (const.gas_constant / 1000.0 * self._temperature_exchange) * (originalParams - swappedParams + 0.0000001))
+    )  # pseudo count, if params are equal
 
     def __str__(self):
-        outstr = '{:<5s}{:<10s}{:<10s}\n'.format("i", "lambda_i", "E_i" )
+        outstr = "{:<5s}{:<10s}{:<10s}\n".format("i", "lambda_i", "E_i")
         outstr += "-" * 25 + "\n"
         for i in self.replicas:
-            outstr += '{:5d}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
-                                                        float(self.replicas[i].total_system_energy))
+            outstr += "{:5d}{:10.2f}{:10.3f}\n".format(i, self.replicas[i].lam, float(self.replicas[i].total_system_energy))
         return outstr
 
     def __repr__(self):
         return self.__str__()
 
-    def __init__(self,
-                 capital_lambda: float,
-                 n_replicas: int,
-                 system:systemCls =
-                         perturbed_system.perturbedSystem(
-                             temperature=300.0,
-                             lam=0.0,
-                             potential=pot.OneD.linearCoupledPotentials(
-                                 Va=pot.OneD.harmonicOscillatorPotential(k=1, x_shift=0),
-                                 Vb=pot.OneD.harmonicOscillatorPotential(k=2, x_shift=0)
-                             ),
-                             sampler=stochastic.metropolisMonteCarloIntegrator()
-                         ),
-                 build: bool = False):
+    def __init__(
+        self,
+        capital_lambda: float,
+        n_replicas: int,
+        system: systemCls = perturbed_system.perturbedSystem(
+            temperature=300.0,
+            lam=0.0,
+            potential=pot.OneD.linearCoupledPotentials(
+                Va=pot.OneD.harmonicOscillatorPotential(k=1, x_shift=0), Vb=pot.OneD.harmonicOscillatorPotential(k=2, x_shift=0)
+            ),
+            sampler=stochastic.metropolisMonteCarloIntegrator(),
+        ),
+        build: bool = False,
+    ):
         """
             initialize Ensemble object
 
@@ -95,11 +92,7 @@ class conveyorBelt(_mutliReplicaApproach):
 
         self.dis = 2.0 * np.pi / n_replicas
         self.exchange_dimensions = {
-            self._parameter_name:
-                [
-                    self.calculate_replica_lambda(self.capital_lambda, i)
-                    for i in range(n_replicas)
-                 ]
+            self._parameter_name: [self.calculate_replica_lambda(self.capital_lambda, i) for i in range(n_replicas)]
         }
 
         self._temperature_exchange = system.temperature
@@ -107,7 +100,6 @@ class conveyorBelt(_mutliReplicaApproach):
         self.initialise()
 
         self.system_trajs: dict = {}
-
 
     # public functions
     def initialise(self) -> NoReturn:
@@ -142,22 +134,18 @@ class conveyorBelt(_mutliReplicaApproach):
             self.replicas[i].update_current_state()
             self.replicas[i].clear_trajectory()
         self.exchange_information = pd.DataFrame(
-                                                   [{
-                                                       "Step": self._currentTrial,
-                                                       "capital_lambda": self.capital_lambda,
-                                                       "TotE": self.calculate_total_ensemble_energy(),
-                                                       "biasE": self.biasene,
-                                                       "doAccept": True
-                                                   }
-                                                       ]
-                                                )
+            [
+                {
+                    "Step": self._currentTrial,
+                    "capital_lambda": self.capital_lambda,
+                    "TotE": self.calculate_total_ensemble_energy(),
+                    "biasE": self.biasene,
+                    "doAccept": True,
+                }
+            ]
+        )
 
-
-    def simulate(self,
-                 ntrials: int,
-                 nSteps_between_trials: int = 1,
-                 reset_ensemble: bool = False,
-                 verbosity: bool = True):
+    def simulate(self, ntrials: int, nSteps_between_trials: int = 1, reset_ensemble: bool = False, verbosity: bool = True):
         """
             Integrates the conveyor belt ensemble
 
@@ -178,7 +166,7 @@ class conveyorBelt(_mutliReplicaApproach):
 
         """
 
-        if (isinstance(nSteps_between_trials, int)):
+        if isinstance(nSteps_between_trials, int):
             self.set_simulation_n_steps_between_trials(n_steps=nSteps_between_trials)
 
         self.__tmp_exchange_traj = []
@@ -186,13 +174,13 @@ class conveyorBelt(_mutliReplicaApproach):
             self.accept_move()
             self.run()
 
-        self.exchange_information = pd.concat([self.exchange_information, pd.DataFrame(self.__tmp_exchange_traj)],ignore_index=True)
+        self.exchange_information = pd.concat([self.exchange_information, pd.DataFrame(self.__tmp_exchange_traj)], ignore_index=True)
 
         # self.exchange_information = self.exchange_information
 
     def run(self, verbosity: bool = False) -> NoReturn:
         """
-                Integrates the systems of the ensemble for the :var:nSteps_between_trials.
+        Integrates the systems of the ensemble for the :var:nSteps_between_trials.
         """
 
         self._currentTrial += 1
@@ -201,8 +189,8 @@ class conveyorBelt(_mutliReplicaApproach):
 
     def accept_move(self) -> NoReturn:
         """
-            Performs one trial move of the capital lambda, either accepts or rejects it and
-            updates the lambdas of all replicas.
+        Performs one trial move of the capital lambda, either accepts or rejects it and
+        updates the lambdas of all replicas.
         """
 
         self.state = []
@@ -221,8 +209,15 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
-                 "biasE": self.biasene, "doAccept": True})
+            self.__tmp_exchange_traj.append(
+                {
+                    "Step": self._currentTrial,
+                    "capital_lambda": self.capital_lambda,
+                    "TotE": float(newEne),
+                    "biasE": self.biasene,
+                    "doAccept": True,
+                }
+            )
         else:
             self.reject += 1
             self.update_all_lambda(oldBlam)
@@ -230,12 +225,18 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),
-                 "biasE": float(oldBiasene), "doAccept": False})
+            self.__tmp_exchange_traj.append(
+                {
+                    "Step": self._currentTrial,
+                    "capital_lambda": oldBlam,
+                    "TotE": float(oldEne),
+                    "biasE": float(oldBiasene),
+                    "doAccept": False,
+                }
+            )
 
         if self.build:
             self.build_mem()
-
 
     def revert(self) -> NoReturn:
         """
@@ -248,10 +249,10 @@ class conveyorBelt(_mutliReplicaApproach):
         self.exchange_information = self.exchange_information[:-1]
 
     def add_replica(self, clam: float, add_n_replicas: int = 1) -> NoReturn:
-        '''
+        """
             Not Implemented!!!
         adds a replica to the ensemble
-        '''
+        """
         raise NotImplementedError("Please Implement this function!")
 
     # PRIVATE functions
@@ -289,7 +290,7 @@ class conveyorBelt(_mutliReplicaApproach):
             lambda of replica i
         """
 
-        ome = (capital_lambda + i * self.dis) % (2. * np.pi)
+        ome = (capital_lambda + i * self.dis) % (2.0 * np.pi)
         if ome > np.pi:
             ome = 2.0 * np.pi - ome
         return ome / np.pi
@@ -307,12 +308,12 @@ class conveyorBelt(_mutliReplicaApproach):
         float
             capital_lambda
         """
-        '''
+        """
         :param capital_lambda: 
         :type capital_lambda: float
         :return: capital_lambda
         :rtype: float
-        '''
+        """
         self.capital_lambda = capital_lambda
         for i in self.replicas:
             self.replicas[i].lam = self.calculate_replica_lambda(capital_lambda, i)
@@ -323,7 +324,7 @@ class conveyorBelt(_mutliReplicaApproach):
     ## * Bias Memory Functions
     def init_mem(self) -> NoReturn:
         """
-           initializes memory
+        initializes memory
         """
         self.num_gp = 11
         self.mem_fc = 0.0001
@@ -353,15 +354,17 @@ class conveyorBelt(_mutliReplicaApproach):
         dg = (self.capital_lambda % self.dis) / self.gp_spacing - float(active_gp)
         if dg < 0:
             self.biasene = self.mem[(active_gp - 1) % (self.num_gp - 1)] * self.spline(1.0 + dg) + self.mem[
-                active_gp % (self.num_gp - 1)] * self.spline(-dg)
+                active_gp % (self.num_gp - 1)
+            ] * self.spline(-dg)
         else:
             self.biasene = self.mem[active_gp % (self.num_gp - 1)] * self.spline(dg) + self.mem[
-                (active_gp + 1) % (self.num_gp - 1)] * self.spline(1.0 - dg)
+                (active_gp + 1) % (self.num_gp - 1)
+            ] * self.spline(1.0 - dg)
         # print("{:5.2f}{:5.2f}{:8.3f}{:3d}{:8.3f}{:8.3f}{:8.3f} {:s}".format(self.capital_lambda, (self.capital_lambda%self.dis),
         # (self.capital_lambda%self.dis)/self.gp_spacing, active_gp,
         # self.gp_spacing*active_gp, dg, ene, np.array2string(self.mem)))
 
-    ## * Trajectories 
+    ## * Trajectories
     def get_trajs(self) -> Tuple[pd.DataFrame, Dict[int, pd.DataFrame]]:
         """
             returns all Trajectories of this Ensemble.
@@ -401,7 +404,7 @@ class conveyorBelt(_mutliReplicaApproach):
 
     def clear_all_trajs(self) -> NoReturn:
         """
-                deletes trajectories of replicas
+        deletes trajectories of replicas
 
         """
         self.system_trajs = {}
@@ -422,7 +425,6 @@ class conveyorBelt(_mutliReplicaApproach):
         for coord, replica in self.replicas.items():
             replica.nsteps = self.nSteps_between_trials
 
-
     @staticmethod
     def spline(dg):
         """
@@ -441,7 +443,7 @@ class conveyorBelt(_mutliReplicaApproach):
             value of spline (float)
         """
         if dg < 0.0:
-            print('distance smaller than 0')
+            print("distance smaller than 0")
         elif dg < 1.0:
             return 1.0 - 3.0 * dg * dg + 2 * dg * dg * dg
         else:

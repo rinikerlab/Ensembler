@@ -23,14 +23,14 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
 
     """
     # if none given build cvb
-    if (isinstance(conveyorBelt, type(None))):
+    if isinstance(conveyorBelt, type(None)):
         lam = np.linspace(0, 1, nbins)
-        ene = lam * np.sin(lam*np.pi) + lam**2
+        ene = lam * np.sin(lam * np.pi) + lam**2
     else:
 
         (cvb_traj, systrajs) = conveyorBelt.get_trajs()
 
-        if (len(cvb_traj) == 0):
+        if len(cvb_traj) == 0:
             raise IOError("Could not find any conveyor belt simulation in conveyorbelt traj. Please simulate first.")
 
         bins = np.zeros(nbins)
@@ -39,46 +39,36 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
             for j in range(systrajs[i].shape[0]):
                 index = int(np.floor(systrajs[i].lam[j] / nbins))
                 if index == nbins:
-                    index=nbins-1
-                bins[index]+=1
-                dhdlbins[index]+=systrajs[i].dhdlam[j]
+                    index = nbins - 1
+                bins[index] += 1
+                dhdlbins[index] += systrajs[i].dhdlam[j]
         for i, b in enumerate(bins):
             if b > 0:
-                dhdlbins[i]/=b
-        ene = np.cumsum(dhdlbins)/nbins
+                dhdlbins[i] /= b
+        ene = np.cumsum(dhdlbins) / nbins
 
         lam = np.linspace(0, 1, nbins)
-
 
     def redraw(CapLam, M):
         plotEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)
 
     # build layout and components
 
-    player = ipywidgets.Play(value=0, min=0, max=360, step=1,
-                             description="rotate")
-    capLam_slider = ipywidgets.IntSlider(value=0, min=0, max=360, step=1,
-                                         orientation='vertical',
-                                         description="Capital Lambda",
-                                         continous_update=True)
-    nReplicas_slider = ipywidgets.IntSlider(value=8, min=2, max=20, step=1,
-                                            orientation='vertical',
-                                            description="number of Replicas")
+    player = ipywidgets.Play(value=0, min=0, max=360, step=1, description="rotate")
+    capLam_slider = ipywidgets.IntSlider(
+        value=0, min=0, max=360, step=1, orientation="vertical", description="Capital Lambda", continous_update=True
+    )
+    nReplicas_slider = ipywidgets.IntSlider(value=8, min=2, max=20, step=1, orientation="vertical", description="number of Replicas")
 
-    ipywidgets.jslink((capLam_slider, 'value'), (player, 'value'))
+    ipywidgets.jslink((capLam_slider, "value"), (player, "value"))
 
-    interactive_plot = ipywidgets.interactive_output(redraw,
-                                                     {'CapLam': capLam_slider,
-                                                      'M': nReplicas_slider})
+    interactive_plot = ipywidgets.interactive_output(redraw, {"CapLam": capLam_slider, "M": nReplicas_slider})
 
     controls = ipywidgets.VBox([player, ipywidgets.HBox([capLam_slider, nReplicas_slider])])
 
-    app = ipywidgets.AppLayout(header=None,
-                               left_sidebar=controls,
-                               center=interactive_plot,
-                               right_sidebar=None,
-                               footer=None,
-                               align_items="center")
+    app = ipywidgets.AppLayout(
+        header=None, left_sidebar=controls, center=interactive_plot, right_sidebar=None, footer=None, align_items="center"
+    )
 
     return app
 
@@ -97,14 +87,14 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
 
     """
     # if none given build cvb
-    if (isinstance(conveyorBelt, type(None))):
+    if isinstance(conveyorBelt, type(None)):
         lam = np.linspace(0, 1, nbins)
-        ene = lam * np.sin(lam*np.pi) + lam**2
+        ene = lam * np.sin(lam * np.pi) + lam**2
     else:
 
         (cvb_traj, systrajs) = conveyorBelt.get_trajs()
 
-        if (len(cvb_traj) == 0):
+        if len(cvb_traj) == 0:
             raise IOError("Could not find any conveyor belt simulation in conveyorbelt traj. Please simulate first.")
 
         bins = np.zeros(nbins)
@@ -113,65 +103,56 @@ def interactive_conveyor_belt(conveyorBelt=None, numsys: int = 8, nbins: int = 1
             for j in range(systrajs[i].shape[0]):
                 index = int(np.floor(systrajs[i].lam[j] / nbins))
                 if index == nbins:
-                    index=nbins-1
-                bins[index]+=1
-                dhdlbins[index]+=systrajs[i].dhdlam[j]
+                    index = nbins - 1
+                bins[index] += 1
+                dhdlbins[index] += systrajs[i].dhdlam[j]
         for i, b in enumerate(bins):
             if b > 0:
-                dhdlbins[i]/=b
-        ene = np.cumsum(dhdlbins)/nbins
+                dhdlbins[i] /= b
+        ene = np.cumsum(dhdlbins) / nbins
 
         lam = np.linspace(0, 1, nbins)
-
 
     def redraw(CapLam, M):
         plotEnsembler(lam, ene, CapLam=np.deg2rad(CapLam), M=M)
 
     # build layout and components
 
-    player = ipywidgets.Play(value=0, min=0, max=360, step=1,
-                             description="rotate")
-    capLam_slider = ipywidgets.IntSlider(value=0, min=0, max=360, step=1,
-                                         orientation='vertical',
-                                         description="Capital Lambda",
-                                         continous_update=True)
-    nReplicas_slider = ipywidgets.IntSlider(value=8, min=2, max=20, step=1,
-                                            orientation='vertical',
-                                            description="number of Replicas")
+    player = ipywidgets.Play(value=0, min=0, max=360, step=1, description="rotate")
+    capLam_slider = ipywidgets.IntSlider(
+        value=0, min=0, max=360, step=1, orientation="vertical", description="Capital Lambda", continous_update=True
+    )
+    nReplicas_slider = ipywidgets.IntSlider(value=8, min=2, max=20, step=1, orientation="vertical", description="number of Replicas")
 
-    ipywidgets.jslink((capLam_slider, 'value'), (player, 'value'))
+    ipywidgets.jslink((capLam_slider, "value"), (player, "value"))
 
-    interactive_plot = ipywidgets.interactive_output(redraw,
-                                                     {'CapLam': capLam_slider,
-                                                      'M': nReplicas_slider})
+    interactive_plot = ipywidgets.interactive_output(redraw, {"CapLam": capLam_slider, "M": nReplicas_slider})
 
     controls = ipywidgets.VBox([player, ipywidgets.HBox([capLam_slider, nReplicas_slider])])
 
-    app = ipywidgets.AppLayout(header=None,
-                               left_sidebar=controls,
-                               center=interactive_plot,
-                               right_sidebar=None,
-                               footer=None,
-                               align_items="center")
+    app = ipywidgets.AppLayout(
+        header=None, left_sidebar=controls, center=interactive_plot, right_sidebar=None, footer=None, align_items="center"
+    )
 
     return app
 
 
-class interactive_eds():
+class interactive_eds:
     """
     This provides a nice widget for jupyter notebooks to play around with the eds reference potetnial.
 
     """
+
     s = 1.35
     Eoffs = []
     V_is = []
     nstates = 2
 
-    def __init__(self, nstates=2, s=100, Eoff=None, figsize=[12,6]):
+    def __init__(self, nstates=2, s=100, Eoff=None, figsize=[12, 6]):
         self.nstates = nstates
         self.s = s
         plt.ion()
-        if (isinstance(Eoff, type(None))):
+        if isinstance(Eoff, type(None)):
             self.Eoffs = [0 for state in range(self.nstates)]
         else:
             self.Eoffs = Eoff
@@ -187,7 +168,7 @@ class interactive_eds():
         eds_enes = self.eds_pot.ene(self.positions)
 
         # plot
-        if(figsize is None):
+        if figsize is None:
             self.fig = plt.figure()  # dpi=300)
         else:
             self.fig = plt.figure(figsize=figsize)
@@ -207,22 +188,18 @@ class interactive_eds():
         # sliders
         ##states
         state_label = ipywidgets.Label("Number of States")
-        state_slider = ipywidgets.IntSlider(value=2, min=2, max=10, step=1,
-                                            orientation='horizontal')
+        state_slider = ipywidgets.IntSlider(value=2, min=2, max=10, step=1, orientation="horizontal")
         state_slider.observe(self.redraw_states, names="value")
 
         ##svals
 
-        s_slider = ipywidgets.FloatSlider(value=100, min=0.1, max=101, step=1,
-                                          orientation='horizontal',
-                                          continous_update=True)
-        self.s_label = ipywidgets.Label("smoothing Parameter:  " + str(np.log10(1 + (s_slider.value ** 1.5 / 1000))))
+        s_slider = ipywidgets.FloatSlider(value=100, min=0.1, max=101, step=1, orientation="horizontal", continous_update=True)
+        self.s_label = ipywidgets.Label("smoothing Parameter:  " + str(np.log10(1 + (s_slider.value**1.5 / 1000))))
         s_slider.observe(self.redraw_s, names="value")
 
-        player = ipywidgets.Play(value=100, min=0.1, max=100, step=1,
-                                 description="s_values")
+        player = ipywidgets.Play(value=100, min=0.1, max=100, step=1, description="s_values")
 
-        ipywidgets.jslink((s_slider, 'value'), (player, 'value'))
+        ipywidgets.jslink((s_slider, "value"), (player, "value"))
 
         ##eoffs
         eoff_sliders = self.make_eoff_sliders(self.nstates)
@@ -240,7 +217,6 @@ class interactive_eds():
         display(controls)
         self.fig.show()
 
-
     def redraw(self):
         self.fig.canvas.draw()
         self.fig.canvas.flush_events()
@@ -251,7 +227,7 @@ class interactive_eds():
         # Plotting stuff
 
         for line in self.ax.lines:
-            if (line != self.eds_line):
+            if line != self.eds_line:
                 self.ax.lines.remove(line)
             del line
 
@@ -265,15 +241,15 @@ class interactive_eds():
 
         # pot
         self.Eoffs = self.eds_pot.Eoff
-        if (len(self.Eoffs) < self.nstates):
+        if len(self.Eoffs) < self.nstates:
             for x in range(len(self.Eoffs), self.nstates):
                 self.Eoffs.append(0)
-        elif (len(self.Eoffs) > self.nstates):
-            self.Eoffs = self.Eoffs[:self.nstates]
+        elif len(self.Eoffs) > self.nstates:
+            self.Eoffs = self.Eoffs[: self.nstates]
 
         self.eoff_sliders_box.children = self.make_eoff_sliders(self.nstates)
 
-        self.eds_pot = pot.envelopedPotential(V_is=V_is, s=np.log10(1 + (self.s ** 1.5 / 1000)), eoff=self.Eoffs)
+        self.eds_pot = pot.envelopedPotential(V_is=V_is, s=np.log10(1 + (self.s**1.5 / 1000)), eoff=self.Eoffs)
         eds_enes = self.eds_pot.ene(self.positions)
         self.eds_line.set_data(self.positions, eds_enes)
         self.fig.canvas.draw()
@@ -281,8 +257,8 @@ class interactive_eds():
 
     def redraw_s(self, s):
         self.s = s["new"]
-        self.eds_pot.s = np.log10(1 + (self.s ** 1.5 / 1000))
-        self.s_label.value = "smoothing Parameter:  " + str(round(np.log10(1 + (self.s ** 1.5 / 1000)), 4))
+        self.eds_pot.s = np.log10(1 + (self.s**1.5 / 1000))
+        self.s_label.value = "smoothing Parameter:  " + str(round(np.log10(1 + (self.s**1.5 / 1000)), 4))
 
         eds_enes = self.eds_pot.ene(self.positions)
         self.eds_line.set_data(self.positions, eds_enes)
@@ -304,11 +280,9 @@ class interactive_eds():
         eoff_sliders = []
         for ind in range(nstates):
             tag = "Eoff_" + str(ind)
-            eoffVi_slider = ipywidgets.FloatSlider(value=self.Eoffs[ind], min=-50, max=50, step=1,
-                                                   orientation='Vertical',
-                                                   description=tag,
-                                                   continous_update=True)
+            eoffVi_slider = ipywidgets.FloatSlider(
+                value=self.Eoffs[ind], min=-50, max=50, step=1, orientation="Vertical", description=tag, continous_update=True
+            )
             eoff_sliders.append(eoffVi_slider)
             eoffVi_slider.observe(self.redraw_eoff, names="value")
         return eoff_sliders
-

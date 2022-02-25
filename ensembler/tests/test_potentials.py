@@ -17,11 +17,11 @@ class test_potentialCls(unittest.TestCase):
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
-        test_dir = os.getcwd()+"/tests_out"
-        if(not os.path.exists(test_dir)):
+        test_dir = os.getcwd() + "/tests_out"
+        if not os.path.exists(test_dir):
             os.mkdir(test_dir)
 
-        if(__class__.tmp_test_dir is None):
+        if __class__.tmp_test_dir is None:
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_potentials")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.potential_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
@@ -72,10 +72,8 @@ class potentialCls_flatwell(test_potentialCls):
 
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos(self):
         x_range = [0, 1]
@@ -87,10 +85,8 @@ class potentialCls_flatwell(test_potentialCls):
 
         energies = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
 
 class potentialCls_harmonicOsc1D(test_potentialCls):
@@ -106,10 +102,8 @@ class potentialCls_harmonicOsc1D(test_potentialCls):
         potential = self.potential_class(k=fc, x_shift=x_shift, y_shift=y_shift)
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos(self):
         fc: float = 1.0
@@ -123,10 +117,8 @@ class potentialCls_harmonicOsc1D(test_potentialCls):
         energies = potential.force(positions)
         # print(energies)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
 
 class potentialCls_wavePotential(test_potentialCls):
@@ -142,14 +134,18 @@ class potentialCls_wavePotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([1, 0, -1, 0, 1])
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_shift=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dVdpos(self):
         phase_shift = 0.0
@@ -161,14 +157,18 @@ class potentialCls_wavePotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([0, -1, 0, 1, 0])
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_shift=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
         energies = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
 
 class potentialCls_torsionPotential(test_potentialCls):
@@ -193,15 +193,17 @@ class potentialCls_torsionPotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([1, 0, -1, 0, 1])
 
-        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_shift=y_offset)
+        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset)
         potential = OneD.torsionPotential(wavePotentials=WavePotential, radians=radians)
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies_singlepo_list(self):
         phase_shift = 0.0
@@ -213,15 +215,19 @@ class potentialCls_torsionPotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([1, 0, -1, 0, 1])
 
-        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_shift=y_offset, radians=radians)
+        WavePotential = OneD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
         potential = OneD.torsionPotential(wavePotentials=[WavePotential])
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies(self):
         phase_shift = 0.0
@@ -233,17 +239,18 @@ class potentialCls_torsionPotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([2, 0, -2, 0, 2])
 
-        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_shift=y_offset)
-        WavePotential2 = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_shift=y_offset)
+        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset)
+        WavePotential2 = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset)
         potential = OneD.torsionPotential(wavePotentials=[WavePotential, WavePotential2], radians=radians)
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies_phase_shifted(self):
         phase_shift1 = 0.0
@@ -256,17 +263,22 @@ class potentialCls_torsionPotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([0.40153993, 0.80115264, -0.40153993, -0.80115264, 0.40153993])
 
-        WavePotential = OneD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_shift=y_offset, radians=radians)
-        WavePotential2 = OneD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_shift=y_offset, radians=radians)
+        WavePotential = OneD.wavePotential(
+            phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
+        WavePotential2 = OneD.wavePotential(
+            phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
         potential = OneD.torsionPotential(wavePotentials=[WavePotential, WavePotential2])
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dVdpos(self):
         phase_shift = 0.0
@@ -278,17 +290,22 @@ class potentialCls_torsionPotential(test_potentialCls):
         positions = [0, 90, 180, 270, 360]
         expected_result = np.array([0, -2, 0, 2, 0])
 
-        WavePotential = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_shift=y_offset, radians=radians)
-        WavePotential2 = OneD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_shift=y_offset, radians=radians)
+        WavePotential = OneD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
+        WavePotential2 = OneD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_shift=y_offset, radians=radians
+        )
         potential = OneD.torsionPotential(wavePotentials=[WavePotential, WavePotential2])
         energies = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
 
 class potentialCls_coulombPotential(test_potentialCls):
@@ -306,10 +323,13 @@ class potentialCls_coulombPotential(test_potentialCls):
         energies = potential.ene(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dVdpos(self):
         q1 = 1
@@ -317,17 +337,19 @@ class potentialCls_coulombPotential(test_potentialCls):
         epsilon = 1
 
         positions = [0, 0.2, 0.5, 1, 2, 360]
-        expected_result = np.array(
-            [-np.inf, -1.98943679, -0.31830988, -0.0795774715, -0.0198943679, -0.000000614023700])
+        expected_result = np.array([-np.inf, -1.98943679, -0.31830988, -0.0795774715, -0.0198943679, -0.000000614023700])
 
         potential = OneD.coulombPotential(q1=q1, q2=q2, epsilon=epsilon)
         energies = potential.force(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
 
 class potentialCls_lennardJonesPotential(test_potentialCls):
@@ -341,15 +363,24 @@ class potentialCls_lennardJonesPotential(test_potentialCls):
 
         positions = [0, 0.1, 0.2, 0.5, 1, 2, 3, 6]
         expected_result = np.array(
-            [np.nan, 7.99999200 * 10 ** 12, 1.95300000 * 10 ** 9, 3.22560000 * 10 ** 4, 0.00000000,
-             -1.23046875 * 10 ** -1, -1.09588835 * 10 ** -2, -1.71464089 * 10 ** -4])
+            [
+                np.nan,
+                7.99999200 * 10**12,
+                1.95300000 * 10**9,
+                3.22560000 * 10**4,
+                0.00000000,
+                -1.23046875 * 10**-1,
+                -1.09588835 * 10**-2,
+                -1.71464089 * 10**-4,
+            ]
+        )
         potential = OneD.lennardJonesPotential(sigma=1, epsilon=2, x_shift=x_shift, y_shift=y_shift)
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
     def test_dVdpos(self):
         c6: float = 1 ** (-1)
@@ -359,16 +390,27 @@ class potentialCls_lennardJonesPotential(test_potentialCls):
 
         positions = [0, 0.1, 0.2, 0.5, 1, 2, 3, 6]
         expected_result = np.array(
-            [np.nan, -9.59999520 * 10 ** 14, -1.17183750 * 10 ** 11, -7.80288000 * 10 ** 5, -4.80000000 * 10,
-             3.63281250 * 10 ** -1, 2.18876602 * 10 ** -2, 1.71460414 * 10 ** -4])
+            [
+                np.nan,
+                -9.59999520 * 10**14,
+                -1.17183750 * 10**11,
+                -7.80288000 * 10**5,
+                -4.80000000 * 10,
+                3.63281250 * 10**-1,
+                2.18876602 * 10**-2,
+                1.71460414 * 10**-4,
+            ]
+        )
 
         potential = OneD.lennardJonesPotential(sigma=1, epsilon=2, x_shift=x_shift, y_shift=y_shift)
         forces = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of " + potential.name + " was not correct! it should be an np.array")
-        np.testing.assert_allclose(desired=expected_result, actual=forces, atol=0.002,
-                                   err_msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(
+            type(expected_result), type(forces), msg="returnType of " + potential.name + " was not correct! it should be an np.array"
+        )
+        np.testing.assert_allclose(
+            desired=expected_result, actual=forces, atol=0.002, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
 
 class potentialCls_lennardJonesForceFieldPotential(test_potentialCls):
@@ -381,17 +423,16 @@ class potentialCls_lennardJonesForceFieldPotential(test_potentialCls):
         y_shift = 0
 
         positions = [0, 0.2, 0.5, 1, 2, 3, 6]
-        expected_result = np.array([np.nan, 2.4414062e+08, 4.0940000e+03,
-                                    0.0000000e+00, -4.9975586e-01, -3.3333145e-01, -1.6666667e-01])
+        expected_result = np.array([np.nan, 2.4414062e08, 4.0940000e03, 0.0000000e00, -4.9975586e-01, -3.3333145e-01, -1.6666667e-01])
 
         potential = OneD.lennardJonesForceFieldPotential(c6=c6, c12=c12, x_shift=x_shift, y_shift=y_shift)
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
     def test_dVdpos(self):
         c6: float = 1 ** (-1)
@@ -400,18 +441,27 @@ class potentialCls_lennardJonesForceFieldPotential(test_potentialCls):
         y_shift = 0
 
         positions = [0, 0.1, 0.2, 0.5, 1, 2, 3, 6]
-        expected_result = np.array([np.nan, -1.20000000 * 10 ** 14, -1.46484375 * 10 ** 10, -9.83000000 * 10 ** +4,
-                                    -1.10000000 * 10 ** 1, 2.48535156 * 10 ** -1, 1.11103584 * 10 ** -1,
-                                    2.77777769 * 10 ** -2])
+        expected_result = np.array(
+            [
+                np.nan,
+                -1.20000000 * 10**14,
+                -1.46484375 * 10**10,
+                -9.83000000 * 10**+4,
+                -1.10000000 * 10**1,
+                2.48535156 * 10**-1,
+                1.11103584 * 10**-1,
+                2.77777769 * 10**-2,
+            ]
+        )
 
         potential = OneD.lennardJonesForceFieldPotential(c6=c6, c12=c12, x_shift=x_shift, y_shift=y_shift)
         energies = potential.force(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_allclose(desired=expected_result, actual=energies,
-                                   err_msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_allclose(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
 
 class potentialCls_doubleWellPot1D(test_potentialCls):
@@ -429,10 +479,10 @@ class potentialCls_doubleWellPot1D(test_potentialCls):
         energies = potential.ene(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
     def test_dVdpos(self):
         Vmax = 100
@@ -440,18 +490,16 @@ class potentialCls_doubleWellPot1D(test_potentialCls):
         b = 8
 
         positions = [0, 0.1, 0.2, 0.5, 1, 2, 3, 6]
-        expected_result = np.array(
-            [0, -0.62490234, -1.24921875, -3.11279297, -6.15234375, -11.71875, -16.11328125, -16.40625])
+        expected_result = np.array([0, -0.62490234, -1.24921875, -3.11279297, -6.15234375, -11.71875, -16.11328125, -16.40625])
 
         potential = self.potential_class(Vmax=Vmax, a=a, b=b)
         energies = potential.force(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
 
 class potentialCls_fourWellPot1D(test_potentialCls):
@@ -469,10 +517,10 @@ class potentialCls_fourWellPot1D(test_potentialCls):
         energies = potential.ene(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
     def test_dVdpos(self):
         Vmax = 100
@@ -480,18 +528,16 @@ class potentialCls_fourWellPot1D(test_potentialCls):
         b = 8
 
         positions = [0.1, 0.2, 0.5, 1, 2, 3, 6]
-        expected_result = np.array(
-            [2.00e+01, 4.00e+01, 1.00e+02, 2.00e+02, 4.00e+02, 5.943e+02, -2.1524e+02])
+        expected_result = np.array([2.00e01, 4.00e01, 1.00e02, 2.00e02, 4.00e02, 5.943e02, -2.1524e02])
 
         potential = self.potential_class(Vmax=Vmax, a=a, b=b)
         energies = potential.force(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
 
 class potentialCls_gaussPotential1D(test_potentialCls):
@@ -503,16 +549,16 @@ class potentialCls_gaussPotential1D(test_potentialCls):
         b = 8
 
         positions = np.linspace(-10, 10, num=5)
-        expected_result = np.array([1.93e-22, 3.73e-06, 1.00e+00, 3.73e-06, 1.93e-22])
+        expected_result = np.array([1.93e-22, 3.73e-06, 1.00e00, 3.73e-06, 1.93e-22])
 
         potential = self.potential_class()
         energies = potential.ene(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
 
     def test_dVdpos(self):
         Vmax = 100
@@ -526,11 +572,11 @@ class potentialCls_gaussPotential1D(test_potentialCls):
         energies = potential.force(positions)
 
         # print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!", decimal=2
+        )
+
 
 class potentialCls_sumPotentials(test_potentialCls):
     potential_class = OneD.sumPotentials
@@ -539,37 +585,37 @@ class potentialCls_sumPotentials(test_potentialCls):
     c = OneD.harmonicOscillatorPotential(x_shift=-2)
 
     def test_constructor_ListPotentials(self):
-        potential = self.potential_class([self.a,self.b,self.c])
+        potential = self.potential_class([self.a, self.b, self.c])
 
     def test_energies(self):
-        positions = np.linspace(-3,3, 10)
-        expected_result = np.array([17.5       , 12.16666667,  8.16666667,  5.5       ,  4.16666667,
-        4.16666667,  5.5       ,  8.16666667, 12.16666667, 17.5       ])
+        positions = np.linspace(-3, 3, 10)
+        expected_result = np.array([17.5, 12.16666667, 8.16666667, 5.5, 4.16666667, 4.16666667, 5.5, 8.16666667, 12.16666667, 17.5])
 
-        potential = self.potential_class([self.a,self.b,self.c])
+        potential = self.potential_class([self.a, self.b, self.c])
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos(self):
-        positions = np.linspace(-3,3, 10)
-        expected_result = np.array([-9., -7., -5., -3., -1.,  1.,  3.,  5.,  7.,  9.])
+        positions = np.linspace(-3, 3, 10)
+        expected_result = np.array([-9.0, -7.0, -5.0, -3.0, -1.0, 1.0, 3.0, 5.0, 7.0, 9.0])
 
-        potential = self.potential_class([self.a,self.b,self.c])
+        potential = self.potential_class([self.a, self.b, self.c])
         forces = potential.force(positions)
 
         print(forces)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
 
 """
@@ -599,12 +645,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
         potential.set_lambda(lam=lam1)
         energies = potential.ene(positions)
         # print(energies)
-        self.assertEqual(type(expected_result1), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result1, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam1) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result1), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result1,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam1)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies only for pot HB
         lam2 = 1
@@ -612,12 +666,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam2)
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result2), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result2, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam2) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result2), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result2,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam2)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies merged for pot HB and HA
         lam3 = 0.5
@@ -625,12 +687,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam3)
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result3), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result3, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam3) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result3), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result3,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam3)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
     def test_dVdpos(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -646,12 +716,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         energies = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies only for pot HB
         lam = 1
@@ -659,12 +737,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam)
         energies = potential.force(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies merged for pot HB and HA
         lam = 0.5
@@ -672,12 +758,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam)
         energies = potential.force(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
     def test_dHdlam(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -693,12 +787,20 @@ class potentialCls_perturbedLinearCoupledPotentials(test_potentialCls):
 
         energies = potential.dvdlam(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
 
 class potentialCls_perturbed_exponentialCoupledPotentials(test_potentialCls):
@@ -720,28 +822,35 @@ class potentialCls_perturbed_exponentialCoupledPotentials(test_potentialCls):
         expected_result = np.array([12.5, 0, 12.2, 0, 12.5])
 
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                           positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=1)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=1,
+        )
 
     def test_dVdpos(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
         hb = OneD.harmonicOscillatorPotential(k=1.0, x_shift=5.0)
-        potential = self.potential_class(Va=ha, Vb=hb, )
+        potential = self.potential_class(
+            Va=ha,
+            Vb=hb,
+        )
 
         positions = np.linspace(-10, 10, num=5)
 
         # energies only for pot HA
-        expected_result = np.array(
-            [-1304235.5118838537, 0.0, 1.9168317203608185e-05, 1.469697537672566e-10, 8.451488578640889e-16])
+        expected_result = np.array([-1304235.5118838537, 0.0, 1.9168317203608185e-05, 1.469697537672566e-10, 8.451488578640889e-16])
 
         energies = potential.force(positions)
         ##print("GOT",  list(energies))
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
 
 
 class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
@@ -754,73 +863,126 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
         positions = 3
         expected_results = np.squeeze(np.array([0.0]))
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
         positions = 1.5
         expected_results = np.squeeze(np.array([1.1180685281944005]))
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
         positions = 6
         expected_results = np.squeeze(np.array([4.5]))
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
         positions = -3
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
     def test_ene_NPos(self):
         potential = self.potential_class(s=100)
         positions = (-100, -3, 0, 2, 3, 6, 103)
-        expected_results = np.array([5.0e+03, 4.5, 0, 0.5, 0, 4.5, 5.0e+03])
+        expected_results = np.array([5.0e03, 4.5, 0, 0.5, 0, 4.5, 5.0e03])
 
         actual_energies = potential.ene(positions)
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
-                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                           positions) + "\n\tForces: " + str(
-                                           actual_energies), decimal=1)
+        self.assertEqual(
+            type(expected_results), type(actual_energies), msg="returnType of potential was not correct! it should be an np.array"
+        )
+        np.testing.assert_almost_equal(
+            desired=expected_results,
+            actual=actual_energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+            decimal=1,
+        )
 
     def test_s_change(self):
         potential = self.potential_class(s=100)
@@ -829,24 +991,42 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
         potential.s_i = 0.01
         expected_results = np.squeeze(np.array([-68.18971805599453]))
         actual_energies = potential.ene(positions)
 
         # CHECK
-        self.assertTrue(isinstance(actual_energies, Number),
-                         msg="returnType of potential was not correct! got actually: " + str(
-                             actual_energies) + " expected: " + str(expected_results))
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tEnergies: " + str(actual_energies))
+        self.assertTrue(
+            isinstance(actual_energies, Number),
+            msg="returnType of potential was not correct! got actually: " + str(actual_energies) + " expected: " + str(expected_results),
+        )
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+        )
 
     def test_force_1Pos(self):
         potential = self.potential_class(s=100)
@@ -856,9 +1036,17 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         print("Actual Result1: ", actual_energies)
 
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
         positions = 3
         expected_results = np.squeeze(np.array([0.0]))
@@ -866,9 +1054,17 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         print("Actual Result2: ", actual_energies)
 
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
         positions = 1.5
         expected_results = np.squeeze(0.0)
@@ -876,9 +1072,17 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         print("Actual Result3: ", actual_energies)
 
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
         positions = 6
         expected_results = np.squeeze(np.array([-3]))
@@ -886,18 +1090,34 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         print("Actual Result4: ", actual_energies)
 
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
         positions = -3
         expected_results = np.squeeze(np.array([3]))
         actual_energies = potential.force(positions)
 
         # CHECK
-        self.assertAlmostEqual(first=expected_results, second=actual_energies, delta=0.001,
-                               msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
+        self.assertAlmostEqual(
+            first=expected_results,
+            second=actual_energies,
+            delta=0.001,
+            msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
     def test_force_NPos(self):
         potential = self.potential_class(s=100)
@@ -906,10 +1126,17 @@ class potentialCls_perturbed_envelopedPotentials(test_potentialCls):
         actual_energies = potential.force(positions)
 
         # CHECK
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
-                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                           positions) + "\n\tEnergies: " + str(
-                                           actual_energies), decimal=1)
+        np.testing.assert_almost_equal(
+            desired=expected_results,
+            actual=actual_energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+            decimal=1,
+        )
 
 
 class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
@@ -933,12 +1160,20 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies only for pot HB
         lam = 1
@@ -946,25 +1181,41 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
 
         potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
         # energies merged for pot HB and HA
         lam = 0.5
-        expected_result = np.array([13.19,  0.69, 12.5 ,  0.69, 13.19])
+        expected_result = np.array([13.19, 0.69, 12.5, 0.69, 13.19])
 
         potential.set_lambda(lam=lam)
         energies = potential.ene(positions)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
     def test_dVdpos(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -976,32 +1227,27 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         # energies only for pot HA
         lam = 0
         potential.set_lambda(lam=lam)
-        expected_result = np.array(
-            [-5.00e+00, -0.00e+00, -0.00e+00, 7.87e-54, 5.00e+00])
+        expected_result = np.array([-5.00e00, -0.00e00, -0.00e00, 7.87e-54, 5.00e00])
 
         energies = potential.force(positions)
         ##print("GOT",  list(energies))
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
         # np.testing.assert_almost_equal(desired=expected_result, actual=energies, err_msg="The results of "+potential.name+" are not correct wit lambda "+str(lam)+"!\n\tPositions: "+str(positions)+"\n\tEnergies: "+str(energies), decimal=2)
 
         # energies only for pot HB
         lam = 1
-        expected_result = np.array(
-            [-2.6622529026263318e+17, -680412108183.5752, -1304235.5118838537, 0.0, 1.9168317203608185e-05])
+        expected_result = np.array([-2.6622529026263318e17, -680412108183.5752, -1304235.5118838537, 0.0, 1.9168317203608185e-05])
 
         potential.set_lambda(lam=lam)
         energies = potential.force(positions)
 
         ##print("GOT2",  list(energies))
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
         # np.testing.assert_almost_equal(desired=expected_result, actual=energies, err_msg="The results of "+potential.name+" are not correct wit lambda "+str(lam)+"!\n\tPositions: "+str(positions)+"\n\tEnergies: "+str(energies), decimal=2)
 
         # energies merged for pot HB and HA
         lam = 0.5
-        expected_result = np.array([-5.00000000e+00, -0.00000000e+00, -0.00000000e+00, 7.87379318e-54,
-                                    5.00000000e+00])
+        expected_result = np.array([-5.00000000e00, -0.00000000e00, -0.00000000e00, 7.87379318e-54, 5.00000000e00])
         # [-1.331126451319687e+17, -340206054091.7876, -652117.7559323427, 7.34848768836283e-11,
         # 9.584158602226667e-06])
 
@@ -1009,12 +1255,20 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         energies = potential.force(positions)
 
         ##print("GOT3",  list(energies))
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                           lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                           energies), decimal=2)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+            decimal=2,
+        )
 
     def test_dHdlam(self):
         ha = OneD.harmonicOscillatorPotential(k=1.0, x_shift=-5.0)
@@ -1026,16 +1280,23 @@ class potentialCls_perturbed_hybridCoupledPotentials(test_potentialCls):
         # energies only for pot HA
         lam = 0
         potential.set_lambda(lam=lam)
-        expected_result = np.array([1.000000e+00,  1.000000e+00, -0.000000e+00, -5.184706e+21,-2.688117e+43])
+        expected_result = np.array([1.000000e00, 1.000000e00, -0.000000e00, -5.184706e21, -2.688117e43])
 
         energies = potential.dvdlam(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_allclose(desired=expected_result, actual=energies,
-                                   err_msg="The results of " + potential.name + " are not correct wit lambda " + str(
-                                       lam) + "!\n\tPositions: " + str(positions) + "\n\tEnergies: " + str(
-                                       energies))
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_allclose(
+            desired=expected_result,
+            actual=energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct wit lambda "
+            + str(lam)
+            + "!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(energies),
+        )
 
 
 class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
@@ -1043,7 +1304,7 @@ class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
 
     def test_ene_1Pos(self):
         potential = self.potential_class(s=100)
-        positions = [0,3, 1.5, 6, -3]
+        positions = [0, 3, 1.5, 6, -3]
         expected_results = np.squeeze(np.array([0.007, 0.007, 1.125, 4.507, 4.507]))
         actual_energies = []
 
@@ -1052,43 +1313,51 @@ class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
             actual_energies.append(actual_energy)
 
         # CHECK
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
-                               err_msg="The results of " + potential.name + " are not correct!\n")
-
+        np.testing.assert_almost_equal(
+            desired=expected_results, actual=actual_energies, decimal=3, err_msg="The results of " + potential.name + " are not correct!\n"
+        )
 
     def test_ene_NPos(self):
         potential = self.potential_class(s=100)
         positions = (-100, -3, 0, 2, 3, 6, 103)
-        expected_results = np.array([5.0e+03, 4.5e+00, 6.9e-03, 5.1e-01, 6.9e-03, 4.5e+00, 5.0e+03])
+        expected_results = np.array([5.0e03, 4.5e00, 6.9e-03, 5.1e-01, 6.9e-03, 4.5e00, 5.0e03])
 
         actual_energies = potential.ene(positions)
         print(actual_energies)
         # CHECK
-        self.assertEqual(type(expected_results), type(actual_energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
-                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                           positions) + "\n\tForces: " + str(
-                                           actual_energies), decimal=1)
+        self.assertEqual(
+            type(expected_results), type(actual_energies), msg="returnType of potential was not correct! it should be an np.array"
+        )
+        np.testing.assert_almost_equal(
+            desired=expected_results,
+            actual=actual_energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+            decimal=1,
+        )
 
     def test_s_change(self):
         potential = self.potential_class(s=100)
         positions = [1.5, 0.01]
         expected_results = np.squeeze(np.array([1.125, 0.007]))
-        actual_energies =[]
+        actual_energies = []
         for position in positions:
             actual_energy = potential.ene(position)
             actual_energies.append(actual_energy)
 
         # CHECK
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
-                               err_msg="The results of " + potential.name + " are not correct!\n")
+        np.testing.assert_almost_equal(
+            desired=expected_results, actual=actual_energies, decimal=3, err_msg="The results of " + potential.name + " are not correct!\n"
+        )
 
     def test_force_1Pos(self):
         potential = self.potential_class(s=100)
         positions = [0, 3, 1.5, 6, -3]
-        expected_results = np.array([1.108e-195, -1.108e-195,  0.000e+000, -3.000e+000,  3.000e+000])
-
+        expected_results = np.array([1.108e-195, -1.108e-195, 0.000e000, -3.000e000, 3.000e000])
 
         actual_energies = []
         for position in positions:
@@ -1096,23 +1365,38 @@ class potentialCls_perturbed_lambdaEnvelopedPotentials(test_potentialCls):
             actual_energies.append(actual_energy)
         print(actual_energies)
         # CHECK
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies, decimal=3,
-                               err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                   positions) + "\n\tForces: " + str(actual_energies))
-
+        np.testing.assert_almost_equal(
+            desired=expected_results,
+            actual=actual_energies,
+            decimal=3,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tForces: "
+            + str(actual_energies),
+        )
 
     def test_force_NPos(self):
         potential = self.potential_class(s=100)
         positions = (-100, -15, -3, 0, 1, 1.5, 2, 3, 6, 18, 103)
-        expected_results = np.array([1.0e+002,  1.5e+001,  3.0e+000,  1.1e-195, -1.0e+000,  0.0e+000,
-               1.0e+000, -1.1e-195, -3.0e+000, -1.5e+001, -1.0e+002])
+        expected_results = np.array(
+            [1.0e002, 1.5e001, 3.0e000, 1.1e-195, -1.0e000, 0.0e000, 1.0e000, -1.1e-195, -3.0e000, -1.5e001, -1.0e002]
+        )
         actual_energies = potential.force(positions)
         print(actual_energies)
         # CHECK
-        np.testing.assert_almost_equal(desired=expected_results, actual=actual_energies,
-                                       err_msg="The results of " + potential.name + " are not correct!\n\tPositions: " + str(
-                                           positions) + "\n\tEnergies: " + str(
-                                           actual_energies), decimal=1)
+        np.testing.assert_almost_equal(
+            desired=expected_results,
+            actual=actual_energies,
+            err_msg="The results of "
+            + potential.name
+            + " are not correct!\n\tPositions: "
+            + str(positions)
+            + "\n\tEnergies: "
+            + str(actual_energies),
+            decimal=1,
+        )
 
 
 """
@@ -1126,33 +1410,31 @@ class potentialCls_2D_harmonicOscillatorPotential(test_potentialCls):
 
     def test_energies2DNPos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([0., 0.5, 0.5, 0.5, 0.5, 1.])
+        expected_result = np.array([0.0, 0.5, 0.5, 0.5, 0.5, 1.0])
 
         potential = self.potential_class()
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos2DNPos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([[ 0.,  0.],
-                                     [ 1.,  0.],
-                                     [-1.,  0.],
-                                     [ 0.,  1.],
-                                     [ 0., -1.],
-                                     [-1., -1.]])
+        expected_result = np.array([[0.0, 0.0], [1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [-1.0, -1.0]])
 
         potential = self.potential_class()
         forces = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
         # for ind, (expected, actual) in enumerate(zip(expected_result, forces.T)):
 
@@ -1170,15 +1452,19 @@ class potentialCls_2D_wavePotential(test_potentialCls):
         positions = np.array([0.0, 0.0])
         expected_result = np.array([2])
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_offset=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=np.array(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=np.array(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies2DNPos(self):
         phase_shift = (0.0, 0.0)
@@ -1190,15 +1476,19 @@ class potentialCls_2D_wavePotential(test_potentialCls):
         positions = np.array([[0.0, 0.0], [90.0, 0.0], [180.0, 270.0], [270.0, 180.0], [360.0, 360.0]])
         expected_result = np.array([2, 1, -1, -1, 2])
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_offset=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos2D1Pos(self):
         phase_shift = (0.0, 0.0)
@@ -1209,15 +1499,16 @@ class potentialCls_2D_wavePotential(test_potentialCls):
         positions = np.array([0, 0])
         expected_result = np.array([0, 0], ndmin=1)
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_offset=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         forces = potential.force(positions)
         # print(forces)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
     def test_dHdpos2DNPos(self):
         phase_shift = (0.0, 0.0)
@@ -1229,15 +1520,16 @@ class potentialCls_2D_wavePotential(test_potentialCls):
         positions = np.array([[0, 0], [90, 0], [180, 270], [90, 270], [270, 0], [360, 360]])
         expected_result = np.array([[0, 0], [-1, 0], [0, 1], [-1, 1], [1, 0], [0, 0]])
 
-        potential = self.potential_class(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                         y_offset=y_offset, radians=radians)
+        potential = self.potential_class(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         forces = potential.force(positions)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
 
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
 
 class potentialCls_2D_torsionPotential(test_potentialCls):
@@ -1258,18 +1550,23 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
         positions = np.array([(0, 0), (90, 0), (180, 270), (270, 180), (360, 360)])
         expected_result = np.array([4, 2, -2, -2, 4])
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset, radians=radians)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset, radians=radians)
+        WavePotential = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
+        WavePotential2 = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         potential = self.potential_class(wave_potentials=[WavePotential, WavePotential2])
 
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies_phase_shifted(self):
         phase_shift1 = (0.0, 0)
@@ -1279,21 +1576,21 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
         y_offset = (0.0, 0, 0)
 
         positions = np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)])
-        expected_result = np.array([ 0.00000000e+00, -7.35035672e-15,  0.00000000e+00,  3.66373598e-15,
-        0.00000000e+00])
+        expected_result = np.array([0.00000000e00, -7.35035672e-15, 0.00000000e00, 3.66373598e-15, 0.00000000e00])
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset)
+        WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset)
+        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset)
         potential = self.potential_class(wave_potentials=[WavePotential, WavePotential2])
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos(self):
         phase_shift = (0.0, 0)
@@ -1303,25 +1600,31 @@ class potentialCls_2D_torsionPotential(test_potentialCls):
         radians = False
 
         positions = np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)])
-        expected_result = np.array([[ 0.0000000e+00,  0.0000000e+00],
-                                     [-2.0000000e+00, -2.0000000e+00],
-                                     [-2.4492936e-16,  0.0000000e+00],
-                                     [ 2.0000000e+00,  0.0000000e+00],
-                                     [ 4.8985872e-16,  0.0000000e+00]])
+        expected_result = np.array(
+            [
+                [0.0000000e00, 0.0000000e00],
+                [-2.0000000e00, -2.0000000e00],
+                [-2.4492936e-16, 0.0000000e00],
+                [2.0000000e00, 0.0000000e00],
+                [4.8985872e-16, 0.0000000e00],
+            ]
+        )
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset, radians=radians)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset, radians=radians)
+        WavePotential = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
+        WavePotential2 = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         potential = self.potential_class(wave_potentials=[WavePotential, WavePotential2])
         forces = potential.force(positions)
 
         print(forces)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
 
 class potentialCls_2D_sumPotentials(test_potentialCls):
@@ -1343,18 +1646,23 @@ class potentialCls_2D_sumPotentials(test_potentialCls):
 
         expected_result = np.array([4, 2, -2, -2, 4])
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset, radians=radians)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset, radians=radians)
+        WavePotential = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
+        WavePotential2 = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         potential = self.potential_class(potentials=[WavePotential, WavePotential2])
 
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_energies_phase_shifted(self):
         phase_shift1 = (0.0, 0)
@@ -1364,21 +1672,21 @@ class potentialCls_2D_sumPotentials(test_potentialCls):
         y_offset = (0.0, 0, 0)
 
         positions = np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)])
-        expected_result = np.array([ 0.00000000e+00, -7.35035672e-15,  0.00000000e+00,  3.66373598e-15,
-        0.00000000e+00])
+        expected_result = np.array([0.00000000e00, -7.35035672e-15, 0.00000000e00, 3.66373598e-15, 0.00000000e00])
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset)
+        WavePotential = TwoD.wavePotential(phase_shift=phase_shift1, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset)
+        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift2, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset)
         potential = self.potential_class(potentials=[WavePotential, WavePotential2])
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos(self):
         phase_shift = (0.0, 0)
@@ -1388,25 +1696,31 @@ class potentialCls_2D_sumPotentials(test_potentialCls):
         radians = True
 
         positions = np.deg2rad(np.array([(0, 0), (90, 90), (180, 0), (270, 0), (360, 0)]))
-        expected_result = np.array([[ 0.0000000e+00,  0.0000000e+00],
-                                     [-2.0000000e+00, -2.0000000e+00],
-                                     [-2.4492936e-16,  0.0000000e+00],
-                                     [ 2.0000000e+00,  0.0000000e+00],
-                                     [ 4.8985872e-16,  0.0000000e+00]])
+        expected_result = np.array(
+            [
+                [0.0000000e00, 0.0000000e00],
+                [-2.0000000e00, -2.0000000e00],
+                [-2.4492936e-16, 0.0000000e00],
+                [2.0000000e00, 0.0000000e00],
+                [4.8985872e-16, 0.0000000e00],
+            ]
+        )
 
-        WavePotential = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                           y_offset=y_offset, radians=radians)
-        WavePotential2 = TwoD.wavePotential(phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude,
-                                            y_offset=y_offset, radians=radians)
+        WavePotential = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
+        WavePotential2 = TwoD.wavePotential(
+            phase_shift=phase_shift, multiplicity=multiplicity, amplitude=amplitude, y_offset=y_offset, radians=radians
+        )
         potential = self.potential_class(potentials=[WavePotential, WavePotential2])
         forces = potential.force(positions)
 
         print(forces)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
 
 """
@@ -1420,33 +1734,33 @@ class potentialCls_ND_harmonicOscillatorPotential(test_potentialCls):
 
     def test_energies3DNPos(self):
         positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, 1], [0, 1, 0], [0, -1, -1], [-1, -1, 1]])
-        expected_result = np.array([0., 1, 1, 0.5, 1, 1.5])
+        expected_result = np.array([0.0, 1, 1, 0.5, 1, 1.5])
 
         potential = self.potential_class(nDimensions=3)
         energies = potential.ene(positions)
 
         print(energies)
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos3DNPos(self):
         positions = np.array([[0, 0, 0], [1, 0, 1], [-1, 0, -1], [0, 1, 0], [0, -1, 0], [-1, -1, -1]])
-        expected_result = np.array([[ 0.,  0. , 0.],
-                                     [ 1.,  0.,  1.],
-                                     [-1.,  0., -1.],
-                                     [ 0.,  1.,  0.],
-                                     [ 0., -1.,  0.],
-                                     [-1., -1., -1.]])
+        expected_result = np.array(
+            [[0.0, 0.0, 0.0], [1.0, 0.0, 1.0], [-1.0, 0.0, -1.0], [0.0, 1.0, 0.0], [0.0, -1.0, 0.0], [-1.0, -1.0, -1.0]]
+        )
 
         potential = self.potential_class(nDimensions=3)
         forces = potential.force(positions)
         print(str(forces))
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!", decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
         # for ind, (expected, actual) in enumerate(zip(expected_result, forces.T)):
 
@@ -1458,42 +1772,40 @@ class potentialCls_ND_sumPotentials(test_potentialCls):
         potential = self.potential_class()
 
     def test_energies(self):
-        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2,2,0)])
+        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2, 2, 0)])
         expected_result = np.array([1.5, 1.5, 1.5, 1.5, 5.5])
 
         potential = self.potential_class()
 
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=list(expected_result), actual=list(energies),
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=8)
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=list(expected_result),
+            actual=list(energies),
+            err_msg="The results of " + potential.name + " are not correct!",
+            decimal=8,
+        )
 
     def test_dHdpos(self):
-        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2,2,0)])
-        expected_result = np.array([[-1., -1., -1.],
-                                 [ 1., -1., -1.],
-                                 [ 1., 1., -1.],
-                                 [ 1.,  1.,  1.],
-                                 [ 3.,  3., -1.]])
+        positions = np.array([(0, 0, 0), (1, 0, 0), (1, 1, 0), (1, 1, 1), (2, 2, 0)])
+        expected_result = np.array([[-1.0, -1.0, -1.0], [1.0, -1.0, -1.0], [1.0, 1.0, -1.0], [1.0, 1.0, 1.0], [3.0, 3.0, -1.0]])
 
         potential = self.potential_class()
         forces = potential.force(positions)
 
         print(forces)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!",
-                                       decimal=8)
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!", decimal=8
+        )
 
 
 """
 biased potentials
 """
+
 
 class potentialCls_addedPotentials(test_potentialCls):
     potential_class = OneD.addedPotentials
@@ -1505,10 +1817,8 @@ class potentialCls_addedPotentials(test_potentialCls):
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos(self):
         positions = [0, 0.5, 1, 2]
@@ -1519,10 +1829,8 @@ class potentialCls_addedPotentials(test_potentialCls):
         energies = potential.force(positions)
         # print(energies)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
 
 class potentialCls_metadynamics(test_potentialCls):
@@ -1535,10 +1843,8 @@ class potentialCls_metadynamics(test_potentialCls):
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        self.assertListEqual(list(expected_result), list(energies), msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos_NPos(self):
         positions = np.array([0, 0.5, 1, 2])
@@ -1549,10 +1855,10 @@ class potentialCls_metadynamics(test_potentialCls):
         forces = potential.force(positions)
         # print(energies)
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
     def test_dVdpos_1Pos(self):
         positions = 0
@@ -1563,9 +1869,9 @@ class potentialCls_metadynamics(test_potentialCls):
         forces = potential.force(positions)
         # print(energies)
 
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!")
-
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
 
 class potentialCls_addedPotentials2D(test_potentialCls):
@@ -1573,24 +1879,21 @@ class potentialCls_addedPotentials2D(test_potentialCls):
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([1. , 1.1065307, 1.1065307, 1.1065307, 1.1065307, 1.3678794])
+        expected_result = np.array([1.0, 1.1065307, 1.1065307, 1.1065307, 1.1065307, 1.3678794])
 
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        self.assertEqual(type(expected_result), type(energies),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(energies), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
     def test_dVdpos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([[ 0.,          0.        ],
-                                     [ 0.39346934,  0.        ],
-                                     [-0.39346934,  0.        ],
-                                     [ 0.        ,  0.39346934],
-                                     [ 0.        , -0.39346934],
-                                     [-0.63212056, -0.63212056]])
+        expected_result = np.array(
+            [[0.0, 0.0], [0.39346934, 0.0], [-0.39346934, 0.0], [0.0, 0.39346934], [0.0, -0.39346934], [-0.63212056, -0.63212056]]
+        )
 
         potential = self.potential_class()
 
@@ -1598,10 +1901,10 @@ class potentialCls_addedPotentials2D(test_potentialCls):
 
         print(str(forces))
 
-        self.assertEqual(type(expected_result), type(forces),
-                         msg="returnType of potential was not correct! it should be an np.array")
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                             err_msg="The results of " + potential.name + " are not correct!")
+        self.assertEqual(type(expected_result), type(forces), msg="returnType of potential was not correct! it should be an np.array")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
 
 class potentialCls_metadynamics2D(test_potentialCls):
@@ -1609,13 +1912,14 @@ class potentialCls_metadynamics2D(test_potentialCls):
 
     def test_energies(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.array([0. , 0.5, 0.5, 0.5, 0.5, 1. ])
+        expected_result = np.array([0.0, 0.5, 0.5, 0.5, 0.5, 1.0])
 
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
     def test_energies(self):
         positions = np.array([0, 0])
@@ -1624,36 +1928,34 @@ class potentialCls_metadynamics2D(test_potentialCls):
         potential = self.potential_class()
         energies = potential.ene(positions)
 
-        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=energies, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
     def test_dVdpos(self):
         positions = np.array([[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [-1, -1]])
-        expected_result = np.squeeze(np.array([[ 0.,  0.],
-                                                 [ 1.,  0.],
-                                                 [-1.,  0.],
-                                                 [ 0.,  1.],
-                                                 [ 0., -1.],
-                                                 [-1., -1.]]))
+        expected_result = np.squeeze(np.array([[0.0, 0.0], [1.0, 0.0], [-1.0, 0.0], [0.0, 1.0], [0.0, -1.0], [-1.0, -1.0]]))
 
         potential = self.potential_class()
         forces = potential.force(positions)
         print(forces.shape, forces)
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
     def test_dVdpos_1Pos(self):
-        positions = [0,0]
-        expected_result = [0,0]
+        positions = [0, 0]
+        expected_result = [0, 0]
 
         potential = self.potential_class()
 
         forces = potential.force(positions)
         # print(energies)
 
-        np.testing.assert_almost_equal(desired=expected_result, actual=forces,
-                                       err_msg="The results of " + potential.name + " are not correct!")
+        np.testing.assert_almost_equal(
+            desired=expected_result, actual=forces, err_msg="The results of " + potential.name + " are not correct!"
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

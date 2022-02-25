@@ -10,8 +10,8 @@ from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 class _samplerCls(_baseClass):
     """
             This class is the parent class for all samplers classes.
-            The constructor is a interface method. 
-            Each subclass should implement it's own constructor.  
+            The constructor is a interface method.
+            Each subclass should implement it's own constructor.
 
     Raises
     ------
@@ -19,6 +19,7 @@ class _samplerCls(_baseClass):
         These functions need to be implemented by the subclass
 
     """
+
     # general:
     verbose: bool = False
     nDimensions: int = 0
@@ -37,7 +38,7 @@ class _samplerCls(_baseClass):
 
     def step(self, system: systemType) -> Tuple[float, float, float]:
         """
-        step  
+        step
             This interface function needs to be implemented for a subclass.
             The purpose of this function is to perform one integration step.
 

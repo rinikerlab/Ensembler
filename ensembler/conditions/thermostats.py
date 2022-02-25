@@ -17,12 +17,13 @@ class thermostat(_conditionCls):
 
     _currentTemperature: float
 
-    def __init__(self, system: systemType, tau: int, verbose:bool=False):
+    def __init__(self, system: systemType, tau: int, verbose: bool = False):
         super().__init__(system=system, tau=tau, verbose=verbose)
 
+
 class andersonThermostat(thermostat):
-    """ -UnderConstuction-
-    andersenThermostat 
+    """-UnderConstuction-
+    andersenThermostat
         This thermostat was developed by anderson 1980 and is also called stochastic collisions method.
         This method is optimal for single particle simulations as it tries to simulate a particle that collides with virtual particles from  a temperature bath.
         At each collision, the velocity and the interval of the next collision is randomly reassigned and reselected from a Maxwell-Boltzmann distribution.
@@ -47,10 +48,20 @@ class andersonThermostat(thermostat):
 
     """Under COnstructurion"""
 
-    def __init__(self, temperature: float = 298, temperature_noise_range: float = 25, MConstraintsDims: int = 1,
-                 system: systemType = None, tau:int=1,
-                 kb=const.k * const.Avogadro, a: float = 1, k: float = 1, N_dens: float = 0.005, N: float = 1,
-                 verbose: bool = False):
+    def __init__(
+        self,
+        temperature: float = 298,
+        temperature_noise_range: float = 25,
+        MConstraintsDims: int = 1,
+        system: systemType = None,
+        tau: int = 1,
+        kb=const.k * const.Avogadro,
+        a: float = 1,
+        k: float = 1,
+        N_dens: float = 0.005,
+        N: float = 1,
+        verbose: bool = False,
+    ):
         """
             __This Thermostat is underconstruction! __
 
@@ -93,11 +104,10 @@ class andersonThermostat(thermostat):
 
         self.M = MConstraintsDims
 
-        if (system != None):
+        if system != None:
             self.temperature = self.system.temperature
         else:
             self.temperature = temperature
-
 
     def _collision(self) -> bool:
         p_collision = (2 * self.a * self.k) / (3 * self.kb * self.N_dens ** (1 / 3) * self.N ** (2 / 3))
@@ -112,34 +122,35 @@ class andersonThermostat(thermostat):
 
     def _calculate_scaling_factor(self):
         # pick new temperature randomly
-        self._new_temperature = maxwell.rvs(loc=self.temperature - self.temperature_noise_range,
-                                            scale=self.temperature_noise_range)
-        self._currentTemperature = (
-            self.system._currentTemperature if (self.system._currentTemperature != 0) else 0.000001)
+        self._new_temperature = maxwell.rvs(loc=self.temperature - self.temperature_noise_range, scale=self.temperature_noise_range)
+        self._currentTemperature = self.system._currentTemperature if (self.system._currentTemperature != 0) else 0.000001
         self.system._currentTemperature = self._new_temperature
         # scaling factor
         self._lambda = self._new_temperature / self._currentTemperature  # (1+(self.dt/self.tau)*((self.system.temperature/T_t)-1))**0.5
 
     def apply_coupled(self):
-        if (self._collision()):
+        if self._collision():
             self._calculate_scaling_factor()
             self._rescale_velocities()
 
-            if (self.verbose):
-                print("THERMOSTAT: get to temp: ", self.system._currentTemperature, "\n"
-                                                                                    'THERMOSTAT: tot_kin: ',
-                      self.system.calculate_total_kinetic_energy(), "\n"
-                                            "THERMOSTAT: lambda: ", self._lambda, "\n"
-                                                                                  "THERMOSTAT: current_Velocity: ",
-                      self.system._currentVelocities, "\n"
-                                                      "\n")
+            if self.verbose:
+                print(
+                    "THERMOSTAT: get to temp: ",
+                    self.system._currentTemperature,
+                    "\n" "THERMOSTAT: tot_kin: ",
+                    self.system.calculate_total_kinetic_energy(),
+                    "\n" "THERMOSTAT: lambda: ",
+                    self._lambda,
+                    "\n" "THERMOSTAT: current_Velocity: ",
+                    self.system._currentVelocities,
+                    "\n" "\n",
+                )
         else:
             pass
 
 
 class berendsenThermostate(thermostat):
-
-    def __init__(self, tau: float, dt: float, MConstraintsDims: int = 1, system: systemType = None, verbose:bool=False):
+    def __init__(self, tau: float, dt: float, MConstraintsDims: int = 1, system: systemType = None, verbose: bool = False):
         """
             __under contsruction! __
             This thermostat is not tested, no guarantee for correctness!
@@ -165,22 +176,25 @@ class berendsenThermostate(thermostat):
         self.dt = dt
         self.M = MConstraintsDims
 
-
-
     def apply_coupled(self):
         self._calculate_current_temperature()
         self._calculate_scaling_factor()
         self._rescale_velocities()
 
-        if (self.verbose):
-            print("THERMOSTAT: get to temp: ", self.system.temperature, "\n"
-                                                                        'THERMOSTAT: tot_kin: ', self.system.calculate_total_kinetic_energy(),
-                  "\n"
-                  "THERMOSTAT: curr temp: ", self._current_temperatur, "\n"
-                                                                       "THERMOSTAT: lambda: ", self._lambda, "\n"
-                                                                                                             "THERMOSTAT: current_Velocity: ",
-                  self.system._currentVelocities, "\n"
-                                                  "\n")
+        if self.verbose:
+            print(
+                "THERMOSTAT: get to temp: ",
+                self.system.temperature,
+                "\n" "THERMOSTAT: tot_kin: ",
+                self.system.calculate_total_kinetic_energy(),
+                "\n" "THERMOSTAT: curr temp: ",
+                self._current_temperatur,
+                "\n" "THERMOSTAT: lambda: ",
+                self._lambda,
+                "\n" "THERMOSTAT: current_Velocity: ",
+                self.system._currentVelocities,
+                "\n" "\n",
+            )
 
     def _rescale_velocities(self):
         orig_vels = self.system._currentVelocities
@@ -203,7 +217,7 @@ class berendsenThermostate(thermostat):
             (eq.34)
         :return:
         """
-        T_t = (self._current_temperatur if (self._current_temperatur != 0) else 0.000001)
+        T_t = self._current_temperatur if (self._current_temperatur != 0) else 0.000001
         self._lambda = (1 + (self.dt / self.tau) * ((self.system.temperature / T_t) - 1)) ** 0.5
 
 

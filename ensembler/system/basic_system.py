@@ -14,9 +14,8 @@ pd.options.mode.use_inf_as_na = True
 
 # Typing
 from ensembler.util.basic_class import _baseClass
-from ensembler.util.ensemblerTypes import samplerCls, conditionCls, potentialCls, Number, Union, Iterable, NoReturn, \
-    List
-
+from ensembler.util.ensemblerTypes import samplerCls, conditionCls, potentialCls, Number, Union, Iterable, NoReturn, List
+from ensembler.util import units
 from ensembler.util import dataStructure as data
 
 from ensembler.samplers.newtonian import newtonianSampler
@@ -31,9 +30,11 @@ class system(_baseClass):
     The system class is managing the simulation approaches and all system data as well as the simulation results.
 
     """
+
     # static attributes
     name = "system"
     state = data.basicState
+    _stateUnits: data.basicState
     verbose: bool
 
     # general attributes
@@ -96,7 +97,7 @@ class system(_baseClass):
 
     @conditions.setter
     def conditions(self, conditions: List[conditionCls]):
-        if (isinstance(conditions, List)):
+        if isinstance(conditions, List):
             self._conditions = conditions
         else:
             raise ValueError("Conditions needs to be a List of objs, that are a subclass of _conditionCls")
@@ -141,10 +142,13 @@ class system(_baseClass):
     def current_state(self) -> state:
         return self._currentState
 
-    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
-                          current_velocities: Union[Number, Iterable[Number]] = 0,
-                          current_force: Union[Number, Iterable[Number]] = 0,
-                          current_temperature: Number = 298):
+    def set_current_state(
+        self,
+        current_position: Union[Number, Iterable[Number]],
+        current_velocities: Union[Number, Iterable[Number]] = 0,
+        current_force: Union[Number, Iterable[Number]] = 0,
+        current_temperature: Number = 298,
+    ):
         """
         set_current_state
             set the current State of the system.
@@ -165,8 +169,7 @@ class system(_baseClass):
         self._currentForce = current_force
         self._currentVelocities = current_velocities
         self._currentTemperature = current_temperature
-        self.currentState = self.state(self._currentPosition, self._currentTemperature, np.nan, np.nan, np.nan, np.nan,
-                                       np.nan)
+        self.currentState = self.state(self._currentPosition, self._currentTemperature, np.nan, np.nan, np.nan, np.nan, np.nan)
 
         self._update_energies()
         self.update_current_state()
@@ -182,7 +185,7 @@ class system(_baseClass):
     @position.setter
     def position(self, position: Union[Number, Iterable[Number]]):
         self._currentPosition = position
-        if (len(self.trajectory) == 0):
+        if len(self.trajectory) == 0:
             self.initial_position = self._currentPosition
         self._update_energies()
         self.update_current_state()
@@ -249,12 +252,17 @@ class system(_baseClass):
     def mass(self, mass: float):
         self._mass = mass
 
-
-
-
-    def __init__(self, potential: potentialCls=harmonicOscillatorPotential(), sampler: samplerCls=metropolisMonteCarloIntegrator(), conditions: Iterable[conditionCls] = None,
-                 temperature: Number = 298.0, start_position: (Iterable[Number] or Number) = None, mass: Number = 1,
-                 verbose: bool = True) -> NoReturn:
+    def __init__(
+        self,
+        potential: potentialCls = harmonicOscillatorPotential(),
+        sampler: samplerCls = metropolisMonteCarloIntegrator(),
+        conditions: Iterable[conditionCls] = None,
+        temperature: Number = 298.0*units.K,
+        start_position: (Iterable[Number] or Number) = None,
+        mass: Number = 1,
+        unitless: bool = False,
+        verbose: bool = True,
+    ) -> NoReturn:
         """
             The system class is wrapping all components needed for a simulation.
             It can be used as the control unit for executing a simulation (simulate) and also to manage the generated data or input data.
@@ -283,12 +291,14 @@ class system(_baseClass):
 
         ##Physical parameters
         self.nParticles = 1  # FUTURE: adapt it to be multiple particles
+        self._unitless = unitless
         self._mass = mass  # for one particle systems!!!!
         self._temperature = temperature
 
         # Output
         self._currentState = self.state(**{key: np.nan for key in self.state.__dict__["_fields"]})
-        self._trajectory =[]
+        self._unitState = self.state(**{key: 1 for key in self.state.__dict__["_fields"]})
+        self._trajectory = []
 
         # tmpvars - private:
         self._currentTotE: (Number) = np.nan
@@ -304,59 +314,61 @@ class system(_baseClass):
         self._potential = potential
         self._integrator = sampler
 
-        if(conditions is None):
+        if conditions is None:
             self._conditions = []
         else:
             self._conditions = conditions
 
         ## set dim
-        if (potential.constants[potential.nDimensions] > 0):
+        if potential.constants[potential.nDimensions] > 0:
             self.nDimensions = potential.constants[potential.nDimensions]
         else:
-            raise IOError(
-                "Could not estimate the disered Dimensionality as potential dim was <1 and no initial position was given.")
+            raise IOError("Could not estimate the disered Dimensionality as potential dim was <1 and no initial position was given.")
 
         ###is the potential a state dependent one? - needed for initial pos.
-        if (hasattr(potential, "nStates")):
+        if hasattr(potential, "nStates"):
             self.nStates = potential.constants[potential.nStates]
         else:
             self.nstates = 1
 
         # PREPARE THE SYSTEM
         # Only init velocities, if the samplers uses them
-        if (issubclass(sampler.__class__, (newtonianSampler, langevinIntegrator))):
+        if issubclass(sampler.__class__, (newtonianSampler, langevinIntegrator)):
             init_velocity = True
         else:
             init_velocity = False
 
-        self.initialise(withdraw_Traj=True, init_position=True, init_velocity=init_velocity,
-                        set_initial_position=start_position)
+        self.initialise(withdraw_Traj=True, init_position=True, init_velocity=init_velocity, set_initial_position=start_position)
 
         ##check if system should be coupled to conditions:
         # update for metadynamics simulation - local elevation bias is like a condition/potential hybrid.
-        if (isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D)):
+        if isinstance(self.potential, metadynamicsPotential1D) or isinstance(self.potential, metadynamicsPotential2D):
             self._conditions.append(self.potential)
 
         for condition in self._conditions:
-            if (not hasattr(condition, "system")):
+            if not hasattr(condition, "system"):
                 condition.couple_system(self)
             else:
                 # warnings.warn("Decoupling system and coupling it again!")
                 condition.couple_system(self)
 
-            if (not hasattr(condition, "dt") and hasattr(self.sampler, "dt")):
+            if not hasattr(condition, "dt") and hasattr(self.sampler, "dt"):
                 condition.dt = self.sampler.dt
             else:
                 condition.dt = 1
         self.verbose = verbose
 
-
     """
         Initialisation
     """
 
-    def initialise(self, withdraw_Traj: bool = True, init_position: bool = True, init_velocity: bool = True,
-                   set_initial_position: Union[Number, Iterable[Number]] = None) -> NoReturn:
+    def initialise(
+        self,
+        withdraw_Traj: bool = True,
+        init_position: bool = True,
+        init_velocity: bool = True,
+        set_initial_position: Union[Number, Iterable[Number]] = None,
+    ) -> NoReturn:
         """
             initialise
                 initialises the system, i.e. can set an initial position, initial velocities and initialize the forces.
@@ -377,10 +389,10 @@ class system(_baseClass):
         NoReturn
 
         """
-        if (withdraw_Traj):
+        if withdraw_Traj:
             self.clear_trajectory()
 
-        if (init_position):
+        if init_position:
             self._init_position(initial_position=set_initial_position)
 
         # Try to init the force
@@ -389,7 +401,7 @@ class system(_baseClass):
         except:
             warnings.warn("Could not initialize the force of the potential? Check if you need it!")
 
-        if (init_velocity):
+        if init_velocity:
             self._init_velocities()
 
         # set initial Temperature
@@ -413,15 +425,21 @@ class system(_baseClass):
             if None, a random position is selected else the given position is used.
 
         """
-        if (isinstance(initial_position, type(None))):
-            self.initial_position = self.random_position()
-        elif ((isinstance(initial_position, Number) and self.nDimensions == 1) or
-              (isinstance(initial_position, Iterable) and all(
-                  [isinstance(x, Number) for x in initial_position]) and self.nDimensions == len(initial_position))):
+        if isinstance(initial_position, type(None)):
+            self.initial_position = self.random_position() 
+        elif (isinstance(initial_position, Number) and self.nDimensions == 1) or (
+            isinstance(initial_position, Iterable)
+            and all([isinstance(x, Number) for x in initial_position])
+            and self.nDimensions == len(initial_position)
+        ):
             self.initial_position = initial_position
         else:
-            raise Exception("Did not understand the initial position! \n given: " + str(
-                initial_position) + "\n Expected dimensions: " + str(self.nDimensions))
+            raise Exception(
+                "Did not understand the initial position! \n given: "
+                + str(initial_position)
+                + "\n Expected dimensions: "
+                + str(self.nDimensions)
+            )
         self._currentPosition = self.initial_position
 
         self.update_current_state()
@@ -429,18 +447,20 @@ class system(_baseClass):
 
     def _init_velocities(self) -> NoReturn:
         """
-            _init_velocities
-                Initializes the initial velocity randomly.
+        _init_velocities
+            Initializes the initial velocity randomly.
 
         """
-        if (self.nStates > 1):
-            self._currentVelocities = [[self._gen_rand_vel() for dim in range(self.nDimensions)] for s in
-                                       range(self.nStates)] if (self.nDimensions > 1) else [self._gen_rand_vel() for
-                                                                                            state in
-                                                                                            range(self.nStates)]
+        if self.nStates > 1:
+            self._currentVelocities = (
+                [[self._gen_rand_vel() for dim in range(self.nDimensions)] for s in range(self.nStates)]
+                if (self.nDimensions > 1)
+                else [self._gen_rand_vel() for state in range(self.nStates)]
+            )
         else:
-            self._currentVelocities = [self._gen_rand_vel() for dim in range(self.nDimensions)] if (
-                    self.nDimensions > 1) else self._gen_rand_vel()
+            self._currentVelocities = (
+                [self._gen_rand_vel() for dim in range(self.nDimensions)] if (self.nDimensions > 1) else self._gen_rand_vel()
+            )
 
         self.veltemp = self.mass / const.gas_constant / 1000.0 * np.linalg.norm(self._currentVelocities) ** 2  # t
 
@@ -470,7 +490,7 @@ class system(_baseClass):
         """
 
         random_pos = np.squeeze(np.array(np.subtract(np.multiply(np.random.rand(self.nDimensions), 20), 10)))
-        if (len(random_pos.shape) == 0):
+        if len(random_pos.shape) == 0:
             return np.float(random_pos)
         else:
             return random_pos
@@ -488,8 +508,10 @@ class system(_baseClass):
         Union[Iterable[Number], Number, np.nan]
             total kinetic energy.
         """
-        if (isinstance(self._currentVelocities, Number) or (isinstance(self._currentVelocities, Iterable) and all(
-                [isinstance(x, Number) and not np.isnan(x) for x in self._currentVelocities]))):
+        if isinstance(self._currentVelocities, Number) or (
+            isinstance(self._currentVelocities, Iterable)
+            and all([isinstance(x, Number) and not np.isnan(x) for x in self._currentVelocities])
+        ):
             return np.sum(0.5 * self.mass * np.square(np.linalg.norm(self._currentVelocities)))
         else:
             return np.nan
@@ -528,9 +550,15 @@ class system(_baseClass):
         -------
         NoReturn
         """
-        self._currentState = self.state(self._currentPosition, self._currentTemperature,
-                                        self._currentTotE, self._currentTotPot, self._currentTotKin,
-                                        self._currentForce, self._currentVelocities)
+        self._currentState = self.state(
+            self._currentPosition,
+            self._currentTemperature,
+            self._currentTotE,
+            self._currentTotPot,
+            self._currentTotKin,
+            self._currentForce,
+            self._currentVelocities,
+        )
 
     def _update_temperature(self) -> NoReturn:
         """
@@ -556,8 +584,7 @@ class system(_baseClass):
         """
         self._currentTotPot = self.calculate_total_potential_energy()
         self._currentTotKin = self.calculate_total_kinetic_energy()
-        self._currentTotE = self._currentTotPot if (np.isnan(self._currentTotKin)) else np.add(self._currentTotKin,
-                                                                                               self._currentTotPot)
+        self._currentTotE = self._currentTotPot if (np.isnan(self._currentTotKin)) else np.add(self._currentTotKin, self._currentTotPot)
 
     def _update_current_vars_from_current_state(self):
         """
@@ -595,10 +622,15 @@ class system(_baseClass):
         Functionality
     """
 
-    def simulate(self, steps: int,
-                 withdraw_traj: bool = False, save_every_state: int = 1,
-                 init_system: bool = False,
-                 verbosity: bool = True, _progress_bar_prefix: str = "Simulation: ") -> state:
+    def simulate(
+        self,
+        steps: int,
+        withdraw_traj: bool = False,
+        save_every_state: int = 1,
+        init_system: bool = False,
+        verbosity: bool = True,
+        _progress_bar_prefix: str = "Simulation: ",
+    ) -> state:
         """
             this function executes the simulation, by exploring the potential energy function with the sampling method for the given n steps.
 
@@ -623,11 +655,11 @@ class system(_baseClass):
             returns the last current state
         """
 
-        if (init_system):
+        if init_system:
             self._init_position()
             self._init_velocities()
 
-        if (withdraw_traj):
+        if withdraw_traj:
             self._trajectory = []
             self._trajectory.append(self.current_state)
 
@@ -635,9 +667,8 @@ class system(_baseClass):
         self.update_system_properties()
 
         # progressBar or no ProgressBar
-        if (verbosity):
-            iteration_queue = tqdm(range(steps), desc=_progress_bar_prefix + " Simulation: ", mininterval=1.0,
-                                   leave=verbosity)
+        if verbosity:
+            iteration_queue = tqdm(range(steps), desc=_progress_bar_prefix + " Simulation: ", mininterval=1.0, leave=verbosity)
         else:
             iteration_queue = range(steps)
 
@@ -656,15 +687,13 @@ class system(_baseClass):
             # Set new State
             self.update_current_state()
 
-            if (self.step % save_every_state == 0 and self.step != steps - 1):
+            if self.step % save_every_state == 0 and self.step != steps - 1:
                 self._trajectory.append(self.current_state)
-
 
         self._trajectory.append(self.current_state)
         return self.current_state
 
-    def propagate(self) -> (
-    Union[Iterable[Number], Number], Union[Iterable[Number], Number], Union[Iterable[Number], Number]):
+    def propagate(self) -> (Union[Iterable[Number], Number], Union[Iterable[Number], Number], Union[Iterable[Number], Number]):
         """
             propagate
                 Do a single exploration step.
@@ -693,8 +722,12 @@ class system(_baseClass):
         for condition in self._conditions:
             condition.apply_coupled()
 
-    def append_state(self, new_position: Union[Iterable[Number], Number], new_velocity: Union[Iterable[Number], Number],
-                     new_forces: Union[Iterable[Number], Number]) -> NoReturn:
+    def append_state(
+        self,
+        new_position: Union[Iterable[Number], Number],
+        new_velocity: Union[Iterable[Number], Number],
+        new_forces: Union[Iterable[Number], Number],
+    ) -> NoReturn:
         """
             append_state
                 appends a new state, based on the given arguments and updates the system to them.
@@ -727,12 +760,13 @@ class system(_baseClass):
         -------
         NoReturn
         """
-        if(len(self._trajectory)>1):
+        if len(self._trajectory) > 1:
             self._trajectory.pop()
             self._currentState = self._trajectory[-1]
             self._update_current_vars_from_current_state()
         else:
             warnings.warn("Could not revert step, as only 1 step is in the trajectory!")
+
     def clear_trajectory(self):
         """
         deletes all entries of trajectory and adds current state as first timestep to the trajectory
@@ -759,7 +793,7 @@ class system(_baseClass):
         save
 
         """
-        if (not os.path.exists(os.path.dirname(os.path.abspath(out_path)))):
+        if not os.path.exists(os.path.dirname(os.path.abspath(out_path))):
             raise Exception("Could not find output folder: " + os.path.dirname(out_path))
         traj = self.trajectory
         traj.to_csv(out_path, header=True)

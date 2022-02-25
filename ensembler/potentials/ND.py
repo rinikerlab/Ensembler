@@ -7,13 +7,15 @@ Module: Potential
 import numpy as np
 import sympy as sp
 from ensembler.util import ensemblerTypes as t
-from ensembler.util.ensemblerTypes import  Number, Union, Iterable
+from ensembler.util.ensemblerTypes import Number, Union, Iterable
+
 # Base Classes
 from ensembler.potentials._basicPotentials import _potentialNDCls
 
+
 class harmonicOscillatorPotential(_potentialNDCls):
     """
-        ND  harmonic oscillator potential
+    ND  harmonic oscillator potential
     """
 
     name: str = "harmonicOscilator"
@@ -28,8 +30,13 @@ class harmonicOscillatorPotential(_potentialNDCls):
     i = sp.Symbol("i")
     V_functional = sp.Sum(V_dim[i, 0], (i, 0, nDimensions))
 
-    def __init__(self, k: np.array = np.array([1.0, 1.0, 1.0]), r_shift: np.array = np.array([0.0, 0.0, 0.0]),
-                 Voff: np.array = np.array([0.0, 0.0, 0.0]), nDimensions: int = 3):
+    def __init__(
+        self,
+        k: np.array = np.array([1.0, 1.0, 1.0]),
+        r_shift: np.array = np.array([0.0, 0.0, 0.0]),
+        Voff: np.array = np.array([0.0, 0.0, 0.0]),
+        nDimensions: int = 3,
+    ):
         """
             __init__
                 Constructs an harmonic Oscillator with an on runtime defined dimensionality.
@@ -45,7 +52,7 @@ class harmonicOscillatorPotential(_potentialNDCls):
         nDim
             dimensionality of the harmoic oscillator object. default: 3
         """
-        self.constants = {self.nDimensions:nDimensions}
+        self.constants = {self.nDimensions: nDimensions}
         self.constants.update({"k_" + str(j): k[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"r_shift" + str(j): r_shift[j] for j in range(self.constants[self.nDimensions])})
         self.constants.update({"V_off_" + str(j): Voff[j] for j in range(self.constants[self.nDimensions])})
@@ -57,15 +64,17 @@ class harmonicOscillatorPotential(_potentialNDCls):
         Build up the nDimensionssymbolic definitions
         """
         # Parameters
-        nDimensions= self.constants[self.nDimensions]
+        nDimensions = self.constants[self.nDimensions]
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(nDimensions)])
         self.r_shift = sp.Matrix([sp.symbols("r_shift" + str(i)) for i in range(nDimensions)])
         self.V_off = sp.Matrix([sp.symbols("V_off_" + str(i)) for i in range(nDimensions)])
         self.k = sp.Matrix([sp.symbols("k_" + str(i)) for i in range(nDimensions)])
         # Function
-        self.V_dim = 0.5 * sp.matrix_multiply_elementwise(self.k, (
-            (self.position - self.r_shift).applyfunc(lambda x: x ** 2)))  # +self.Voff
+        self.V_dim = 0.5 * sp.matrix_multiply_elementwise(
+            self.k, ((self.position - self.r_shift).applyfunc(lambda x: x**2))
+        )  # +self.Voff
         self.V_functional = sp.Sum(self.V_dim[self.i, 0], (self.i, 0, self.nDimensions - 1))
+
 
 class envelopedPotential(_potentialNDCls):
     """
@@ -78,6 +87,7 @@ class envelopedPotential(_potentialNDCls):
 
     This potential coupling is for example used in EDS.
     """
+
     name = "Enveloping Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -87,12 +97,19 @@ class envelopedPotential(_potentialNDCls):
     Eoffis = sp.Matrix(["Eoff_i"])
     sis = sp.Matrix(["s_i"])
     i, nStates = sp.symbols("i N")
-    V_functional = -1 / (beta * sis[0, 0]) * sp.log(
-        sp.Sum(sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    V_functional = -1 / (beta * sis[0, 0]) * sp.log(sp.Sum(sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
 
-    def __init__(self, V_is: t.List[_potentialNDCls] = (
-            harmonicOscillatorPotential(nDimensions=2), harmonicOscillatorPotential(r_shift=[3,3], nDimensions=2)),
-                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
+    def __init__(
+        self,
+        V_is: t.List[_potentialNDCls] = (
+            harmonicOscillatorPotential(nDimensions=2),
+            harmonicOscillatorPotential(r_shift=[3, 3], nDimensions=2),
+        ),
+        s: float = 1.0,
+        eoff: t.List[float] = None,
+        T: float = 1,
+        kb: float = 1,
+    ):
         """
             __init__
                 This function constructs a enveloped potential, enveloping all given states.
@@ -138,14 +155,15 @@ class envelopedPotential(_potentialNDCls):
         self.states = sp.Matrix([sp.symbols(l) * (sp.symbols(j) - sp.symbols(k)) for j, k, l in keys])
         self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis})
 
-        self.V_functional = -1 / (self.beta * self.sis[0, 0]) * sp.log(
-            sp.Sum(sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)))
+        self.V_functional = (
+            -1 / (self.beta * self.sis[0, 0]) * sp.log(sp.Sum(sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)))
+        )
         self._update_functions()
 
         # also make sure that states are up to work:
         [V._update_functions() for V in self.V_is]
 
-        if (all([self.s_i[0] == s for s in self.s_i[1:]])):
+        if all([self.s_i[0] == s for s in self.s_i[1:]]):
             self.ene = self._calculate_energies_singlePos_overwrite_oneS
         else:
             self.ene = self._calculate_energies_singlePos_overwrite_multiS
@@ -164,7 +182,7 @@ class envelopedPotential(_potentialNDCls):
 
     @V_is.setter
     def V_is(self, V_is: t.List[_potentialNDCls]):
-        if (isinstance(V_is, Iterable) and all([isinstance(Vi, _potentialNDCls) for Vi in V_is])):
+        if isinstance(V_is, Iterable) and all([isinstance(Vi, _potentialNDCls) for Vi in V_is]):
             self._V_is = V_is
             self.constants.update({self.nStates: len(V_is)})
         else:
@@ -211,18 +229,21 @@ class envelopedPotential(_potentialNDCls):
 
     @Eoff_i.setter
     def Eoff_i(self, Eoff: Union[Number, Iterable[Number], None]):
-        if (isinstance(Eoff, type(None))):
+        if isinstance(Eoff, type(None)):
             self._Eoff_i = [0.0 for state in range(self.constants[self.nStates])]
             Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**Eoffis})
-        elif (len(Eoff) == self.constants[self.nStates]):
+        elif len(Eoff) == self.constants[self.nStates]:
             self._Eoff_i = Eoff
             Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**Eoffis})
         else:
             raise IOError(
-                "Energy offset Vector and state potentials don't have the same length!\n states in Eoff " + str(
-                    len(Eoff)) + "\t states in Vi" + str(len(self.V_is)))
+                "Energy offset Vector and state potentials don't have the same length!\n states in Eoff "
+                + str(len(Eoff))
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
 
     def set_s(self, s: Union[Number, Iterable[Number]]):
         """
@@ -252,17 +273,21 @@ class envelopedPotential(_potentialNDCls):
 
     @s_i.setter
     def s_i(self, s: Union[Number, Iterable[Number]]):
-        if (isinstance(s, Number)):
+        if isinstance(s, Number):
             self._s = [s for x in range(self.constants[self.nStates])]
             sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**sis})
-        elif (len(s) == self.constants[self.nStates]):
+        elif len(s) == self.constants[self.nStates]:
             self._s = s
             sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**sis})
         else:
-            raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
-                len(s)) + "\t states in Vi" + str(len(self.V_is)))
+            raise IOError(
+                "s Vector/Number and state potentials don't have the same length!\n states in s "
+                + str(len(s))
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
         self._update_functions()
 
     def _calculate_energies_singlePos_overwrite_multiS(self, positions) -> np.array:
@@ -301,8 +326,7 @@ class envelopedPotential(_potentialNDCls):
         # print("ADAPT: ",adapt.shape, adapt)
         scaling = np.exp(V_Is_ene - adapt)
         # print("scaling: ", scaling.shape, scaling)
-        dVdpos_state = np.multiply(scaling,
-                                   V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
+        dVdpos_state = np.multiply(scaling, V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
         # print("state_contributions: ",dVdpos_state.shape, dVdpos_state)
         dVdpos = np.sum(dVdpos_state, axis=1)
         # print("forces: ",dVdpos.shape, dVdpos)
@@ -313,12 +337,12 @@ class envelopedPotential(_potentialNDCls):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
         for state in range(self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
-                                 ndmin=1).T
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
+
         # print("Prefactors", prefactors)
         sum_prefactors = logsumexp(prefactors, axis=1)
         # print("logexpsum: ", np.squeeze(sum_prefactors))
@@ -353,10 +377,12 @@ class envelopedPotential(_potentialNDCls):
         for state in range(2, self.constants[self.nStates]):
             partN = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
             prefactors.append(partN)
-            sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(1 + np.exp(
-                np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
+            sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(
+                1 + np.exp(np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1))
+            )
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
+
 
 class lambdaEDSPotential(envelopedPotential):
     """
@@ -369,6 +395,7 @@ class lambdaEDSPotential(envelopedPotential):
 
     This potential coupling is for example used in $\lambda$-EDS.
     """
+
     name: str = "lambda enveloped Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -380,12 +407,22 @@ class lambdaEDSPotential(envelopedPotential):
     lamis = sp.Matrix(["λ"])
 
     i, nStates = sp.symbols("i N")
-    V_functional = -1 / (beta * sis[0, 0]) * sp.log(
-        sp.Sum(lamis[i, 0] * sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    V_functional = (
+        -1 / (beta * sis[0, 0]) * sp.log(sp.Sum(lamis[i, 0] * sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    )
 
-    def __init__(self, V_is: t.List[_potentialNDCls] = (
-            harmonicOscillatorPotential(nDimensions=2), harmonicOscillatorPotential(r_shift=[3,3],nDimensions=2)), lam: Number = 0.5,
-                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
+    def __init__(
+        self,
+        V_is: t.List[_potentialNDCls] = (
+            harmonicOscillatorPotential(nDimensions=2),
+            harmonicOscillatorPotential(r_shift=[3, 3], nDimensions=2),
+        ),
+        lam: Number = 0.5,
+        s: float = 1.0,
+        eoff: t.List[float] = None,
+        T: float = 1,
+        kb: float = 1,
+    ):
 
         nStates = len(V_is)
         self.constants = {self.nStates: nStates}
@@ -406,10 +443,10 @@ class lambdaEDSPotential(envelopedPotential):
         keys = zip(sorted(self.statePotentials.keys()), sorted(Eoffis.keys()), sorted(sis.keys()))
 
         self.states = sp.Matrix([sp.symbols(l) * (sp.symbols(j) - sp.symbols(k)) for j, k, l in keys])
-        self.constants.update(
-            {**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
-        inner_log = sp.Sum(sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]),
-                           (self.i, 0, self.nStates - 1))
+        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
+        inner_log = sp.Sum(
+            sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)
+        )
         self.V_functional = -1 / (self.beta * self.sis[0, 0]) * sp.log(inner_log)
         self._update_functions()
 
@@ -436,22 +473,25 @@ class lambdaEDSPotential(envelopedPotential):
 
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
-        if (isinstance(lam, Number) and self.constants[self.nStates] == 2):
+        if isinstance(lam, Number) and self.constants[self.nStates] == 2:
             self._lam_i = np.array([lam] + [1 - lam for x in range(1, self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif (isinstance(lam, Number)):
-            self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])],
-                                   ndmin=1)
+        elif isinstance(lam, Number):
+            self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif (len(lam) == self.constants[self.nStates]):
+        elif len(lam) == self.constants[self.nStates]:
             raise NotImplementedError("Currently Only one lam runs supported!")
             # self._lam_i = np.array(lam, ndmin=1)
             # self.constants.update({self.lamis: self._lam_i})
         else:
-            raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
-                lam) + "\t states in Vi" + str(len(self.V_is)))
+            raise IOError(
+                "s Vector/Number and state potentials don't have the same length!\n states in s "
+                + str(lam)
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
 
     def _calculate_energies_singlePos_overwrite(self, position) -> np.array:
         # print("Positions: ",position)
@@ -488,21 +528,23 @@ class lambdaEDSPotential(envelopedPotential):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
         for state in range(self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
-                                 ndmin=1).T
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
+
         sum_prefactors = logsumexp(prefactors, axis=1, b=self.lam)
 
         return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
+
 
 class sumPotentials(_potentialNDCls):
     """
     Adds n different potentials.
      For adding up wavepotentials, we recommend using the addedwavePotential class.
     """
+
     name: str = "Summed Potential"
 
     position = sp.symbols("r")
@@ -513,7 +555,13 @@ class sumPotentials(_potentialNDCls):
 
     V_functional = sp.Sum(potentials[i, 0], (i, 0, nPotentials))
 
-    def __init__(self, potentials: t.List[_potentialNDCls] = (harmonicOscillatorPotential(), harmonicOscillatorPotential(r_shift=[1,1,1], nDimensions=3))):
+    def __init__(
+        self,
+        potentials: t.List[_potentialNDCls] = (
+            harmonicOscillatorPotential(),
+            harmonicOscillatorPotential(r_shift=[1, 1, 1], nDimensions=3),
+        ),
+    ):
         """
         __init__
             This is the Constructor of an summed Potentials
@@ -524,11 +572,12 @@ class sumPotentials(_potentialNDCls):
             it uses the 2D potential class to generate its potential,
             default to (wavePotential(), wavePotential(multiplicity=[3, 3]))
         """
-        if(all([potentials[0].constants[V.nDimensions] == V.constants[V.nDimensions] for V in potentials])):
+        if all([potentials[0].constants[V.nDimensions] == V.constants[V.nDimensions] for V in potentials]):
             nDim = potentials[0].constants[potentials[0].nDimensions]
         else:
-            raise ValueError("The potentials don't share the same dimensionality!\n\t"+str([V.constants[V.nDimensions] for V in potentials]))
-
+            raise ValueError(
+                "The potentials don't share the same dimensionality!\n\t" + str([V.constants[V.nDimensions] for V in potentials])
+            )
 
         self.constants = {self.nPotentials: len(potentials)}
         self.constants.update({"V_" + str(i): potentials[i].V for i in range(len(potentials))})
@@ -542,8 +591,7 @@ class sumPotentials(_potentialNDCls):
             with multi-dimentionality.
         """
         self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDimensions])])
-        self.potentials = sp.Matrix(
-            [sp.symbols("V_" + str(i)) for i in range(self.constants[self.nPotentials])])
+        self.potentials = sp.Matrix([sp.symbols("V_" + str(i)) for i in range(self.constants[self.nPotentials])])
         # Function
         self.V_functional = sp.Sum(self.potentials[self.i, 0], (self.i, 0, self.nPotentials - 1))
 

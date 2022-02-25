@@ -61,7 +61,7 @@ jobs:
 
         run: |
           pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
-          
+
       - name: Run example notebooks
 
         # conda setup requires this special shell
@@ -80,4 +80,3 @@ jobs:
           file: ./coverage.xml
           flags: unittests
           name: codecov-${{ matrix.os }}-py${{ matrix.python-version }}
-

@@ -90,5 +90,5 @@ class testEnsemble(unittest.TestCase):
         # os.remove(os.getcwd()+"/traj_*.dat")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

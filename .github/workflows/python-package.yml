@@ -62,7 +62,7 @@ jobs:
       run: |
         $CONDA/bin/conda env update --file devtools/conda-envs/environment_unix.yml
         /usr/share/miniconda/envs/Ensembler/bin/pytest
-        
+
   windows-build:
     runs-on: windows-latest
     strategy:
@@ -91,4 +91,3 @@ jobs:
         pip install pytest
         pip install -r devtools/pip_requirements/requirements_windows.txt
         pytest
-
