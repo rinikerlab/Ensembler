@@ -1,5 +1,36 @@
 repos:
 
+  - repo: local
+    hooks:
+
+      - id: jupyisort
+        name: Sorts ipynb imports
+        entry: jupytext --pipe-fmt ".py" --pipe "isort - --multi-line=3 --trailing-comma --force-grid-wrap=0 --use-parentheses --line-width=99" --sync
+        files: \.ipynb$
+        language: python
+
+      - id: jupyblack
+        name: Fixes ipynb format
+        entry: jupytext --pipe-fmt ".py" --pipe "black - --line-length=120" --sync
+        files: \.ipynb$
+        language: python
+
+      - id: nbconvert
+        name: Removes ipynb content
+        entry: jupyter nbconvert
+        args:
+          [
+            "--ClearOutputPreprocessor.enabled=True",
+            "--ClearMetadataPreprocessor.enabled=True",
+            "--RegexRemovePreprocessor.enabled=True",
+            "--to=notebook",
+            "--log-level=ERROR",
+            "--inplace",
+          ]
+        files: \.ipynb$
+        language: python
+
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
     hooks:
@@ -34,33 +65,3 @@ repos:
   #         # needed to not remove * imports (for example in _all_blocks.py)
   #         "--ignore=F405",
   #       ]
-
-  # - repo: local
-  #   hooks:
-
-  #     - id: jupyisort
-  #       name: Sorts ipynb imports
-  #       entry: jupytext --pipe-fmt ".py" --pipe "isort - --multi-line=3 --trailing-comma --force-grid-wrap=0 --use-parentheses --line-width=99" --sync
-  #       files: \.ipynb$
-  #       language: python
-
-  #     - id: jupyblack
-  #       name: Fixes ipynb format
-  #       entry: jupytext --pipe-fmt ".py" --pipe "black - --line-length=120" --sync
-  #       files: \.ipynb$
-  #       language: python
-
-  #     - id: nbconvert
-  #       name: Removes ipynb content
-  #       entry: jupyter nbconvert
-  #       args:
-  #         [
-  #           "--ClearOutputPreprocessor.enabled=True",
-  #           "--ClearMetadataPreprocessor.enabled=True",
-  #           "--RegexRemovePreprocessor.enabled=True",
-  #           "--to=notebook",
-  #           "--log-level=ERROR",
-  #           "--inplace",
-  #         ]
-  #       files: \.ipynb$
-  #       language: python
