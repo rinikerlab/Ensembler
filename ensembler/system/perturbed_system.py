@@ -20,9 +20,8 @@ from ensembler.system.basic_system import system
 
 
 class perturbedSystem(system):
-    """
-    
-    """
+    """ """
+
     name = "perturbed system"
     # Lambda Dependend Settings
     state = data.lambdaState
@@ -36,6 +35,7 @@ class perturbedSystem(system):
     """
     Attributes
     """
+
     @property
     def lam(self) -> Number:
         return self._currentLambda
@@ -43,22 +43,27 @@ class perturbedSystem(system):
     @lam.setter
     def lam(self, lam: Number):
         if lam < 0.0 or lam > 1.0:
-            raise ValueError(f"Variable lam = {lam}."\
-                              "It cannot be lower than 0 or larger than 1.")
+            raise ValueError(f"Variable lam = {lam}." "It cannot be lower than 0 or larger than 1.")
         self._currentLambda = lam
         self.potential.set_lambda(lam=self._currentLambda)
         self.update_current_state()
 
-    def set_lambda(self, lam:Number):
+    def set_lambda(self, lam: Number):
         self.lam = lam
 
     """
     Magic
     """
 
-    def __init__(self, potential: _perturbedPotentialCls=linearCoupledPotentials(), sampler: samplerCls=metropolisMonteCarloIntegrator(),
-                 conditions: Iterable[conditionCls] = [],
-                 temperature: float = 298.0, start_position: (Iterable[Number] or float) = None, lam: float = 0.0):
+    def __init__(
+        self,
+        potential: _perturbedPotentialCls = linearCoupledPotentials(),
+        sampler: samplerCls = metropolisMonteCarloIntegrator(),
+        conditions: Iterable[conditionCls] = [],
+        temperature: float = 298.0,
+        start_position: (Iterable[Number] or float) = None,
+        lam: float = 0.0,
+    ):
         """
             __init__
                 construct a eds-System that can be used to manage a simulation.
@@ -78,8 +83,9 @@ class perturbedSystem(system):
         lam: Number, optional
             the value of the copuling lambda
         """
-        super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
-                         start_position=start_position)
+        super().__init__(
+            potential=potential, sampler=sampler, conditions=conditions, temperature=temperature, start_position=start_position
+        )
 
         self.lam = lam
         self.update_current_state()
@@ -88,13 +94,15 @@ class perturbedSystem(system):
     Overwrite Functions to adapt to EDS
     """
 
-    def set_current_state(self,
-                          current_position: Union[Number, Iterable[Number]],
-                          current_velocities: Union[Number, Iterable[Number]] = 0,
-                          current_force: Union[Number, Iterable[Number]] = 0,
-                          current_temperature: Union[Number, Iterable[Number]] = 298,
-                          current_lambda: Union[Number, Iterable[Number]] = 0,
-                          current_dHdLambda: Union[Number, Iterable[Number]] = 0):
+    def set_current_state(
+        self,
+        current_position: Union[Number, Iterable[Number]],
+        current_velocities: Union[Number, Iterable[Number]] = 0,
+        current_force: Union[Number, Iterable[Number]] = 0,
+        current_temperature: Union[Number, Iterable[Number]] = 298,
+        current_lambda: Union[Number, Iterable[Number]] = 0,
+        current_dHdLambda: Union[Number, Iterable[Number]] = 0,
+    ):
         """
             set_current_state
                 set s the current state to the given variables.
@@ -129,8 +137,8 @@ class perturbedSystem(system):
 
     def update_system_properties(self) -> NoReturn:
         """
-            updateSystemProperties
-                update all system properties
+        updateSystemProperties
+            update all system properties
         """
         self._update_energies()
         self._update_temperature()
@@ -142,15 +150,25 @@ class perturbedSystem(system):
                 This function updates the current state from the _current Variables.
 
         """
-        self._currentState = self.state(position=self._currentPosition, temperature=self._currentTemperature,
-                                        total_system_energy=self._currentTotE,
-                                        total_potential_energy=self._currentTotPot,
-                                        total_kinetic_energy=self._currentTotKin,
-                                        dhdpos=self._currentForce, velocity=self._currentVelocities,
-                                        lam=self._currentLambda, dhdlam=self._currentdHdLambda)
+        self._currentState = self.state(
+            position=self._currentPosition,
+            temperature=self._currentTemperature,
+            total_system_energy=self._currentTotE,
+            total_potential_energy=self._currentTotPot,
+            total_kinetic_energy=self._currentTotKin,
+            dhdpos=self._currentForce,
+            velocity=self._currentVelocities,
+            lam=self._currentLambda,
+            dhdlam=self._currentdHdLambda,
+        )
 
-    def append_state(self, new_position: Union[Number, Iterable[Number]], new_velocity: Union[Number, Iterable[Number]], new_forces: Union[Number, Iterable[Number]],
-                     new_lambda: Number) -> NoReturn:
+    def append_state(
+        self,
+        new_position: Union[Number, Iterable[Number]],
+        new_velocity: Union[Number, Iterable[Number]],
+        new_forces: Union[Number, Iterable[Number]],
+        new_lambda: Number,
+    ) -> NoReturn:
         """
             append_state
                 Append a new state to the trajectory.

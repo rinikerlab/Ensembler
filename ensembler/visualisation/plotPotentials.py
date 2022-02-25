@@ -83,7 +83,6 @@ def plot_1DPotential(
     plot_1DPotential_dhdpos(
         potential=potential, positions=positions, ax=axes[1], x_range=x_range, y_range=y_range, title=""
     )
-
     fig.tight_layout()
     fig.subplots_adjust(top=0.8)
     fig.suptitle(title, y=0.95) if (title != None) else fig.suptitle("" + str(potential.name), y=0.96)
@@ -211,6 +210,7 @@ def plot_1DPotential_dhdpos(
 
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
+
     ax.set_title(title) if (title != None) else ax.set_title("Potential " + str(potential.name))
 
     if ax != None:
@@ -218,10 +218,7 @@ def plot_1DPotential_dhdpos(
     else:
         return ax
 
-
-def plot_1DPotential_Termoverlay(
-    potential: _potential1DCls, positions: list, x_range=None, y_range=None, title: str = None, ax=None
-):
+def plot_1DPotential_Termoverlay(potential: _potential1DCls, positions: list, x_range=None, y_range=None, title: str = None, ax=None):
     # generate dat
     energies = potential.ene(positions=positions)
     dVdpos = potential.force(positions=positions)
@@ -294,13 +291,7 @@ def plot_2DPotential(
     fig, axes = plt.subplots(nrows=1, ncols=1)
     axes = list([axes])
     _, _, surf = plot_2D_potential_V(
-        potential=potential,
-        positions2D=positions,
-        ax=axes[0],
-        space_range=[x1_range, x2_range],
-        title="",
-        x_label="$r_1$",
-        y_label="$r_2$",
+        potential=potential, positions2D=positions, ax=axes[0], space_range=[x1_range, x2_range], title="", x_label="$r_1$", y_label="$r_2$"
     )
     # plot_2D_potential_force(potential=potential, positions2D=positions, ax=axes[1], space_range=[x1_range,x2_range],
     #                        title="")
@@ -387,6 +378,7 @@ def plot_2D_potential_V(
         cb = plt.colorbar(
             surf, fraction=0.046, pad=0.04, cax=cbaxes, ticks=list(np.round(np.linspace(minV, maxV, 5), 2))
         )
+
         cb.set_label("V/[kT]")
 
         fig.tight_layout()
@@ -697,6 +689,7 @@ def plot_envelopedPotential_2State_System(
                 + str(Eoffi)
                 + ", but the numbers have to be equal!"
             )
+
 
     # Calculate energies
     energy_Vr = eds_potential.ene(positions)
@@ -1119,6 +1112,7 @@ def plot_2D_2State_EDS_potential_sDependency(
                     vmax=emaxV,
                     vmin=eminV,
                     extent=[minX, maxX, minY, maxY],
+
                 )  # interpolation="nearest",
             else:
                 surf = ax.imshow(

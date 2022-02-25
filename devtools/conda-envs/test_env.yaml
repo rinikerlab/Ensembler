@@ -18,8 +18,3 @@ dependencies:
   - tqdm
   - ipywidgets
   - matplotlib
-
-  # Pip-only installs
-  #- pip:
-  #  - codecov
-

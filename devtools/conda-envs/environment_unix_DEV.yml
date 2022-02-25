@@ -3,17 +3,24 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  #Minimally required environment for using Ensembler
+  #Required environment for developing Ensembler
   - ipywidgets
   - jupyter
   - matplotlib
   - mpmath
+  - nbsphinx
   - numpy
   - pandas
   - pip
   - scipy
+  - sphinx
+  - m2r
   - sympy
   - tqdm
   - typing
   - wheel
   - rdkit
+  - codecov
+  - pytest
+  - pytest-cov
+  - pre-commit

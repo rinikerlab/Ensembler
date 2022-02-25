@@ -12,24 +12,30 @@ import sympy as sp
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
-from ensembler.util.units import kJ, nm, C
-
+from ensembler.util import units
 
 """
     SIMPLE POTENTIALS
 """
-unitless=True
+unitless = True
 
 
 class harmonicOscillatorPotential(_potential1DCls):
     """
-        Implementation of an 1D  harmonic oscillator potential following hooke's law
+    Implementation of an 1D  harmonic oscillator potential following hooke's law
     """
+
     name: str = "Harmonic Oscillator"
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
     V_functional = 0.5 * k * (position - x_shift) ** 2 + y_shift
 
-    def __init__(self, k: float = 1.0*(kJ/nm**2), x_shift: float = 0.0*nm, y_shift: float = 0.0*kJ, unitless:bool=False):
+    def __init__(
+        self,
+        k: float = 1.0 * (units.kJ / units.nm**2),
+        x_shift: float = 0.0 * units.nm,
+        y_shift: float = 0.0 * units.kJ,
+        unitless: bool = False,
+    ):
         """
         __init__
             This is the Constructor of the 1D harmonic oscillator
@@ -47,17 +53,25 @@ class harmonicOscillatorPotential(_potential1DCls):
         self.constants = {self.k: k, self.x_shift: x_shift, self.y_shift: y_shift}
         super().__init__(unitless=unitless)
 
-#add Units!
+
+# add Units!
 class wavePotential(_potential1DCls):
     """
-       Simple 1D wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
-       """
+    Simple 1D wave potential consisting of a cosine function with given multiplicity, that can be shifted and elongated
+    """
+
     name: str = "Wave Potential"
     amplitude, phase_shift, position, y_shift, multiplicity = sp.symbols("A w r Voff m")
     V_functional = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
 
-    def __init__(self, amplitude: float = 1.0, multiplicity: float = 1.0, phase_shift: float = 0.0,
-                 y_shift: float = 0.0*kJ, radians: bool = False):
+    def __init__(
+        self,
+        amplitude: float = 1.0,
+        multiplicity: float = 1.0,
+        phase_shift: float = 0.0,
+        y_shift: float = 0.0 * units.kJ,
+        radians: bool = False,
+    ):
         """
         __init__
             This is the Constructor of the 1D wave potential function
@@ -75,8 +89,7 @@ class wavePotential(_potential1DCls):
             in radians or degrees, defaults to False
         """
 
-        self.constants = {self.amplitude: amplitude, self.multiplicity: multiplicity, self.phase_shift: phase_shift,
-                          self.y_shift: y_shift}
+        self.constants = {self.amplitude: amplitude, self.multiplicity: multiplicity, self.phase_shift: phase_shift, self.y_shift: y_shift}
         super().__init__(unitless=unitless)
         self.set_radians(radians)
 
@@ -102,7 +115,7 @@ class wavePotential(_potential1DCls):
             if True, output will be given in degrees, otherwise in radians, default: True
         """
         self.radians = not degrees
-        if (degrees):
+        if degrees:
             self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
             self._calculate_dVdpos = lambda positions: self.tmp_dVdpfunc(np.deg2rad(positions))
         else:
@@ -118,23 +131,24 @@ class wavePotential(_potential1DCls):
             if True, output will be given in radians, otherwise in degree, default: True
         """
         self.radians = radians
-        if (radians):
+        if radians:
             self._calculate_energies = self.tmp_Vfunc
             self._calculate_dVdpos = self.tmp_dVdpfunc
         else:
             self.set_degrees(degrees=not radians)
 
 
-#Check units
+# Check units
 class coulombPotential(_potential1DCls):
     """
     Coulomb potential representing the pairwise electrostatic interaction of two charged particles
     """
+
     name = "Coulomb Potential"
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
     V_functional = (charge1 * charge2) / (position * electric_permetivity * 4 * sp.pi)
 
-    def __init__(self, q1=1*C, q2=1*C, epsilon=1*(C**2/(kJ*nm))):
+    def __init__(self, q1=1 * units.C, q2=1 * units.C, epsilon=1 * (units.C**2 / (units.kJ * units.nm))):
         """
         __init__
             This is the Constructor of the Coulomb potential
@@ -155,16 +169,16 @@ class coulombPotential(_potential1DCls):
         super().__init__(unitless=unitless)
 
 
-
 class lennardJonesPotential(_potential1DCls):
     """
-     Lennard Jones potential representing the pairwise van-der-Waals interaction of two particles
-     """
+    Lennard Jones potential representing the pairwise van-der-Waals interaction of two particles
+    """
+
     name: str = "Lennard Jones Potential"
     sigma, epsilon, x_shift, y_shift, position = sp.symbols("s e r_0 V_off r")
     V_functional = 4 * epsilon * ((sigma / (position - x_shift)) ** 12 - (sigma / (position - x_shift)) ** 6) + y_shift
 
-    def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0*nm, y_shift=0*kJ):
+    def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0 * units.nm, y_shift=0 * units.kJ):
         """
         __init__
             This is the Constructor of the Lennard-Jones Potential
@@ -191,11 +205,12 @@ class lennardJonesPotential(_potential1DCls):
 
 class lennardJonesForceFieldPotential(_potential1DCls):
     """
-            This is a forcefield like implementation of  a lennard Jones Potential
+    This is a forcefield like implementation of  a lennard Jones Potential
     """
+
     name: str = "Lennard Jones Potential"
     c6, c12, x_shift, y_shift, position = sp.symbols("c6 c12 r_0 V_off r")
-    V_functional = (c12 / (position - x_shift) ** 12) - (c6 / (position - x_shift ** 6)) + y_shift
+    V_functional = (c12 / (position - x_shift) ** 12) - (c6 / (position - x_shift**6)) + y_shift
 
     def __init__(self, c6: float = 0.2, c12: float = 0.0001, x_shift: float = 0, y_shift: float = 0):
         """
@@ -221,11 +236,12 @@ class lennardJonesForceFieldPotential(_potential1DCls):
 
 class doubleWellPotential(_potential1DCls):
     """
-            This is an implementation of a double Well potential
+    This is an implementation of a double Well potential
     """
+
     name: str = "Double Well"
     a, b, Vmax, position = sp.symbols("a b V_max r")
-    V_functional = (Vmax / (b ** 4)) * ((position - a / 2) ** 2 - b ** 2) ** 2
+    V_functional = (Vmax / (b**4)) * ((position - a / 2) ** 2 - b**2) ** 2
 
     def __init__(self, Vmax=5, a=-1, b=1):
         """
@@ -249,18 +265,23 @@ class doubleWellPotential(_potential1DCls):
 
 
 class fourWellPotential(_potential1DCls):
-    '''
-        Unperturbed four well potential
-    '''
+    """
+    Unperturbed four well potential
+    """
+
     name: str = "Four Well Potential"
 
     a, ah, b, bh, c, ch, d, dh, Vmax, position = sp.symbols("a ah b bh c ch d dh V_max r")
 
-    V_functional = -Vmax * sp.log(sp.exp(-(position - a) ** 2 - ah) + sp.exp(-(position - b) ** 2 - bh) + sp.exp(
-        -(position - c) ** 2 - ch) + sp.exp(-(position - d) ** 2 - dh))
+    V_functional = -Vmax * sp.log(
+        sp.exp(-((position - a) ** 2) - ah)
+        + sp.exp(-((position - b) ** 2) - bh)
+        + sp.exp(-((position - c) ** 2) - ch)
+        + sp.exp(-((position - d) ** 2) - dh)
+    )
 
-    def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0, ah=2., bh=0., ch=0.5, dh=1.):
-        '''
+    def __init__(self, Vmax=4, a=1.5, b=4.0, c=7.0, d=9.0, ah=2.0, bh=0.0, ch=0.5, dh=1.0):
+        """
         __init__
             This is the Constructor of the four well Potential
 
@@ -284,10 +305,9 @@ class fourWellPotential(_potential1DCls):
             ch*Vmax = y position of the third well
         dh: str, optional
             dh*Vmax = y position of the fourth well
-        '''
+        """
 
-        self.constants = {self.Vmax: Vmax, self.a: a, self.b: b, self.c: c, self.d: d, self.ah: ah, self.bh: bh,
-                          self.ch: ch, self.dh: dh}
+        self.constants = {self.Vmax: Vmax, self.a: a, self.b: b, self.c: c, self.d: d, self.ah: ah, self.bh: bh, self.ch: ch, self.dh: dh}
         self.V = self.V_functional.subs(self.constants)
         self.dVdpos = sp.diff(self.V, self.position)
 
@@ -295,17 +315,18 @@ class fourWellPotential(_potential1DCls):
 
 
 class gaussPotential(_potential1DCls):
-    '''
-        Gaussian like potential, usually used for metadynamics
-    '''
+    """
+    Gaussian like potential, usually used for metadynamics
+    """
+
     name: str = "Gaussian Potential"
 
     mu, sigma, A, position = sp.symbols("mu sigma A r")
 
-    V_functional = A * sp.exp(-(position - mu) ** 2 / (2 * sigma ** 2))
+    V_functional = A * sp.exp(-((position - mu) ** 2) / (2 * sigma**2))
 
-    def __init__(self, A=1., mu=0., sigma=1.):
-        '''
+    def __init__(self, A=1.0, mu=0.0, sigma=1.0):
+        """
         __init__
             This is the Constructor of a 1D Gauss Potential
 
@@ -319,7 +340,7 @@ class gaussPotential(_potential1DCls):
             standard deviation of the gauss function, defaults to 1.
 
                 TODO: improve numerical stablility
-        '''
+        """
         self.constants = {self.A: A, self.mu: mu, self.sigma: sigma}
         super().__init__(unitless=unitless)
 
@@ -347,6 +368,7 @@ class torsionPotential(_potential1DCls):
     """
     Torsion potential that represents the energy potential of a torsion angle
     """
+
     name: str = "Torsion Potential"
 
     phase: float = 1.0
@@ -368,12 +390,11 @@ class torsionPotential(_potential1DCls):
         radians: bool, optional
             set potential to radians or degrees, defaults to False
         """
-        '''
+        """
         initializes torsions Potential
-        '''
+        """
         wavePotentials = np.array(wavePotentials, ndmin=1)
-        self.constants = {**{"wave_" + str(key): wave.V for key, wave in enumerate(wavePotentials)},
-                          **{self.N: len(wavePotentials) - 1}}
+        self.constants = {**{"wave_" + str(key): wave.V for key, wave in enumerate(wavePotentials)}, **{self.N: len(wavePotentials) - 1}}
         self.wavePotentials = sp.Matrix([sp.symbols("wave_" + str(i)) for i in range(len(wavePotentials))])
         self.V_functional = sp.Sum(self.wavePotentials[self.i, 0], (self.i, 0, self.N))
 
@@ -401,7 +422,7 @@ class torsionPotential(_potential1DCls):
             if True, output will be given in degrees, otherwise in radians, default: True
         """
         self.radians = not degrees
-        if (degrees):
+        if degrees:
             self._calculate_energies = lambda positions: self.tmp_Vfunc(np.deg2rad(positions))
             self._calculate_dVdpos = lambda positions: self.tmp_dVdpfunc(np.deg2rad(positions))
         else:
@@ -417,7 +438,7 @@ class torsionPotential(_potential1DCls):
             if True, output will be given in radians, otherwise in degree, default: True
         """
         self.radians = radians
-        if (radians):
+        if radians:
             self._calculate_energies = self.tmp_Vfunc
             self._calculate_dVdpos = self.tmp_dVdpfunc
         else:
@@ -446,14 +467,18 @@ class linearCoupledPotentials(_potential1DClsPerturbed):
     This variant of coupling states is used for example in FEP, TI or BAR approaches.
 
     """
+
     name: str = "Linear Coupled System"
-    lam, position = sp.symbols('λ r')
+    lam, position = sp.symbols("λ r")
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
     coupling = (1 - lam) * Va + lam * Vb
 
-    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
-                 lam: float = 0.5):
+    def __init__(
+        self,
+        Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+        Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+        lam: float = 0.5,
+    ):
         """
             __init__
                 This constructor builds a linear combination of Va and Vb potentials, with lam as a cofactor.
@@ -484,15 +509,22 @@ class exponentialCoupledPotentials(_potential1DCls):
     This potential coupling is for example used in EDS.
 
     """
+
     name: str = "exponential Coupled System"
-    position, s, temp, eoffA, eoffB = sp.symbols('r s T eoffI eoffJ')
+    position, s, temp, eoffA, eoffB = sp.symbols("r s T eoffI eoffJ")
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
     beta = const.gas_constant / 1000.0 * temp
     coupling = -1 / (beta * s) * sp.log(sp.exp(-beta * s * Vb - eoffA) + sp.exp(-beta * s * Va - eoffB))
 
-    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
-                 eoffA: float = 0, eoffB: float = 0, s: float = 1.0, temp: float = 298):
+    def __init__(
+        self,
+        Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+        Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+        eoffA: float = 0,
+        eoffB: float = 0,
+        s: float = 1.0,
+        temp: float = 298,
+    ):
         """
             __init__
                 This constructor is building a exponential coupled Potential out of two given end-states.
@@ -515,8 +547,7 @@ class exponentialCoupledPotentials(_potential1DCls):
         """
 
         self.statePotentials = {self.Va: Va, self.Vb: Vb}
-        self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.eoffA: eoffA, self.eoffB: eoffB, self.s: s,
-                          self.temp: temp}
+        self.constants = {self.Va: Va.V, self.Vb: Vb.V, self.eoffA: eoffA, self.eoffB: eoffB, self.s: s, self.temp: temp}
         self.V_functional = self.coupling.expand()
 
         super().__init__(nStates=2, unitless=unitless)
@@ -548,9 +579,9 @@ class exponentialCoupledPotentials(_potential1DCls):
             set a new E offset for state B in the reference state (default: None)
 
         """
-        if (eoffA is None):
+        if eoffA is None:
             self.constants.update({self.eoffA: eoffA})
-        if (eoffB is None):
+        if eoffB is None:
             self.constants.update({self.eoffB: eoffB})
         self._update_functions()
 
@@ -566,6 +597,7 @@ class envelopedPotential(_potential1DCls):
 
     This potential coupling is for example used in EDS.
     """
+
     name = "Enveloping Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -575,12 +607,16 @@ class envelopedPotential(_potential1DCls):
     Eoffis = sp.Matrix(["Eoff_i"])
     sis = sp.Matrix(["s_i"])
     i, nStates = sp.symbols("i N")
-    V_functional = -1 / (beta * sis[0, 0]) * sp.log(
-        sp.Sum(sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    V_functional = -1 / (beta * sis[0, 0]) * sp.log(sp.Sum(sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
 
-    def __init__(self, V_is: t.List[_potential1DCls] = (
-            harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)),
-                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
+    def __init__(
+        self,
+        V_is: t.List[_potential1DCls] = (harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)),
+        s: float = 1.0,
+        eoff: t.List[float] = None,
+        T: float = 1,
+        kb: float = 1,
+    ):
         """
             __init__
                 This function constructs a enveloped potential, enveloping all given states.
@@ -626,14 +662,15 @@ class envelopedPotential(_potential1DCls):
         self.states = sp.Matrix([sp.symbols(l) * (sp.symbols(j) - sp.symbols(k)) for j, k, l in keys])
         self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis})
 
-        self.V_functional = -1 / (self.beta * self.sis[0, 0]) * sp.log(
-            sp.Sum(sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)))
+        self.V_functional = (
+            -1 / (self.beta * self.sis[0, 0]) * sp.log(sp.Sum(sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)))
+        )
         self._update_functions()
 
         # also make sure that states are up to work:
         [V._update_functions() for V in self.V_is]
 
-        if (all([self.s_i[0] == s for s in self.s_i[1:]])):
+        if all([self.s_i[0] == s for s in self.s_i[1:]]):
             self.ene = self._calculate_energies_singlePos_overwrite_oneS
         else:
             self.ene = self._calculate_energies_singlePos_overwrite_multiS
@@ -652,7 +689,7 @@ class envelopedPotential(_potential1DCls):
 
     @V_is.setter
     def V_is(self, V_is: t.List[_potential1DCls]):
-        if (isinstance(V_is, Iterable) and all([isinstance(Vi, _potential1DCls) for Vi in V_is])):
+        if isinstance(V_is, Iterable) and all([isinstance(Vi, _potential1DCls) for Vi in V_is]):
             self._V_is = V_is
             self.constants.update({self.nStates: len(V_is)})
         else:
@@ -699,18 +736,21 @@ class envelopedPotential(_potential1DCls):
 
     @Eoff_i.setter
     def Eoff_i(self, Eoff: Union[Number, Iterable[Number], None]):
-        if (isinstance(Eoff, type(None))):
+        if isinstance(Eoff, type(None)):
             self._Eoff_i = [0.0 for state in range(self.constants[self.nStates])]
             Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**Eoffis})
-        elif (len(Eoff) == self.constants[self.nStates]):
+        elif len(Eoff) == self.constants[self.nStates]:
             self._Eoff_i = Eoff
             Eoffis = {"Eoff_" + str(i): self.Eoff_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**Eoffis})
         else:
             raise IOError(
-                "Energy offset Vector and state potentials don't have the same length!\n states in Eoff " + str(
-                    len(Eoff)) + "\t states in Vi" + str(len(self.V_is)))
+                "Energy offset Vector and state potentials don't have the same length!\n states in Eoff "
+                + str(len(Eoff))
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
 
     def set_s(self, s: Union[Number, Iterable[Number]]):
         """
@@ -740,19 +780,23 @@ class envelopedPotential(_potential1DCls):
 
     @s_i.setter
     def s_i(self, s: Union[Number, Iterable[Number]]):
-        if (isinstance(s, Number)):
+        if isinstance(s, Number):
             self._s = [s for x in range(self.constants[self.nStates])]
             sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**sis})
-        elif (len(s) == self.constants[self.nStates]):
+        elif len(s) == self.constants[self.nStates]:
             raise NotImplementedError("Currently Only one s runs supported!")
             # self._s = s
             # self.constants.update({self.sis: self._s})
             # sis = {"s_" + str(i): self.s_i[i] for i in range(self.constants[self.nStates])}
             # self.constants.update({**sis})
         else:
-            raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
-                len(s)) + "\t states in Vi" + str(len(self.V_is)))
+            raise IOError(
+                "s Vector/Number and state potentials don't have the same length!\n states in s "
+                + str(len(s))
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
 
     def _calculate_energies_singlePos_overwrite_multiS(self, positions) -> np.array:
         sum_prefactors, _ = self._logsumexp_calc_gromos(positions)
@@ -790,8 +834,7 @@ class envelopedPotential(_potential1DCls):
         # print("ADAPT: ",adapt.shape, adapt)
         scaling = np.exp(V_Is_ene - adapt)
         # print("scaling: ", scaling.shape, scaling)
-        dVdpos_state = np.multiply(scaling,
-                                   V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
+        dVdpos_state = np.multiply(scaling, V_Is_dhdpos)  # np.array([(ene/V_R_part) * force for ene, force in zip(V_Is_ene, V_Is_dhdpos)])
         # print("state_contributions: ",dVdpos_state.shape, dVdpos_state)
         dVdpos = np.sum(dVdpos_state, axis=1)
         # print("forces: ",dVdpos.shape, dVdpos)
@@ -802,12 +845,12 @@ class envelopedPotential(_potential1DCls):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
         for state in range(self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
-                                 ndmin=1).T
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
+
         # print("Prefactors", prefactors)
         sum_prefactors = logsumexp(prefactors, axis=1)
         # print("logexpsum: ", np.squeeze(sum_prefactors))
@@ -842,8 +885,9 @@ class envelopedPotential(_potential1DCls):
         for state in range(2, self.constants[self.nStates]):
             partN = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1)
             prefactors.append(partN)
-            sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(1 + np.exp(
-                np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1)))
+            sum_prefactors = np.max([sum_prefactors, partN], axis=1) + np.log(
+                1 + np.exp(np.min([sum_prefactors, partN], axis=1) - np.max([sum_prefactors, partN], axis=1))
+            )
             # print("prefactors: ", sum_prefactors)
         return sum_prefactors, np.array(prefactors, ndmin=2).T
 
@@ -860,14 +904,19 @@ class hybridCoupledPotentials(_potential1DClsPerturbed):
     """
 
     name: str = "hybrid Coupled Potential"
-    lam, position, s, T = sp.symbols(u'λ r s T')
+    lam, position, s, T = sp.symbols("λ r s T")
     Va, Vb = (sp.symbols("V_a"), sp.symbols("V_b"))
     beta = 1  # const.gas_constant / 1000.0 * temp
     coupling = -1 / (beta * s) * sp.log(lam * sp.exp(-beta * s * Vb) + (1 - lam) * sp.exp(-beta * s * Va))
 
-    def __init__(self, Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
-                 Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
-                 lam: float = 0.5, s: float = 1.0, temp: float = 298):
+    def __init__(
+        self,
+        Va: _potential1DCls = harmonicOscillatorPotential(k=1.0, x_shift=0.0),
+        Vb: _potential1DCls = harmonicOscillatorPotential(k=11.0, x_shift=0.0),
+        lam: float = 0.5,
+        s: float = 1.0,
+        temp: float = 298,
+    ):
         """
             __init__
                 This function constructs a $\lambda$-enveloped potential, enveloping all given states and weighting them by $\lambda$.
@@ -913,6 +962,7 @@ class lambdaEDSPotential(envelopedPotential):
 
     This potential coupling is for example used in $\lambda$-EDS.
     """
+
     name: str = "lambda enveloped Potential"
 
     T, kb, position = sp.symbols("T kb r")
@@ -924,12 +974,19 @@ class lambdaEDSPotential(envelopedPotential):
     lamis = sp.Matrix(["λ"])
 
     i, nStates = sp.symbols("i N")
-    V_functional = -1 / (beta * sis[0, 0]) * sp.log(
-        sp.Sum(lamis[i, 0] * sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    V_functional = (
+        -1 / (beta * sis[0, 0]) * sp.log(sp.Sum(lamis[i, 0] * sp.exp(-beta * sis[i, 0] * (Vis[i, 0] - Eoffis[i, 0])), (i, 0, nStates)))
+    )
 
-    def __init__(self, V_is: t.List[_potential1DCls] = (
-            harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)), lam: Number = 0.5,
-                 s: float = 1.0, eoff: t.List[float] = None, T: float = 1, kb: float = 1):
+    def __init__(
+        self,
+        V_is: t.List[_potential1DCls] = (harmonicOscillatorPotential(), harmonicOscillatorPotential(x_shift=3)),
+        lam: Number = 0.5,
+        s: float = 1.0,
+        eoff: t.List[float] = None,
+        T: float = 1,
+        kb: float = 1,
+    ):
 
         nStates = len(V_is)
         self.constants = {self.nStates: nStates}
@@ -950,10 +1007,10 @@ class lambdaEDSPotential(envelopedPotential):
         keys = zip(sorted(self.statePotentials.keys()), sorted(Eoffis.keys()), sorted(sis.keys()))
 
         self.states = sp.Matrix([sp.symbols(l) * (sp.symbols(j) - sp.symbols(k)) for j, k, l in keys])
-        self.constants.update(
-            {**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
-        inner_log = sp.Sum(sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]),
-                           (self.i, 0, self.nStates - 1))
+        self.constants.update({**{state: value.V for state, value in self.statePotentials.items()}, **Eoffis, **sis, **lamis})
+        inner_log = sp.Sum(
+            sp.Matrix(list(lamis.keys()))[self.i, 0] * sp.exp(-self.beta * self.states[self.i, 0]), (self.i, 0, self.nStates - 1)
+        )
         self.V_functional = -1 / (self.beta * self.sis[0, 0]) * sp.log(inner_log)
         self._update_functions()
 
@@ -980,22 +1037,25 @@ class lambdaEDSPotential(envelopedPotential):
 
     @lam_i.setter
     def lam_i(self, lam: Union[Number, Iterable[Number]]):
-        if (isinstance(lam, Number) and self.constants[self.nStates] == 2):
+        if isinstance(lam, Number) and self.constants[self.nStates] == 2:
             self._lam_i = np.array([lam] + [1 - lam for x in range(1, self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif (isinstance(lam, Number)):
-            self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])],
-                                   ndmin=1)
+        elif isinstance(lam, Number):
+            self._lam_i = np.array([1 / self.constants[self.nStates] for x in range(self.constants[self.nStates])], ndmin=1)
             lamis = {"lam_" + str(i): self.lam_i[i] for i in range(self.constants[self.nStates])}
             self.constants.update({**lamis})
-        elif (len(lam) == self.constants[self.nStates]):
+        elif len(lam) == self.constants[self.nStates]:
             raise NotImplementedError("Currently Only one lam runs supported!")
             # self._lam_i = np.array(lam, ndmin=1)
             # self.constants.update({self.lamis: self._lam_i})
         else:
-            raise IOError("s Vector/Number and state potentials don't have the same length!\n states in s " + str(
-                lam) + "\t states in Vi" + str(len(self.V_is)))
+            raise IOError(
+                "s Vector/Number and state potentials don't have the same length!\n states in s "
+                + str(lam)
+                + "\t states in Vi"
+                + str(len(self.V_is))
+            )
 
     def _calculate_energies_singlePos_overwrite(self, position) -> np.array:
         # print("Positions: ",position)
@@ -1032,12 +1092,12 @@ class lambdaEDSPotential(envelopedPotential):
         prefactors = []
         beta = self.constants[self.T] * self.constants[self.kb]
         for state in range(self.constants[self.nStates]):
-            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]),
-                                 ndmin=1).T
+            prefactor = np.array(-beta * self.s_i[state] * (self.V_is[state].ene(position) - self.Eoff_i[state]), ndmin=1).T
             prefactors.append(prefactor)
         prefactors = np.array(prefactors, ndmin=2).T
 
         from scipy.special import logsumexp
+
         sum_prefactors = logsumexp(prefactors, axis=1, b=self.lam)
 
         return np.squeeze(sum_prefactors), np.array(prefactors, ndmin=2).T
@@ -1052,6 +1112,7 @@ class dummyPotential(_potential1DCls):
     """
     This Dummy potential returns a simple constant value for each position
     """
+
     name: str = "Dummy Potential"
     position, y_shift = sp.symbols("r Voffset")
 
@@ -1084,6 +1145,7 @@ class flatwellPotential(_potential1DCls):
     A flatwell potential returns a simple constant value (y_max) for each position except positions in the range x_min-x_max.
     In the defined phase space range the potential always returns a second defined value (y_min)
     """
+
     name: str = "Flat Well"
 
     x_min: float = None
@@ -1117,12 +1179,12 @@ class flatwellPotential(_potential1DCls):
         self._update_functions = None
 
     def _calculate_energies(self, position: Union[Number, np.array]) -> Union[Number, np.array]:
-        return np.squeeze([self.y_min if (pos >= self.x_min and pos <= self.x_max) else self.y_max for pos in
-                           np.array(np.squeeze(position), ndmin=1)])
+        return np.squeeze(
+            [self.y_min if (pos >= self.x_min and pos <= self.x_max) else self.y_max for pos in np.array(np.squeeze(position), ndmin=1)]
+        )
 
     def _calculate_dVdpos(self, positions: Union[Number, np.array]) -> Union[Number, np.array]:
-        return np.squeeze([np.inf if (pos == self.x_min or pos == self.x_max) else 0 for pos in
-                           np.array(np.squeeze(positions), ndmin=1)])
+        return np.squeeze([np.inf if (pos == self.x_min or pos == self.x_max) else 0 for pos in np.array(np.squeeze(positions), ndmin=1)])
 
     def __setstate__(self, state):
         """
@@ -1140,16 +1202,17 @@ Biased potentials
 
 
 class addedPotentials(_potential1DCls):
-    '''
+    """
     Adds two different potentials on top of each other. Can be used to generate
     harmonic potential umbrella sampling or scaled potentials
-    '''
+    """
+
     name: str = "Added Potential Enhanced Sampling System"
     position = sp.symbols("r")
     bias_potential = True
 
     def __init__(self, origPotential=harmonicOscillatorPotential(), addPotential=gaussPotential()):
-        '''
+        """
         __init__
               This is the Constructor of the addedPotential class.
         Parameters
@@ -1159,7 +1222,7 @@ class addedPotentials(_potential1DCls):
         addPotential: potential type
             The potential added on top of the unbiased potential to
             bias the system
-        '''
+        """
 
         self.origPotential = origPotential
         self.addPotential = addPotential
@@ -1173,11 +1236,13 @@ class addedPotentials(_potential1DCls):
 
         super().__init__(unitless=unitless)
 
+
 class sumPotentials(_potential1DCls):
     """
     Adds n different potentials.
      For adding up wavepotentials, we recommend using the addedwavePotential class.
     """
+
     name: str = "Summed Potential"
 
     position = sp.symbols("r")
@@ -1210,9 +1275,8 @@ class sumPotentials(_potential1DCls):
             converts the symbolic mathematics of sympy to a matrix representation that is compatible
             with multi-dimentionality.
         """
-        #self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDimensions])])
-        self.potentials = sp.Matrix(
-            [sp.symbols("V_" + str(i)) for i in range(self.constants[self.nPotentials])])
+        # self.position = sp.Matrix([sp.symbols("r_" + str(i)) for i in range(self.constants[self.nDimensions])])
+        self.potentials = sp.Matrix([sp.symbols("V_" + str(i)) for i in range(self.constants[self.nPotentials])])
         # Function
         self.V_functional = sp.Sum(self.potentials[self.i, 0], (self.i, 0, self.nPotentials - 1))
 
@@ -1240,29 +1304,38 @@ class sumPotentials(_potential1DCls):
         self.tmp_Vfunc = self._calculate_energies
         self.tmp_dVdpfunc = self._calculate_dVdpos
 
+
 """
     TIME DEPENDENT BIASES 
 """
 
 
 class metadynamicsPotential(_potential1DCls):
-    '''
+    """
     The metadynamics bias potential adds 1D Gaussian potentials on top of
     the original 1D potential. The added gaussian potential is centered on the current position.
     Thereby the valleys of the potential "flooded" and barrier crossing is easier.
 
     This implementation uses a grid to store the biasing. This is much faster than calculating
     an ever increasing potential with sympy
-    '''
+    """
+
     name: str = "Metadynamics Enhanced Sampling System using grid bias"
     position = sp.symbols("r")
     bias_potential = True
 
-    def __init__(self, origPotential=harmonicOscillatorPotential(), amplitude=0.1, sigma=1, n_trigger=100,
-                 bias_grid_min=0, bias_grid_max=10,
-                 numbins=100):
+    def __init__(
+        self,
+        origPotential=harmonicOscillatorPotential(),
+        amplitude=0.1,
+        sigma=1,
+        n_trigger=100,
+        bias_grid_min=0,
+        bias_grid_max=10,
+        numbins=100,
+    ):
 
-        '''
+        """
         This is the Constructor of the metadynamicsPotential class.
         Parameters
         ----------
@@ -1280,7 +1353,7 @@ class metadynamicsPotential(_potential1DCls):
             max value of the bias grid
         numbins: float
             size of the grid bias and forces are saved in
-        '''
+        """
 
         self.origPotential = origPotential
         self.n_trigger = n_trigger
@@ -1305,7 +1378,6 @@ class metadynamicsPotential(_potential1DCls):
         self.V_functional = origPotential.V
         self.V_orig_part = self.V_functional.subs(self.constants)
 
-
         super().__init__(unitless=unitless)
 
     """
@@ -1323,7 +1395,7 @@ class metadynamicsPotential(_potential1DCls):
         self.system = system
 
     def check_for_metastep(self, curr_position):
-        '''
+        """
         Checks if the bias potential should be added at the current step
         Parameters
         ----------
@@ -1333,13 +1405,13 @@ class metadynamicsPotential(_potential1DCls):
         Returns
         -------
 
-        '''
-        if (self.system.step % self.n_trigger == 0):
+        """
+        if self.system.step % self.n_trigger == 0:
             self._update_potential(curr_position)
             self.finished_steps += 1
 
     def _update_potential(self, curr_position):
-        '''
+        """
         Is triggered by check_for_metastep(). Adds a gaussian centered on the
         current position to the potential
 
@@ -1352,25 +1424,25 @@ class metadynamicsPotential(_potential1DCls):
         -------
 
 
-        '''
+        """
         # do gaussian metadynamics
-        #print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
+        # print("A ", self.amplitude, "mu ", curr_position, "sigma ", self.sigma)
         biasPotential = self.biasPotentialType(A=self.amplitude, mu=curr_position, sigma=self.sigma)
-        #print(biasPotential)
+        # print(biasPotential)
         try:
             new_bias_bin_energy = biasPotential.ene(self.bin_centers)
             new_bias_bin_force = biasPotential.force(self.bin_centers)
         except OverflowError:
             print("Gaussian Overflows!")
-        #print("newENE", new_bias_bin_energy.shape, new_bias_bin_energy)
-        #print("newForce", new_bias_bin_force.shape, new_bias_bin_force)
+        # print("newENE", new_bias_bin_energy.shape, new_bias_bin_energy)
+        # print("newForce", new_bias_bin_force.shape, new_bias_bin_force)
         # update bias grid
         self.bias_grid_energy = self.bias_grid_energy + new_bias_bin_energy
         self.bias_grid_force = self.bias_grid_force + new_bias_bin_force
 
     # overwrite the energy and force
     def ene(self, positions):
-        '''
+        """
         calculates energy of particle also takes bias into account
         Parameters
         ----------
@@ -1380,14 +1452,14 @@ class metadynamicsPotential(_potential1DCls):
         Returns
         -------
         current energy
-        '''
+        """
 
         if isinstance(positions, float) or isinstance(positions, int):
             current_bin = self._find_nearest(self.bin_centers, positions)
-            #print(current_bin, len(self.bias_grid_energy))
+            # print(current_bin, len(self.bias_grid_energy))
             bias_contribution = self.bias_grid_energy[current_bin]
             orig_potential = self._calculate_energies(np.squeeze(positions))
-            #print(bias_contribution, orig_potential)
+            # print(bias_contribution, orig_potential)
             return np.squeeze(orig_potential + bias_contribution)
         else:
             bias_list = []
@@ -1397,7 +1469,7 @@ class metadynamicsPotential(_potential1DCls):
             return np.squeeze(self._calculate_energies(np.squeeze(positions)) + np.array(bias_list))
 
     def force(self, positions):
-        '''
+        """
         calculates derivative with respect to position also takes bias into account
 
         Parameters
@@ -1408,15 +1480,15 @@ class metadynamicsPotential(_potential1DCls):
         Returns
         current derivative dh/dpos
         -------
-        '''
+        """
 
         current_bin = np.array([self._find_nearest(self.bin_centers, pos) for pos in np.array(positions, ndmin=1)])
         force = np.squeeze(self._calculate_dVdpos(positions) + self.bias_grid_force[current_bin])
-        #print("Force: ",current_bin, self.bias_grid_force[current_bin], force)
+        # print("Force: ",current_bin, self.bias_grid_force[current_bin], force)
         return force
 
     def _find_nearest(self, array, value):
-        '''
+        """
         Function that finds position of the closest entry to a given value in an array
 
         Parameters
@@ -1430,9 +1502,11 @@ class metadynamicsPotential(_potential1DCls):
         Index of the entry closest to the given value
         -------
 
-        '''
+        """
         idx = np.searchsorted(array, value, side="left")
-        if idx > 0 and (idx == len(array)):  #Why, looks like an earlier version?: or np.abs(value - array[idx - 1]) < np.abs(value - array[idx])
+        if idx > 0 and (
+            idx == len(array)
+        ):  # Why, looks like an earlier version?: or np.abs(value - array[idx - 1]) < np.abs(value - array[idx])
             return idx - 1
         else:
             return idx
@@ -1440,19 +1514,21 @@ class metadynamicsPotential(_potential1DCls):
 
 #### OLD FUNCTIONS ###
 
+
 class _timedependendBias(_potential1DCls):
-    '''
+    """
     The timedependend bias potential adds a user defined potential on top of
     the original potential.
 
     This implementation uses sympy instead of a grid and is therefore super slow
-    '''
+    """
+
     name: str = "Metadynamics Enhanced Sampling System"
     position = sp.symbols("r")
 
     def __init__(self, origPotential, addPotential, n_trigger):
 
-        '''
+        """
         __init__
               This is the Constructor of the addedPotential class.
         Parameters
@@ -1464,7 +1540,7 @@ class _timedependendBias(_potential1DCls):
             bias the system, usually of gaussian type
         n_trigger : int
             Added potential will be added after every n_trigger'th steps
-        '''
+        """
         self.origPotential = origPotential
         self.n_trigger = n_trigger
         self.addPotential = addPotential
@@ -1480,7 +1556,7 @@ class _timedependendBias(_potential1DCls):
         super().__init__(unitless=unitless)
 
     def check_for_metastep(self, curr_position):
-        '''
+        """
         Checks if the bias potential should be added at the current step
         Parameters
         ----------
@@ -1488,7 +1564,7 @@ class _timedependendBias(_potential1DCls):
             current x position
         Returns
         -------
-        '''
+        """
         if self.current_n % self.n_trigger == 0:
             self._update_potential()
             self.current_n = 1
@@ -1496,7 +1572,7 @@ class _timedependendBias(_potential1DCls):
             self.current_n += 1
 
     def _update_potential(self):
-        '''
+        """
         Is triggered by check_for_metastep(). Adds the pre-defined potential on the
         current position to the potential
 
@@ -1504,7 +1580,7 @@ class _timedependendBias(_potential1DCls):
         ----------
         Returns
         -------
-        '''
+        """
         # add potential to the system
         self.V_functional = self.V + self.addPotential.V
         self.V = self.V_functional.subs(self.constants)
@@ -1512,20 +1588,20 @@ class _timedependendBias(_potential1DCls):
 
 
 class _metadynamicsPotentialSympy(_potential1DCls):
-    '''
+    """
     The metadynamics bias potential adds Gaussian potentials on top of
     the original potential. The added gaussian potential is centered on the current position.
     Thereby the valleys of the potential "flooded" and barrier crossing is easier
 
     This implementation uses sympy instead of a grid and is therefore super slow
-    '''
+    """
 
     name: str = "Metadynamics Enhanced Sampling System using sympy"
     position = sp.symbols("r")
 
     def __init__(self, origPotential, amplitude=0.1, sigma=0.1, n_trigger=100):
 
-        '''
+        """
         This is the Constructor of the metadynamicsPotential class.
         Parameters
         ----------
@@ -1537,7 +1613,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
             standard deviation of the gaussian potential added in the metadynamcis step
         n_trigger : int
             Metadynamics potential will be added after every n_trigger'th steps
-        '''
+        """
 
         self.origPotential = origPotential
         self.biasPotential = gaussPotential
@@ -1560,7 +1636,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
         super().__init__(unitless=unitless)
 
     def check_for_metastep(self, curr_position):
-        '''
+        """
         Checks if the bias potential should be added at the current step
         Parameters
         ----------
@@ -1569,7 +1645,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
 
         Returns
         -------
-        '''
+        """
         if self.current_n % self.n_trigger == 0:
             self._update_potential(curr_position)
             self.finished_steps += 1
@@ -1578,7 +1654,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
             self.current_n += 1
 
     def _update_potential(self, curr_position):
-        '''
+        """
         Is triggered by check_for_metastep(). Adds a gaussian centered on the
         current position to the potential
 
@@ -1589,7 +1665,7 @@ class _metadynamicsPotentialSympy(_potential1DCls):
 
         Returns
         -------
-        '''
+        """
         # add potential to the system
         # do gaussian metadynamics
         self.V_functional = self.V + self.biasPotential(A=self.amplitude, mu=curr_position, sigma=self.sigma).V

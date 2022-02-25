@@ -10,16 +10,17 @@ from ensembler.samplers import stochastic, newtonian, optimizers
 STOCHASTIC INTEGRATORS
 """
 
+
 class standard_IntegratorTests(unittest.TestCase):
     integrator_class = _basicSamplers._samplerCls
     tmp_test_dir: str = None
 
     def setUp(self) -> None:
-        test_dir = os.getcwd()+"/tests_out"
-        if(not os.path.exists(test_dir)):
+        test_dir = os.getcwd() + "/tests_out"
+        if not os.path.exists(test_dir):
             os.mkdir(test_dir)
 
-        if(__class__.tmp_test_dir is None):
+        if __class__.tmp_test_dir is None:
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_sampler")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.integrator_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
@@ -36,7 +37,7 @@ class standard_IntegratorTests(unittest.TestCase):
         del integrator
 
         integrator = self.integrator_class.load(self.tmp_out_path)
-        #print(integrator)
+        # print(integrator)
 
 
 class test_MonteCarlo_Integrator(standard_IntegratorTests):
@@ -155,7 +156,7 @@ class test_LangevinVelocity_Integrator(standard_IntegratorTests):
         integrator.integrate(system=sys, steps=steps)
         new_pos, new_Force = sys._currentPosition, sys._currentForce
 
-        #print(sys.trajectory)
+        # print(sys.trajectory)
 
         self.assertEqual(steps + 1, len(sys.trajectory), msg="The simulation did not run or was too short!")
         self.assertNotEqual(old_pos, new_pos, msg="Nothing happened here!")
@@ -292,5 +293,5 @@ class test_cg_Integrator(standard_IntegratorTests):
         self.assertNotEqual(oldForce, new_Force, msg="Nothing happened here!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

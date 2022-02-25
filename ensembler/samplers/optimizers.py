@@ -14,9 +14,10 @@ from ensembler.util.ensemblerTypes import systemCls as systemType, Tuple
 
 class optimizer(_samplerCls):
     """
-     This class is the parent class for all optimizers. The pre-implemented
-     optimizers currently comprise the conjugate gradient.
-     """
+    This class is the parent class for all optimizers. The pre-implemented
+    optimizers currently comprise the conjugate gradient.
+    """
+
     maxStepSize: float
 
 
@@ -25,9 +26,10 @@ class conjugate_gradient(optimizer):
     Conjugate gradient is an algorithm for the numerical solution of linear equations and for energy minimization.
     Linear equations should have a symmetric matrix and be positive-definite.
     """
+
     epsilon: float
 
-    def __init__(self, max_step_size: float = 1, epsilon: float = 10 ** -20):
+    def __init__(self, max_step_size: float = 1, epsilon: float = 10**-20):
         """
         __init__
             This is the Constructor of the conjugate gradient optimizer
@@ -48,7 +50,7 @@ class conjugate_gradient(optimizer):
 
     def step(self, system: systemType) -> Tuple[float, None, float]:
         """
-        step 
+        step
             This function is performing an integration step for optimizing a potential.
             NOTE: This is not the optimal way to call scipy optimization, but it works with the interfaces and is useful
             for theoretical thinking about it.
@@ -68,14 +70,13 @@ class conjugate_gradient(optimizer):
         f_prime = system.potential.force
 
         self.oldpos = system.current_state.position
-        self.newPos = np.squeeze(
-            fmin_cg(f=f, fprime=f_prime, x0=self.oldpos, epsilon=self.epsilon, maxiter=1, disp=False))
+        self.newPos = np.squeeze(fmin_cg(f=f, fprime=f_prime, x0=self.oldpos, epsilon=self.epsilon, maxiter=1, disp=False))
 
         move_vector = self.oldpos - self.newPos
 
         # Scale if move vector is bigger than maxstep
         prefactor = abs(self.maxStepSize / move_vector) if (self.oldpos - self.newPos != 0) else 0
-        if (not isinstance(self.maxStepSize, type(None)) and prefactor < 1):
+        if not isinstance(self.maxStepSize, type(None)) and prefactor < 1:
             scaled_move_vector = prefactor * move_vector
             self.newPos = self.oldpos - scaled_move_vector
 
@@ -110,19 +111,24 @@ class conjugate_gradient(optimizer):
 
         """
 
-        cg_out = fmin_cg(f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maximal_iterations,
-                         full_output=True, retall=True)
+        cg_out = fmin_cg(
+            f=potential.ene, fprime=potential.force, x0=x0, epsilon=self.epsilon, maxiter=maximal_iterations, full_output=True, retall=True
+        )
         opt_position, Vmin, function_iterations, gradient_iterations, warn_flag, traj_positions = cg_out
 
-        if (warn_flag == 1):
+        if warn_flag == 1:
             raise ValueError("Did not converge with the maximal number of iterations")
-        elif (warn_flag == 2):
+        elif warn_flag == 2:
             raise ValueError("Function values did not change! Error in function? precision problem?")
-        elif (warn_flag == 3):
+        elif warn_flag == 3:
             raise ValueError("encountered NaN")
 
-        return {"optimal_position": opt_position, "minimal_potential_energy": Vmin,
-                "used_iterations": function_iterations, "position_trajectory": traj_positions}
+        return {
+            "optimal_position": opt_position,
+            "minimal_potential_energy": Vmin,
+            "used_iterations": function_iterations,
+            "position_trajectory": traj_positions,
+        }
 
 
 # alternative class names

@@ -17,8 +17,9 @@ class _baseClass:
     """
     This class is a scaffold, containing functionality all classes should have.
     """
+
     name: str = "Unknown"
-    _verbose:bool =False
+    _verbose: bool = False
 
     def __name__(self) -> str:
         return str(self.name)
@@ -29,10 +30,10 @@ class _baseClass:
         remove the non trivial pickling parts
         """
         attribute_dict = self.__dict__
-        new_dict ={}
+        new_dict = {}
         for key in attribute_dict.keys():
-            if (not isinstance(attribute_dict[key], Callable)):
-                new_dict.update({key:attribute_dict[key]})
+            if not isinstance(attribute_dict[key], Callable):
+                new_dict.update({key: attribute_dict[key]})
 
         return new_dict
 
@@ -44,29 +45,29 @@ class _baseClass:
         copy_obj.__setstate__(copy.deepcopy(self.__getstate__()))
         return copy_obj
 
-
-
     """
     Attributes
     """
+
     @property
-    def verbose(self)->bool:
+    def verbose(self) -> bool:
         return self._verbose
 
     @verbose.setter
-    def verbose(self, verbose:bool):
-        self._verbose=verbose
+    def verbose(self, verbose: bool):
+        self._verbose = verbose
 
     """
     Methods
     """
+
     def save(self, path: Union[str, io.FileIO] = None) -> str:
         """
         This method stores the Class as binary obj to a given path or fileBuffer.
         """
-        if (isinstance(path, str)):
+        if isinstance(path, str):
             bufferdWriter = open(path, "wb")
-        elif (isinstance(path, io.BufferedWriter)):
+        elif isinstance(path, io.BufferedWriter):
             bufferdWriter = path
             path = bufferdWriter.name
         else:
@@ -81,9 +82,9 @@ class _baseClass:
         """
         This method stores the Class as binary obj to a given path or fileBuffer.
         """
-        if (isinstance(path, str)):
+        if isinstance(path, str):
             bufferedReader = open(path, "rb")
-        elif (isinstance(path, io.BufferedReader)):
+        elif isinstance(path, io.BufferedReader):
             bufferedReader = path
         else:
             raise IOError("Please give as parameter a path:str or a File Buffer.")
