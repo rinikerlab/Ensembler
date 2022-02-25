@@ -29,7 +29,13 @@ class harmonicOscillatorPotential(_potential1DCls):
     k, x_shift, position, y_shift = sp.symbols("k r_0 r Voffset")
     V_functional = 0.5 * k * (position - x_shift) ** 2 + y_shift
 
-    def __init__(self, k: float = 1.0 * (units.kJ / units.nm**2), x_shift: float = 0.0 * units.nm, y_shift: float = 0.0 * units.kJ, unitless: bool = False):
+    def __init__(
+        self,
+        k: float = 1.0 * (units.kJ / units.nm**2),
+        x_shift: float = 0.0 * units.nm,
+        y_shift: float = 0.0 * units.kJ,
+        unitless: bool = False,
+    ):
         """
         __init__
             This is the Constructor of the 1D harmonic oscillator
@@ -59,7 +65,12 @@ class wavePotential(_potential1DCls):
     V_functional = amplitude * sp.cos(multiplicity * (position + phase_shift)) + y_shift
 
     def __init__(
-        self, amplitude: float = 1.0, multiplicity: float = 1.0, phase_shift: float = 0.0, y_shift: float = 0.0 * units.kJ, radians: bool = False
+        self,
+        amplitude: float = 1.0,
+        multiplicity: float = 1.0,
+        phase_shift: float = 0.0,
+        y_shift: float = 0.0 * units.kJ,
+        radians: bool = False,
     ):
         """
         __init__

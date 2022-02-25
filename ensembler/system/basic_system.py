@@ -257,7 +257,7 @@ class system(_baseClass):
         potential: potentialCls = harmonicOscillatorPotential(),
         sampler: samplerCls = metropolisMonteCarloIntegrator(),
         conditions: Iterable[conditionCls] = None,
-        temperature: Number = 298.0*units.K,
+        temperature: Number = 298.0 * units.K,
         start_position: (Iterable[Number] or Number) = None,
         mass: Number = 1,
         unitless: bool = False,
@@ -426,7 +426,7 @@ class system(_baseClass):
 
         """
         if isinstance(initial_position, type(None)):
-            self.initial_position = self.random_position() 
+            self.initial_position = self.random_position()
         elif (isinstance(initial_position, Number) and self.nDimensions == 1) or (
             isinstance(initial_position, Iterable)
             and all([isinstance(x, Number) for x in initial_position])
