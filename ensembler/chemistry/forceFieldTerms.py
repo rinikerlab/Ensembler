@@ -6,7 +6,7 @@ from ensembler.util import units
 
 class bondTerm(harmonicOscillatorPotential):
     """
-    _summary_
+    Todo: nice docstring here
     """
 
     def __init__(self, k: float = constants.k_harm_CC, r_0: float = constants.r_0_CC, V_0: float = 0.0 * units.kJ):
