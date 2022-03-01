@@ -407,8 +407,6 @@ def plot_2D_potential_V(
 
         if isinstance(out_path, str):
             fig.savefig(out_path)
-        # else:
-        #    fig.show()
 
     return fig, surf
 
@@ -538,7 +536,6 @@ def envPot_differentS_overlay_min0_plot(
         fig.suptitle(title)
     if out_path:
         fig.savefig(out_path)
-    # fig.show()
 
     return fig, axes
 
@@ -590,7 +587,6 @@ def envPot_differentS_overlay_plot(
         fig.suptitle(title)
     if out_path and not isinstance(fig, type(None)):
         fig.savefig(out_path)
-    # if (not isinstance(fig, type(None))): fig.show()
 
     return fig, axes
 
@@ -631,7 +627,6 @@ def envPot_diffS_compare(
         fig.suptitle(title)
     if out_path:
         fig.savefig(out_path)
-    # fig.show()
     return fig, axes
 
 
@@ -684,7 +679,6 @@ def plot_envelopedPotential_system(
         fig.suptitle(title)
     if out_path:
         fig.savefig(out_path)
-    # fig.show()
     return fig, axes
 
 
@@ -770,7 +764,6 @@ def plot_envelopedPotential_2State_System(
         fig.suptitle(title)
     if out_path:
         fig.savefig(out_path)
-    # fig.show()
     return fig, axes
 
 
@@ -829,7 +822,6 @@ def envPot_diffS_2stateMap_compare(
         fig.suptitle(title)
     if out_path:
         fig.savefig(out_path)
-    # fig.show()
 
     return fig, axes
 

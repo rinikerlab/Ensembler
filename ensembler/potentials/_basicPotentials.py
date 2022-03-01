@@ -8,7 +8,6 @@ from ensembler.util.ensemblerTypes import Iterable, Union, Dict, Number
 from ensembler.util.basic_class import _baseClass, notImplementedERR
 from ensembler.util.ensemblerTypes import Number, Union, List, Dict, Iterable
 from ensembler.util.units import quantity
-import ensembler.visualisation as vis
 
 # from concurrent.futures.thread import ThreadPoolExecutor
 
@@ -91,6 +90,7 @@ class _potentialNDCls(_potentialCls):
 
     position: sp.Symbol  # This sympol is required and resembles the input parameter (besides the constants).
     V_functional: sp.Function = notImplementedERR  # This attribute needs to be provided.
+    V_units: sp.Function  # is a helper, that shows the partially solved functional with unit symbols. - not used in any calculation, only for the user
     dVdpos_functional: sp.Function = (
         notImplementedERR  # This function will be generated in the constructure by initialize-functions
     )
@@ -232,14 +232,10 @@ class _potentialNDCls(_potentialCls):
         # print(argsK, argsV)
         self.argsK = tuple(argsK)
         self.argsV = tuple(argsV)
-        self.ff = sp.lambdify(self.argsK, self.V_functional, "numpy")
+        self.ff = sp.lambdify(self.argsK, functional, "numpy")
         self._solved_units = self.ff(*argsV)
-        # print(self._solved_units, type(self._solved_units))
 
         return self._solved_units.units
-        # except Exception as err:
-        #    raise Exception("The unit Conversion did not work! Please check if all variables have the correct units.\n"+
-        #                    "SymPy solving try: "+str(self._solved_units))
 
     """
         public
@@ -276,7 +272,7 @@ class _potentialNDCls(_potentialCls):
                             *np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])
                         )
                     ),
-                    units=self._solve_units(functional=self.V_units, position_unit=positions.units),
+                    units=self._solve_units(functional=self.V_functional, position_unit=positions.units),
                 )
             else:
                 raise ValueError(
@@ -305,7 +301,7 @@ class _potentialNDCls(_potentialCls):
                 value=np.squeeze(
                     self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))
                 ).T,
-                units=self._solve_units(functional=self.dVdpos_units, position_unit=positions.units),
+                units=self._solve_units(functional=self.dVdpos_functional, position_unit=positions.units),
             )
         else:
             return np.squeeze(
@@ -365,7 +361,7 @@ class _potential1DCls(_potentialNDCls):
             if isinstance(positions, quantity):
                 return quantity(
                     value=np.squeeze(self._calculate_energies(np.array(positions.magnitude))),
-                    units=self._solve_units(functional=self.V_units, position_unit=positions.units),
+                    units=self._solve_units(functional=self.V_functional, position_unit=positions.units),
                 )
             else:
                 raise ValueError(
@@ -393,7 +389,7 @@ class _potential1DCls(_potentialNDCls):
         if hasattr(positions, "dimensionless") and not positions.dimensionless and not self._unitless:
             return quantity(
                 value=np.squeeze(self._calculate_dVdpos(np.array(positions.magnitude))),
-                units=self._solve_units(functional=self.dVdpos_units, position_unit=positions.units),
+                units=self._solve_units(functional=self.dVdpos_functional, position_unit=positions.units),
             )
         else:
             return np.squeeze(self._calculate_dVdpos(np.squeeze(np.array(positions))))
@@ -427,7 +423,9 @@ class _potential1DCls(_potentialNDCls):
         vis.plt.Figure
             _description_
         """
-        return vis.plotPotentials.plot_1DPotential(
+        from ensembler.visualisation.plotPotentials import plot_1DPotential
+
+        return plot_1DPotential(
             self, positions=positions, out_path=out_path, x_range=x_range, y_range=y_range, title=None
         )
 
@@ -449,7 +447,7 @@ class _potential2DCls(_potentialNDCls):
         nStates: int, optional
             number of states in the potential. (default: 1)
         """
-        print("Warning no units for 2D right now!")
+        # Warning no units for 2D right now!
         super().__init__(nDimensions=2, nStates=nStates, unitless=unitless)
 
 

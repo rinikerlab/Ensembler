@@ -5,6 +5,7 @@ Module: System
 
 import numpy as np
 import pandas as pd
+from matplotlib import animation
 
 pd.options.mode.use_inf_as_na = True
 
@@ -13,17 +14,20 @@ from ensembler.util.ensemblerTypes import samplerCls, conditionCls, Number, Iter
 from ensembler.util import dataStructure as data
 from ensembler.potentials import OneD as pot
 from ensembler.samplers.stochastic import metropolisMonteCarloIntegrator
+from ensembler.visualisation import style, dpi_animation, figaspect
+from ensembler.util.ensemblerTypes import systemCls, Iterable, List, Tuple, Union, Number
 
 from ensembler.system.basic_system import system
 
 
 class edsSystem(system):
     """
-        The EDS-System is collecting and providing information essential to EDS.
-        The Trajectory contains s and Eoff values for each step.
-        Functions like set_s (or simply access s) or set_eoff (or simply access Eoff) give direct acces to the EDS potential.
+    The EDS-System is collecting and providing information essential to EDS.
+    The Trajectory contains s and Eoff values for each step.
+    Functions like set_s (or simply access s) or set_eoff (or simply access Eoff) give direct acces to the EDS potential.
 
     """
+
     name = "eds system"
     # EDS Dependend Settings
     state = data.envelopedPStstate
@@ -42,8 +46,8 @@ class edsSystem(system):
     @property
     def s(self) -> Number:
         """
-            s
-                smoothing parameter for the EDS-potential
+        s
+            smoothing parameter for the EDS-potential
         """
         return self._currentEdsS
 
@@ -69,8 +73,8 @@ class edsSystem(system):
     @property
     def eoff(self):
         """
-            Eoff
-                Energy Offsets for the EDS-potential
+        Eoff
+            Energy Offsets for the EDS-potential
 
         """
         return self._currentEdsEoffs
@@ -98,12 +102,22 @@ class edsSystem(system):
     Magics
     """
 
-    def __init__(self, potential: pot.envelopedPotential = pot.envelopedPotential(
-        V_is=[pot.harmonicOscillatorPotential(x_shift=2), pot.harmonicOscillatorPotential(x_shift=-2)], eoff=[0, 0]),
-                 sampler: samplerCls = metropolisMonteCarloIntegrator(),
-                 conditions: Iterable[conditionCls] = [],
-                 temperature: float = 298.0, start_position: Union[Number, Iterable[Number]] = None,
-                 eds_s: float = 1, eds_Eoff: Iterable[Number] = [0, 0]):
+    def __init__(
+        self,
+        potential: pot.envelopedPotential = pot.envelopedPotential(
+            V_is=[
+                pot.harmonicOscillatorPotential(x_shift=2, unitless=True),
+                pot.harmonicOscillatorPotential(x_shift=-2, unitless=True),
+            ],
+            eoff=[0, 0],
+        ),
+        sampler: samplerCls = metropolisMonteCarloIntegrator(),
+        conditions: Iterable[conditionCls] = [],
+        temperature: float = 298.0,
+        start_position: Union[Number, Iterable[Number]] = None,
+        eds_s: float = 1,
+        eds_Eoff: Iterable[Number] = [0, 0],
+    ):
         """
             __init__
                 construct a eds-System that can be used to manage a simulation.
@@ -134,8 +148,13 @@ class edsSystem(system):
         self._currentEdsEoffs = eds_Eoff
         self.state = data.envelopedPStstate
 
-        super().__init__(potential=potential, sampler=sampler, conditions=conditions, temperature=temperature,
-                         start_position=start_position)
+        super().__init__(
+            potential=potential,
+            sampler=sampler,
+            conditions=conditions,
+            temperature=temperature,
+            start_position=start_position,
+        )
 
         # Output
         self.set_s(self._currentEdsS)
@@ -145,12 +164,15 @@ class edsSystem(system):
     Overwrite Functions to adapt to EDS
     """
 
-    def set_current_state(self, current_position: Union[Number, Iterable[Number]],
-                          current_velocities: Union[Number, Iterable[Number]] = 0,
-                          current_force: Union[Number, Iterable[Number]] = 0,
-                          current_temperature: Union[Number, Iterable[Number]] = 298,
-                          current_s: Union[Number, Iterable[Number]] = 1.0,
-                          current_eoff: Iterable[Number] = None):
+    def set_current_state(
+        self,
+        current_position: Union[Number, Iterable[Number]],
+        current_velocities: Union[Number, Iterable[Number]] = 0,
+        current_force: Union[Number, Iterable[Number]] = 0,
+        current_temperature: Union[Number, Iterable[Number]] = 298,
+        current_s: Union[Number, Iterable[Number]] = 1.0,
+        current_eoff: Iterable[Number] = None,
+    ):
         """
             set_current_state
                 set s the current state to the given variables.
@@ -176,7 +198,7 @@ class edsSystem(system):
         self._currentTemperature = current_temperature
 
         self._currentEdsS = current_s
-        if (current_eoff is None):
+        if current_eoff is None:
             self._currentEdsEoffs = [0 for x in range(self.nStates)]
         else:
             self._currentEdsEoffs = current_eoff
@@ -186,19 +208,29 @@ class edsSystem(system):
 
     def update_current_state(self):
         """
-            updateCurrentState
-                This function updates the current state from the _current Variables.
+        updateCurrentState
+            This function updates the current state from the _current Variables.
         """
-        self._currentState = self.state(position=self._currentPosition, temperature=self._currentTemperature,
-                                        total_system_energy=self._currentTotE,
-                                        total_potential_energy=self._currentTotPot,
-                                        total_kinetic_energy=self._currentTotKin,
-                                        dhdpos=self._currentForce, velocity=self._currentVelocities,
-                                        s=self._currentEdsS, eoff=self._currentEdsEoffs)
+        self._currentState = self.state(
+            position=self._currentPosition,
+            temperature=self._currentTemperature,
+            total_system_energy=self._currentTotE,
+            total_potential_energy=self._currentTotPot,
+            total_kinetic_energy=self._currentTotKin,
+            dhdpos=self._currentForce,
+            velocity=self._currentVelocities,
+            s=self._currentEdsS,
+            eoff=self._currentEdsEoffs,
+        )
 
-    def append_state(self, new_position: Union[Number, Iterable[Number]], new_velocity: Union[Number, Iterable[Number]],
-                     new_forces: Union[Number, Iterable[Number]], new_s: Union[Number, Iterable[Number]],
-                     new_eoff: Iterable[Number]):
+    def append_state(
+        self,
+        new_position: Union[Number, Iterable[Number]],
+        new_velocity: Union[Number, Iterable[Number]],
+        new_forces: Union[Number, Iterable[Number]],
+        new_s: Union[Number, Iterable[Number]],
+        new_eoff: Iterable[Number],
+    ):
         """
             append_state
                 Append a new state to the trajectory.
@@ -227,3 +259,28 @@ class edsSystem(system):
         self.update_current_state()
 
         self._trajectory.append(self.current_state)
+
+    def animation(
+        self,
+        limits_coordinate_space: Tuple[float, float] = None,
+        limits_potential_system_energy: Tuple[float, float] = None,
+        resolution_of_analytic_potential: int = 1000,
+        title: str = None,
+        out_path: str = None,
+        out_writer: str = "pillow",
+        dpi: int = dpi_animation,
+        every_n_frame: int = 1,
+    ) -> animation.Animation:
+        from ensembler.visualisation.animationSimulation import animation_EDS_trajectory
+
+        return animation_EDS_trajectory(
+            self,
+            limits_coordinate_space=limits_coordinate_space,
+            limits_potential_system_energy=limits_potential_system_energy,
+            resolution_of_analytic_potential=resolution_of_analytic_potential,
+            title=title,
+            out_path=out_path,
+            out_writer=out_writer,
+            dpi=dpi,
+            every_n_frame=every_n_frame,
+        )
