@@ -12,13 +12,11 @@ import sympy as sp
 from ensembler.potentials._basicPotentials import _potential1DCls, _potential1DClsPerturbed
 
 from ensembler.util.ensemblerTypes import Union, Number, Iterable, systemCls
-from ensembler.util.units import kJ, nm, C
-
+from ensembler.util.units import unit_registry
 
 """
     SIMPLE POTENTIALS
 """
-unitless = True
 
 
 class harmonicOscillatorPotential(_potential1DCls):
@@ -32,9 +30,9 @@ class harmonicOscillatorPotential(_potential1DCls):
 
     def __init__(
         self,
-        k: float = 1.0 * (kJ / nm**2),
-        x_shift: float = 0.0 * nm,
-        y_shift: float = 0.0 * kJ,
+        k: float = 1.0 * (unit_registry.kJ / unit_registry.nm**2),
+        x_shift: float = 0.0 * unit_registry.nm,
+        y_shift: float = 0.0 * unit_registry.kJ,
         unitless: bool = False,
     ):
         """
@@ -70,7 +68,7 @@ class wavePotential(_potential1DCls):
         amplitude: float = 1.0,
         multiplicity: float = 1.0,
         phase_shift: float = 0.0,
-        y_shift: float = 0.0 * kJ,
+        y_shift: float = 0.0 * unit_registry.kJ,
         radians: bool = False,
     ):
         """
@@ -154,7 +152,12 @@ class coulombPotential(_potential1DCls):
     charge1, charge2, position, electric_permetivity = sp.symbols("q1 q2 r e")
     V_functional = (charge1 * charge2) / (position * electric_permetivity * 4 * sp.pi)
 
-    def __init__(self, q1=1 * C, q2=1 * C, epsilon=1 * (C**2 / (kJ * nm))):
+    def __init__(
+        self,
+        q1=1 * unit_registry.C,
+        q2=1 * unit_registry.C,
+        epsilon=1 * (C**2 / (unit_registry.kJ * unit_registry.nm)),
+    ):
         """
         __init__
             This is the Constructor of the Coulomb potential
@@ -184,7 +187,13 @@ class lennardJonesPotential(_potential1DCls):
     sigma, epsilon, x_shift, y_shift, position = sp.symbols("s e r_0 V_off r")
     V_functional = 4 * epsilon * ((sigma / (position - x_shift)) ** 12 - (sigma / (position - x_shift)) ** 6) + y_shift
 
-    def __init__(self, sigma: float = 1.5, epsilon: float = 2, x_shift: float = 0 * nm, y_shift=0 * kJ):
+    def __init__(
+        self,
+        sigma: float = 1.5,
+        epsilon: float = 2,
+        x_shift: float = 0 * unit_registry.nm,
+        y_shift=0 * unit_registry.kJ,
+    ):
         """
         __init__
             This is the Constructor of the Lennard-Jones Potential
