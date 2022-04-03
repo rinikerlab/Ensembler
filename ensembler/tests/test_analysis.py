@@ -2,7 +2,8 @@ import numpy as np
 import unittest
 
 
-from ensembler.analysis.freeEnergyCalculation import  zwanzigEquation, threeStateZwanzig, bennetAcceptanceRatio
+from ensembler.analysis.freeEnergyCalculation import zwanzigEquation, threeStateZwanzig, bennetAcceptanceRatio
+
 
 class test_ZwanzigEquation(unittest.TestCase):
     feCalculation = zwanzigEquation
@@ -103,7 +104,6 @@ class test_BAR(test_ZwanzigEquation):
 class test_threeStateZwanzigReweighting(test_ZwanzigEquation):
     feCalculation = threeStateZwanzig
 
-
     def test_free_Energy1(self):
         feCalc = self.feCalculation(kT=True)
 
@@ -122,12 +122,15 @@ class test_threeStateZwanzigReweighting(test_ZwanzigEquation):
         energy_off_state = 10
         noise_off_state = 0.01
 
-        V1 = np.concatenate([np.random.normal(state_1, state_1_noise, sample_state1),
-                             np.random.normal(energy_off_state, noise_off_state, sample_state2)])
-        V2 = np.concatenate([np.random.normal(energy_off_state, noise_off_state, sample_state1),
-                             np.random.normal(state_2, state_2_noise, sample_state2)])
-        Vr = np.concatenate([np.random.normal(state_1, state_1_noise, sample_state1),
-                             np.random.normal(state_2, state_2_noise, sample_state2)])
+        V1 = np.concatenate(
+            [np.random.normal(state_1, state_1_noise, sample_state1), np.random.normal(energy_off_state, noise_off_state, sample_state2)]
+        )
+        V2 = np.concatenate(
+            [np.random.normal(energy_off_state, noise_off_state, sample_state1), np.random.normal(state_2, state_2_noise, sample_state2)]
+        )
+        Vr = np.concatenate(
+            [np.random.normal(state_1, state_1_noise, sample_state1), np.random.normal(state_2, state_2_noise, sample_state2)]
+        )
 
         dF_ana = state_2 - state_1
         dFRew_zwanz = feCalc.calculate(Vi=V1, Vj=V2, Vr=Vr)

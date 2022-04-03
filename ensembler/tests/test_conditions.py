@@ -7,20 +7,18 @@ from ensembler.conditions.box_conditions import periodicBoundaryCondition, boxBo
 from ensembler.conditions.restrain_conditions import positionRestraintCondition
 
 
-
 class boxBoundaryCondition(unittest.TestCase):
     condition_class = boxBoundaryCondition
     boundary1D = [0, 10]
     boundary2D = [[0, 10], [0, 10]]
     tmp_test_dir: str = None
 
-
     def setUp(self) -> None:
-        test_dir = os.getcwd()+"/tests_out"
-        if(not os.path.exists(test_dir)):
+        test_dir = os.getcwd() + "/tests_out"
+        if not os.path.exists(test_dir):
             os.mkdir(test_dir)
 
-        if(__class__.tmp_test_dir is None):
+        if __class__.tmp_test_dir is None:
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_potentials")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.condition_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
@@ -53,10 +51,8 @@ class boxBoundaryCondition(unittest.TestCase):
 
         corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
-        self.assertEqual(first=corr_pos, second=expected_pos,
-                         msg="The position correction for the lower bound position was wrong.")
-        self.assertEqual(first=corr_vel, second=expected_vel,
-                         msg="The position correction for the lower bound velocity was wrong.")
+        self.assertEqual(first=corr_pos, second=expected_pos, msg="The position correction for the lower bound position was wrong.")
+        self.assertEqual(first=corr_vel, second=expected_vel, msg="The position correction for the lower bound velocity was wrong.")
 
         expected_pos = [6]
         expected_vel = [-2.2]
@@ -65,10 +61,8 @@ class boxBoundaryCondition(unittest.TestCase):
 
         corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
-        self.assertEqual(first=corr_pos, second=expected_pos,
-                         msg="The position correction for the lower bound position was wrong.")
-        self.assertEqual(first=corr_vel, second=expected_vel,
-                         msg="The position correction for the lower bound velocity was wrong.")
+        self.assertEqual(first=corr_pos, second=expected_pos, msg="The position correction for the lower bound position was wrong.")
+        self.assertEqual(first=corr_vel, second=expected_vel, msg="The position correction for the lower bound velocity was wrong.")
 
     def test_apply2D(self):
         cond = self.condition_class(boundary=self.boundary2D)
@@ -80,10 +74,8 @@ class boxBoundaryCondition(unittest.TestCase):
 
         corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
-        np.testing.assert_equal(corr_pos, expected_pos,
-                                err_msg="The position correction for the lower bound position was wrong.")
-        np.testing.assert_equal(corr_vel, expected_vel,
-                                err_msg="The position correction for the lower bound velocity was wrong.")
+        np.testing.assert_equal(corr_pos, expected_pos, err_msg="The position correction for the lower bound position was wrong.")
+        np.testing.assert_equal(corr_vel, expected_vel, err_msg="The position correction for the lower bound velocity was wrong.")
 
         expected_pos = [1, 2]
         expected_vel = [0.2, -0.5]
@@ -92,10 +84,8 @@ class boxBoundaryCondition(unittest.TestCase):
 
         corr_pos, corr_vel = cond.apply(current_position=position, current_velocity=velocity)
 
-        np.testing.assert_equal(corr_pos, expected_pos,
-                                err_msg="The position correction for the lower bound position was wrong.")
-        np.testing.assert_equal(corr_vel, expected_vel,
-                                err_msg="The position correction for the lower bound velocity was wrong.")
+        np.testing.assert_equal(corr_pos, expected_pos, err_msg="The position correction for the lower bound position was wrong.")
+        np.testing.assert_equal(corr_vel, expected_vel, err_msg="The position correction for the lower bound velocity was wrong.")
 
 
 class periodicBoundaryCondition(unittest.TestCase):
@@ -105,9 +95,9 @@ class periodicBoundaryCondition(unittest.TestCase):
     tmp_test_dir = None
 
     def setUp(self) -> None:
-        if(__class__.tmp_test_dir is None):
+        if __class__.tmp_test_dir is None:
             test_dir = os.getcwd() + "/tests_out"
-            if (not os.path.exists(test_dir)):
+            if not os.path.exists(test_dir):
                 os.mkdir(test_dir)
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_potentials")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.condition_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
@@ -140,8 +130,7 @@ class periodicBoundaryCondition(unittest.TestCase):
         vel = [-3]
         corr_pos = cond.apply(current_position=position)
 
-        self.assertEqual(second=corr_pos, first=expected_pos,
-                         msg="The position correction for the lower bound position was wrong.")
+        self.assertEqual(second=corr_pos, first=expected_pos, msg="The position correction for the lower bound position was wrong.")
 
     def test_apply2D(self):
         cond = self.condition_class(boundary=self.boundary2D)
@@ -153,8 +142,7 @@ class periodicBoundaryCondition(unittest.TestCase):
         vel = [-3, 3]
         corr_pos = cond.apply(current_position=position)
 
-        np.testing.assert_equal(corr_pos, expected_pos,
-                                err_msg="The position correction for the lower bound position was wrong.")
+        np.testing.assert_equal(corr_pos, expected_pos, err_msg="The position correction for the lower bound position was wrong.")
 
 
 class positionRestraintCondition(unittest.TestCase):
@@ -162,11 +150,11 @@ class positionRestraintCondition(unittest.TestCase):
     tmp_test_dir = None
 
     def setUp(self) -> None:
-        test_dir = os.getcwd()+"/tests_out"
-        if(not os.path.exists(test_dir)):
+        test_dir = os.getcwd() + "/tests_out"
+        if not os.path.exists(test_dir):
             os.mkdir(test_dir)
 
-        if(__class__.tmp_test_dir is None):
+        if __class__.tmp_test_dir is None:
             __class__.tmp_test_dir = tempfile.mkdtemp(dir=test_dir, prefix="tmp_test_conditions")
         _, self.tmp_out_path = tempfile.mkstemp(prefix="test_" + self.condition_class.name, suffix=".obj", dir=__class__.tmp_test_dir)
 
@@ -194,20 +182,16 @@ class positionRestraintCondition(unittest.TestCase):
         position = [-2]
 
         corr_pos, corr_force = cond.apply(current_position=position)
-        self.assertEqual(second=corr_pos, first=expected_pos,
-                         msg="The position correction for the lower bound position was wrong.")
-        self.assertEqual(second=corr_force, first=expected_force,
-                         msg="The position correction for the lower bound force was wrong.")
+        self.assertEqual(second=corr_pos, first=expected_pos, msg="The position correction for the lower bound position was wrong.")
+        self.assertEqual(second=corr_force, first=expected_force, msg="The position correction for the lower bound force was wrong.")
 
         expected_pos = [84.5]
         expected_force = [13]
         position = [14]
 
         corr_pos, corr_force = cond.apply(current_position=position)
-        self.assertEqual(second=corr_pos, first=expected_pos,
-                         msg="The position correction for the lower bound position was wrong.")
-        self.assertEqual(second=corr_force, first=expected_force,
-                         msg="The position correction for the lower bound force was wrong.")
+        self.assertEqual(second=corr_pos, first=expected_pos, msg="The position correction for the lower bound position was wrong.")
+        self.assertEqual(second=corr_force, first=expected_force, msg="The position correction for the lower bound force was wrong.")
 
     def test_apply2D(self):
         cond = self.condition_class(position_0=1)
@@ -217,17 +201,13 @@ class positionRestraintCondition(unittest.TestCase):
         position = [-2, 1]
 
         corr_pos, corr_force = cond.apply(current_position=position)
-        np.testing.assert_equal(corr_pos, expected_pos,
-                                err_msg="The position correction for the lower bound position was wrong.")
-        np.testing.assert_equal(corr_force, expected_force,
-                                err_msg="The position correction for the lower bound force was wrong.")
+        np.testing.assert_equal(corr_pos, expected_pos, err_msg="The position correction for the lower bound position was wrong.")
+        np.testing.assert_equal(corr_force, expected_force, err_msg="The position correction for the lower bound force was wrong.")
 
         expected_pos = [0, 4.5]
         expected_force = [0, -3]
         position = [1, -2]
 
         corr_pos, corr_force = cond.apply(current_position=position)
-        np.testing.assert_equal(corr_pos, expected_pos,
-                                err_msg="The position correction for the lower bound position was wrong.")
-        np.testing.assert_equal(corr_force, expected_force,
-                                err_msg="The position correction for the lower bound force was wrong.")
+        np.testing.assert_equal(corr_pos, expected_pos, err_msg="The position correction for the lower bound position was wrong.")
+        np.testing.assert_equal(corr_force, expected_force, err_msg="The position correction for the lower bound force was wrong.")

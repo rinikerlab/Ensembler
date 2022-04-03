@@ -1,20 +1,22 @@
 # Disable Pint's old fallback behavior (must come before importing Pint)
 import os
-os.environ['PINT_ARRAY_PROTOCOL_FALLBACK'] = "0"
+
+os.environ["PINT_ARRAY_PROTOCOL_FALLBACK"] = "0"
 
 import pint
 from pint.quantity import _Quantity
 
 from sympy import sympify
-_Quantity._sympy_ = lambda s: sympify(f'{s.m}*{s.u:~}')
 
-#Build a unitRegistry
+_Quantity._sympy_ = lambda s: sympify(f"{s.m}*{s.u:~}")
+
+# Build a unitRegistry
 unit_registry = pint.UnitRegistry()
-unit_registry.default_format = '~'
+unit_registry.default_format = "~"
 quantity = unit_registry.Quantity
 
 
-#Recommended Units
+# Recommended Units
 ## Energies
 kJ = unit_registry.kJ
 kcal = unit_registry.kcal
@@ -22,6 +24,9 @@ kb = unit_registry.k
 
 ## Temperature
 K = unit_registry.K
+
+## Mass
+g = unit_registry.g
 
 ## Geometrie: Distance
 nm = unit_registry.nm
@@ -31,5 +36,5 @@ deg = unit_registry.degree
 
 C = unit_registry.C
 
-#Suggested Constants:
-k_harm = 1 * kJ / nm #used in gromos
+# Suggested Constants:
+k_harm = 1 * kJ / nm  # used in gromos

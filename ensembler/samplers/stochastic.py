@@ -13,10 +13,11 @@ from ensembler.util.ensemblerTypes import systemCls as systemType
 
 
 class stochasticSampler(_samplerCls):
-    '''
+    """
     This class is the parent class for all stochastic samplers. The pre-implemented
     stochastic type samplers currently comprise various Monte-Carlo and Langevin Methods.
-    '''
+    """
+
     # Params
     minStepSize: Number = None
     step_size_coefficient: Number = 1
@@ -30,7 +31,8 @@ class stochasticSampler(_samplerCls):
 
     # Limits:
     _critInSpaceRange = lambda self, pos: self.spaceRange is None or (
-            self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange))
+        self.spaceRange != None and pos >= min(self.spaceRange) and pos <= max(self.spaceRange)
+    )
 
     def random_shift(self, nDimensions: int) -> Union[float, np.array]:
         """
@@ -52,17 +54,25 @@ class stochasticSampler(_samplerCls):
         sign = np.array([-1 if (x < 50) else 1 for x in np.random.randint(low=0, high=100, size=nDimensions)])
 
         # Check if there is a space restriction? - converges faster
-        if (not isinstance(self.fixedStepSize, type(None))):
+        if not isinstance(self.fixedStepSize, type(None)):
             shift = np.array(np.full(shape=nDimensions, fill_value=self.fixedStepSize), ndmin=1)
-        elif (not isinstance(self.spaceRange, type(None))):
-            shift = np.array(np.multiply(np.abs(np.random.randint(low=np.min(self.spaceRange) / self.resolution,
-                                                                  high=np.max(self.spaceRange) / self.resolution,
-                                                                  size=nDimensions)), self.resolution), ndmin=1)
+        elif not isinstance(self.spaceRange, type(None)):
+            shift = np.array(
+                np.multiply(
+                    np.abs(
+                        np.random.randint(
+                            low=np.min(self.spaceRange) / self.resolution, high=np.max(self.spaceRange) / self.resolution, size=nDimensions
+                        )
+                    ),
+                    self.resolution,
+                ),
+                ndmin=1,
+            )
         else:
             shift = self.step_size_coefficient * np.array(np.abs(np.random.rand(nDimensions)), ndmin=1)
 
         # Is the step shift in the allowed area?
-        if (self.minStepSize != None and any([s < self.minStepSize for s in shift])):
+        if self.minStepSize != None and any([s < self.minStepSize for s in shift]):
             self.posShift = np.multiply(sign, np.array([s if (s > self.minStepSize) else self.minStepSize for s in shift]))
         else:
             self.posShift = sign * shift
@@ -78,11 +88,16 @@ class monteCarloIntegrator(stochasticSampler):
         resemble the (micro/grand) canonical ensemble. Additionally, no kinetic information can be obtained from
         Monte Carlo samplers.
     """
+
     name = "Monte Carlo Integrator"
 
-    def __init__(self, space_range: Tuple[Number, Number] = None,
-                 step_size_coefficient: Number = 5, minimal_step_size: Number = None,
-                 fixed_step_size: Number = None):
+    def __init__(
+        self,
+        space_range: Tuple[Number, Number] = None,
+        step_size_coefficient: Number = 5,
+        minimal_step_size: Number = None,
+        fixed_step_size: Number = None,
+    ):
         """
         __init__
             This is the Constructor of the MonteCarlo samplers.
@@ -127,14 +142,14 @@ class monteCarloIntegrator(stochasticSampler):
         current_state = system.current_state
         self.oldpos = current_state.position
 
-        while (True):
+        while True:
             self.random_shift(system.nDimensions)
             self.newPos = np.add(self.oldpos, self.posShift)
             # only get positions in certain range or accept if no range
-            if (self._critInSpaceRange(self.newPos)):
+            if self._critInSpaceRange(self.newPos):
                 break
 
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current position\t ", self.oldpos)
             print(str(self.__name__) + ": shift\t ", self.posShift)
             print(str(self.__name__) + ": newPosition\t ", self.newPos)
@@ -166,6 +181,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
                 - $k_b$ as Boltzmann Constant
 
     """
+
     name = "Metropolis Monte Carlo Integrator"
     # Parameters:
     maxIterationTillAccept: float = np.inf  # how often shall the samplers iterate till it accepts a step forcefully
@@ -174,14 +190,19 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
     # METROPOLIS CRITERION
     ##random part of Metropolis Criterion:
     _default_randomness = lambda self, ene_new, current_state: (
-            self._randomness_factor * np.random.rand() <= np.exp(
-        -1.0 / (const.gas_constant / 1000.0 * current_state.temperature) * (
-                    ene_new - current_state.total_potential_energy)))
+        self._randomness_factor * np.random.rand()
+        <= np.exp(-1.0 / (const.gas_constant / 1000.0 * current_state.temperature) * (ene_new - current_state.total_potential_energy))
+    )
 
-    def __init__(self, space_range: tuple = None,
-                 step_size_coefficient: Number = 5, minimal_step_size: float = None,
-                 fixed_step_size=None,
-                 randomness_increase_factor=1.25, max_iteration_tillAccept: int = 10000):
+    def __init__(
+        self,
+        space_range: tuple = None,
+        step_size_coefficient: Number = 5,
+        minimal_step_size: float = None,
+        fixed_step_size=None,
+        randomness_increase_factor=1.25,
+        max_iteration_tillAccept: int = 10000,
+    ):
         """
         __init__
             This is the Constructor of the Metropolis-MonteCarlo samplers.
@@ -231,7 +252,7 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         -------
 
         """
-        return (ene_new < current_state.total_potential_energy or self._default_randomness(ene_new, current_state))
+        return ene_new < current_state.total_potential_energy or self._default_randomness(ene_new, current_state)
 
     def step(self, system: systemType) -> Tuple[float, None, float]:
         """
@@ -256,7 +277,9 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         nDimensions = system.nDimensions
 
         # integrate position
-        while (current_iteration <= self.convergence_limit and current_iteration <= self.maxIterationTillAccept):  # while no value in spaceRange was found, terminates in first run if no spaceRange
+        while (
+            current_iteration <= self.convergence_limit and current_iteration <= self.maxIterationTillAccept
+        ):  # while no value in spaceRange was found, terminates in first run if no spaceRange
             self.random_shift(nDimensions)
 
             # eval new Energy
@@ -264,22 +287,21 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
             system._currentForce = self.posShift
 
             new_ene = system.potential.ene(system._currentPosition)
-            #print(system._currentPosition)
+            # print(system._currentPosition)
 
             # MetropolisCriterion
-            if (self.maxIterationTillAccept <= current_iteration or ((self._critInSpaceRange(system._currentPosition) and
-                                                                   self.metropolis_criterion(new_ene, current_state)))):
+            if self.maxIterationTillAccept <= current_iteration or (
+                (self._critInSpaceRange(system._currentPosition) and self.metropolis_criterion(new_ene, current_state))
+            ):
                 break
             else:  # not accepted
                 current_iteration += 1
 
-            if (current_iteration >= self.convergence_limit):
-                raise ValueError(
-                    "Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept")
-
+            if current_iteration >= self.convergence_limit:
+                raise ValueError("Metropolis-MonteCarlo samplers did not converge! Think about the maxIterationTillAccept")
 
         self.newPos = self.oldpos
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current position\t ", self.oldpos)
             print(str(self.__name__) + ": shift\t ", self.posShift)
             print(str(self.__name__) + ": newPosition\t ", self.newPos)
@@ -289,9 +311,9 @@ class metropolisMonteCarloIntegrator(stochasticSampler):
         return np.squeeze(system._currentPosition), np.nan, np.squeeze(self.posShift)
 
 
-'''
+"""
 Langevin stochastic integration
-'''
+"""
 
 
 class langevinIntegrator(stochasticSampler):
@@ -300,23 +322,24 @@ class langevinIntegrator(stochasticSampler):
     Langevin integrators provide information on the kinetics of the system.  The Position Langevin
     Integrator does not calculate velocities. Therefore, the kinetic energy is undefined.
     """
+
     name = "Langevin Integrator"
 
     def __init__(self, dt: float = 0.005, gamma: float = 50, old_position: float = None):
         """
-          __init__
-              This is the Constructor of the Langevin samplers.
+        __init__
+            This is the Constructor of the Langevin samplers.
 
 
-          Parameters
-          ----------
-          dt : Number, optional
-              time step of an integration, by default 0.005
-          gamma : Number, optional
-              Friktion constant of the system, by default 50
-          old_position : Iterable[Number, Number] of size nDim, optional
-              determines the position at step -1, if not set the system will use the velocity to determine this position
-          """
+        Parameters
+        ----------
+        dt : Number, optional
+            time step of an integration, by default 0.005
+        gamma : Number, optional
+            Friktion constant of the system, by default 50
+        old_position : Iterable[Number, Number] of size nDim, optional
+            determines the position at step -1, if not set the system will use the velocity to determine this position
+        """
         super().__init__()
 
         self.dt = dt
@@ -361,10 +384,12 @@ class langevinIntegrator(stochasticSampler):
         self.newForces = -system.potential.force(self.currentPosition)
 
         # Brünger-Brooks-Karplus samplers for positions
-        new_position = (1 / (1 + self.gamma * self.dt / 2)) * (2 * self.currentPosition - self._oldPosition
-                                                               + self.gamma * (self.dt / 2) * (self._oldPosition) + (
-                                                                       self.dt ** 2 / system.mass) * (
-                                                                       self.R_x + self.newForces))
+        new_position = (1 / (1 + self.gamma * self.dt / 2)) * (
+            2 * self.currentPosition
+            - self._oldPosition
+            + self.gamma * (self.dt / 2) * (self._oldPosition)
+            + (self.dt**2 / system.mass) * (self.R_x + self.newForces)
+        )
 
         return new_position, None
 
@@ -399,8 +424,10 @@ class langevinIntegrator(stochasticSampler):
 
             self._oldPosition = self.currentPosition - self.currentVelocity * self.dt
 
-            if(system.nDimensions < len(np.array(self._oldPosition, ndmin=1))):   #this is not such a nice fix, but if multiple states are involved, multiple vels are needed as well.
-                self._oldPosition = np.squeeze(self._oldPosition[:system.nDimensions])
+            if system.nDimensions < len(
+                np.array(self._oldPosition, ndmin=1)
+            ):  # this is not such a nice fix, but if multiple states are involved, multiple vels are needed as well.
+                self._oldPosition = np.squeeze(self._oldPosition[: system.nDimensions])
         else:
             self._oldPosition = np.array(self._oldPosition)
 
@@ -409,7 +436,7 @@ class langevinIntegrator(stochasticSampler):
         # update position
         self._oldPosition = self.currentPosition
 
-        if (self.verbose):
+        if self.verbose:
             print(str(self.__name__) + ": current forces\t ", self.newForces)
             print(str(self.__name__) + ": old Position\t ", self._oldPosition)
             print(str(self.__name__) + ": current_position\t ", self.currentPosition)
@@ -470,7 +497,8 @@ class langevinVelocityIntegrator(langevinIntegrator):
         # Brünger-Brooks-Karplus samplers for velocities
 
         half_step_velocity = (1 - self.gamma * self.dt / 2) * self.currentVelocity + self.dt / (2 * system.mass) * (
-                self.newForces + self.R_x)
+            self.newForces + self.R_x
+        )
 
         full_step_position = self.currentPosition + half_step_velocity * self.dt
 
@@ -486,6 +514,7 @@ class langevinVelocityIntegrator(langevinIntegrator):
 
         # last half step
         full_step_velocity = (1 / (1 + self.gamma * self.dt / 2)) * (
-                half_step_velocity + self.dt / (1 * system.mass) * (self.newForces + self.R_x))
+            half_step_velocity + self.dt / (1 * system.mass) * (self.newForces + self.R_x)
+        )
 
         return full_step_position, full_step_velocity

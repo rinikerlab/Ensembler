@@ -1,7 +1,6 @@
 from ensembler.conditions._basicCondition import _conditionCls
 from ensembler.potentials import OneD
-from ensembler.util.ensemblerTypes import systemCls as systemType, potentialCls as potentialType, Iterable, Number, \
-    Union, Tuple, NoReturn
+from ensembler.util.ensemblerTypes import systemCls as systemType, potentialCls as potentialType, Iterable, Number, Union, Tuple, NoReturn
 
 
 class Restraint(_conditionCls):
@@ -10,15 +9,21 @@ class Restraint(_conditionCls):
 
 class positionRestraintCondition(Restraint):
     """
-        The position restraint is adding a bias to a certain position selected in the coordinate space
+    The position restraint is adding a bias to a certain position selected in the coordinate space
     """
+
     name: str = "position restraint"
     position_0: Union[Number, Iterable[Number]]
     functional: potentialType
 
-    def __init__(self, position_0: Union[Number, Iterable[Number]], every_step: int = 1,
-                 restraint_functional: potentialType = OneD.harmonicOscillatorPotential, system: systemType = None,
-                 verbose: bool = False):
+    def __init__(
+        self,
+        position_0: Union[Number, Iterable[Number]],
+        every_step: int = 1,
+        restraint_functional: potentialType = OneD.harmonicOscillatorPotential,
+        system: systemType = None,
+        verbose: bool = False,
+    ):
         """
             __init__
                 builds the bias to a certain position_0 in the coordinate space, which is applied every_step
@@ -67,7 +72,7 @@ class positionRestraintCondition(Restraint):
 
     def apply_coupled(self) -> NoReturn:
         """
-            apply the condition to the coupled system.
+        apply the condition to the coupled system.
         """
         if self.system.step % self._tau == 0:
             new_current_position, new_current_velocity = self.apply(current_position=self.system._currentPosition)

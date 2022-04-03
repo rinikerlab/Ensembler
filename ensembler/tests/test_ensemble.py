@@ -20,8 +20,7 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         _replica_graph._replicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
 
     def test_init_2DREnsemble(self):
-        exchange_dimensions = {"temperature": range(288, 310),
-                               "mass": range(1, 10)}
+        exchange_dimensions = {"temperature": range(288, 310), "mass": range(1, 10)}
 
         _replica_graph._replicaExchange(system=self.sys, exchange_dimensions=exchange_dimensions)
 
@@ -46,8 +45,9 @@ class test_ReplicaExchangeCls(unittest.TestCase):
         ##print([len(trajectories[t]) for t in trajectories])
 
         self.assertEqual(len(trajectories), 22, msg="not enough trajectories were retrieved!")
-        self.assertEquals([len(trajectories[t]) for t in trajectories], second=[nsteps + 1 for x in range(replicas)],
-                          msg="traj lengths are not correct!")
+        self.assertEquals(
+            [len(trajectories[t]) for t in trajectories], second=[nsteps + 1 for x in range(replicas)], msg="traj lengths are not correct!"
+        )
 
     def test_getTotPot_1DREnsemble(self):
         replicas = 22
@@ -109,11 +109,10 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         nsteps = 100
         T_range = range(288, 310)
         group = replica_exchange.temperatureReplicaExchange(system=sys, temperature_range=T_range)
-        #print(group.get_Total_Energy())
+        # print(group.get_Total_Energy())
         group.nSteps_between_trials = nsteps
         group.run()
-        #print(group.get_Total_Energy())
-
+        # print(group.get_Total_Energy())
 
     def test_exchange_all(self):
         integrator = stochastic.metropolisMonteCarloIntegrator()
@@ -140,7 +139,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         self.assertEqual(len(group.replicas), nReplicas, msg="not enough trajectories were retrieved!")
         self.assertListEqual(finpositions, list(positions.values()), msg="Positions should not change during exchange!")
 
-        #self.assertListEqual(finvelocities, velocities, msg="Velocities should not change during exchange!")
+        # self.assertListEqual(finvelocities, velocities, msg="Velocities should not change during exchange!")
         ##exchange process
         self.assertEqual(nReplicas // 2, len(all_exchanges), msg="length of all exchanges is not correct!")
         self.assertTrue(all(list(all_exchanges.values())), msg="not all exchanges are True!!")
@@ -247,5 +246,5 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
     """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

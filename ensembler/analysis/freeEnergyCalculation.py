@@ -33,8 +33,7 @@ class _FreeEnergyCalculator:
         msg = ""
         msg += self.__class__.__name__ + "\n"
         msg += "\tEquation: " + str(self.equation) + "\n"
-        msg += "\tConstants:\n\t\t" + "\n\t\t".join(
-            [str(key) + ":\t" + str(value) for key, value in self.constants.items()]) + "\n"
+        msg += "\tConstants:\n\t\t" + "\n\t\t".join([str(key) + ":\t" + str(value) for key, value in self.constants.items()]) + "\n"
         msg += "\tsimplified Equation: " + str(self.simplified_equation) + "\n"
         return msg
 
@@ -46,7 +45,7 @@ class _FreeEnergyCalculator:
 
     @classmethod
     def _prepare_type(self, *arrays):
-        return tuple(map(lambda arr: np.array(list(map(lambda x: np.float(x), arr)),ndmin=1), arrays))
+        return tuple(map(lambda arr: np.array(list(map(lambda x: np.float(x), arr)), ndmin=1), arrays))
 
     @classmethod
     def get_equation(cls) -> sp.Function:
@@ -74,17 +73,17 @@ class _FreeEnergyCalculator:
 class zwanzigEquation(_FreeEnergyCalculator):
     """Zwanzig Equation
 
-        This class is a nice wrapper for the zwanzig Equation.
+    This class is a nice wrapper for the zwanzig Equation.
 
-        dF = - \beta \ln(\langle e^(-beta(V_j-V_i)) \rangle)
+    dF = - \beta \ln(\langle e^(-beta(V_j-V_i)) \rangle)
 
     """
+
     k, T, Vi, Vj = sp.symbols("k T, Vi, Vj")
     equation: sp.Function = -(1 / (k * T)) * sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vi)))
     constants: dict
 
-    def __init__(self, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False, kJ: bool = False,
-                 kCal: bool = False):
+    def __init__(self, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False, kJ: bool = False, kCal: bool = False):
         """
         __init__
             Here you can set Class wide the parameters T and k for the Zwanzig Equation
@@ -105,11 +104,11 @@ class zwanzigEquation(_FreeEnergyCalculator):
         """
 
         self.constants = {}
-        if (kT):
+        if kT:
             self.set_parameters(T=1, k=1)
-        elif (kJ):
+        elif kJ:
             self.set_parameters(T=T, k=const.k * const.Avogadro / 1000)
-        elif (kCal):
+        elif kCal:
             self.set_parameters(T=T, k=const.k * const.Avogadro * self.J_to_cal / 1000)
         else:
             self.set_parameters(T=T, k=k)
@@ -166,10 +165,12 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
         """
 
-        if (not (len(Vi) == len(Vj))):
+        if not (len(Vi) == len(Vj)):
             raise ValueError(
-                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
-                    len(Vi) + " \t " + str(len(Vj))) + "\n")
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: "
+                + str(len(Vi) + " \t " + str(len(Vj)))
+                + "\n"
+            )
 
         # Typcasting
         Vi, Vj = self._prepare_type(Vi, Vj)
@@ -177,14 +178,13 @@ class zwanzigEquation(_FreeEnergyCalculator):
         beta = 1 / (self.constants[self.k] * self.constants[self.T])  # calculate Beta
 
         # Calculate the potential energy difference in reduced units of kT
-        dVij = - beta * (Vj - Vi)
+        dVij = -beta * (Vj - Vi)
 
         # Exponentiate to obtain exp(-Delta U/kT)
         try:
             edVij = self.exp(dVij)
         except OverflowError:
-            raise OverflowError(
-                "Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
+            raise OverflowError("Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
 
         # average of exponents
         meandVij = np.mean(edVij)
@@ -192,10 +192,9 @@ class zwanzigEquation(_FreeEnergyCalculator):
         # Return free energy difference
         try:
             # dF = zwanzigEquation.calculate(Vi, Vr) - zwanzigEquation.calculate(Vj, Vr)
-            dF = - (1 / beta) * (meandVij).ln()
+            dF = -(1 / beta) * (meandVij).ln()
         except ValueError:
-            raise ValueError(
-                "Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference ")
+            raise ValueError("Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference ")
 
         return dF
 
@@ -232,16 +231,18 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        if (not (len(Vi) == len(Vj))):
+        if not (len(Vi) == len(Vj)):
             raise ValueError(
-                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
-                    len(Vi) + " \t " + str(len(Vj))) + "\n")
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: "
+                + str(len(Vi) + " \t " + str(len(Vj)))
+                + "\n"
+            )
 
         Vi, Vj = self._prepare_type(Vi, Vj)
         beta = 1 / (self.constants[self.k] * self.constants[self.T])
 
         # Calculate the potential energy difference in reduced units of kT
-        dVij = - beta * ( Vj - Vi)
+        dVij = -beta * (Vj - Vi)
 
         # Calculate offset for increased numerical stability
         meandVij = np.mean(dVij)
@@ -250,16 +251,15 @@ class zwanzigEquation(_FreeEnergyCalculator):
         try:
             edVij = self.exp(dVij - meandVij)
         except OverflowError:
-            raise OverflowError(
-                "Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
+            raise OverflowError("Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
 
         # Return free energy difference
         try:
-            dF = - (1 / beta) * ((np.mean(edVij)).ln() + meandVij)
+            dF = -(1 / beta) * ((np.mean(edVij)).ln() + meandVij)
         except ValueError:
             raise ValueError(
-                "Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
-                    np.mean(edVij)))
+                "Zwanzig Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(np.mean(edVij))
+            )
 
         return dF
 
@@ -295,23 +295,26 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        if (not (len(Vi) == len(Vj))):
+        if not (len(Vi) == len(Vj)):
             raise ValueError(
-                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
-                    len(Vi) + " \t " + str(len(Vj))) + "\n")
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: "
+                + str(len(Vi) + " \t " + str(len(Vj)))
+                + "\n"
+            )
 
         Vi, Vj = self._prepare_type(Vi, Vj)
         beta = 1 / (self.constants[self.k] * self.constants[self.T])
 
         # Calculate the potential energy difference in reduced units of kT
-        dVij = - beta * (Vj - Vi)
+        dVij = -beta * (Vj - Vi)
 
         # Return free energy difference
         from scipy import special as s
-        dF = - np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1 / len(dVij))
+
+        dF = -np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1 / len(dVij))
         return dF
 
-    def _calculate_mpmath(self,  Vi: (Iterable, Number), Vj: (Iterable, Number))->float:
+    def _calculate_mpmath(self, Vi: (Iterable, Number), Vj: (Iterable, Number)) -> float:
         """
         implementation of zwanzig with mpmath package, another way of having a robust variant,
         but this one is very close to the initial equation thanks to the mpmath package.
@@ -333,7 +336,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
         """
         beta = np.float(1 / (self.constants[self.k] * self.constants[self.T]))
 
-        return - (1 / beta) * np.float(mp.ln(np.mean(list(map(mp.exp, -beta*(np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
+        return -(1 / beta) * np.float(mp.ln(np.mean(list(map(mp.exp, -beta * (np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
 
     def set_parameters(self, T: float = None, k: float = None):
         """
@@ -348,10 +351,10 @@ class zwanzigEquation(_FreeEnergyCalculator):
 
         """
 
-        if (isinstance(T, (Number))):
+        if isinstance(T, (Number)):
             self.constants.update({self.T: T})
 
-        if (isinstance(k, (Number))):
+        if isinstance(k, (Number)):
             self.constants.update({self.k: k})
         self._update_function()
 
@@ -362,17 +365,16 @@ class zwanzig(zwanzigEquation):
 
 class threeStateZwanzig(zwanzigEquation):
     """
-            this class provides the implementation for the Free energy calculation with EDS.
-            It calculates the free energy via the reference state.
+    this class provides the implementation for the Free energy calculation with EDS.
+    It calculates the free energy via the reference state.
 
-            $dF = dF_{BR}-dF_{AR} = \frac{1}{\beta} * ( \ln(\langle e^{-\beta * (V_j-V_R)}\rangle) - \ln(\langle e^{-\beta * (V_i-V_R)}\rangle))$
+    $dF = dF_{BR}-dF_{AR} = \frac{1}{\beta} * ( \ln(\langle e^{-\beta * (V_j-V_R)}\rangle) - \ln(\langle e^{-\beta * (V_i-V_R)}\rangle))$
     """
-    k, T, Vi, Vj, Vr = sp.symbols("k T Vi Vj Vr")
-    equation: sp.Function = -(1 / (k * T)) * (
-            sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
 
-    def __init__(self, kCal: bool = False, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False,
-                 kJ: bool = False):
+    k, T, Vi, Vj, Vr = sp.symbols("k T Vi Vj Vr")
+    equation: sp.Function = -(1 / (k * T)) * (sp.log(sp.exp(-(1 / (k * T)) * (Vi - Vr))) - sp.log(sp.exp(-(1 / (k * T)) * (Vj - Vr))))
+
+    def __init__(self, kCal: bool = False, T: float = 298, k: float = const.k * const.Avogadro, kT: bool = False, kJ: bool = False):
         """
         __init__
             this class provides the implementation for the Free energy calculation with EDS.
@@ -393,8 +395,7 @@ class threeStateZwanzig(zwanzigEquation):
         """
         super().__init__(kCal=kCal, T=T, k=k, kT=kT, kJ=kJ)
 
-    def calculate(self, Vi: (Iterable[Number], Number), Vj: (Iterable[Number], Number),
-                  Vr: (Iterable[Number], Number)) -> float:
+    def calculate(self, Vi: (Iterable[Number], Number), Vj: (Iterable[Number], Number), Vr: (Iterable[Number], Number)) -> float:
         """
             calculate
                 this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.
@@ -416,8 +417,7 @@ class threeStateZwanzig(zwanzigEquation):
         """
         return float(self._calculate_implementation_useZwanzig(Vi=Vi, Vj=Vj, Vr=Vr))
 
-    def _calculate_implementation_useZwanzig(self, Vi: (Iterable, Number), Vj: (Iterable, Number),
-                                             Vr: (Iterable[Number], Number)) -> float:
+    def _calculate_implementation_useZwanzig(self, Vi: (Iterable, Number), Vj: (Iterable, Number), Vr: (Iterable[Number], Number)) -> float:
         """
             calculate
                 this method calculates the zwanzig equation via the intermediate reference state R using the Zwanzig equation.
@@ -438,10 +438,12 @@ class threeStateZwanzig(zwanzigEquation):
             free energy difference
 
         """
-        if (not (len(Vi) == len(Vj) == len(Vr))):
+        if not (len(Vi) == len(Vj) == len(Vr)):
             raise ValueError(
-                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
-                    len(Vi) + " \t " + str(len(Vj))) + "\n")
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: "
+                + str(len(Vi) + " \t " + str(len(Vj)))
+                + "\n"
+            )
 
         # Type Casting
         Vi, Vj, Vr = self._prepare_type(Vi, Vj, Vr)
@@ -473,9 +475,11 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
     $ f(x) = \frac{1}{1+e^(\beta x)}$ - fermi function
 
     """
+
     k, T, beta, C, Vi_i, Vj_i, Vi_j, Vj_j = sp.symbols("k T beta C  Vi_i Vj_i Vi_j Vj_j")
     equation: sp.Function = (1 / (k * T)) * (
-            sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C))))
+        sp.log(sp.exp((1 / (k * T)) * (Vi_j - Vj_j + C))) - sp.log(sp.exp((1 / (k * T)) * (Vj_i - Vi_i + C)))
+    )
     constants: dict = {T: 298, k: const.k * const.Avogadro, C: Number}
 
     # Numeric parameters
@@ -483,9 +487,18 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
     max_iterations: int
     min_iterations: int
 
-    def __init__(self, C: float = 0.0, T: float = 298, k: float = const.k * const.Avogadro,
-                 kT: bool = False, kJ: bool = False, kCal: bool = False,
-                 convergence_radius: float = 10 ** (-5), max_iterations: int = 500, min_iterations: int = 1):
+    def __init__(
+        self,
+        C: float = 0.0,
+        T: float = 298,
+        k: float = const.k * const.Avogadro,
+        kT: bool = False,
+        kJ: bool = False,
+        kCal: bool = False,
+        convergence_radius: float = 10 ** (-5),
+        max_iterations: int = 500,
+        min_iterations: int = 1,
+    ):
         """
         __init__
         Here you can set Class wide the parameters T and k for the bennet acceptance ration (BAR) Equation
@@ -513,11 +526,11 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
         """
 
         self.constants = {}
-        if (kT):
+        if kT:
             self.set_parameters(T=1, k=1, C=C)
-        elif (kJ):
+        elif kJ:
             self.set_parameters(T=T, k=const.k * const.Avogadro / 1000, C=C)
-        elif (kCal):
+        elif kCal:
             self.set_parameters(T=T, k=const.k * const.Avogadro * self.J_to_cal / 1000, C=C)
         else:
             self.set_parameters(T=T, k=k)
@@ -529,8 +542,9 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         self._update_function()
 
-    def calculate(self, Vi_i: Iterable[Number], Vj_i: Iterable[Number],
-                  Vi_j: Iterable[Number], Vj_j: Iterable[Number], verbose: bool = False) -> float:
+    def calculate(
+        self, Vi_i: Iterable[Number], Vj_i: Iterable[Number], Vi_j: Iterable[Number], Vj_j: Iterable[Number], verbose: bool = False
+    ) -> float:
         """
             calculate
                 this function is calculating the free energy difference of two states with the BAR method.
@@ -580,16 +594,15 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         """
         # Calculate the potential energy difference in reduced units of kT
-        dV_j = ((Vi_j - Vj_j) + C)
-        dV_i = ((Vj_i - Vi_i) - C)
+        dV_j = (Vi_j - Vj_j) + C
+        dV_i = (Vj_i - Vi_i) - C
 
         # Exponentiate to obtain fermi(-Delta U/kT)
         try:
             ferm_dV_i = 1 / (1 + self.exp(self.constants[self.beta] * dV_i))
             ferm_dV_j = 1 / (1 + self.exp(self.constants[self.beta] * dV_j))
         except OverflowError:
-            raise OverflowError(
-                "Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
+            raise OverflowError("Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
 
         # get average
         mean_edV_i = np.mean(ferm_dV_i)
@@ -600,8 +613,8 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             ddF = (1 / self.constants[self.beta]) * self.ln(mean_edV_j / mean_edV_i)
         except ValueError as err:
             raise ValueError(
-                "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
-                    err.args))
+                "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(err.args)
+            )
 
         dF = ddF + C
         return dF
@@ -637,11 +650,10 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
         # Exponentiate to obtain fermi(-Delta U/kT)
 
         try:
-            ferm_dV_j = self.fermifunc(dV_j,self.constants[self.beta])
-            ferm_dV_i = self.fermifunc(dV_i,self.constants[self.beta])
+            ferm_dV_j = self.fermifunc(dV_j, self.constants[self.beta])
+            ferm_dV_i = self.fermifunc(dV_i, self.constants[self.beta])
         except OverflowError:
-            raise OverflowError(
-                "Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
+            raise OverflowError("Zwanzig Error: Overflow in exponentiation of potential energy difference. Aborting calculation.")
 
         # get average
         mean_edV_j = np.mean(ferm_dV_j)
@@ -652,15 +664,20 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             ddF = (1 / self.constants[self.beta]) * mp.ln(mean_edV_j / mean_edV_i)
         except ValueError as err:
             raise ValueError(
-                "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
-                    err.args))
+                "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(err.args)
+            )
 
         return np.float(ddF + C)
 
-
-    def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
-                            Vi_j: (Iterable[Number], Number), Vj_j: (Iterable[Number], Number), C0: float = 0,
-                            verbose: bool = False) -> float:
+    def _calculate_optimize(
+        self,
+        Vi_i: (Iterable[Number], Number),
+        Vj_i: (Iterable[Number], Number),
+        Vi_j: (Iterable[Number], Number),
+        Vj_j: (Iterable[Number], Number),
+        C0: float = 0,
+        verbose: bool = False,
+    ) -> float:
         """
         _calculate_optimize
             this function is calculating the free energy difference of two states with the BAR method.
@@ -684,21 +701,24 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             free energy difference
 
         """
-        if (
-                not ((len(Vi_i) == len(Vi_i)) and (
-                        len(Vi_j) == len(Vj_j)))):  # I and J simulation don't need the same length.
+        if not ((len(Vi_i) == len(Vi_i)) and (len(Vi_j) == len(Vj_j))):  # I and J simulation don't need the same length.
             raise ValueError(
-                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: " + str(
-                    len(Vi_i) + " \t " + str(len(Vj_i))) + "\n" + str(len(Vi_j) + " \t " + str(len(Vj_j))) + "\n")
+                "Zwanzig Error: The given arrays for Vi and Vj must have the same length. \n Actually they have: "
+                + str(len(Vi_i) + " \t " + str(len(Vj_i)))
+                + "\n"
+                + str(len(Vi_j) + " \t " + str(len(Vj_j)))
+                + "\n"
+            )
 
         # Calc Beta
         self.constants.update({self.beta: 1 / (self.constants[self.k] * self.constants[self.T])})
         # given C?
-        if (not isinstance(C0, type(None))):
+        if not isinstance(C0, type(None)):
             self.constants.update({self.C: C0})
 
         # optimization scheme:
-        if (verbose): print("Iterate: \tconvergence raidus: " + str(self.convergence_radius))
+        if verbose:
+            print("Iterate: \tconvergence raidus: " + str(self.convergence_radius))
         iteration = 0
         convergence = self.convergence_radius + 1
         while self.max_iterations > iteration:
@@ -708,17 +728,17 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
             newC = dF
             convergence = abs(self.constants[self.C] - dF)
 
-            if (verbose): print("Iteration: " + str(iteration) + "\tdF: " + str(dF), "\tconvergence", convergence)
+            if verbose:
+                print("Iteration: " + str(iteration) + "\tdF: " + str(dF), "\tconvergence", convergence)
 
-            if (convergence > self.convergence_radius or self.min_iterations > iteration):
+            if convergence > self.convergence_radius or self.min_iterations > iteration:
                 iteration += 1
                 self.constants.update({self.C: newC})
             else:
                 break
         print()
-        if (iteration >= self.max_iterations):
-            raise Exception(
-                "BAR is not converged after " + str(iteration) + " steps. stopped at: " + str(self.constants[self.C]))
+        if iteration >= self.max_iterations:
+            raise Exception("BAR is not converged after " + str(iteration) + " steps. stopped at: " + str(self.constants[self.C]))
         print("Final Iterations: ", iteration, " Result: ", dF)
 
         return float(dF)
@@ -738,13 +758,13 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
 
         """
 
-        if (isinstance(T, Number)):
+        if isinstance(T, Number):
             self.constants.update({self.T: T})
 
-        if (isinstance(k, Number)):
+        if isinstance(k, Number):
             self.constants.update({self.k: k})
 
-        if (isinstance(C, Number)):
+        if isinstance(C, Number):
             self.constants.update({self.C: C})
 
         self._update_function()
