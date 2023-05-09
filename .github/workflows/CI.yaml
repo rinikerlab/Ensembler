@@ -1,13 +1,9 @@
-name: CI
-
+name: tests
 on:
   push:
-    branches:
-      - "build_release_1"
-      - "master"
+    branches: [ master ]
   pull_request:
-    branches:
-      - "master"
+    branches: [ master ]
 
 jobs:
   test:
