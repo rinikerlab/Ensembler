@@ -8,11 +8,6 @@ on:
   pull_request:
     branches:
       - "master"
-  schedule:
-    # Nightly tests run on master by default:
-    #   Scheduled workflows run on the latest commit on the default or base branch.
-    #   (from https://help.github.com/en/actions/reference/events-that-trigger-workflows#scheduled-events-schedule)
-    - cron: "0 0 * * *"
 
 jobs:
   test:
@@ -60,7 +55,7 @@ jobs:
         shell: bash -l {0}
 
         run: |
-          pytest  -v --cov=ensembler --cov-report=xml --color=yes ensembler/tests/
+          pytest  -v --cov=ensembler --cov-report=xml --color=yes src/ensembler/tests/
           
       - name: Run example notebooks
 
