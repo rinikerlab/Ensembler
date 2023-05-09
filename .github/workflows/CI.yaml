@@ -1,4 +1,4 @@
-name: tests
+name: Python tests
 on:
   push:
     branches: [ master ]
@@ -33,7 +33,7 @@ jobs:
           channels: conda-forge,defaults
 
           activate-environment: test
-          auto-update-conda: truea
+          auto-update-conda: true
           auto-activate-base: false
           show-channel-urls: true
 
