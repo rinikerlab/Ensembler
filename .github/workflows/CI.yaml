@@ -36,7 +36,7 @@ jobs:
             use-mamba: true
             python-version: ${{ matrix.python-version }}
             miniforge-variant: Mambaforge
-            activate-environment: test
+
 
       - name: "Install"
         run: pip install --no-deps -e .
