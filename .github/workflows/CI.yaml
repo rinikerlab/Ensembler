@@ -36,7 +36,6 @@ jobs:
             use-mamba: true
             python-version: ${{ matrix.python-version }}
             miniforge-variant: Mambaforge
-            environment-file: ../devtools/conda-envs/test_env.yml
             activate-environment: test
 
       - name: "Install"
