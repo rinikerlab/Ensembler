@@ -51,7 +51,7 @@ jobs:
           mamba list
       - name: "Run tests"
         run: |
-          pytest -n 2 -v --cov=ensembler --cov-report=xml
+          pytest -v --cov=ensembler --cov-report=xml
       - name: codecovg
         if: ${{ github.repository == 'rinikerlab/ensembler' && github.event != 'schedule'}}
         uses: codecov/codecov-action@v3
