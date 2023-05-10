@@ -39,7 +39,7 @@ jobs:
 
 
       - name: "Install"
-        run: pip install --no-deps -e .
+        run: pip install -e .
 
       - name: "Test imports"
         run: |
