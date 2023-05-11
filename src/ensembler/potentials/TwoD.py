@@ -610,8 +610,11 @@ class metadynamicsPotential(_potential2DCls):
         current_bin_x = self._find_nearest(self.y_centers, x_vals)
         current_bin_y = self._find_nearest(self.y_centers, y_vals)
 
-        dvdpos = np.squeeze(
-            self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        arr = np.array(positions, ndmin=2) #Check is this a good solution?
+        print(arr)
+        f = [self._calculate_dVdpos(x,y) for x,y in arr]
+        dvdpos = np.squeeze(f).T
+
         return np.squeeze(dvdpos + self.bias_grid_force[:, current_bin_y, current_bin_x].T)
 
     def _find_nearest(self, array, value):

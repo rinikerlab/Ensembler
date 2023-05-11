@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from ensembler.util.ensemblerTypes import NoReturn, Dict, List, Tuple
 
 class Exchange_pattern:
@@ -85,45 +86,56 @@ class Exchange_pattern:
             exchange = False
             IJ = original_exchange_coordinates[0]
             replicaIJ = self.replica_graph.replicas[IJ]
-            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
+
+            move_data = [
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaIJ.replicaID,
                  "replicaPositionI": IJ, "exchangeCoordinateI": replicaIJ.exchange_parameters,
                  "TotEI": swapped_totPots[IJ],
                  "replicaPositionJ": IJ, "exchangeCoordinateJ": replicaIJ.exchange_parameters,
                  "TotEJ": swapped_totPots[IJ],
-                 "doExchange": exchange}, ignore_index=True)
+                 "doExchange": exchange}
+            ]
+            self.replica_graph._exchange_information = pd.concat([self.replica_graph.exchange_information,  pd.DataFrame(move_data)],
+                                                                 ignore_index=True)
 
         for (I, J), exchange in self.replica_graph._current_exchanges.items():
-            replicaI = self.replica_graph.replicas[I]
-            replicaJ = self.replica_graph.replicas[J]
-            # add exchange info line here!
-            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
-                {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaI.replicaID,
-                 "replicaPositionI": I, "exchangeCoordinateI": replicaI.exchange_parameters,
-                 "TotEI": original_totPots[I],
-                 "replicaPositionJ": J, "exchangeCoordinateJ": replicaJ.exchange_parameters,
-                 "TotEJ": original_totPots[J],
-                 "doExchange": exchange}, ignore_index=True)
-            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
-                {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaJ.replicaID,
-                 "replicaPositionI": J, "exchangeCoordinateI": replicaJ.exchange_parameters,
-                 "TotEI": swapped_totPots[J],
-                 "replicaPositionJ": I, "exchangeCoordinateJ": replicaI.exchange_parameters,
-                 "TotEJ": swapped_totPots[I],
-                 "doExchange": exchange}, ignore_index=True)
+                replicaI = self.replica_graph.replicas[I]
+                replicaJ = self.replica_graph.replicas[J]
+
+                # add exchange info line here!
+                move_data = [
+                    {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaI.replicaID,
+                     "replicaPositionI": I, "exchangeCoordinateI": replicaI.exchange_parameters,
+                     "TotEI": original_totPots[I],
+                     "replicaPositionJ": J, "exchangeCoordinateJ": replicaJ.exchange_parameters,
+                     "TotEJ": original_totPots[J],
+                     "doExchange": exchange},
+                    {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaJ.replicaID,
+                     "replicaPositionI": J, "exchangeCoordinateI": replicaJ.exchange_parameters,
+                     "TotEI": swapped_totPots[J],
+                     "replicaPositionJ": I, "exchangeCoordinateJ": replicaI.exchange_parameters,
+                     "TotEJ": swapped_totPots[I],
+                     "doExchange": exchange}
+
+                ]
+                self.replica_graph._exchange_information = pd.concat([self.replica_graph.exchange_information, pd.DataFrame(move_data)], ignore_index=True)
 
         round_reps =len(self.replica_graph.replicas)%2==0
         if ((self.exchange_offset == 0 and not round_reps) or (self.exchange_offset == 1 and round_reps)):
             exchange = False
             IJ = original_exchange_coordinates[-1]
             replicaIJ = self.replica_graph.replicas[IJ]
-            self.replica_graph._exchange_information = self.replica_graph.exchange_information.append(
+
+            move_data = [
                 {"nExchange": self.replica_graph._currentTrial, "replicaID": replicaIJ.replicaID,
                  "replicaPositionI": IJ, "exchangeCoordinateI": replicaIJ.exchange_parameters,
                  "TotEI": swapped_totPots[IJ],
                  "replicaPositionJ": IJ, "exchangeCoordinateJ": replicaIJ.exchange_parameters,
                  "TotEJ": swapped_totPots[IJ],
-                 "doExchange": exchange}, ignore_index=True)
+                 "doExchange": exchange}
+            ]
+            self.replica_graph._exchange_information = pd.concat([self.replica_graph.exchange_information,  pd.DataFrame(move_data)], ignore_index=True)
+
 
 
 class localExchangeScheme(Exchange_pattern):

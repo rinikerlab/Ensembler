@@ -212,14 +212,14 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
             y.append(1.0)
         elif calc_lam(CapLam, i, numsys=M) < rx:
             alpha = np.arcsin((rx - calc_lam(CapLam, i, numsys=M)) / rx)
-            if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+            if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
                 rotation.append(45 + alpha / np.pi * 180.0)
             else:
                 rotation.append(45 - alpha / np.pi * 180.0)
             y.append(np.cos(alpha))
         else:
             alpha = np.arcsin((rx - (1 - calc_lam(CapLam, i, numsys=M))) / rx)
-            if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+            if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
                 rotation.append(45 - alpha / np.pi * 180.0)
             else:
                 rotation.append(45 + alpha / np.pi * 180.0)
@@ -268,7 +268,7 @@ def plotEnsembler(x, y, CapLam=0.1, M=8, drawArrows=False):
             rx -= np.sqrt(1 - y[i] ** 2) * shiftMarker
         elif x > 1 - rx:
             rx += np.sqrt(1 - y[i] ** 2) * shiftMarker
-        if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+        if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
             ax.add_patch(  # Create triangle as arrow head
                 patches.RegularPolygon(
                     (x, shifty + ry + y[i] * ry + y[i] * shiftMarker),  # (x,y)
@@ -361,14 +361,14 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
             y.append(1.0)
         elif calc_lam(CapLam, i, numsys=M) < rx:
             alpha = np.arcsin((rx - calc_lam(CapLam, i, numsys=M)) / rx)
-            if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+            if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
                 rotation.append(45 + alpha / np.pi * 180.0)
             else:
                 rotation.append(45 - alpha / np.pi * 180.0)
             y.append(np.cos(alpha))
         else:
             alpha = np.arcsin((rx - (1 - calc_lam(CapLam, i, numsys=M))) / rx)
-            if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+            if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
                 rotation.append(45 - alpha / np.pi * 180.0)
             else:
                 rotation.append(45 + alpha / np.pi * 180.0)
@@ -403,7 +403,7 @@ def updateEnsembler(x, y, ax, CapLam=0.1, M=8, drawArrows=False):
             rx -= np.sqrt(1 - y[i] ** 2) * shiftMarker
         elif x > 1 - rx:
             rx += np.sqrt(1 - y[i] ** 2) * shiftMarker
-        if (CapLam + i * 2 * np.pi / float(M)) % (2. * np.pi) < np.pi:
+        if (CapLam + i * 2 * np.pi / np.float64(M)) % (2. * np.pi) < np.pi:
             ax.add_patch(  # Create triangle as arrow head
                 patches.RegularPolygon(
                     (x, shifty + ry + y[i] * ry + y[i] * shiftMarker),  # (x,y)

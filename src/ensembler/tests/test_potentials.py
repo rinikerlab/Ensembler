@@ -1643,8 +1643,8 @@ class potentialCls_metadynamics2D(test_potentialCls):
                                        err_msg="The results of " + potential.name + " are not correct!")
 
     def test_dVdpos_1Pos(self):
-        positions = [0,0]
-        expected_result = [0,0]
+        positions = np.array([0,0])
+        expected_result = np.array([0,0])
 
         potential = self.potential_class()
 

@@ -600,15 +600,17 @@ class _replicaExchange(_mutliReplicaApproach):
         """
         initialise the exchanges
         """
+        self._exchange_information = list(self.exchange_information)
         for replicaID in self.replicas:
             exchange = False
-            self._exchange_information = self.exchange_information.append(
+            self._exchange_information.append(
                 {"nExchange": self._currentTrial, "replicaID": self.replicas[replicaID].replicaID,
                  "replicaPositionI": replicaID, "exchangeCoordinateI": self.replicas[replicaID].exchange_parameters,
                  "TotEI": self.replicas[replicaID].calculate_total_potential_energy(),
                  "replicaPositionJ": replicaID, "exchangeCoordinateJ": self.replicas[replicaID].exchange_parameters,
                  "TotEJ": self.replicas[replicaID].calculate_total_potential_energy(),
-                 "doExchange": exchange}, ignore_index=True)
+                 "doExchange": exchange})
+        self._exchange_information = pd.DataFrame(self._exchange_information)
 
     def _adapt_system_to_exchange_coordinate(self) ->NoReturn:
         """

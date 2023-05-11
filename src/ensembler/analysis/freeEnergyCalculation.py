@@ -46,7 +46,7 @@ class _FreeEnergyCalculator:
 
     @classmethod
     def _prepare_type(self, *arrays):
-        return tuple(map(lambda arr: np.array(list(map(lambda x: float(x), arr)),ndmin=1), arrays))
+        return tuple(map(lambda arr: np.array(list(map(lambda x: np.float64(x), arr)),ndmin=1), arrays))
 
     @classmethod
     def get_equation(cls) -> sp.Function:
@@ -142,7 +142,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        return float(self._calculate_mpmath(Vi=Vi, Vj=Vj))
+        return np.float64(self._calculate_mpmath(Vi=Vi, Vj=Vj))
 
     def _calculate_implementation_bruteForce(self, Vi: (Iterable, Number), Vj: (Iterable, Number)) -> float:
         """
@@ -308,7 +308,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
 
         # Return free energy difference
         from scipy import special as s
-        dF = - float(1 / beta) * s.logsumexp(np.array(dVij, dtype=float), b=1 / len(dVij))
+        dF = - np.float64(1 / beta) * s.logsumexp(np.array(dVij, dtype=float), b=1 / len(dVij))
         return dF
 
     def _calculate_mpmath(self,  Vi: (Iterable, Number), Vj: (Iterable, Number))->float:
@@ -331,9 +331,9 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        beta = float(1 / (self.constants[self.k] * self.constants[self.T]))
+        beta = np.float64(1 / (self.constants[self.k] * self.constants[self.T]))
 
-        return - (1 / beta) * float(mp.ln(np.mean(list(map(mp.exp, -beta*(np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
+        return - (1 / beta) * np.float64(mp.ln(np.mean(list(map(mp.exp, -beta*(np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
 
     def set_parameters(self, T: float = None, k: float = None):
         """
@@ -414,7 +414,7 @@ class threeStateZwanzig(zwanzigEquation):
             free energy difference
 
         """
-        return float(self._calculate_implementation_useZwanzig(Vi=Vi, Vj=Vj, Vr=Vr))
+        return np.float64(self._calculate_implementation_useZwanzig(Vi=Vi, Vj=Vj, Vr=Vr))
 
     def _calculate_implementation_useZwanzig(self, Vi: (Iterable, Number), Vj: (Iterable, Number),
                                              Vr: (Iterable[Number], Number)) -> float:
@@ -655,7 +655,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
                 "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
                     err.args))
 
-        return float(ddF + C)
+        return np.float64(ddF + C)
 
 
     def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
@@ -721,7 +721,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
                 "BAR is not converged after " + str(iteration) + " steps. stopped at: " + str(self.constants[self.C]))
         print("Final Iterations: ", iteration, " Result: ", dF)
 
-        return float(dF)
+        return np.float64(dF)
 
     def set_parameters(self, C: float = None, T: float = None, k: float = None):
         """

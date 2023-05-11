@@ -177,7 +177,11 @@ class _potentialNDCls(_potentialCls):
             the calculated potential forces.
 
         """
-        return np.squeeze(self._calculate_dVdpos(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions]))).T
+        arr = np.array(positions, ndmin=1)
+        comp = np.hsplit(arr, self.constants[self.nDimensions])
+        f = self._calculate_dVdpos(*comp)
+
+        return np.squeeze(f).T
 
     # just alternative name, same as force
     def dvdpos(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:

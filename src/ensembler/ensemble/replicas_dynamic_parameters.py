@@ -50,7 +50,7 @@ class conveyorBelt(_mutliReplicaApproach):
         outstr += "-" * 25 + "\n"
         for i in self.replicas:
             outstr += '{:5d}{:10.2f}{:10.3f}\n'.format(i, self.replicas[i].lam,
-                                                        float(self.replicas[i].total_system_energy))
+                                                        np.float64(self.replicas[i].total_system_energy))
         return outstr
 
     def __repr__(self):
@@ -221,7 +221,7 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": float(newEne),
+            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": self.capital_lambda, "TotE": np.float64(newEne),
                  "biasE": self.biasene, "doAccept": True})
         else:
             self.reject += 1
@@ -230,8 +230,8 @@ class conveyorBelt(_mutliReplicaApproach):
             for i in self.replicas:
                 self.replicas[i]._update_dHdLambda()
 
-            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": float(oldEne),
-                 "biasE": float(oldBiasene), "doAccept": False})
+            self.__tmp_exchange_traj.append({"Step": self._currentTrial, "capital_lambda": oldBlam, "TotE": np.float64(oldEne),
+                 "biasE": np.float64(oldBiasene), "doAccept": False})
 
         if self.build:
             self.build_mem()
@@ -330,7 +330,7 @@ class conveyorBelt(_mutliReplicaApproach):
         #        self.mem=np.array([2.2991 ,  2.00274,  1.84395,  1.83953,  2.0147])
         #        memory for perturbed hosc, alpha=10.0, gamma=0.0, 8 replica, num_gp=6, fc=0.00001, 1E6 steps
         self.mem = np.zeros(self.num_gp - 1)
-        self.gp_spacing = self.dis / float(self.num_gp - 1.0)
+        self.gp_spacing = self.dis / np.float64(self.num_gp - 1.0)
         self.biasene = 0.0
         # print('Distance: ', self.dis, self.dis / np.pi)
         # print('GP Distance: ', self.gp_spacing, self.gp_spacing / np.pi)
@@ -350,7 +350,7 @@ class conveyorBelt(_mutliReplicaApproach):
         """
 
         active_gp = int(np.floor((self.capital_lambda % self.dis) / self.gp_spacing + 0.5))
-        dg = (self.capital_lambda % self.dis) / self.gp_spacing - float(active_gp)
+        dg = (self.capital_lambda % self.dis) / self.gp_spacing - np.float64(active_gp)
         if dg < 0:
             self.biasene = self.mem[(active_gp - 1) % (self.num_gp - 1)] * self.spline(1.0 + dg) + self.mem[
                 active_gp % (self.num_gp - 1)] * self.spline(-dg)

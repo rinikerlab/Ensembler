@@ -1,5 +1,5 @@
 import unittest
-
+import numpy as np
 from ensembler.ensemble import replica_exchange, _replica_graph
 from ensembler.samplers import stochastic
 from ensembler.potentials import OneD
@@ -122,8 +122,8 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
 
         T_range = range(1, 10)
         nReplicas = len(T_range)
-        positions = {x: float(1) for x in range(nReplicas)}
-        velocities = {x: float(0) for x in range(nReplicas)}
+        positions = {x: np.float64(1) for x in range(nReplicas)}
+        velocities = {x: np.float64(0) for x in range(nReplicas)}
 
         group = replica_exchange.temperatureReplicaExchange(system=sys, temperature_range=T_range)
         group.set_replicas_positions(positions)
@@ -158,8 +158,8 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         T_range = [1, 200, 500]
         nReplicas = len(T_range)
         print("REPS", nReplicas)
-        positions = [float(x)*100 for x in range(nReplicas)]
-        velocities = list([float(1) for x in range(nReplicas)])
+        positions = [np.float64(x)*100 for x in range(nReplicas)]
+        velocities = list([np.float64(1) for x in range(nReplicas)])
 
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
         print("REPS", group.nReplicas)
@@ -213,7 +213,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         nsteps = 1
 
         T_range = [1, 2000, 5000]
-        positions = [float(x)*100 for x in range(len(T_range))]
+        positions = [np.float64(x)*100 for x in range(len(T_range))]
 
         group = replica_exchange.TemperatureReplicaExchange(system=sys, temperature_Range=T_range)
 
@@ -221,7 +221,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         group._defaultRandomness= lambda x,y: False
         group.set_replicas_positions(positions)
         group.nSteps_between_trials = nsteps
-        group.set_replicas_velocities([float(-100) for x in range(replicas)])
+        group.set_replicas_velocities([np.float64(-100) for x in range(replicas)])
 
         print("STEP:\t", 0)
         print(group.get_replicas_positions())
@@ -233,7 +233,7 @@ class test_TemperatureReplicaExchangeCls(unittest.TestCase):
         for step in range(5):
             #group.run()
             group.simulate(1)
-            group.set_replicas_velocities([float(10) for x in range(replicas)])
+            group.set_replicas_velocities([np.float64(10) for x in range(replicas)])
             #group.exchange()
             #group.simulate(1)
             print("STEP:\t", step)

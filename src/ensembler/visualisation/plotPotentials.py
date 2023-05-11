@@ -20,7 +20,7 @@ for key, value in plot_layout_settings.items():
 def significant_decimals(s: float) -> float:
     significant_decimal = 2
     if (s % 1 != 0):
-        decimals = str(float(s)).split(".")[-1]
+        decimals = str(np.float64(s)).split(".")[-1]
         for digit in decimals:
             if (digit == "0"):
                 significant_decimal += 1
@@ -509,7 +509,7 @@ def plot_envelopedPotential_2State_System(eds_potential: pot.envelopedPotential,
 
     for x in positions:
         row = eds_potential.ene(list(map(lambda y: [[x], [y]], list(positions))))
-        row_cut = list(map(lambda x: V_max if (V_max != None and float(x) > V_max) else float(x), row))
+        row_cut = list(map(lambda x: V_max if (V_max != None and np.float64(x) > V_max) else np.float64(x), row))
         energy_map.append(row_cut)
         if (min(row) < min_e):
             min_e = min(row)
@@ -567,7 +567,7 @@ def envPot_diffS_2stateMap_compare(eds_potential: pot.envelopedPotential, s_valu
         energy_map = []
         for x in positions:
             row = eds_potential.ene(list(map(lambda y: [[x], [y]], list(positions))))
-            row_cut = list(map(lambda x: V_max if (V_max != None and float(x) > V_max) else float(x), row))
+            row_cut = list(map(lambda x: V_max if (V_max != None and np.float64(x) > V_max) else np.float64(x), row))
             energy_map.append(row_cut)
             if (min(row) < min_e):
                 min_e = min(row)
