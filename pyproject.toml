@@ -27,7 +27,9 @@ dependencies = [
     'jupyter', # Tutorial/Examples: basics
     'ipywidgets',# Tutorial/Examples: Interactive widgets
     'tqdm',# Tutorial/Examples: nice progressbar
-    'ffmpeg' #Visualizations: for animations in general
+    'ffmpeg', #Visualizations: for animations in general
+    'pytest',
+    'pytest-cov'
 ]
 
 description="Ensembler is a tool for fast and efficient development of simulation methods or for teaching purposes."
