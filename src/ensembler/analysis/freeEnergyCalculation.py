@@ -46,7 +46,7 @@ class _FreeEnergyCalculator:
 
     @classmethod
     def _prepare_type(self, *arrays):
-        return tuple(map(lambda arr: np.array(list(map(lambda x: np.float(x), arr)),ndmin=1), arrays))
+        return tuple(map(lambda arr: np.array(list(map(lambda x: float(x), arr)),ndmin=1), arrays))
 
     @classmethod
     def get_equation(cls) -> sp.Function:
@@ -308,7 +308,7 @@ class zwanzigEquation(_FreeEnergyCalculator):
 
         # Return free energy difference
         from scipy import special as s
-        dF = - np.float(1 / beta) * s.logsumexp(np.array(dVij, dtype=np.float), b=1 / len(dVij))
+        dF = - float(1 / beta) * s.logsumexp(np.array(dVij, dtype=float), b=1 / len(dVij))
         return dF
 
     def _calculate_mpmath(self,  Vi: (Iterable, Number), Vj: (Iterable, Number))->float:
@@ -331,9 +331,9 @@ class zwanzigEquation(_FreeEnergyCalculator):
             free energy difference
 
         """
-        beta = np.float(1 / (self.constants[self.k] * self.constants[self.T]))
+        beta = float(1 / (self.constants[self.k] * self.constants[self.T]))
 
-        return - (1 / beta) * np.float(mp.ln(np.mean(list(map(mp.exp, -beta*(np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
+        return - (1 / beta) * float(mp.ln(np.mean(list(map(mp.exp, -beta*(np.array(Vj, ndmin=1) - np.array(Vi, ndmin=1)))))))
 
     def set_parameters(self, T: float = None, k: float = None):
         """
@@ -655,7 +655,7 @@ class bennetAcceptanceRatio(_FreeEnergyCalculator):
                 "BAR Error: Problems taking logarithm of the average exponentiated potential energy difference " + str(
                     err.args))
 
-        return np.float(ddF + C)
+        return float(ddF + C)
 
 
     def _calculate_optimize(self, Vi_i: (Iterable[Number], Number), Vj_i: (Iterable[Number], Number),
