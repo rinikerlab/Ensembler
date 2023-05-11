@@ -718,7 +718,7 @@ class test_perturbedSystem1D(test_System):
 
         cur_velocity = sys._currentVelocities
         # print(cur_velocity)
-        expected_vel = float64(-2.8014573319669176)
+        expected_vel = float(-2.8014573319669176)
         self.assertEqual(type(cur_velocity), type(expected_vel), msg="Velocity has not the correcttype!")
 
     def test_updateTemp(self):
