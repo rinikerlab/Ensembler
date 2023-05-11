@@ -471,7 +471,7 @@ class system(_baseClass):
 
         random_pos = np.squeeze(np.array(np.subtract(np.multiply(np.random.rand(self.nDimensions), 20), 10)))
         if (len(random_pos.shape) == 0):
-            return np.float(random_pos)
+            return float(random_pos)
         else:
             return random_pos
 
