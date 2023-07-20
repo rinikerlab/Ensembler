@@ -130,8 +130,8 @@ There are many ways to get the Ensembler package.
         
         git clone https://github.com/rinikerlab/Ensembler.git
         cd Ensembler
-        python setup.py install
-          
+        pip install .
+              
   * If you want to use Ensembler, see the example notebooks or develop Ensembler - but not install the package:
     Add the path to the Ensembler repository; the requirements needed for the package can be used like in the following examples:
   
