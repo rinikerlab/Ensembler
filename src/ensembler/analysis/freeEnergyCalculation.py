@@ -46,7 +46,7 @@ class _FreeEnergyCalculator:
 
     @classmethod
     def _prepare_type(self, *arrays):
-        return tuple(map(lambda arr: np.array(list(map(lambda x: np.float64(x), arr)),ndmin=1), arrays))
+        return tuple(map(lambda arr: np.array(arr,ndmin=1, dtype=np.float64), arrays))
 
     @classmethod
     def get_equation(cls) -> sp.Function:

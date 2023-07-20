@@ -178,7 +178,7 @@ class _potentialNDCls(_potentialCls):
             the calculated potential forces.
 
         """
-        arr = np.array(positions, ndmin=1)
+        arr = np.array(positions, ndmin=2)
         f = np.array(list(map(lambda c: self._calculate_dVdpos(*c), arr)))
 
         return np.squeeze(f)
