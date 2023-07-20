@@ -139,8 +139,7 @@ There are many ways to get the Ensembler package.
     
             git clone https://github.com/rinikerlab/Ensembler.git
             cd Ensembler
-            export PYTHONPATH=${PYTHONPATH}:${PWD}
-            pip install -r devtools/pip_requirements/requirements_unix.txt
+            pip install .
         
     * Anaconda:
    
@@ -148,6 +147,7 @@ There are many ways to get the Ensembler package.
             cd Ensembler
             conda create -n Ensembler --file devtools/conda-envs/environment_unix.yml
             conda activate Ensembler
+            pip install .
 
 For windows, we also provide the required files in the same folders:
   * devtools/pip_requirements/requirements_windows.txt
