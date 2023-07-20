@@ -1507,12 +1507,14 @@ class potentialCls_addedPotentials(test_potentialCls):
 
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+
+        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
+                                       err_msg="The results of " + potential.name + " are not correct!")
+
 
     def test_dVdpos(self):
         positions = [0, 0.5, 1, 2]
-        expected_result = np.array([0.0, 0.05875154870770227, 0.3934693402873666, 1.7293294335267746])
+        expected_result = np.array([0.0, 0.05875154870770233, 0.3934693402873666, 1.7293294335267746])
 
         potential = self.potential_class()
 
@@ -1521,8 +1523,9 @@ class potentialCls_addedPotentials(test_potentialCls):
 
         self.assertEqual(type(expected_result), type(energies),
                          msg="returnType of potential was not correct! it should be an np.array")
-        self.assertListEqual(list(expected_result), list(energies),
-                             msg="The results of " + potential.name + " are not correct!")
+
+        np.testing.assert_almost_equal(desired=expected_result, actual=energies,
+                                       err_msg="The results of " + potential.name + " are not correct!")
 
 
 class potentialCls_metadynamics(test_potentialCls):

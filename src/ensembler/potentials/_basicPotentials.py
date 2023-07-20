@@ -162,6 +162,7 @@ class _potentialNDCls(_potentialCls):
         """
         return np.squeeze(self._calculate_energies(*np.hsplit(np.array(positions, ndmin=1), self.constants[self.nDimensions])))
 
+
     def force(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
         """
             force
@@ -178,10 +179,10 @@ class _potentialNDCls(_potentialCls):
 
         """
         arr = np.array(positions, ndmin=1)
-        comp = np.hsplit(arr, self.constants[self.nDimensions])
-        f = self._calculate_dVdpos(*comp)
+        f = np.array(list(map(lambda c: self._calculate_dVdpos(*c), arr)))
 
-        return np.squeeze(f).T
+        return np.squeeze(f)
+
 
     # just alternative name, same as force
     def dvdpos(self, positions:Union[Number, Iterable[Number], Iterable[Iterable[Number]]]) -> Union[Number, Iterable[Number], Iterable[Iterable[Number]]]:
