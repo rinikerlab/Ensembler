@@ -14,6 +14,6 @@ pandas==1.1.2
 scipy==1.10.0
 sphinx==3.2.1
 sympy==1.6.2
-tqdm==4.49.0
+tqdm==4.66.3
 typing==3.7.4.3
 
